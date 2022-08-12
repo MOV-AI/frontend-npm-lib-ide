@@ -1,4 +1,4 @@
-# MOV.AI Flow™
+# MOV.AI IDE Library™
 
 ![Movai](https://files.readme.io/d69ebeb-Flow-Logo_trans.png)
 
@@ -6,7 +6,7 @@ MOV.AI Flow™ is an integrated development environment offering multiple editor
 
 **main branch:**
 
-[![Deploy - On branch main/release Push](https://github.com/MOV-AI/frontend-npm-ide-ce/actions/workflows/DeployOnMergeMain.yml/badge.svg?branch=dev)](https://github.com/MOV-AI/frontend-npm-ide-ce/actions/workflows/DeployOnMergeMain.yml)
+[![Deploy - On branch main/release Push](https://github.com/MOV-AI/frontend-npm-ide-ce/actions/workflows/DeployOnMergeMain.yml/badge.svg?branch=dev)](https://github.com/MOV-AI/frontend-npm-lib-ide/actions/workflows/DeployOnMergeMain.yml)
 
 ## Development
 
