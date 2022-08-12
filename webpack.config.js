@@ -6,7 +6,7 @@ module.exports = {
   output: {
     path: path.resolve("./"),
     filename: "dist/index.js",
-    library: "MovaiReact",
+    library: "MovaiIDE",
     libraryTarget: "umd"
   },
   target: "web",

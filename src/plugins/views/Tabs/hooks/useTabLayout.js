@@ -47,7 +47,8 @@ const useTabLayout = (props, dockRef) => {
           const tabData = getToolTabData(tab);
           tabsById.current.set(tabData.id, tabData);
           workspaceManager.setTabs(tabsById.current);
-          dockRef.current.updateTab(toolName, tabData, false);
+          dockRef.current &&
+            dockRef.current.updateTab(toolName, tabData, false);
         }
       });
 

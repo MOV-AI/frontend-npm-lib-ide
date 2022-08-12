@@ -1,3 +1,4 @@
+import "./index.css";
 import reportWebVitals from "./src/reportWebVitals";
 // Import shared classes to be exported
 import BaseApp, { installEditor, installTool } from "./src/App/BaseApp";
@@ -5,7 +6,7 @@ import { Store, DBSubscriber } from "./src/store";
 import { Model, Manager } from "./src/models";
 import { withAlerts, withTheme, withKeyBinds } from "./src/decorators";
 import { withEditorPlugin, withViewPlugin } from "./src/engine";
-// Import editors
+// Import src/editors
 import {
   CallbackModel,
   CallbackStore,
@@ -18,30 +19,28 @@ import {
 } from "./src/editors/Configuration";
 import { NodeModel, NodeStore, NodeView } from "./src/editors/Node";
 import { FlowModel, FlowStore, FlowView } from "./src/editors/Flow";
-import FlowExplorer from "./src/editors/Flow/view/Components/Explorer/Explorer";
 import * as CONSTANTS from "./src/utils/Constants";
-
-import { ApplicationTheme } from "./src/themes";
-
+import FlowExplorer from "./src/editors/Flow/view/Components/Explorer/Explorer";
 import HomeTabPlugin, { getHomeTab } from "./src/tools/HomeTab/HomeTab";
 import ShortcutsPlugin, {
   getShortcutsTab
 } from "./src/tools/AppShortcuts/AppShortcuts";
+import { ApplicationTheme } from "./src/themes";
+import { ThemeProvider } from "@material-ui/core/styles";
+import i18n from "./src/i18n/i18n";
 
-// Export classes to build App
+// Exports
 export { BaseApp, installEditor, installTool };
 export { Store, DBSubscriber };
 export { Model, Manager };
 export { withAlerts, withTheme, withKeyBinds };
 export { withEditorPlugin, withViewPlugin };
-// Export built-in editors
 export { CallbackModel, CallbackStore, CallbackView };
 export { ConfigurationModel, ConfigurationStore, ConfigurationView };
 export { NodeModel, NodeStore, NodeView };
-export { FlowModel, FlowStore, FlowView };
-export { FlowExplorer };
-export { CONSTANTS };
-export { ApplicationTheme };
+export { FlowModel, FlowStore, FlowView, reportWebVitals, CONSTANTS };
 export { HomeTabPlugin, getHomeTab };
 export { ShortcutsPlugin, getShortcutsTab };
-export { reportWebVitals };
+export { FlowExplorer };
+export { ThemeProvider, ApplicationTheme };
+export { i18n };
