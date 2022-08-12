@@ -71,6 +71,14 @@
     "rxjs": "^6.6.7",
     "web-vitals": "^1.1.2"
   },
+  "peerDependencies": {
+    "@material-ui/core": ">=4.12.3",
+    "@material-ui/icons": ">=4.11.2",
+    "@material-ui/lab": ">=4.0.0-alpha.60",
+    "@material-ui/styles": ">=4.11.4",
+    "react": ">=16.14.0",
+    "react-dom": ">=16.14.0"
+  },
   "devDependencies": {
     "http-proxy-middleware": "^2.0.4",
     "webpack": "^5.53.0",
