@@ -11,7 +11,7 @@ module.exports = {
   },
   target: "web",
   devtool: "source-map",
-  watch: true,
+  watch: false,
   externals: [nodeExternals()],
   resolve: {
     extensions: [".js", ".jsx"]
