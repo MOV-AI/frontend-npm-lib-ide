@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import { Tooltip } from "@material-ui/core";
 import {
-  HOMETAB_PROFILE,
   DEFAULT_LAYOUT,
   DOCK_POSITIONS,
   DOCK_MODES,
@@ -16,7 +15,7 @@ import {
 import { getIconByScope, buildDocPath } from "../../../../utils/Utils";
 import PluginManagerIDE from "../../../../engine/PluginManagerIDE/PluginManagerIDE";
 import Workspace from "../../../../utils/Workspace";
-import { getHomeTab } from "../../HomeTab/HomeTab";
+import { getToolTabData } from "../../../../tools";
 import useTabStack from "./useTabStack";
 
 const useTabLayout = (props, dockRef) => {
@@ -34,6 +33,31 @@ const useTabLayout = (props, dockRef) => {
    *                                    Private Methods                                   *
    *                                                                                      */
   //========================================================================================
+
+  const openNonEditorTabs = useCallback(
+    lastTabs => {
+      // Save current active tab id
+      const currentActiveTabId = activeTabId.current;
+
+      // Load tools tab data
+      lastTabs.forEach(tab => {
+        const isTool = !Boolean(tab.extension);
+        if (isTool) {
+          const toolName = tab.id;
+          const tabData = getToolTabData(tab);
+          tabsById.current.set(tabData.id, tabData);
+          workspaceManager.setTabs(tabsById.current);
+          dockRef.current &&
+            dockRef.current.updateTab(toolName, tabData, false);
+        }
+      });
+
+      // Set current active tab id after extra tabs update
+      activeTabId.current = currentActiveTabId;
+      emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: currentActiveTabId });
+    },
+    [dockRef, workspaceManager, emit]
+  );
 
   /**
    * Helper function to find if a tab exists in the DockLayout
@@ -487,6 +511,7 @@ const useTabLayout = (props, dockRef) => {
         z: 1
       };
 
+      emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: tabData.id });
       addTabToStack(tabData, tabPosition);
       tabsById.current.set(tabData.id, tabData);
       workspaceManager.setTabs(tabsById.current);
@@ -530,7 +555,8 @@ const useTabLayout = (props, dockRef) => {
       getDefaultTabPosition,
       focusExistingTab,
       addTabToStack,
-      findTab
+      findTab,
+      emit
     ]
   );
 
@@ -540,19 +566,23 @@ const useTabLayout = (props, dockRef) => {
    */
   const openEditor = useCallback(
     async docData => {
-      const doc = await call(
-        PLUGINS.DOC_MANAGER.NAME,
-        PLUGINS.DOC_MANAGER.CALL.READ,
-        { name: docData.name, scope: docData.scope }
-      );
+      try {
+        const doc = await call(
+          PLUGINS.DOC_MANAGER.NAME,
+          PLUGINS.DOC_MANAGER.CALL.READ,
+          { name: docData.name, scope: docData.scope }
+        );
 
-      docData.isNew = docData.isNew ?? doc.isNew;
-      docData.isDirty = docData.isDirty ?? doc.isDirty;
+        docData.isNew = docData.isNew ?? doc.isNew;
+        docData.isDirty = docData.isDirty ?? doc.isDirty;
 
-      _getTabData(docData).then(tabData => {
-        emit(PLUGINS.TABS.ON.OPEN_EDITOR, tabData);
-        open(tabData);
-      });
+        _getTabData(docData).then(tabData => {
+          emit(PLUGINS.TABS.ON.OPEN_EDITOR, tabData);
+          open(tabData);
+        });
+      } catch (e) {
+        console.warn(e);
+      }
     },
     [call, emit, _getTabData, open]
   );
@@ -631,7 +661,6 @@ const useTabLayout = (props, dockRef) => {
         applyLayout(newLayout);
 
         !firstLoad.current && addTabToStack(tabData, dock);
-
         firstLoad.current = false;
       }
       // Emit new active tab id
@@ -775,25 +804,20 @@ const useTabLayout = (props, dockRef) => {
       });
       setLayout(lastLayout);
 
-      // Save current active tab id
-      const currentActiveTabId = activeTabId.current;
-
-      // Open Home Tab
-      if (lastTabs.has(HOMETAB_PROFILE.name)) {
-        const tabData = getHomeTab();
-        tabsById.current.set(tabData.id, tabData);
-        workspaceManager.setTabs(tabsById.current);
-        dockRef.current.updateTab(HOMETAB_PROFILE.name, tabData, false);
-        // Set current active tab id after home tab update
-        activeTabId.current = currentActiveTabId;
-      }
+      openNonEditorTabs(lastTabs);
     });
 
     // Destroy local workspace manager instance on unmount
     return () => {
       workspaceManager.destroy();
     };
-  }, [dockRef, workspaceManager, _getTabData, layoutActiveIdIsValid]);
+  }, [
+    dockRef,
+    workspaceManager,
+    _getTabData,
+    layoutActiveIdIsValid,
+    openNonEditorTabs
+  ]);
 
   //========================================================================================
   /*                                                                                      *

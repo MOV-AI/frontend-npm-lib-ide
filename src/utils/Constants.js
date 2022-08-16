@@ -3,27 +3,9 @@ import i18n from "../i18n/i18n";
 export const APP_DEFAULT_CONFIG = "app-ide-ce";
 export const APP_CUSTOM_CONFIG = "app-custom-ide-ce";
 
-const APPLICATION_DATA = window.SERVER_DATA?.Application;
-
 export const MANAGER = "manager";
 
-export const BRANDING = {
-  NAME: "MOV.AI Flow™"
-};
-
-export const APP_INFORMATION = {
-  VERSION: APPLICATION_DATA?.Version || "0.0.1",
-  LAST_UPDATE: APPLICATION_DATA?.LastUpdate || "-",
-  CONFIGURATION_FILE: APPLICATION_DATA?.Configuration || "-",
-  CUSTOM_CONFIGURATION_FILE: APPLICATION_DATA?.CustomConfiguration || "-",
-  DESCRIPTION: APPLICATION_DATA?.Description || "-",
-  LABEL: APPLICATION_DATA?.Label || BRANDING.NAME
-};
-
-export const APP_LINKS = {
-  DOCUMENTATION: "https://flow.mov.ai/",
-  FORUM: "https://forum.flow.mov.ai/"
-};
+export const GLOBAL_WORKSPACE = "global";
 
 export const DEFAULT_VALUE = undefined;
 export const DISABLED_VALUE = "None";
@@ -45,6 +27,9 @@ export const SCOPES = {
 };
 
 export const HOSTS = {
+  ABSTRACT_HOST: {
+    NAME: "abstractHost"
+  },
   TOP_BAR: {
     NAME: "topBar"
   },
@@ -68,6 +53,9 @@ export const HOSTS = {
 };
 
 export const PLUGINS = {
+  APP_KEYBINDINGS: {
+    NAME: "appKeybindings"
+  },
   DOC_MANAGER: {
     NAME: "docManager",
     CALL: {
@@ -95,7 +83,8 @@ export const PLUGINS = {
       DELETE_DOC: "deleteDoc",
       UPDATE_DOCS: "updateDocs",
       LOAD_DOCS: "loadDocs",
-      SAVE_DOC: "saveDoc"
+      SAVE_DOC: "saveDoc",
+      BEFORE_SAVE_DOC: "beforeSaveDoc"
     }
   },
   TABS: {
@@ -165,6 +154,10 @@ export const PLUGINS = {
   }
 };
 
+export const KEYBIND_SCOPES = {
+  APP: "all"
+};
+
 export const TABLE_KEYS_NAMES = {
   PARAMETERS: "parameters",
   ENVVARS: "envVars",
@@ -224,11 +217,36 @@ export const ALERT_SEVERITIES = {
   WARNING: "warning"
 };
 
+export const LINK_DEPENDENCY = {
+  ALL_DEPENDENCIES: {
+    LABEL: "AllDependenciesLabel",
+    VALUE: 0,
+    COLOR: "white"
+  },
+  ONLY_FROM: {
+    LABEL: "OnlyFromLabel",
+    VALUE: 1,
+    COLOR: "violet"
+  },
+  ONLY_TO: {
+    LABEL: "OnlyToLabel",
+    VALUE: 2,
+    COLOR: "steelblue"
+  },
+  NO_DEPENDENCIES: {
+    LABEL: "NoDependenciesLabel",
+    VALUE: 3,
+    COLOR: "darkseagreen"
+  }
+};
+
 //========================================================================================
 /*                                                                                      *
  *                                   Layout Constants                                   *
  *                                                                                      */
 //========================================================================================
+
+export const DEFAULT_EXPLORER_ROW_HEIGHT = 40;
 
 export const DOCK_POSITIONS = {
   DOCK: "dockbox",
@@ -252,6 +270,11 @@ export const HOMETAB_PROFILE = {
   title: i18n.t("HomeTabTitle")
 };
 
+export const SHORTCUTS_PROFILE = {
+  name: "ShortcutsTab",
+  title: i18n.t("ShortcutsTabTitle")
+};
+
 export const DEFAULT_TABS = new Map(
   Object.entries({ [HOMETAB_PROFILE.name]: { id: HOMETAB_PROFILE.name } })
 );
@@ -272,4 +295,29 @@ export const DEFAULT_LAYOUT = {
   windowbox: { children: [] },
   maxbox: { children: [] },
   floatbox: { children: [] }
+};
+
+//========================================================================================
+/*                                                                                      *
+ *                                 Flow/Nodes Constants                                 *
+ *                                                                                      */
+//========================================================================================
+
+export const MOVAI_FLOW_TYPES = {
+  NODES: {
+    ROS1_NODELETE: "ROS1/Nodelet",
+    ROS1_NODE: "ROS1/Node",
+    ROS1_PLUGIN: "ROS1/Plugin",
+    ROS1_STATEM: "ROS1/StateM",
+    MOVAI_NODE: "MovAI/Node",
+    MOVAI_STATE: "MovAI/State",
+    MOVAI_SERVER: "MovAI/Server",
+    MOVAI_FLOW: "MovAI/Flow",
+    ROS2_NODE: "ROS2/Node",
+    ROS2_LIFECYCLENODE: "ROS2/LifecycleNode"
+  },
+  LINKS: {
+    TRANSITION: "movai_msgs/Transition",
+    NODELET: "movai_msgs/Nodelet"
+  }
 };
