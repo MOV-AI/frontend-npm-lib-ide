@@ -1,8 +1,8 @@
-# MOV.AI Flow™
+# MOV.AI Base IDE
 
 ![Movai](https://files.readme.io/d69ebeb-Flow-Logo_trans.png)
 
-MOV.AI Flow™ is an integrated development environment offering multiple editors for the robotics developer.
+This library is created to share a base IDE app ready to use. This is the base for the MOV.AI Flow™.
 
 **main branch:**
 
@@ -11,18 +11,7 @@ MOV.AI Flow™ is an integrated development environment offering multiple editor
 ## Development
 
 Open the project in VS Code and then choose to reopen in container.
-Once the container is ready, open a new terminal inside VS Code and run:
-
-```
-npm start
-```
-
-Note: ~/.npmrc must be previously configured with access to github.
-
-## Proxy
-
-During development requests are proxied using http-proxy-middleware.
-Edit src/setupProxy.js to add more endpoints. If your movai service is running in port 8080, you might need to change this file to set the target as localhost:8080 and .env file to point to port 8080 as well.
+TODO: Storybook
 
 # Plugin Architecture
 
