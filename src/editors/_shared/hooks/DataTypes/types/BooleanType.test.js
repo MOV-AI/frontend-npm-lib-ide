@@ -1,5 +1,5 @@
 import BooleanType from "./BooleanType";
-import { pythonToBool, boolToPython } from "../../../../../../../utils/Utils";
+import { boolToPython, pythonToBool } from "../../../../../utils/Utils";
 
 test("Smoke test", () => {
   const obj = new BooleanType({ theme: {} });
