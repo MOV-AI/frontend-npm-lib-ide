@@ -28,6 +28,8 @@ import ShortcutsPlugin, {
 import { ApplicationTheme } from "./src/themes";
 import { ThemeProvider } from "@material-ui/core/styles";
 import i18n from "./src/i18n/i18n";
+// hooks
+import useDataTypes from "./src/editors/_shared/hooks/useDataTypes";
 
 // Exports
 export { BaseApp, installEditor, installTool };
@@ -44,3 +46,6 @@ export { ShortcutsPlugin, getShortcutsTab };
 export { FlowExplorer };
 export { ThemeProvider, ApplicationTheme };
 export { i18n };
+export { useDataTypes };
+// Export editor's shared components
+export * from "./src/editors/_shared";
