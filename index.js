@@ -47,3 +47,5 @@ export { FlowExplorer };
 export { ThemeProvider, ApplicationTheme };
 export { i18n };
 export { useDataTypes };
+// Export editor's shared components
+export * from "./src/editors/_shared";
