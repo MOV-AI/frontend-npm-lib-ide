@@ -12,7 +12,6 @@ const withMenuHandler = Component => {
 
   return (props, ref) => {
     const { call } = props;
-    const updateRightMenuRef = useRef();
 
     /**
      * Reset right menu : clear menu and close right drawer
@@ -24,6 +23,9 @@ const withMenuHandler = Component => {
       );
     }, [call]);
 
+    // Update right menu Ref (should be initialized with the 'resetRightMenu' method)
+    const updateRightMenuRef = useRef(resetRightMenu);
+
     /**
      * Render components menu if any and bind events of active tab to trigger the component's renderRightMenu method
      * @returns
@@ -32,9 +34,7 @@ const withMenuHandler = Component => {
       // render component menus (if any)
       const editorRef = ref?.current;
       if (!editorRef) return;
-      const _updateRightMenu = editorRef.renderRightMenu
-        ? editorRef.renderRightMenu
-        : resetRightMenu;
+      const _updateRightMenu = editorRef.renderRightMenu ?? resetRightMenu;
       // Render (or close) right menu details
       _updateRightMenu();
       updateRightMenuRef.current = _updateRightMenu;
