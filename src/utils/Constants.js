@@ -321,3 +321,11 @@ export const MOVAI_FLOW_TYPES = {
     NODELET: "movai_msgs/Nodelet"
   }
 };
+
+//========================================================================================
+/*                                                                                      *
+ *                                 Robots Constants                                     *
+ *                                                                                      */
+//========================================================================================
+
+export const ROBOT_BLACKLIST = window.SERVER_DATA?.RobotBlackList ?? [];
