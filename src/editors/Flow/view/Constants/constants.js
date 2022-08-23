@@ -8,8 +8,6 @@ const FLOW_VIEW_MODE = {
   treeView: "treeView"
 };
 
-const ROBOT_BLACKLIST = window.SERVER_DATA?.RobotBlackList ?? [];
-
 const MOVAI_FLOW_TYPES = {
   NODES: {
     ROS1_NODELETE: "ROS1/Nodelet",
@@ -54,7 +52,6 @@ export {
   generateContainerId,
   FLOW_VIEW_MODE,
   MOVAI_FLOW_TYPES,
-  ROBOT_BLACKLIST,
   NODE_TYPES,
   TYPES
 };
