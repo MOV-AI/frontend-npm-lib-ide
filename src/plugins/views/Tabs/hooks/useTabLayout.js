@@ -44,7 +44,7 @@ const useTabLayout = (props, dockRef) => {
         const isTool = !Boolean(tab.extension);
         if (isTool) {
           const toolName = tab.id;
-          const tabData = getToolTabData(tab);
+          const tabData = getToolTabData(tab, tab.tabProps);
           tabsById.current.set(tabData.id, tabData);
           workspaceManager.setTabs(tabsById.current);
           dockRef.current &&
@@ -613,8 +613,17 @@ const useTabLayout = (props, dockRef) => {
     data => {
       const tabFromMemory = tabsById.current.get(data.id);
       if (!tabFromMemory && !data.content) return;
-      const { id, content, scope, name, tabTitle, extension, isDirty, isNew } =
-        tabFromMemory ?? data;
+      const {
+        id,
+        content,
+        scope,
+        name,
+        tabTitle,
+        extension,
+        isDirty,
+        isNew,
+        tabProps
+      } = tabFromMemory ?? data;
       tabsById.current.set(id, {
         id,
         scope,
@@ -623,7 +632,8 @@ const useTabLayout = (props, dockRef) => {
         content,
         extension,
         isNew,
-        isDirty
+        isDirty,
+        tabProps
       });
       const tabData = { id, scope, name, tabTitle, extension };
       return {
@@ -792,9 +802,8 @@ const useTabLayout = (props, dockRef) => {
     tabsById.current = lastTabs;
     // Install current tabs plugins
     lastTabs.forEach(tab => {
-      const { id, name, scope } = tab;
-
-      tabs.push(_getTabData({ id, name, scope }));
+      const { content, ...others } = tab;
+      tabs.push(_getTabData({ ...others, tabProps: content?.props ?? {} }));
     });
     // After all plugins are installed
     Promise.allSettled(tabs).then(_tabs => {
