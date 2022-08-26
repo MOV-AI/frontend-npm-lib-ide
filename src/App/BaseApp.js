@@ -124,11 +124,17 @@ export function installEditor(editor) {
  * @param {{profile: {name: string}, Plugin: IDEPlugin, tabData: object}} tool
  */
 export function installTool(tool) {
-  const { Plugin, profile, id } = tool;
+  const { Plugin, profile, id, dependencies = [] } = tool;
   const viewPlugin = new Plugin(profile);
   PluginManagerIDE.install(id, viewPlugin).then(() => {
     tool.tabData.content = viewPlugin.render();
     addTool(id, tool);
+  });
+  dependencies.forEach(dependency => {
+    const { id: depID, Plugin: DepPlugin, profile: depProfile } = dependency;
+    const plugin = new DepPlugin(depProfile);
+    PluginManagerIDE.install(depID, plugin);
+    addTool(depID, dependency);
   });
 }
 
