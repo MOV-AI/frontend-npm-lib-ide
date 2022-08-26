@@ -128,10 +128,12 @@ const MainMenu = props => {
         }
         navigationList={MENUS.map(menu => (
           <Tooltip key={menu.name} title={menu.title} placement="right" arrow>
-            {menu.icon({
-              className: classes.icon,
-              onClick: () => menu.getOnClick()
-            })}
+            <span>
+              {menu.icon({
+                className: classes.icon,
+                onClick: () => menu.getOnClick()
+              })}
+            </span>
           </Tooltip>
         ))}
         lowerElement={[
