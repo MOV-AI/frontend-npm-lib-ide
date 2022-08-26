@@ -16,6 +16,7 @@ export const getToolTabData = (tab, props = {}) => {
     const plugin = PluginManagerIDE.getPlugin(id);
     data.content = plugin.render(props) || notInstalledTab.content;
   }
+  if (props.tabTitle) data.name = props.tabTitle;
   if ("parent" in data) delete data.parent;
   return data;
 };
