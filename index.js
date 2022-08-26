@@ -39,6 +39,7 @@ import LocalStorage from "./src/utils/LocalStorage";
 import useDataTypes from "./src/editors/_shared/hooks/useDataTypes";
 import useDataSubscriber from "./src/plugins/DocManager/useDataSubscriber";
 import { usePluginMethods } from "./src/engine/ReactPlugin/ViewReactPlugin";
+import { openTool } from "./src/plugins/views/SystemBar/builder/buildFunctions";
 
 // Exports
 export { BaseApp, installEditor, installTool };
@@ -58,5 +59,7 @@ export { FlowExplorer };
 export { ThemeProvider, ApplicationTheme };
 export { i18n, Translations };
 export { useDataTypes, useDataSubscriber, usePluginMethods };
+export { openTool };
+
 // Export editor's shared components
 export * from "./src/editors/_shared";

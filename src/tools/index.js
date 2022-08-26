@@ -1,3 +1,4 @@
+import PluginManagerIDE from "../engine/PluginManagerIDE/PluginManagerIDE";
 import { getTabData } from "./NotInstalled/NotInstalled";
 
 const APP_TOOLS = {};
@@ -6,10 +7,15 @@ export const addTool = (name, tool) => {
   APP_TOOLS[name] = tool;
 };
 
-export const getToolTabData = tab => {
+export const getToolTabData = (tab, props = {}) => {
   const { id, name } = tab;
-  const data = id in APP_TOOLS ? APP_TOOLS[id].tabData : getTabData(id, name);
+  const notInstalledTab = getTabData(id, name);
+  const data = id in APP_TOOLS ? APP_TOOLS[id].tabData : notInstalledTab;
   // Sanitize tab data to avoid TypeError: Converting circular structure to JSON
+  if (!data.content) {
+    const plugin = PluginManagerIDE.getPlugin(id);
+    data.content = plugin.render(props) || notInstalledTab.content;
+  }
   if ("parent" in data) delete data.parent;
   return data;
 };
