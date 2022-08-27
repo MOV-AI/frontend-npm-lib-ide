@@ -29,11 +29,12 @@ import {
   SCOPES,
   PLUGINS,
   GLOBAL_WORKSPACE,
-  ALERT_SEVERITIES
+  ALERT_SEVERITIES,
+  ROBOT_BLACKLIST
 } from "../../../../../utils/Constants";
 import { ERROR_MESSAGES } from "../../../../../utils/Messages";
 import { defaultFunction } from "../../../../../utils/Utils";
-import { FLOW_VIEW_MODE, ROBOT_BLACKLIST } from "../../Constants/constants";
+import { FLOW_VIEW_MODE } from "../../Constants/constants";
 import useNodeStatusUpdate from "./hooks/useNodeStatusUpdate";
 
 import { buttonStyles, flowTopBarStyles } from "./styles";

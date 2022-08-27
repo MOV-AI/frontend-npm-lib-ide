@@ -76,8 +76,8 @@ export function openLink(link) {
  * @param {function} call : Plugin call method
  * @param {string} toolName : Tool Unique Name
  */
-export function openTool(call, toolName) {
-  const tabData = getToolTabData({ id: toolName });
+export function openTool(call, toolName, props = {}) {
+  const tabData = getToolTabData({ id: toolName }, props);
   call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN, tabData);
 }
 
