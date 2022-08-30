@@ -13,7 +13,7 @@ export const mainMenuStyles = makeStyles(theme => ({
   },
   movaiIcon: {
     padding: "10px",
-    width: "25px",
-    height: "25px"
+    width: "50px",
+    height: "50px"
   }
 }));
