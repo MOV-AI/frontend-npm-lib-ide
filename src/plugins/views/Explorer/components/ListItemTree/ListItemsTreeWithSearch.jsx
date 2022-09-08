@@ -81,8 +81,6 @@ const ListItemsTreeWithSearch = props => {
     const filteredNodes = searchData
       .filter(
         node =>
-          (!node.name.includes("@SM") &&
-            node.name.toLowerCase().includes(valueLower)) ||
           node.children.findIndex(ch =>
             ch.name.toLowerCase().includes(valueLower)
           ) >= 0
@@ -93,7 +91,6 @@ const ListItemsTreeWithSearch = props => {
           children: (node?.children ?? []).filter(
             ch =>
               ch.name &&
-              !ch.name.includes("@SM") &&
               (node.name.toLowerCase().includes(valueLower) ||
                 ch.name.toLowerCase().includes(valueLower))
           )
