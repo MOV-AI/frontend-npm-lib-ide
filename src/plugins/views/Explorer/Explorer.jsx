@@ -59,7 +59,7 @@ const Explorer = props => {
     setData(prevState => {
       const newData = [...prevState];
       // TODO: optimize time
-      const typeIndex = newData.findIndex(type => type.name === documentType);
+      const typeIndex = newData.findIndex(type => type.scope === documentType);
       if (typeIndex >= 0) {
         const documentIndex = newData[typeIndex].children.findIndex(
           doc => doc.name === documentName
@@ -84,7 +84,9 @@ const Explorer = props => {
       setData(prevState => {
         // TODO: optimize time
         const newData = [...prevState];
-        const typeIndex = newData.findIndex(type => type.name === documentType);
+        const typeIndex = newData.findIndex(
+          type => type.scope === documentType
+        );
         if (typeIndex >= 0) {
           const documentIndex = newData[typeIndex].children.findIndex(
             doc => doc.name === documentName
@@ -200,10 +202,11 @@ const Explorer = props => {
   const loadDocs = useCallback(docManager => {
     return setData(_ =>
       docManager.getStores().map((store, id) => {
-        const { name, title } = store;
+        const { name, title, model } = store;
         return {
           id,
           name,
+          scope: model.SCOPE || name,
           title,
           children: store.getDocs().map((doc, childId) => {
             return {
@@ -256,7 +259,6 @@ const Explorer = props => {
    *                                       Render                                         *
    *                                                                                      */
   //========================================================================================
-
   return (
     <>
       <h1 className={classes.header}>

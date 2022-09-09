@@ -97,7 +97,7 @@ const QuickAccess = props => {
                   isNew: true
                 });
               }),
-            element: docType.scope,
+            element: docType.name || docType.scope,
             icon: getIconByScope(docType.scope),
             onClose: true
           }))}
