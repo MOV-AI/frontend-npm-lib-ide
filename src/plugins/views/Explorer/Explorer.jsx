@@ -59,7 +59,7 @@ const Explorer = props => {
     setData(prevState => {
       const newData = [...prevState];
       // TODO: optimize time
-      const typeIndex = newData.findIndex(type => type.name === documentType);
+      const typeIndex = newData.findIndex(type => type.scope === documentType);
       if (typeIndex >= 0) {
         const documentIndex = newData[typeIndex].children.findIndex(
           doc => doc.name === documentName
@@ -84,7 +84,9 @@ const Explorer = props => {
       setData(prevState => {
         // TODO: optimize time
         const newData = [...prevState];
-        const typeIndex = newData.findIndex(type => type.name === documentType);
+        const typeIndex = newData.findIndex(
+          type => type.scope === documentType
+        );
         if (typeIndex >= 0) {
           const documentIndex = newData[typeIndex].children.findIndex(
             doc => doc.name === documentName
@@ -176,11 +178,18 @@ const Explorer = props => {
           call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.DELETE, {
             name,
             scope
-          }).catch(error =>
-            console.warn(
-              `Could not delete ${name} \n ${error.statusText ?? error}`
-            )
-          ),
+          })
+            .then(res => {
+              console.log("debug document deleted", res);
+              // TODO: https://movai.atlassian.net/browse/FP-2032
+              // - Trigger success alert
+              // - Delete document locally
+            })
+            .catch(error =>
+              console.warn(
+                `Could not delete ${name} \n ${error.statusText ?? error}`
+              )
+            ),
         message: t("DeleteDocConfirmationMessage", { docName: name })
       });
     },
@@ -200,10 +209,11 @@ const Explorer = props => {
   const loadDocs = useCallback(docManager => {
     return setData(_ =>
       docManager.getStores().map((store, id) => {
-        const { name, title } = store;
+        const { name, title, model } = store;
         return {
           id,
           name,
+          scope: model.SCOPE || name,
           title,
           children: store.getDocs().map((doc, childId) => {
             return {
@@ -256,7 +266,6 @@ const Explorer = props => {
    *                                       Render                                         *
    *                                                                                      */
   //========================================================================================
-
   return (
     <>
       <h1 className={classes.header}>
