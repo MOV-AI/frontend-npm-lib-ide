@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Divider, List, ListItem } from "@material-ui/core";
-import Search from "../../../editors/_shared/Search/Search";
+import Search from "../../../../../utils/components/Search/Search";
 import VirtualizedTree from "../VirtualizedTree/VirtualizedTree";
 
 import { listItemsTreeWithSearchStyles } from "./styles";
@@ -81,8 +81,6 @@ const ListItemsTreeWithSearch = props => {
     const filteredNodes = searchData
       .filter(
         node =>
-          (!node.name.includes("@SM") &&
-            node.name.toLowerCase().includes(valueLower)) ||
           node.children.findIndex(ch =>
             ch.name.toLowerCase().includes(valueLower)
           ) >= 0
@@ -93,7 +91,6 @@ const ListItemsTreeWithSearch = props => {
           children: (node?.children ?? []).filter(
             ch =>
               ch.name &&
-              !ch.name.includes("@SM") &&
               (node.name.toLowerCase().includes(valueLower) ||
                 ch.name.toLowerCase().includes(valueLower))
           )

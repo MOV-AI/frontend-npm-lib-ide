@@ -10,7 +10,7 @@ export const buildNewFileSubmenu = async call => {
     docTypes.forEach(docType => {
       menu.push({
         id: docType.name,
-        title: docType.scope,
+        title: docType.name || docType.scope,
         icon: getIconByScope(docType.scope),
         callback: () => {
           call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.CREATE, {

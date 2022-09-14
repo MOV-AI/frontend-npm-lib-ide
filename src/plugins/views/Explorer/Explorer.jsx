@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import { Typography } from "@material-ui/core";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
-import { PLUGINS, APP_INFORMATION } from "../../../utils/Constants";
-import movaiLogo from "../editors/_shared/Branding/movai-flow-logo-red.png";
+import { PLUGINS } from "../../../utils/Constants";
+import AppSettings from "../../../App/AppSettings";
 import ListItemsTreeWithSearch, {
   toggleExpandRow
 } from "./components/ListItemTree/ListItemsTreeWithSearch";
@@ -59,7 +59,7 @@ const Explorer = props => {
     setData(prevState => {
       const newData = [...prevState];
       // TODO: optimize time
-      const typeIndex = newData.findIndex(type => type.name === documentType);
+      const typeIndex = newData.findIndex(type => type.scope === documentType);
       if (typeIndex >= 0) {
         const documentIndex = newData[typeIndex].children.findIndex(
           doc => doc.name === documentName
@@ -84,7 +84,9 @@ const Explorer = props => {
       setData(prevState => {
         // TODO: optimize time
         const newData = [...prevState];
-        const typeIndex = newData.findIndex(type => type.name === documentType);
+        const typeIndex = newData.findIndex(
+          type => type.scope === documentType
+        );
         if (typeIndex >= 0) {
           const documentIndex = newData[typeIndex].children.findIndex(
             doc => doc.name === documentName
@@ -207,10 +209,11 @@ const Explorer = props => {
   const loadDocs = useCallback(docManager => {
     return setData(_ =>
       docManager.getStores().map((store, id) => {
-        const { name, title } = store;
+        const { name, title, model } = store;
         return {
           id,
           name,
+          scope: model.SCOPE || name,
           title,
           children: store.getDocs().map((doc, childId) => {
             return {
@@ -263,11 +266,10 @@ const Explorer = props => {
    *                                       Render                                         *
    *                                                                                      */
   //========================================================================================
-
   return (
     <>
       <h1 className={classes.header}>
-        <img src={movaiLogo} alt={APP_INFORMATION.LABEL} />
+        <img src={AppSettings.LOGO} alt={AppSettings.APP_INFORMATION.LABEL} />
       </h1>
       <Typography
         data-testid="section_explorer"

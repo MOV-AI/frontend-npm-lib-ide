@@ -19,7 +19,10 @@ export const bookmarkStyles = (side, oppositeSide) =>
       border: `solid 1px ${theme.palette.background.primary} !important`,
       [`border-${side}`]: "none !important",
       borderRadius: "0px !important",
-      background: `${theme.palette.background.secondary} !important`
+      background: `${theme.palette.background.secondary} !important`,
+      "& p": {
+        marginTop: "10px"
+      }
     },
     unselectedBookmark: {
       color: "white"

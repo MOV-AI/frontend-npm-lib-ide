@@ -7,8 +7,6 @@ import React, {
 } from "react";
 import { Tooltip } from "@material-ui/core";
 import {
-  HOMETAB_PROFILE,
-  SHORTCUTS_PROFILE,
   DEFAULT_LAYOUT,
   DOCK_POSITIONS,
   DOCK_MODES,
@@ -17,8 +15,7 @@ import {
 import { getIconByScope, buildDocPath } from "../../../../utils/Utils";
 import PluginManagerIDE from "../../../../engine/PluginManagerIDE/PluginManagerIDE";
 import Workspace from "../../../../utils/Workspace";
-import { getHomeTab } from "../../HomeTab/HomeTab";
-import { getShortcutsTab } from "../../Keybinding/Shortcuts";
+import { getToolTabData } from "../../../../tools";
 import useTabStack from "./useTabStack";
 
 const useTabLayout = (props, dockRef) => {
@@ -42,21 +39,18 @@ const useTabLayout = (props, dockRef) => {
       // Save current active tab id
       const currentActiveTabId = activeTabId.current;
 
-      // Open Home Tab
-      if (lastTabs.has(HOMETAB_PROFILE.name)) {
-        const tabData = getHomeTab();
-        tabsById.current.set(tabData.id, tabData);
-        workspaceManager.setTabs(tabsById.current);
-        dockRef.current.updateTab(HOMETAB_PROFILE.name, tabData, false);
-      }
-
-      // Open Shortcuts Tab
-      if (lastTabs.has(SHORTCUTS_PROFILE.name)) {
-        const tabData = getShortcutsTab();
-        tabsById.current.set(tabData.id, tabData);
-        workspaceManager.setTabs(tabsById.current);
-        dockRef.current.updateTab(SHORTCUTS_PROFILE.name, tabData, false);
-      }
+      // Load tools tab data
+      lastTabs.forEach(tab => {
+        const isTool = !Boolean(tab.extension);
+        if (isTool) {
+          const toolName = tab.id;
+          const tabData = getToolTabData(tab, tab.tabProps);
+          tabsById.current.set(tabData.id, tabData);
+          workspaceManager.setTabs(tabsById.current);
+          dockRef.current &&
+            dockRef.current.updateTab(toolName, tabData, false);
+        }
+      });
 
       // Set current active tab id after extra tabs update
       activeTabId.current = currentActiveTabId;
@@ -619,8 +613,17 @@ const useTabLayout = (props, dockRef) => {
     data => {
       const tabFromMemory = tabsById.current.get(data.id);
       if (!tabFromMemory && !data.content) return;
-      const { id, content, scope, name, tabTitle, extension, isDirty, isNew } =
-        tabFromMemory ?? data;
+      const {
+        id,
+        content,
+        scope,
+        name,
+        tabTitle,
+        extension,
+        isDirty,
+        isNew,
+        tabProps
+      } = tabFromMemory ?? data;
       tabsById.current.set(id, {
         id,
         scope,
@@ -629,7 +632,8 @@ const useTabLayout = (props, dockRef) => {
         content,
         extension,
         isNew,
-        isDirty
+        isDirty,
+        tabProps
       });
       const tabData = { id, scope, name, tabTitle, extension };
       return {
@@ -798,9 +802,8 @@ const useTabLayout = (props, dockRef) => {
     tabsById.current = lastTabs;
     // Install current tabs plugins
     lastTabs.forEach(tab => {
-      const { id, name, scope } = tab;
-
-      tabs.push(_getTabData({ id, name, scope }));
+      const { content, ...others } = tab;
+      tabs.push(_getTabData({ ...others, tabProps: content?.props ?? {} }));
     });
     // After all plugins are installed
     Promise.allSettled(tabs).then(_tabs => {
