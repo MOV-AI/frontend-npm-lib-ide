@@ -341,7 +341,7 @@ const ParameterEditorDialog = props => {
               })}
             </p>
           ) : (
-            getEditComponent(data.type)(
+            editComponent(
               {
                 rowData: {
                   value: options.isDefault
