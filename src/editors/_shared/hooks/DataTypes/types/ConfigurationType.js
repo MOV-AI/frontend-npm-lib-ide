@@ -1,11 +1,17 @@
 import { Rest } from "@mov-ai/mov-fe-lib-core";
+import { SCOPES } from "../../../../../utils/Constants";
+import ConfigurationSelector from "../../../ConfigurationSelector/ConfigurationSelector";
 import DataType from "../AbstractDataType";
 
 class ConfigurationType extends DataType {
   // Configuration type properties definition
   key = "config";
-  label = "Configuration";
-  editComponent = this.defaultStringEditor;
+  label = SCOPES.CONFIGURATION;
+
+  editComponent = props => {
+    const { alert, ...otherProps } = props;
+    return <ConfigurationSelector rowProps={otherProps} alert={alert} />;
+  };
 
   /**
    * Validate configuration value
