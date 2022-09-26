@@ -171,6 +171,7 @@
   "NotToLaunch": "Não enviar",
   "Ok": "Ok",
   "OnlyFromLabel": "Apenas De -> Para",
+  "OnlyGlobalConfiguration": "Apenas Configurações do workspace global são aceites até o momento.",
   "OnlyToLabel": "Apenas Para -> De",
   "OpenCallbackName": "Abrir {{callbackName}}",
   "OpenDocUrl": "Abrir {{docUrl}}",
