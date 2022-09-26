@@ -8,7 +8,11 @@ import CodeIcon from "@material-ui/icons/Code";
 
 const ConfigurationSelector = props => {
   // Props
-  const { rowProps, alert } = props;
+  const {
+    rowProps,
+    alert = window.alert,
+    formatValue = value => value
+  } = props;
   // State Hooks
   const [openModal, setOpenModal] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -19,6 +23,11 @@ const ConfigurationSelector = props => {
 
   const rowData = rowProps?.rowData;
 
+  /**
+   * Format Configuration Value on input value
+   * @param {string} configuration : Configuration Path (workspace/scope/name/version)
+   * @returns {string} Formatted value
+   */
   const formatConfigurationValue = configuration => {
     const document = Document.parsePath(configuration, SCOPES.CONFIGURATION);
     // Temporary validation if document is from archive
@@ -30,8 +39,33 @@ const ConfigurationSelector = props => {
       });
     }
     // Return formatted config name
-    return document.name;
+    return formatValue(document.name);
   };
+
+  /**
+   * On Configuration selected
+   * @param {string} selectedConfiguration
+   */
+  const onSubmit = selectedConfiguration => {
+    const formatted = formatConfigurationValue(selectedConfiguration);
+    rowProps.onChange(formatted);
+    setSelected(selectedConfiguration);
+    setOpenModal(false);
+    // Set cursor position
+    setImmediate(() => {
+      if (!inputTextRef.current) return;
+      const inputText = inputTextRef.current.querySelector("input");
+      inputText.focus();
+      const endPosition = inputText.value.length;
+      inputText.setSelectionRange(endPosition, endPosition);
+    });
+  };
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                        Render                                        *
+   *                                                                                      */
+  //========================================================================================
 
   return (
     <TextField
@@ -55,22 +89,7 @@ const ConfigurationSelector = props => {
             <SelectScopeModal
               open={openModal}
               onCancel={() => setOpenModal(false)}
-              onSubmit={selectedConfiguration => {
-                const formatted = formatConfigurationValue(
-                  selectedConfiguration
-                );
-                rowProps.onChange(formatted);
-                setSelected(selectedConfiguration);
-                setOpenModal(false);
-                // Set cursor position
-                setImmediate(() => {
-                  if (!inputTextRef.current) return;
-                  const inputText = inputTextRef.current.querySelector("input");
-                  inputText.focus();
-                  const endPosition = inputText.value.length;
-                  inputText.setSelectionRange(endPosition, endPosition);
-                });
-              }}
+              onSubmit={onSubmit}
               scopeList={[SCOPES.CONFIGURATION]}
               selected={selected}
               allowArchive={false}

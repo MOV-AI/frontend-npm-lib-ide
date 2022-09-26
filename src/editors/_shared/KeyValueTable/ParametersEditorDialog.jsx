@@ -23,6 +23,7 @@ import KeyValueEditorDialog from "../KeyValueTable/KeyValueEditorDialog";
 import useDataTypes from "../hooks/useDataTypes";
 
 import { parametersDialogStyles } from "./styles";
+import ConfigurationType from "../hooks/DataTypes/types/ConfigurationType";
 
 const VALUE_OPTIONS = {
   CUSTOM: "custom",
@@ -125,6 +126,45 @@ const ParameterEditorDialog = props => {
     [showValueOptions, valueOption]
   );
 
+  /**
+   * On change value editor (refactored to its own method to reduce cognitivity complexity)
+   * @param {*} _value
+   */
+  const onChangeValueEditor = useCallback(
+    (value, options) => {
+      if (
+        valueOption !== VALUE_OPTIONS.CUSTOM &&
+        renderValue(options.defaultValue) !== value
+      ) {
+        setValueOption(VALUE_OPTIONS.CUSTOM);
+      }
+      setData(prevState => {
+        return { ...prevState, value: value };
+      });
+    },
+    [valueOption]
+  );
+
+  /**
+   * Format Value Editor (used to format the configurations)
+   * @returns {string} Method used to format value
+   */
+  const getFormatterValueEditor = useCallback(() => {
+    return data.type === DATA_TYPES.CONFIGURATION
+      ? ConfigurationType.format2Parameter
+      : s => s;
+  }, [data]);
+
+  /**
+   * Get Validation options for each type
+   * @returns {Object} Validation options
+   */
+  const getValidationOptions = useCallback(() => {
+    return data.type === DATA_TYPES.CONFIGURATION
+      ? { isConfigFromParameter: true }
+      : {};
+  }, [data]);
+
   //========================================================================================
   /*                                                                                      *
    *                                   Component Methods                                  *
@@ -148,7 +188,7 @@ const ParameterEditorDialog = props => {
 
       if (customValidation) return customValidation(dataToValidate);
 
-      return validate(dataToValidate)
+      return validate(dataToValidate, getValidationOptions())
         .then(res => {
           if (!res.success)
             throw new Error(
@@ -348,17 +388,9 @@ const ParameterEditorDialog = props => {
                     ? renderValue(defaultValue)
                     : data.value
                 },
-                onChange: _value => {
-                  if (
-                    valueOption !== VALUE_OPTIONS.CUSTOM &&
-                    renderValue(options.defaultValue) !== _value
-                  ) {
-                    setValueOption(VALUE_OPTIONS.CUSTOM);
-                  }
-                  setData(prevState => {
-                    return { ...prevState, value: _value };
-                  });
-                },
+                alert,
+                formatValue: getFormatterValueEditor(),
+                onChange: _value => onChangeValueEditor(_value, options),
                 disabled: options.disabled || disabled,
                 isNew: options.isNew ?? isNew
               },
