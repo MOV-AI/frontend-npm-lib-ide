@@ -26,3 +26,7 @@ export const Themes = {
   dark: mockedTheme,
   light: mockedTheme
 };
+
+export const i18nHelper = {
+  createInstance: () => ({ t: () => {} })
+};

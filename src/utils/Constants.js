@@ -11,6 +11,7 @@ export const DEFAULT_VALUE = undefined;
 export const DISABLED_VALUE = "None";
 
 export const DATA_TYPES = {
+  CONFIGURATION: "config",
   BOOLEAN: "boolean",
   STRING: "string",
   NUMBER: "number",

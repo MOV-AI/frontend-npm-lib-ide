@@ -28,3 +28,22 @@ test("Convert boolean to Python string", () => {
   expect(boolToPython([])).toBe("False");
   expect(boolToPython({})).toBe("False");
 });
+
+test("Validation", () => {
+  const obj = new BooleanType({ theme: {} });
+
+  const validate = (values, expected) => {
+    values.forEach(async value => {
+      const result = await obj.validate(value);
+      expect(result.success).toBe(expected);
+    });
+  };
+
+  const jsBool = [true, false];
+  const pyBool = ["True", "False"];
+  const jsFalsy = [undefined, 0, "", null];
+
+  validate(jsBool, true);
+  validate(pyBool, true);
+  validate(jsFalsy, false);
+});

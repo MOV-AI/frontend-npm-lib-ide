@@ -17,7 +17,7 @@ const useDataTypes = () => {
    * @param {Array} excluded : Excluded keys
    * @returns {Array} List of valid data types to be displayed in the select box
    */
-  const getDataTypes = (excluded = ["config"]) => {
+  const getDataTypes = (excluded = []) => {
     return dataTypeManager
       .getTypeKeys()
       .filter(type => !excluded.includes(type));
@@ -57,12 +57,13 @@ const useDataTypes = () => {
   /**
    * Validation method of data
    * @param {{type: string, value: *}} data : Data to be validated
+   * @param {{object | undefined}} options : Validation options object
    * @returns {Promise} Async validation of data
    */
-  const validate = data => {
+  const validate = (data, options) => {
     const dataType = dataTypeManager.getType(data.type);
     if (!dataType) return Promise.resolve({ success: true, data });
-    return dataType.validate(data.value);
+    return dataType.validate(data.value, options);
   };
 
   return {

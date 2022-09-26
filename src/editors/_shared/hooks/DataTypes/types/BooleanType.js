@@ -27,8 +27,9 @@ class BooleanType extends DataType {
   validate(value) {
     return new Promise(resolve => {
       try {
-        const parsed = pythonToBool(value);
-        const isValid = typeof parsed === DATA_TYPES.BOOLEAN;
+        const isValid =
+          typeof value === DATA_TYPES.BOOLEAN ||
+          typeof pythonToBool(value) === DATA_TYPES.BOOLEAN;
 
         resolve({ success: isValid });
       } catch (e) {

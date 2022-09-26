@@ -171,6 +171,7 @@
   "NotToLaunch": "Not to launch",
   "Ok": "Ok",
   "OnlyFromLabel": "Only From -> To",
+  "OnlyGlobalConfiguration": "Please note that only configurations from 'global' workspace are accepted at the moment.",
   "OnlyToLabel": "Only To -> From",
   "OpenCallbackName": "Open {{callbackName}}",
   "OpenDocUrl": "Open {{docUrl}}",
