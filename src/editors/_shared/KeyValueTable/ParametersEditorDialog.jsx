@@ -188,6 +188,12 @@ const ParameterEditorDialog = props => {
 
       if (customValidation) return customValidation(dataToValidate);
 
+      // If value is DEFAULT_VALUE, the parameter should be removed
+      //  Therefore we can by-pass the validation in that case
+      if (dataToValidate.value === DEFAULT_VALUE)
+        return Promise.resolve({ success: true, data: dataToValidate });
+
+      // Validate data
       return validate(dataToValidate, getValidationOptions())
         .then(res => {
           if (!res.success)
