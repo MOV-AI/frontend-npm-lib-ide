@@ -92,7 +92,7 @@ const AppCE = props => {
   }, []);
 
   return (
-    <div style={{ height: "100vh" }}>
+    <div style={{ height: "100vh", margin: "-1rem" }}>
       <Style />
       <BaseApp {...props} />
     </div>

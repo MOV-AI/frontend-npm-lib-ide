@@ -48,10 +48,10 @@ const useDataTypes = () => {
    * @param {string} value : The value to validate
    * @returns {string}
    */
-  const getValidValue = async (type, value) => {
+  const getValidValue = async (type, value, options) => {
     const typeInst = dataTypeManager.getType(type);
     const res = await typeInst.validate(value);
-    return res.success ? value : typeInst.default;
+    return res.success ? value : typeInst.getDefault(options);
   };
 
   /**
