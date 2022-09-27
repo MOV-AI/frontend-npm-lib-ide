@@ -62,6 +62,15 @@ class AbstractDataType {
     });
   }
 
+  /**
+   * Get Default data type value
+   * @param {*} options
+   * @returns {any} Default value
+   */
+  getDefault(options) {
+    return this.default;
+  }
+
   //========================================================================================
   /*                                                                                      *
    *                                    Private Methods                                   *
