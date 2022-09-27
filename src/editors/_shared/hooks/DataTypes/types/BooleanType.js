@@ -8,7 +8,7 @@ class BooleanType extends DataType {
   // Boolean type properties definition
   key = DATA_TYPES.BOOLEAN;
   label = "Boolean";
-  default = boolToPython(false);
+  default = false;
 
   editComponent = (props, mode = "row") => {
     let pyValue = this.toString(props.rowData.value).toLowerCase();
@@ -36,6 +36,18 @@ class BooleanType extends DataType {
         resolve({ success: false });
       }
     });
+  }
+
+  /**
+   * @override Get boolean default value
+   * @param {*} options
+   * @returns {string | boolean}
+   *  Returns Python Boolean as string if isPythonValue is set to true
+   *  Or js boolean otherwise
+   */
+  getDefault(options = { isPythonValue: false }) {
+    const { isPythonValue } = options;
+    return isPythonValue ? boolToPython(false) : false;
   }
 
   //========================================================================================

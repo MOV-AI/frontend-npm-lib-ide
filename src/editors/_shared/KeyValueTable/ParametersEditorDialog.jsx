@@ -233,8 +233,9 @@ const ParameterEditorDialog = props => {
   const handleTypeChange = useCallback(
     evt => {
       const type = evt?.target?.value;
+      const options = { isPythonValue: true };
 
-      getValidValue(type, data.value).then(newValue => {
+      getValidValue(type, data.value, options).then(newValue => {
         setData(prevState => {
           return {
             ...prevState,
