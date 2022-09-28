@@ -6,8 +6,8 @@ import FormDialog from "./FormDialog";
 const NewDocumentDialog = props => {
   const {
     call,
-    title,
-    submitText,
+    title = "New",
+    submitText = "Submit",
     placeholder,
     scope,
     onSubmit,
@@ -40,11 +40,6 @@ NewDocumentDialog.propTypes = {
   submitText: PropTypes.string,
   placeholder: PropTypes.string,
   title: PropTypes.string
-};
-
-NewDocumentDialog.defaultProps = {
-  title: "New",
-  submitText: "Submit"
 };
 
 export default NewDocumentDialog;

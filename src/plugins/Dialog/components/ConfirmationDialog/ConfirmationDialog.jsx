@@ -20,7 +20,11 @@ const ConfirmationDialog = props => {
 
 ConfirmationDialog.propTypes = {
   title: PropTypes.string,
-  message: PropTypes.string,
+  message: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+    PropTypes.array
+  ]),
   submitText: PropTypes.string,
   onSubmit: PropTypes.func,
   onClose: PropTypes.func
