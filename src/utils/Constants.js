@@ -27,6 +27,27 @@ export const SCOPES = {
   FLOW: "Flow"
 };
 
+export const BOOKMARK_METHODS = {
+  ADD_BOOKMARK: "addBookmark",
+  SET_BOOKMARK: "setBookmark",
+  REMOVE_BOOKMARK: "removeBookmark",
+  RESET_BOOKMARKS: "resetBookmarks"
+};
+
+export const DRAWER = {
+  VIEWS: {
+    PLUGIN: "PLUGIN",
+    BOOKMARK: "BOOKMARK"
+  },
+  METHODS: {
+    OPEN: "open",
+    CLOSE: "close",
+    TOGGLE: "toggle",
+    ACTIVATE_PLUGIN_VIEW: "activatePluginView",
+    ACTIVATE_BOOKMARK_VIEW: "activateBookmarkView"
+  }
+};
+
 export const HOSTS = {
   ABSTRACT_HOST: {
     NAME: "abstractHost"
@@ -42,11 +63,7 @@ export const HOSTS = {
   },
   LEFT_DRAWER: {
     NAME: "leftDrawer",
-    CALL: {
-      OPEN: "open",
-      CLOSE: "close",
-      TOGGLE: "toggle"
-    }
+    CALL: DRAWER.METHODS
   },
   BOTTOM_BAR: {
     NAME: "bottomBar"
@@ -103,13 +120,18 @@ export const PLUGINS = {
       ACTIVE_TAB_CHANGE: "activeTabChange"
     }
   },
+  LEFT_DRAWER: {
+    NAME: "leftDrawer",
+    CALL: {
+      ...BOOKMARK_METHODS,
+      ...DRAWER.METHODS
+    }
+  },
   RIGHT_DRAWER: {
     NAME: "rightDrawer",
     CALL: {
-      ADD_BOOKMARK: "addBookmark",
-      SET_BOOKMARK: "setBookmark",
-      REMOVE_BOOKMARK: "removeBookmark",
-      RESET_BOOKMARKS: "resetBookmarks"
+      ...BOOKMARK_METHODS,
+      ...DRAWER.METHODS
     },
     ON: {
       CHANGE_BOOKMARK: "changeBookmark"

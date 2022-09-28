@@ -115,13 +115,15 @@ class Dialog extends IDEPlugin {
     const {
       title,
       submitText,
+      message,
       onSubmit,
       onClose,
       size,
       multiline,
       inputLabel,
       value,
-      onValidation
+      onValidation,
+      onPostValidation
     } = data;
     ReactDOM.render(
       <FormDialog
@@ -129,11 +131,13 @@ class Dialog extends IDEPlugin {
         size={size}
         title={title}
         multiline={multiline}
+        message={message}
         defaultValue={value}
         inputLabel={inputLabel}
         submitText={submitText}
         onSubmit={onSubmit}
         onValidation={onValidation}
+        onPostValidation={onPostValidation}
         onClose={() => this._handleDialogClose(targetElement, onClose)}
       />,
       targetElement

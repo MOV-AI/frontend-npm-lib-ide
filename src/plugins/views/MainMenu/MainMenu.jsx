@@ -39,7 +39,10 @@ const MainMenu = props => {
       isActive: true,
       getOnClick: () => {
         // Toggle left drawer
-        call(HOSTS.LEFT_DRAWER.NAME, HOSTS.LEFT_DRAWER.CALL.TOGGLE);
+        call(
+          HOSTS.LEFT_DRAWER.NAME,
+          HOSTS.LEFT_DRAWER.CALL.ACTIVATE_PLUGIN_VIEW
+        );
       }
     },
     ...getMainMenuTools().map(tool => {
