@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect, useRef } from "react";
-import { PLUGINS } from "../utils/Constants";
+import { DRAWER, PLUGINS } from "../utils/Constants";
 import { usePluginMethods } from "../engine/ReactPlugin/ViewReactPlugin";
 import BookmarkTab from "./Components/BookmarkTab";
 
@@ -53,13 +53,15 @@ const withBookmarks = Component => {
      */
     const selectBookmark = useCallback(
       name => {
-        if (active === name) {
+        const drawerView = drawerRef.current.getActiveView();
+        if (active === name && drawerView === DRAWER.VIEWS.BOOKMARK) {
           drawerRef.current.toggleDrawer();
           return;
         }
 
         drawerRef.current.openDrawer();
         setActive(name);
+        drawerRef.current.activateBookmarkView();
         emit(PLUGINS.RIGHT_DRAWER.ON.CHANGE_BOOKMARK, { name });
       },
       [active, emit]
@@ -123,7 +125,7 @@ const withBookmarks = Component => {
     const resetBookmarks = useCallback(() => {
       setBookmarks({});
       setRenderedView([]);
-      drawerRef.current.closeDrawer();
+      drawerRef.current.resetDrawer();
     }, []);
 
     /**
@@ -151,6 +153,7 @@ const withBookmarks = Component => {
       if (bookmarks[active]) {
         const view = bookmarks[active].view;
         setRenderedView(view);
+        drawerRef.current.activateBookmarkView();
       }
     }, [active, bookmarks]);
 
@@ -164,7 +167,12 @@ const withBookmarks = Component => {
       removeBookmark,
       open: () => drawerRef.current.openDrawer(),
       close: () => drawerRef.current.closeDrawer(),
-      toggle: () => drawerRef.current.toggleDrawer()
+      toggle: () => drawerRef.current.toggleDrawer(),
+      activateBookmarkView: () => drawerRef.current.activateBookmarkView(),
+      activatePluginView: () => {
+        setActive();
+        drawerRef.current.activatePluginView();
+      }
     });
 
     //========================================================================================

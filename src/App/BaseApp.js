@@ -121,7 +121,7 @@ export function installEditor(editor) {
 
 /**
  * Install app tools
- * @param {{profile: {name: string}, Plugin: IDEPlugin, tabData: object}} tool
+ * @param {{profile: {name: string}, Plugin: IDEPlugin, tabData: object, mainMenu: boolean, toolBar: boolean, quickAccess: boolean}} tool
  */
 export function installTool(tool) {
   const { Plugin, profile, id, dependencies = [] } = tool;
