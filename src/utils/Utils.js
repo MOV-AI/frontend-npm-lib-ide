@@ -239,3 +239,19 @@ export function runBeforeUnload(callback) {
     return onAppUnload(event);
   };
 }
+
+/**
+ * Add decorators to Component always forwarding ref
+ * @param {ReactComponent} Component : Component to be decorated
+ * @param {Array<decorators>} decorators : Array of decorators to be added to component
+ * @returns Fully decorated component
+ */
+export const composeDecorators = (Component, decorators) => {
+  const [withFirstDecorator, ...otherDecorators] = decorators;
+  const composed = forwardRef((props, ref) =>
+    withFirstDecorator(Component)(props, ref)
+  );
+  if (otherDecorators.length)
+    return composeDecorators(composed, otherDecorators);
+  else return composed;
+};

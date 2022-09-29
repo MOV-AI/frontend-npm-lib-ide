@@ -1,20 +1,19 @@
-import React, { useCallback, useEffect, useMemo } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
-import withAlerts from "../../decorators/withAlerts";
-import { withViewPlugin } from "../../engine/ReactPlugin/ViewReactPlugin";
-import { getNameFromURL } from "../../utils/Utils";
-import Workspace from "../../utils/Workspace";
+import { useTranslation } from "react-i18next";
 import {
+  ALERT_SEVERITIES,
   HOMETAB_PROFILE,
-  PLUGINS,
-  ALERT_SEVERITIES
+  PLUGINS
 } from "../../utils/Constants";
 import { ERROR_MESSAGES } from "../../utils/Messages";
+import { getNameFromURL } from "../../utils/Utils";
+import Workspace from "../../utils/Workspace";
+import ExamplesComponent from "./components/Examples";
 import QuickAccessComponent from "./components/QuickAccess";
 import RecentDocumentsComponent from "./components/RecentDocuments";
-import ExamplesComponent from "./components/Examples";
 
+import { withToolPlugin } from "../../engine";
 import { homeTabStyles } from "./styles";
 
 const HomeTab = props => {
@@ -53,27 +52,6 @@ const HomeTab = props => {
 
   //========================================================================================
   /*                                                                                      *
-   *                                    React Lifecycle                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  useEffect(() => {
-    call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.RESET_BOOKMARKS);
-    on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, data => {
-      if (data.id === HOMETAB_PROFILE.name) {
-        call(
-          PLUGINS.RIGHT_DRAWER.NAME,
-          PLUGINS.RIGHT_DRAWER.CALL.RESET_BOOKMARKS
-        );
-      }
-    });
-    return () => {
-      off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
-    };
-  }, [call, on, off]);
-
-  //========================================================================================
-  /*                                                                                      *
    *                                        Renders                                       *
    *                                                                                      */
   //========================================================================================
@@ -98,7 +76,7 @@ const HomeTab = props => {
   );
 };
 
-const HomeTabPlugin = withViewPlugin(withAlerts(HomeTab));
+const HomeTabPlugin = withToolPlugin(HomeTab);
 
 export default HomeTabPlugin;
 
