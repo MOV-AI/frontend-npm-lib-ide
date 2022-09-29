@@ -3,8 +3,6 @@ import { StorePluginManager } from "./plugins";
 import Subscriber from "../subscriber/Subscriber";
 import { GLOBAL_WORKSPACE } from "../utils/Constants";
 
-const UPDATE_OPTIONS = 
-
 class BaseStore extends StorePluginManager {
   constructor(args) {
     const {
@@ -170,7 +168,7 @@ class BaseStore extends StorePluginManager {
   //========================================================================================
 
   _onDelDoc(doc) {
-    this.deleteDocFromStore(doc.name)
+    this.deleteDocFromStore(doc.name);
   }
 
   _onSetDoc(doc) {
@@ -181,14 +179,13 @@ class BaseStore extends StorePluginManager {
 
   /**
    * Get updated document
-   * @param {{onDel: updateDoc => {}, onSet: updateDoc => {}}} options
    * @returns {Object} data
    */
   getUpdateDoc() {
     const docType = this.scope;
     const event2actionMap = {
-      del: this._onDelDoc,
-      set: this._onSetDoc
+      del: doc => this._onDelDoc(doc),
+      set: doc => this._onSetDoc(doc)
     };
 
     return data => {
@@ -269,9 +266,6 @@ class BaseStore extends StorePluginManager {
     super.destroy();
     if (this.subscriber) this.subscriber.destroy();
   }
-
-
-
 }
 
 export default BaseStore;
