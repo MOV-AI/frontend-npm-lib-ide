@@ -1,16 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import PropTypes from "prop-types";
-import { withViewPlugin } from "../../engine/ReactPlugin/ViewReactPlugin";
-import { PLUGINS, SHORTCUTS_PROFILE } from "../../utils/Constants";
+import { SHORTCUTS_PROFILE } from "../../utils/Constants";
 import ShortcutsList from "./components/ShortcutsList";
 import ShortcutsTable from "./components/ShortcutsTable";
 import { KEYBINDINGS } from "../../utils/shortcuts";
 
 import { shortcutsStyles } from "./styles";
+import { withToolPlugin } from "../../engine";
 
 const AppShortcuts = props => {
-  const { call, off, on } = props;
-
   // Hooks
   const shortcutsData = useRef(formatData(KEYBINDINGS));
   const [selectedScope, setSelectedScope] = useState(KEYBINDINGS.GENERAL.NAME);
@@ -51,27 +49,6 @@ const AppShortcuts = props => {
 
   //========================================================================================
   /*                                                                                      *
-   *                                    React Lifecycle                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  useEffect(() => {
-    call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.RESET_BOOKMARKS);
-    on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, data => {
-      if (data.id === SHORTCUTS_PROFILE.name) {
-        call(
-          PLUGINS.RIGHT_DRAWER.NAME,
-          PLUGINS.RIGHT_DRAWER.CALL.RESET_BOOKMARKS
-        );
-      }
-    });
-    return () => {
-      off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
-    };
-  }, [call, on, off]);
-
-  //========================================================================================
-  /*                                                                                      *
    *                                        Renders                                       *
    *                                                                                      */
   //========================================================================================
@@ -104,7 +81,7 @@ AppShortcuts.propTypes = {
   on: PropTypes.func.isRequired
 };
 
-const ShortcutsPlugin = withViewPlugin(AppShortcuts);
+const ShortcutsPlugin = withToolPlugin(AppShortcuts);
 
 export default ShortcutsPlugin;
 
