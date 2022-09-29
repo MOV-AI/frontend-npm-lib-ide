@@ -66,14 +66,39 @@ class Store extends BaseStore {
   }
 
   /**
+   * Create new document in DB
+   * @param {*} data Document data to save
+   * @returns {Promise<{success: boolean}>} Request promise
+   */
+  saveNewDoc(data) {
+    const { scope } = this;
+    const payload = {
+      type: scope,
+      name: data.Label,
+      body: data
+    };
+    return Document.create(payload);
+  }
+
+  /**
+   * Save changes in existing document in DB
+   * @param {string} name Document name
+   * @param {*} data Document data to save
+   * @returns {Promise<{success: boolean}>} Request promise
+   */
+  saveExistingDoc(name, data) {
+    const { scope } = this;
+    const document = new Document(Document.parsePath(name, scope));
+    return document.overwrite(data);
+  }
+
+  /**
    * Saves the document in the database
    * @param {string} name The name of the document to save
    * @param {string} newName The new name of the document (when renaming)
-   * @returns {Promise<{success, name}>}
+   * @returns {Promise<{success, name, model}>}
    */
   saveDoc(name, newName) {
-    const { scope } = this;
-
     // get document from store
     const doc = this.getDoc(name);
 
@@ -87,16 +112,10 @@ class Store extends BaseStore {
     // If is not a new document => update in DB
     const saveMethodByIsNew = {
       true: _data => {
-        const payload = {
-          type: scope,
-          name: _data.Label,
-          body: _data
-        };
-        return Document.create(payload);
+        return this.saveNewDoc(_data);
       },
       false: _data => {
-        const document = new Document(Document.parsePath(name, scope));
-        return document.overwrite(_data);
+        return this.saveExistingDoc(name, _data);
       }
     };
 
