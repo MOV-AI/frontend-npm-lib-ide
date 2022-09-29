@@ -1,20 +1,19 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useTheme } from "@material-ui/core/styles";
-import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { Button } from "@mov-ai/mov-fe-lib-react";
 import { PLUGINS } from "../../../utils/Constants";
 import { randomId } from "../../../utils/Utils";
+import { withToolPlugin } from "../../../engine";
 // Icons
-import AcUnitIcon from "@material-ui/icons/AcUnit";
 import AccessAlarmIcon from "@material-ui/icons/AccessAlarm";
 import AccessibilityIcon from "@material-ui/icons/Accessibility";
-import AdbIcon from "@material-ui/icons/Adb";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import AccessibleForwardIcon from "@material-ui/icons/AccessibleForward";
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import AcUnitIcon from "@material-ui/icons/AcUnit";
+import AdbIcon from "@material-ui/icons/Adb";
 import AddIcCallIcon from "@material-ui/icons/AddIcCall";
 import AirplanemodeActiveIcon from "@material-ui/icons/AirplanemodeActive";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
-import withMenuHandler from "../../../decorators/withMenuHandler";
 
 export const BOOKMARKS_PROFILE = {
   name: "BookmarkManager",
@@ -52,23 +51,7 @@ const getIcon = () => {
 
 const BookmarkManager = props => {
   const theme = useTheme();
-  const { call, on, initRightMenu, updateRightMenu } = props;
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                    React Lifecycle                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  useEffect(() => {
-    initRightMenu();
-    on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, data => {
-      if (data.id === BOOKMARKS_PROFILE.name) updateRightMenu();
-    });
-    return () => {
-      off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
-    };
-  }, []);
+  const { call } = props;
 
   /**
    * Add bookmark menu in left/right drawer
@@ -121,7 +104,7 @@ const BookmarkManager = props => {
   );
 };
 
-export default withViewPlugin(withMenuHandler(BookmarkManager));
+export default withToolPlugin(BookmarkManager);
 
 export const getTabData = () => {
   return {
