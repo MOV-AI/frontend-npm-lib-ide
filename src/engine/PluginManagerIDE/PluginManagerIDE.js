@@ -103,4 +103,14 @@ export default class PluginManagerIDE {
     if (PluginManagerIDE.getPlugin(PLUGINS.LEFT_DRAWER.NAME))
       manager.call(PLUGINS.LEFT_DRAWER.NAME, BOOKMARK_METHODS.RESET_BOOKMARKS);
   }
+
+  /**
+   * Call plugins
+   * @param  {...any} args : Call arguments
+   * @returns {Promise}
+   */
+  static call(...args) {
+    const manager = PluginManagerIDE.getInstance().manager;
+    return manager.call(...args);
+  }
 }
