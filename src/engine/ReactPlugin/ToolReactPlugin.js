@@ -6,6 +6,7 @@ import withMenuHandler from "../../decorators/withMenuHandler";
 import { PLUGINS } from "../../utils/Constants";
 import { composeDecorators } from "../../utils/Utils";
 import { ViewPlugin } from "./ViewReactPlugin";
+import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
 
 export const useStyles = makeStyles(_theme => ({
   root: {
@@ -32,30 +33,19 @@ export function withToolPlugin(ReactComponent, methods = []) {
     const toolContainer = useRef();
 
     /**
-     * Reset right/left bookmarks
-     */
-    const resetBookmarks = useCallback(() => {
-      call(
-        PLUGINS.RIGHT_DRAWER.NAME,
-        PLUGINS.RIGHT_DRAWER.CALL.RESET_BOOKMARKS
-      );
-      call(PLUGINS.LEFT_DRAWER.NAME, PLUGINS.LEFT_DRAWER.CALL.RESET_BOOKMARKS);
-    }, [call]);
-
-    /**
      * Component did mount
      */
     useEffect(() => {
-      resetBookmarks();
+      PluginManagerIDE.resetBookmarks();
       on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, data => {
         if (data.id === profile.name) {
-          resetBookmarks();
+          PluginManagerIDE.resetBookmarks();
         }
       });
       return () => {
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
       };
-    }, [on, off, profile, resetBookmarks]);
+    }, [on, off, profile]);
 
     return (
       <div

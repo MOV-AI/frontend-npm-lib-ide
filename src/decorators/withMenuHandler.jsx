@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from "react";
-import { PLUGINS } from "../utils/Constants";
+import PluginManagerIDE from "../engine/PluginManagerIDE/PluginManagerIDE";
 import { getRefComponent } from "../utils/Utils";
 
 /**
@@ -11,18 +11,12 @@ const withMenuHandler = Component => {
   const RefComponent = getRefComponent(Component);
 
   return (props, ref) => {
-    const { call } = props;
-
     /**
      * Reset right menu : clear menu and close right drawer
      */
     const resetMenus = useCallback(() => {
-      call(
-        PLUGINS.RIGHT_DRAWER.NAME,
-        PLUGINS.RIGHT_DRAWER.CALL.RESET_BOOKMARKS
-      );
-      call(PLUGINS.LEFT_DRAWER.NAME, PLUGINS.LEFT_DRAWER.CALL.RESET_BOOKMARKS);
-    }, [call]);
+      PluginManagerIDE.resetBookmarks();
+    }, []);
 
     // Update right menu Ref (should be initialized with the 'resetRightMenu' method)
     const updateRightMenuRef = useRef(resetMenus);

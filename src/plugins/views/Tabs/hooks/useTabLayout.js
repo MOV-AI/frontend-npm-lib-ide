@@ -213,6 +213,19 @@ const useTabLayout = (props, dockRef) => {
   );
 
   /**
+   * On tab click
+   * @param {Event} event : Click event
+   * @param {string} tabId : Tab ID
+   * @param {function} onCloseTab : On close tab method
+   */
+  const _onTabMouseDown = useCallback((event, tabId, onCloseTab) => {
+    // Middle button click
+    if (event.button === 1) {
+      onCloseTab(tabId);
+    }
+  }, []);
+
+  /**
    * Get tab to render
    * @param {{id: String, name: String, scope: String, extension: String}} docData : Document data
    * @param {Boolean} isDirty : Document dirty state
@@ -221,7 +234,7 @@ const useTabLayout = (props, dockRef) => {
   const _getCustomTab = useCallback((docData, onCloseTab, isDirty) => {
     return (
       <Tooltip title={docData.tabTitle || docData.id}>
-        <div onAuxClick={() => onCloseTab(docData.id)}>
+        <div onMouseDown={evt => _onTabMouseDown(evt, docData.id, onCloseTab)}>
           {getIconByScope(docData.scope, {
             fontSize: 13,
             marginTop: 2,
@@ -338,10 +351,7 @@ const useTabLayout = (props, dockRef) => {
         removeTabFromStack(tabId, dock);
         applyLayout(newLayout);
         // Reset bookmarks
-        call(
-          PLUGINS.RIGHT_DRAWER.NAME,
-          PLUGINS.RIGHT_DRAWER.CALL.RESET_BOOKMARKS
-        );
+        PluginManagerIDE.resetBookmarks();
       }
     },
     [
@@ -595,11 +605,7 @@ const useTabLayout = (props, dockRef) => {
       const { tabId, keepBookmarks } = data;
       // Close tab dynamically
       _closeTab(tabId);
-      !keepBookmarks &&
-        call(
-          PLUGINS.RIGHT_DRAWER.NAME,
-          PLUGINS.RIGHT_DRAWER.CALL.RESET_BOOKMARKS
-        );
+      !keepBookmarks && PluginManagerIDE.resetBookmarks();
     },
     [call, _closeTab]
   );
@@ -679,10 +685,7 @@ const useTabLayout = (props, dockRef) => {
         activeTabId.current = newActiveTabId;
         emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
       } else {
-        call(
-          PLUGINS.RIGHT_DRAWER.NAME,
-          PLUGINS.RIGHT_DRAWER.CALL.RESET_BOOKMARKS
-        );
+        PluginManagerIDE.resetBookmarks();
       }
     },
     [
