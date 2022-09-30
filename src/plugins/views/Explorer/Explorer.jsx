@@ -11,7 +11,7 @@ import ListItemsTreeWithSearch, {
 import { explorerStyles } from "./styles";
 
 const Explorer = props => {
-  const { call, on } = props;
+  const { call, on, off } = props;
   const classes = explorerStyles();
   const [data, setData] = useState([]);
 
@@ -259,6 +259,15 @@ const Explorer = props => {
       PLUGINS.DOC_MANAGER.ON.UPDATE_DOCS,
       updateDocs
     );
+    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.DELETE_DOC, data => {
+      deleteDocument({ documentName: data.name, documentType: data.scope });
+    });
+
+    return () => {
+      off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.LOAD_DOCS);
+      off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.UPDATE_DOCS);
+      off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.DELETE_DOC);
+    };
   }, [on, loadDocs, updateDocs]);
 
   //========================================================================================
