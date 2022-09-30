@@ -834,6 +834,7 @@ const useTabLayout = (props, dockRef) => {
     layout,
     open,
     openEditor,
+    findTab,
     close,
     loadTab,
     onLayoutChange,
