@@ -110,6 +110,7 @@ export const PLUGINS = {
     CALL: {
       OPEN: "open",
       CLOSE: "close",
+      FIND_TAB: "findTab",
       OPEN_EDITOR: "openEditor",
       UPDATE_TAB_ID: "updateTabId",
       FOCUS_ACTIVE_TAB: "focusActiveTab",

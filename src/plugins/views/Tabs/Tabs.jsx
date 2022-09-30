@@ -17,6 +17,7 @@ const Tabs = (props, ref) => {
   const {
     layout,
     open,
+    findTab,
     openEditor,
     close,
     onLayoutChange,
@@ -29,6 +30,7 @@ const Tabs = (props, ref) => {
 
   usePluginMethods(ref, {
     open,
+    findTab,
     openEditor,
     updateTabId,
     getActiveTab,

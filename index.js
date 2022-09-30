@@ -38,11 +38,13 @@ import LocalStorage from "./src/utils/LocalStorage";
 // Hooks
 import useDataTypes from "./src/editors/_shared/hooks/useDataTypes";
 import useDataSubscriber from "./src/plugins/DocManager/useDataSubscriber";
+import PluginManagerIDE from "./src/engine/PluginManagerIDE/PluginManagerIDE";
 import { usePluginMethods } from "./src/engine/ReactPlugin/ViewReactPlugin";
 import { openTool } from "./src/plugins/views/SystemBar/builder/buildFunctions";
 
 // Exports
 export { BaseApp, installEditor, installTool };
+export { PluginManagerIDE };
 export { Store, DBSubscriber };
 export { Model, Manager };
 export { withAlerts, withTheme, withKeyBinds };
