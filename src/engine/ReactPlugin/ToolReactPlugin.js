@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useRef } from "react";
+import React, { forwardRef, useEffect, useRef } from "react";
 import { makeStyles } from "@material-ui/core";
 import withAlerts from "../../decorators/withAlerts";
 import withKeyBinds from "../../decorators/withKeyBinds";
@@ -27,7 +27,7 @@ export function withToolPlugin(ReactComponent, methods = []) {
    * Component responsible to handle common editor lifecycle
    */
   const ToolComponent = forwardRef((props, ref) => {
-    const { profile, on, off, deactivateKeyBind, call } = props;
+    const { profile, on, off, deactivateKeyBind } = props;
     const classes = useStyles();
 
     const toolContainer = useRef();

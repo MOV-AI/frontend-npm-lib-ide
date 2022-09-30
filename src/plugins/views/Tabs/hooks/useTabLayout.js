@@ -251,10 +251,9 @@ const useTabLayout = (props, dockRef) => {
   /**
    * Save document and apply layout
    * @param {{name: string, scope: string}} docData
-   * @param {LayoutData} newLayout : New layout to apply (optional)
    */
   const _saveDoc = useCallback(
-    (docData, newLayout) => {
+    docData => {
       const { id, name, scope } = docData;
       call(
         PLUGINS.DOC_MANAGER.NAME,
@@ -265,9 +264,7 @@ const useTabLayout = (props, dockRef) => {
         },
         res => {
           if (res.success) {
-            const dock = getDockFromTabId(id);
-            removeTabFromStack(id, dock);
-            if (newLayout) applyLayout(newLayout);
+            close({ tabId: id });
           }
         }
       );
@@ -278,19 +275,16 @@ const useTabLayout = (props, dockRef) => {
   /**
    * Discard changes and apply layout
    * @param {{name: string, scope: string}} docData
-   * @param {LayoutData} newLayout : New layout to apply (optional)
    */
   const _discardChanges = useCallback(
-    (docData, newLayout) => {
+    docData => {
       const { id, name, scope } = docData;
       call(
         PLUGINS.DOC_MANAGER.NAME,
         PLUGINS.DOC_MANAGER.CALL.DISCARD_DOC_CHANGES,
         { name, scope }
       ).then(() => {
-        const dock = getDockFromTabId(id);
-        removeTabFromStack(id, dock);
-        if (newLayout) applyLayout(newLayout);
+        close({ tabId: id });
       });
     },
     [call, applyLayout, getDockFromTabId, removeTabFromStack]
@@ -300,10 +294,9 @@ const useTabLayout = (props, dockRef) => {
    * Open dialog before closing tab in dirty state
    * @param {string} name : Document name
    * @param {string} scope : Document scope
-   * @param {LayoutData} newLayout : New layout
    */
   const _closeDirtyTab = useCallback(
-    (document, newLayout) => {
+    document => {
       const { name, scope } = document;
 
       call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CLOSE_DIRTY_DOC, {
@@ -312,9 +305,9 @@ const useTabLayout = (props, dockRef) => {
         onSubmit: action => {
           const triggerAction = {
             // Save changes and close document
-            save: () => _saveDoc(document, newLayout),
+            save: () => _saveDoc(document),
             // Discard changes and close document
-            dontSave: () => _discardChanges(document, newLayout)
+            dontSave: () => _discardChanges(document)
           };
           return action in triggerAction ? triggerAction[action]() : false;
         }
@@ -334,7 +327,7 @@ const useTabLayout = (props, dockRef) => {
       const { name, scope, isNew, isDirty } = tabsById.current.get(tabId);
       if (isDirty && !forceClose) {
         const document = { id: tabId, name, scope, isNew };
-        _closeDirtyTab(document, newLayout);
+        _closeDirtyTab(document);
       } else {
         // Remove doc locally if is new and not dirty
         if (isNew && !isDirty)
