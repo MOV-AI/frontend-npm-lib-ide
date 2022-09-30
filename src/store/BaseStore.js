@@ -167,22 +167,25 @@ class BaseStore extends StorePluginManager {
    *                                                                                      */
   //========================================================================================
 
+  _onDelDoc(doc) {
+    this.deleteDocFromStore(doc.name);
+  }
+
+  _onSetDoc(doc) {
+    if (!this.getDoc(doc.name)) {
+      this.newDoc(doc.name);
+    }
+  }
+
   /**
    * Get updated document
    * @returns {Object} data
    */
   getUpdateDoc() {
     const docType = this.scope;
-
     const event2actionMap = {
-      del: updateDoc => {
-        this.deleteDocFromStore(updateDoc.name);
-      },
-      set: updateDoc => {
-        if (!this.getDoc(updateDoc.name)) {
-          this.newDoc(updateDoc.name);
-        }
-      }
+      del: doc => this._onDelDoc(doc),
+      set: doc => this._onSetDoc(doc)
     };
 
     return data => {
