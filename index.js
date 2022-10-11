@@ -5,7 +5,7 @@ import BaseApp, { installEditor, installTool } from "./src/App/BaseApp";
 import { Store, DBSubscriber } from "./src/store";
 import { Model, Manager } from "./src/models";
 import { withAlerts, withTheme, withKeyBinds } from "./src/decorators";
-import { withEditorPlugin, withViewPlugin } from "./src/engine";
+import { withEditorPlugin, withViewPlugin, withToolPlugin } from "./src/engine";
 // Import src/editors
 import {
   CallbackModel,
@@ -48,7 +48,7 @@ export { PluginManagerIDE };
 export { Store, DBSubscriber };
 export { Model, Manager };
 export { withAlerts, withTheme, withKeyBinds };
-export { withEditorPlugin, withViewPlugin };
+export { withEditorPlugin, withViewPlugin, withToolPlugin };
 export { CallbackModel, CallbackStore, CallbackView };
 export { ConfigurationModel, ConfigurationStore, ConfigurationView };
 export { NodeModel, NodeStore, NodeView };
