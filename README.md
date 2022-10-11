@@ -24,3 +24,13 @@ A host plugin is any class that extends [HostReactPlugin](./ReactPlugin/HostReac
 ## View plugin
 
 A view plugin is any class that extends [ViewReactPlugin](./ReactPlugin/ViewReactPlugin.js). A view plugin is able to be rendered in host plugins. A way to transform any React Component into a view plugin is to use `withPlugin: ReactComponent -> ReactComponent`.
+
+## Invalid hook
+
+When running the lib-react locally from IDE or another app, you might have an issue with invalid hooks with the following message: "Error: Invalid hook call. Hooks can only be called inside of the body of a function component".
+
+To fix it, stop the development server of IDE (or the other app), stop the buildDev of lib-react and run the following command in lib-react repository root:
+
+## Link lib
+
+`sudo npm link ../frontend-npm-ide/node_modules/react`
