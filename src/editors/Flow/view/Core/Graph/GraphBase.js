@@ -10,6 +10,7 @@ import Factory from "../../Components/Nodes/Factory";
 import { shouldUpdateExposedPorts } from "./Utils";
 import GraphValidator from "./GraphValidator";
 
+const NODE_LOAD_CHECK_TIMEOUT = 500;
 const NODE_DATA = {
   NODE: {
     LABEL: "NodeLabel",
@@ -584,7 +585,10 @@ export default class GraphBase {
     // What would happen sometimes is it was called before all nodes were loaded
     // Causing some nodes to not light up when they should.
     if (!this.allNodesLoaded)
-      return setTimeout(() => this.nodeStatusUpdated(nodes), 500);
+      return setTimeout(
+        () => this.nodeStatusUpdated(nodes),
+        NODE_LOAD_CHECK_TIMEOUT
+      );
 
     Object.keys(nodes).forEach(nodeName => {
       const status = nodes[nodeName];
