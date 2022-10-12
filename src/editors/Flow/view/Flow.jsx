@@ -685,6 +685,10 @@ const Flow = (props, ref) => {
         if (!node) {
           unselectNode();
         } else {
+          // We only want 1 selection at the time.
+          // So let's unselect links if any is selected
+          if (selectedLinkRef.current) onLinkSelected(null);
+
           selectedNodeRef.current = node;
           activeBookmark = MENUS.current.NODE.NAME;
           addNodeMenu(node, true);
@@ -710,6 +714,25 @@ const Flow = (props, ref) => {
           activeBookmark
         );
       } else {
+        const currentMode = getMainInterface().mode.mode;
+        // We only want 1 selection at the time.
+        // So let's unselect nodes if any is selected
+        if (
+          currentMode.id === EVT_NAMES.SELECT_NODE &&
+          currentMode.props.shiftKey
+        ) {
+          // If we're making multiple node selection we need to reset the mode
+          getMainInterface().setMode(EVT_NAMES.DEFAULT);
+          // Since we resetted the mode, we need to add back the selected link
+          getMainInterface().selectedLink = link;
+        } else if (selectedNodeRef.current) {
+          // If we just selected 1 node, it's ok, let's just unselect it
+          selectedNodeRef.current.selected = false;
+        }
+
+        // Remove node menu
+        unselectNode();
+
         activeBookmark = MENUS.current.LINK.NAME;
         addLinkMenu(link, true);
       }
