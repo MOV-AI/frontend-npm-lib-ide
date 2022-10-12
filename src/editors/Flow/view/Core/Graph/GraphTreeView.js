@@ -233,6 +233,11 @@ export default class GraphTreeView extends GraphBase {
 
   /**
    * @override nodeStatusUpdated: Update node running status
+   * We need to override the GraphBase nodeStatusUpdated function because
+   * if we don't we get an infinite loop of calls to BASEFLOW's nodeStatusUpdated -_-'
+   * This happens because we need to have a timeout on Base Flow, but if we swap to
+   * Tree View it will use the default value (false) for the allNodesLoaded variable and
+   * cause the Base flow to spam nodeStatusUpdated calls
    *
    * @param {Object} nodes
    * @param {*} robotStatus
@@ -240,7 +245,7 @@ export default class GraphTreeView extends GraphBase {
   nodeStatusUpdated(nodes, _) {
     Object.keys(nodes).forEach(nodeName => {
       const status = nodes[nodeName];
-      this._updateNodeStatus(nodeName, status);
+      this.updateNodeStatus(nodeName, status);
     });
   }
 
@@ -312,13 +317,14 @@ export default class GraphTreeView extends GraphBase {
   //========================================================================================
 
   /**
-   * Iterate through the nodes in tree to update its running status
+   * @private function
+   * @override updateNodeStatus: Iterate through the nodes in tree to update its running status
    *
    * @param {String} nodeName : Node instance name
    * @param {Boolean} status : True -> Running / False -> Not Running
    * @param {TreeContainerNode} parent : Flow to look for the node
    */
-  _updateNodeStatus = (nodeName, status, parent = this.rootNode) => {
+  updateNodeStatus = (nodeName, status, parent = this.rootNode) => {
     if (!parent) return;
 
     // is this a subflow node?
@@ -326,13 +332,17 @@ export default class GraphTreeView extends GraphBase {
       const nodePath = nodeName.split("__");
       const nodeParent = parent.children.find(n => n.data.name === nodePath[0]);
       const newNodeName = nodePath.splice(1).join("__");
+
+      // Let's also set the Container status to true, given that we are animating is child as well
+      if (nodeParent) nodeParent.status = [1, true, "true"].includes(status);
+
       // let's call this function again with the newNodeName (child) and the parent is the node
-      return this._updateNodeStatus(newNodeName, status, nodeParent);
+      return this.updateNodeStatus(newNodeName, status, nodeParent);
     }
 
     const node = parent.children.find(n => n.data.name === nodeName);
 
-    node.status = [1, true, "true"].includes(status);
+    if (node) node.status = [1, true, "true"].includes(status);
   };
 
   /**
