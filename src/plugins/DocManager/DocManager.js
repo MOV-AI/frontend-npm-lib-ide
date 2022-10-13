@@ -387,6 +387,8 @@ class DocManager extends IDEPlugin {
    * @param {{url: string, name: string}} data : Document data
    */
   onDocumentDeleted(store, data) {
+    // We need to delete this document from our cached docsMap
+    this.getStore(store).data.delete(data.name);
     this.emit(PLUGINS.DOC_MANAGER.ON.DELETE_DOC, { ...data, scope: store });
   }
 
