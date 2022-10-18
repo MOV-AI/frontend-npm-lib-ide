@@ -20,6 +20,13 @@ export const defaultFunction = (name, logToConsole = true) => {
 };
 
 /**
+ * Simple empty function
+ */
+export const emptyFunction = () => {
+  /* Empty on purpose*/
+};
+
+/**
  * Checks if it's a React Component or Functional Component to return it's ref
  * @param {*} Component
  * @returns {Component} RefComponent
@@ -247,6 +254,8 @@ export function runBeforeUnload(callback) {
  * @returns Fully decorated component
  */
 export const composeDecorators = (Component, decorators) => {
+  if (!decorators.length) return Component;
+
   const [withFirstDecorator, ...otherDecorators] = decorators;
   const composed = forwardRef((props, ref) =>
     withFirstDecorator(Component)(props, ref)

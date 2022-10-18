@@ -733,7 +733,6 @@ const Flow = (props, ref) => {
     onNodeSelected(null);
     onLinkSelected(null);
     // Update render of right menu
-    renderRightMenu();
     // broadcast event to other flows
     call(
       PLUGINS.DOC_MANAGER.NAME,
@@ -741,7 +740,7 @@ const Flow = (props, ref) => {
       PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR,
       { action: "setMode", value: EVT_NAMES.DEFAULT }
     );
-  }, [call, onLinkSelected, onNodeSelected, renderRightMenu]);
+  }, [call, onLinkSelected, onNodeSelected]);
 
   /**
    * Subscribe to mainInterface and canvas events
