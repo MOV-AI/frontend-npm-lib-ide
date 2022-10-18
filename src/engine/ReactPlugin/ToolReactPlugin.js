@@ -32,21 +32,6 @@ export function withToolPlugin(ReactComponent, methods = []) {
 
     const toolContainer = useRef();
 
-    /**
-     * Component did mount
-     */
-    useEffect(() => {
-      PluginManagerIDE.resetBookmarks();
-      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, data => {
-        if (data.id === profile.name) {
-          PluginManagerIDE.resetBookmarks();
-        }
-      });
-      return () => {
-        off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
-      };
-    }, [on, off, profile]);
-
     return (
       <div
         tabIndex="-1"
