@@ -19,6 +19,7 @@ const MESSAGES = {
   WARNING_MESSAGES: {},
   SUCCESS_MESSAGES: {
     SAVED_SUCCESSFULLY: "SavedSuccessfully",
+    DOC_DELETE_SUCCESSFULLY: "DocDeleteSuccessfully",
     CALLBACK_CREATED: "CallbackCreated"
   }
 };

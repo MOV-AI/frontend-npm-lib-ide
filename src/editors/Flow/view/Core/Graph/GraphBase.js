@@ -10,6 +10,7 @@ import Factory from "../../Components/Nodes/Factory";
 import { shouldUpdateExposedPorts } from "./Utils";
 import GraphValidator from "./GraphValidator";
 
+const NODE_LOAD_CHECK_TIMEOUT = 500;
 const NODE_DATA = {
   NODE: {
     LABEL: "NodeLabel",
@@ -38,6 +39,7 @@ export default class GraphBase {
 
     this.nodes = new Map(); // <node name> : {obj: <node instance>, links: []}
     this.links = new Map(); // linkId : <link instance>
+    this.allNodesLoaded = false; // If we need to do some actions AFTER we are sure all nodes have loaded
     this.exposedPorts = {};
     this.selectedNodes = [];
     this.selectedLink = null;
@@ -334,6 +336,8 @@ export default class GraphBase {
     await this.loadNodes(flow.NodeInst);
     await this.loadNodes(flow.Container, NODE_TYPES.CONTAINER, false);
 
+    this.allNodesLoaded = true;
+
     this.loadLinks(flow.Links)
       .loadExposedPorts(flow.ExposedPorts || {})
       .update();
@@ -456,7 +460,6 @@ export default class GraphBase {
         Factory.OUTPUT[nodeType],
         { canvas: this.canvas, node, events }
       );
-
       this.nodes.set(node.id, { obj: inst, links: [] });
 
       return inst;
@@ -571,14 +574,49 @@ export default class GraphBase {
     this.warningsVisibility = isVisible;
   };
 
+  /**
+   * Update node running status
+   *
+   * @param {Object} nodes
+   * @param {*} robotStatus
+   */
   nodeStatusUpdated(nodes) {
+    // Let's wait untill allNodes are loaded to recall this function again
+    // What would happen sometimes is it was called before all nodes were loaded
+    // Causing some nodes to not light up when they should.
+    if (!this.allNodesLoaded)
+      return setTimeout(
+        () => this.nodeStatusUpdated(nodes),
+        NODE_LOAD_CHECK_TIMEOUT
+      );
+
     Object.keys(nodes).forEach(nodeName => {
       const status = nodes[nodeName];
-      const node = this.nodes.get(nodeName);
-      if (node)
-        node.obj.status = [1, true, "true"].includes(status) ? true : false;
+      this.updateNodeStatus(nodeName, status);
     });
   }
+
+  /**
+   * @private function
+   * Iterate through the nodes in tree to update its running status
+   *
+   * @param {String} nodeName : Node instance name
+   * @param {Boolean} status : True -> Running / False -> Not Running
+   * @param {TreeContainerNode} parent : Flow to look for the node
+   */
+  updateNodeStatus = (nodeName, status) => {
+    // is this a subflow node?
+    if (nodeName.indexOf("__") >= 0) {
+      const nodePath = nodeName.split("__");
+      const nodeParent = this.nodes.get(nodePath[0]);
+
+      if (nodeParent)
+        nodeParent.obj.status = [1, true, "true"].includes(status);
+    }
+
+    const node = this.nodes.get(nodeName);
+    if (node) node.obj.status = [1, true, "true"].includes(status);
+  };
 
   reset() {
     // Reset all selected nodes

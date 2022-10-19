@@ -68,6 +68,7 @@
   "DisableParamType": "Disable {{paramType}}",
   "DisabledParamType": "{{paramType}} Disabled",
   "Documentation": "Documentation",
+  "DocDeleteSuccessfully": "Document '{{docName}}' deleted successfully.",
   "DontSave": "Don't Save",
   "Edit": "Edit",
   "EditCallback": "Edit Callback",
