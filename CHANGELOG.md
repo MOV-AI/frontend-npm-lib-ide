@@ -1,4 +1,4 @@
-# 1.0.0 --installs on--> 2.2.4 IDE-EE / 3.1 IDE-CE
+# 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
 ## Miscellaneous
 
@@ -8,3 +8,4 @@
   - [Implement ConfigurationSelector for Configuration Data Type](https://github.com/MOV-AI/frontend-npm-lib-ide/commit/0f063cd3c627e1f0ebd5a0d30967be9cc95931a1)
   - [Fix Configuration Type : Works with parameter syntax and default one](https://github.com/MOV-AI/frontend-npm-lib-ide/commit/4e1502c1724c6ff0d5a8cc327b61fd70f88c77cb)
 - [FP-2031 - Only 1 active selection allowed on Flow Editor](https://movai.atlassian.net/browse/FP-2031)
+- [FP-2074 - Fixed a bug that was preventing Containers from triggering the status animation](https://movai.atlassian.net/browse/FP-2074)
