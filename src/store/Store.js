@@ -1,4 +1,5 @@
 import { Document } from "@mov-ai/mov-fe-lib-core";
+import { buildDocPath } from "../utils/Utils";
 import BaseStore from "./BaseStore";
 
 class Store extends BaseStore {
@@ -124,6 +125,10 @@ class Store extends BaseStore {
         doc.setIsNew(false).setDirty(false);
         this.observer.onDocumentDirty(this.name, doc, doc.getDirty());
         res.model = doc;
+
+        // We don't need the untitled anymore, so let's kill it
+        // Without this line we were getting the prompt to save untitled
+        if (newName) this.discardDocChanges(name);
       }
       return res;
     });
@@ -171,14 +176,32 @@ class Store extends BaseStore {
    */
   discardDocChanges(name) {
     const doc = this.getDoc(name);
+
+    if (!doc) {
+      return this.observer.onDocumentDeleted(this.name, {
+        name,
+        url: buildDocPath({ scope: this.name, name })
+      });
+    }
+
     // A new document only exists in the store
     //  so discarding its changes means removing it from the store
+    //  but we also need to remove it from the cached docsMap on DocManager
     // Otherwise set isLoaded flag to false,
     //  so the next time the user tries to read it:
     //  it will load the doc from redis again
-    doc.getIsNew()
-      ? this.deleteDocFromStore(name)
-      : Boolean(doc?.setIsLoaded(false).setDirty(false));
+    if (doc.getIsNew()) {
+      doc.scope = this.name;
+
+      if (this.deleteDocFromStore(name)) {
+        this.observer.onDocumentDeleted(this.name, {
+          name,
+          url: buildDocPath(doc)
+        });
+      }
+    } else {
+      Boolean(doc?.setIsLoaded(false).setDirty(false));
+    }
 
     return this.observer.onDocumentDirty(this.name, doc, doc.getDirty());
   }
