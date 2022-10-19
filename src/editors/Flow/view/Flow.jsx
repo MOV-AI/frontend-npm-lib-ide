@@ -18,9 +18,9 @@ import {
   PLUGINS,
   ALERT_SEVERITIES
 } from "../../../utils/Constants";
-import { SUCCESS_MESSAGES } from "../../../utils/Messages";
 import Workspace from "../../../utils/Workspace";
-import { KEYBINDINGS } from "../../../tools/AppShortcuts/shortcuts";
+import { KEYBINDINGS } from "../../../utils/shortcuts";
+import { SUCCESS_MESSAGES } from "../../../utils/Messages";
 import Clipboard, { KEYS } from "./Utils/Clipboard";
 import Vec2 from "./Utils/Vec2";
 import BaseFlow from "./Views/BaseFlow";
@@ -1017,7 +1017,7 @@ const Flow = (props, ref) => {
    */
   const handleDelete = useCallback(
     ({ message, callback }) => {
-      call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, {
+      confirmationAlert({
         submitText: t("Delete"),
         title: t("ConfirmDelete"),
         onSubmit: callback,
@@ -1259,7 +1259,6 @@ const Flow = (props, ref) => {
       handleSearchEnable
     );
     addKeyBind(KEYBINDINGS.FLOW.KEYBINDS.RESET_ZOOM.SHORTCUTS, handleResetZoom);
-
     addKeyBind(
       KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.CANCEL.SHORTCUTS,
       setFlowsToDefault

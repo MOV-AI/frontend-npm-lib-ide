@@ -53,7 +53,7 @@ const AppDialog = props => {
     actions,
     onSubmit,
     onClose,
-    closeOnBackdrop,
+    closeOnBackdrop = true,
     title = t("DefaultDialogTitle"),
     submitText = t("Submit"),
     testId = "section_app-dialog"
@@ -65,11 +65,7 @@ const AppDialog = props => {
    * Handle Dialog close
    */
   const handleClose = (_, reason) => {
-    if (
-      !closeOnBackdrop &&
-      (reason === "backdropClick" || reason === "escapeKeyDown")
-    )
-      return;
+    if (!closeOnBackdrop && reason === "backdropClick") return;
     setOpen(false);
     onClose();
   };

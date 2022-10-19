@@ -330,12 +330,13 @@ const useTabLayout = (props, dockRef) => {
         _closeDirtyTab(document);
       } else {
         // Remove doc locally if is new and not dirty
-        if (isNew && !isDirty)
+        if (isNew && !isDirty) {
           call(
             PLUGINS.DOC_MANAGER.NAME,
             PLUGINS.DOC_MANAGER.CALL.DISCARD_DOC_CHANGES,
             { name, scope }
           );
+        }
 
         // Remove tab and apply new layout
         tabsById.current.delete(tabId);
@@ -343,6 +344,7 @@ const useTabLayout = (props, dockRef) => {
         const dock = getDockFromTabId(tabId);
         removeTabFromStack(tabId, dock);
         applyLayout(newLayout);
+        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: getNextTabFromStack() });
       }
     },
     [
