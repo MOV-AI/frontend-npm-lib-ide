@@ -1,5 +1,5 @@
 import { snackbar } from "@mov-ai/mov-fe-lib-react";
-import { PLUGINS } from "../../utils/Constants";
+import { ALERT_SEVERITIES, PLUGINS } from "../../utils/Constants";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
 
 class Alerts extends IDEPlugin {
@@ -15,7 +15,12 @@ class Alerts extends IDEPlugin {
    *                                                                                      */
   //========================================================================================
 
-  show({ title, message, severity, location = "snackbar" }) {
+  show({
+    title,
+    message,
+    severity = ALERT_SEVERITIES.SUCCESS,
+    location = "snackbar"
+  }) {
     const alertByLocation = {
       snackbar: () => snackbar({ message, severity }),
       modal: () =>
