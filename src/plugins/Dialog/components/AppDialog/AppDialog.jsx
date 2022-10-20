@@ -19,11 +19,16 @@ import { appDialogTitleStyles, appDialogStyles } from "./styles";
  * @returns {ReactComponent} DialogTitle Component
  */
 export const DialogTitle = props => {
-  const { children, onClose, hasCloseButton } = props;
+  const {
+    children,
+    onClose,
+    hasCloseButton,
+    testId = "section_dialog-title"
+  } = props;
   const classes = appDialogTitleStyles();
   return (
     <MuiDialogTitle
-      data-testid="section_dialog-title"
+      data-testid={testId}
       disableTypography
       className={classes.root}
     >

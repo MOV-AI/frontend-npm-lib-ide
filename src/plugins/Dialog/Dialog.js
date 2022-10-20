@@ -331,7 +331,8 @@ class Dialog extends IDEPlugin {
     hotkeys(
       KEYBINDINGS.MODAL.KEYBINDS.CANCEL.SHORTCUTS,
       KEYBIND_SCOPES.DIALOG,
-      () => {
+      e => {
+        e.stopPropagation();
         this._handleDialogClose(targetElement, onClose);
       }
     );
@@ -339,7 +340,8 @@ class Dialog extends IDEPlugin {
     hotkeys(
       KEYBINDINGS.MODAL.KEYBINDS.CONFIRM.SHORTCUTS,
       KEYBIND_SCOPES.DIALOG,
-      () => {
+      e => {
+        e.stopPropagation();
         onSubmit && onSubmit();
         this._handleDialogClose(targetElement, onClose);
       }
