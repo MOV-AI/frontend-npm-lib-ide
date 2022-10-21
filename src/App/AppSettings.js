@@ -1,4 +1,4 @@
-import { KEYBINDINGS } from "../tools/AppShortcuts/shortcuts";
+import { KEYBINDINGS } from "../utils/shortcuts";
 import Logo from "../Branding/movai-flow-logo-red.png";
 
 const APPLICATION_DATA = window.SERVER_DATA?.Application;

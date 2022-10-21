@@ -31,9 +31,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       removeKeyBind,
       save,
       activateKeyBind,
-      deactivateKeyBind,
-      initRightMenu,
-      updateRightMenu
+      deactivateKeyBind
     } = props;
 
     const editorContainer = useRef();
@@ -43,8 +41,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
      */
     const activateEditor = useCallback(() => {
       activateKeyBind();
-      updateRightMenu();
-    }, [activateKeyBind, updateRightMenu]);
+    }, [activateKeyBind]);
 
     /**
      * Triggers activateEditor if is this editor
@@ -62,7 +59,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
      * Component did mount
      */
     useEffect(() => {
-      initRightMenu();
       addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
       on(
         PLUGINS.TABS.NAME,
@@ -82,16 +78,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
         off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.UPDATE_DOC_DIRTY);
       };
-    }, [
-      id,
-      addKeyBind,
-      removeKeyBind,
-      initRightMenu,
-      on,
-      off,
-      save,
-      activateThisEditor
-    ]);
+    }, [id, addKeyBind, removeKeyBind, on, off, save, activateThisEditor]);
 
     return (
       <div
@@ -114,11 +101,11 @@ export function withEditorPlugin(ReactComponent, methods = []) {
 
   // Decorate component
   const DecoratedEditorComponent = composeDecorators(EditorComponent, [
-    withMenuHandler,
+    withAlerts,
     withLoader,
     withKeyBinds,
     withDataHandler,
-    withAlerts
+    withMenuHandler
   ]);
 
   /**

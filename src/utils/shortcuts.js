@@ -161,5 +161,24 @@ export const KEYBINDINGS = {
         SHORTCUTS: "ctrl+i"
       }
     }
+  },
+  MODAL: {
+    NAME: "dialogModal",
+    LABEL: i18n.t("DialogModalKeybindLabel"),
+    DESCRIPTION: i18n.t("DialogModalKeybindDescription"),
+    KEYBINDS: {
+      CANCEL: {
+        NAME: "cancel",
+        LABEL: i18n.t("Cancel"),
+        DESCRIPTION: i18n.t("CancelKeybindDescription"),
+        SHORTCUTS: "esc"
+      },
+      CONFIRM: {
+        NAME: "confirm",
+        LABEL: i18n.t("Confirm"),
+        DESCRIPTION: i18n.t("ConfirmKeybindDescription"),
+        SHORTCUTS: "enter"
+      }
+    }
   }
 };

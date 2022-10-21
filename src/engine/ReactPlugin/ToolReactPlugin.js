@@ -1,12 +1,10 @@
-import React, { forwardRef, useEffect, useRef } from "react";
+import React, { forwardRef, useRef } from "react";
 import { makeStyles } from "@material-ui/core";
 import withAlerts from "../../decorators/withAlerts";
 import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
-import { PLUGINS } from "../../utils/Constants";
 import { composeDecorators } from "../../utils/Utils";
 import { ViewPlugin } from "./ViewReactPlugin";
-import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
 
 export const useStyles = makeStyles(_theme => ({
   root: {
@@ -27,25 +25,11 @@ export function withToolPlugin(ReactComponent, methods = []) {
    * Component responsible to handle common editor lifecycle
    */
   const ToolComponent = forwardRef((props, ref) => {
-    const { profile, on, off, deactivateKeyBind } = props;
+    const { deactivateKeyBind } = props;
+
     const classes = useStyles();
 
     const toolContainer = useRef();
-
-    /**
-     * Component did mount
-     */
-    useEffect(() => {
-      PluginManagerIDE.resetBookmarks();
-      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, data => {
-        if (data.id === profile.name) {
-          PluginManagerIDE.resetBookmarks();
-        }
-      });
-      return () => {
-        off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
-      };
-    }, [on, off, profile]);
 
     return (
       <div
@@ -65,9 +49,9 @@ export function withToolPlugin(ReactComponent, methods = []) {
 
   // Decorate component
   const DecoratedToolComponent = composeDecorators(ToolComponent, [
-    withMenuHandler,
+    withAlerts,
     withKeyBinds,
-    withAlerts
+    withMenuHandler
   ]);
 
   /**

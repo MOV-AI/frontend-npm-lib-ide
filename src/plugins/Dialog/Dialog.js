@@ -3,8 +3,13 @@ import hotkeys from "hotkeys-js";
 import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
 import i18n from "../../i18n/i18n";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
-import { randomId } from "../../utils/Utils";
-import { PLUGINS, SAVE_OUTDATED_DOC_ACTIONS } from "../../utils/Constants";
+import { KEYBINDINGS } from "../../utils/shortcuts";
+import { parseKeybinds, randomId } from "../../utils/Utils";
+import {
+  PLUGINS,
+  KEYBIND_SCOPES,
+  SAVE_OUTDATED_DOC_ACTIONS
+} from "../../utils/Constants";
 import { withTheme } from "../../decorators/withTheme";
 import ConfirmationDialog from "./components/ConfirmationDialog/ConfirmationDialog";
 import NewDocumentDialog from "./components/FormDialog/NewDocumentDialog";
@@ -23,7 +28,7 @@ class Dialog extends IDEPlugin {
       ])
     );
     super({ ...profile, methods });
-    this.oldScope = "all";
+    this.oldScope = KEYBIND_SCOPES.APP;
   }
 
   //========================================================================================
@@ -46,6 +51,8 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
+
+    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -64,6 +71,8 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
+
+    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -84,6 +93,8 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
+
+    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -104,6 +115,8 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
+
+    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -142,6 +155,8 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
+
+    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -173,6 +188,8 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
+
+    this.addDialogKeybinds(targetElement, data);
   }
 
   saveOutdatedDocument(data) {
@@ -211,6 +228,8 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
+
+    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -245,6 +264,8 @@ class Dialog extends IDEPlugin {
       </AppDialog>,
       targetElement
     );
+
+    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -262,6 +283,8 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
+
+    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -292,6 +315,8 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
+
+    this.addDialogKeybinds(targetElement, data);
   }
 
   //========================================================================================
@@ -299,6 +324,38 @@ class Dialog extends IDEPlugin {
    *                                    Private Methods                                   *
    *                                                                                      */
   //========================================================================================
+
+  addDialogKeybinds(targetElement, { onSubmit, onClose }) {
+    hotkeys.setScope(KEYBIND_SCOPES.DIALOG);
+
+    hotkeys(
+      KEYBINDINGS.MODAL.KEYBINDS.CANCEL.SHORTCUTS,
+      KEYBIND_SCOPES.DIALOG,
+      e => {
+        e.stopPropagation();
+        this._handleDialogClose(targetElement, onClose);
+      }
+    );
+
+    hotkeys(
+      KEYBINDINGS.MODAL.KEYBINDS.CONFIRM.SHORTCUTS,
+      KEYBIND_SCOPES.DIALOG,
+      e => {
+        e.stopPropagation();
+        onSubmit && onSubmit();
+        this._handleDialogClose(targetElement, onClose);
+      }
+    );
+  }
+
+  removeDialogKeybinds() {
+    const keysToUnbind = parseKeybinds([
+      KEYBINDINGS.MODAL.KEYBINDS.CANCEL.SHORTCUTS,
+      KEYBINDINGS.MODAL.KEYBINDS.CONFIRM.SHORTCUTS
+    ]);
+    hotkeys.unbind(keysToUnbind, KEYBIND_SCOPES.DIALOG);
+    hotkeys.setScope(this.oldScope);
+  }
 
   /**
    * @private Handle dialog open : Prepare element where the dialog will be rendered
@@ -311,7 +368,7 @@ class Dialog extends IDEPlugin {
     targetElement.id = randomId();
     containerElement.appendChild(targetElement);
     this.oldScope = hotkeys.getScope();
-    hotkeys.setScope("all");
+
     return targetElement;
   }
 
@@ -323,7 +380,8 @@ class Dialog extends IDEPlugin {
     ReactDOM.unmountComponentAtNode(targetElement);
     targetElement.parentNode.removeChild(targetElement);
     this.call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_ACTIVE_TAB);
-    hotkeys.setScope(this.oldScope);
+    this.removeDialogKeybinds();
+
     onClose && onClose();
   }
 

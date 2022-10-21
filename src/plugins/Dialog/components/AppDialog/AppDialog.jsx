@@ -19,11 +19,16 @@ import { appDialogTitleStyles, appDialogStyles } from "./styles";
  * @returns {ReactComponent} DialogTitle Component
  */
 export const DialogTitle = props => {
-  const { children, onClose, hasCloseButton } = props;
+  const {
+    children,
+    onClose,
+    hasCloseButton,
+    testId = "section_dialog-title"
+  } = props;
   const classes = appDialogTitleStyles();
   return (
     <MuiDialogTitle
-      data-testid="section_dialog-title"
+      data-testid={testId}
       disableTypography
       className={classes.root}
     >
@@ -53,7 +58,7 @@ const AppDialog = props => {
     actions,
     onSubmit,
     onClose,
-    closeOnBackdrop,
+    closeOnBackdrop = true,
     title = t("DefaultDialogTitle"),
     submitText = t("Submit"),
     testId = "section_app-dialog"
@@ -65,11 +70,7 @@ const AppDialog = props => {
    * Handle Dialog close
    */
   const handleClose = (_, reason) => {
-    if (
-      !closeOnBackdrop &&
-      (reason === "backdropClick" || reason === "escapeKeyDown")
-    )
-      return;
+    if (!closeOnBackdrop && reason === "backdropClick") return;
     setOpen(false);
     onClose();
   };

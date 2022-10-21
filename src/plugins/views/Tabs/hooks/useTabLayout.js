@@ -325,17 +325,19 @@ const useTabLayout = (props, dockRef) => {
   const _onLayoutRemoveTab = useCallback(
     (newLayout, tabId, forceClose) => {
       const { name, scope, isNew, isDirty } = tabsById.current.get(tabId);
+
       if (isDirty && !forceClose) {
         const document = { id: tabId, name, scope, isNew };
         _closeDirtyTab(document);
       } else {
         // Remove doc locally if is new and not dirty
-        if (isNew && !isDirty)
+        if (isNew && !isDirty) {
           call(
             PLUGINS.DOC_MANAGER.NAME,
             PLUGINS.DOC_MANAGER.CALL.DISCARD_DOC_CHANGES,
             { name, scope }
           );
+        }
 
         // Remove tab and apply new layout
         tabsById.current.delete(tabId);
@@ -343,8 +345,7 @@ const useTabLayout = (props, dockRef) => {
         const dock = getDockFromTabId(tabId);
         removeTabFromStack(tabId, dock);
         applyLayout(newLayout);
-        // Reset bookmarks
-        PluginManagerIDE.resetBookmarks();
+        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: getNextTabFromStack() });
       }
     },
     [
@@ -595,10 +596,9 @@ const useTabLayout = (props, dockRef) => {
    */
   const close = useCallback(
     data => {
-      const { tabId, keepBookmarks } = data;
+      const { tabId } = data;
       // Close tab dynamically
       _closeTab(tabId);
-      !keepBookmarks && PluginManagerIDE.resetBookmarks();
     },
     [call, _closeTab]
   );
@@ -677,8 +677,6 @@ const useTabLayout = (props, dockRef) => {
       if (newActiveTabId) {
         activeTabId.current = newActiveTabId;
         emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
-      } else {
-        PluginManagerIDE.resetBookmarks();
       }
     },
     [

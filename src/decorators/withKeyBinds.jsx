@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import hotkeys from "hotkeys-js";
-import { getRefComponent, parseKeybinds } from "../utils/Utils";
 import { KEYBINDINGS } from "../utils/shortcuts";
+import { KEYBIND_SCOPES } from "../utils/Constants";
+import { getRefComponent, parseKeybinds } from "../utils/Utils";
 
 /**
  * By default hotkeys are not enabled for INPUT SELECT TEXTAREA elements.
@@ -42,7 +43,7 @@ const withKeyBinds = Component => {
      *  This will deactivate the current scope
      */
     const deactivateKeyBind = () => {
-      hotkeys.setScope("all");
+      hotkeys.setScope(KEYBIND_SCOPES.APP);
     };
 
     /**

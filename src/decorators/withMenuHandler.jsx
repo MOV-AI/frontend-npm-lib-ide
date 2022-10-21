@@ -1,6 +1,11 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import PluginManagerIDE from "../engine/PluginManagerIDE/PluginManagerIDE";
+import { PLUGINS } from "../utils/Constants";
 import { getRefComponent } from "../utils/Utils";
+
+const RETRY_UPDATE_MENU_TIMEOUT = 100;
+const MAXIMUM_RETRIES = 3;
+let lastActiveTabName = undefined;
 
 /**
  * Handle actions to update right menu of each editor
@@ -11,47 +16,46 @@ const withMenuHandler = Component => {
   const RefComponent = getRefComponent(Component);
 
   return (props, ref) => {
+    const { on, off, profile } = props;
+    const retryUpdateMenusCounter = useRef(0);
+
+    /**
+     * Component did mount
+     */
+    useEffect(() => {
+      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, data => {
+        if (data.id === profile.name && lastActiveTabName !== data.id) {
+          updateMenus();
+          lastActiveTabName = data.id;
+        }
+      });
+      return () => {
+        off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
+      };
+    }, [on, off, profile]);
+
     /**
      * Reset right menu : clear menu and close right drawer
      */
-    const resetMenus = useCallback(() => {
+    const updateMenus = useCallback(() => {
       PluginManagerIDE.resetBookmarks();
-    }, []);
-
-    // Update right menu Ref (should be initialized with the 'resetRightMenu' method)
-    const updateRightMenuRef = useRef(resetMenus);
-
-    /**
-     * Render components menu if any and bind events of active tab to trigger the component's renderRightMenu method
-     * @returns
-     */
-    const initRightMenu = useCallback(() => {
-      // render component menus (if any)
       const editorRef = ref?.current;
-      if (!editorRef) return;
-      const _updateRightMenu = editorRef.renderRightMenu ?? resetMenus;
-      // Render (or close) right menu details
-      _updateRightMenu();
-      updateRightMenuRef.current = _updateRightMenu;
-    }, [ref, resetMenus]);
 
-    /**
-     * Update Right menu
-     */
-    const updateRightMenu = useCallback(() => {
-      resetMenus();
-      if (!updateRightMenuRef.current) initRightMenu();
-      updateRightMenuRef.current();
-    }, [initRightMenu]);
+      if (editorRef) return editorRef.renderRightMenu();
 
-    return (
-      <RefComponent
-        {...props}
-        ref={ref}
-        initRightMenu={initRightMenu}
-        updateRightMenu={updateRightMenu}
-      />
-    );
+      // If some tool or editor doesn't have a ref, let's just
+      // Try the MAXIMUM_RETRIES, and then stop trying.
+      if (retryUpdateMenusCounter.current < MAXIMUM_RETRIES) {
+        retryUpdateMenusCounter.current++;
+        // This setTimeout is needed because on first load
+        // We might not have an editorRef yet.
+        setTimeout(() => {
+          updateMenus();
+        }, RETRY_UPDATE_MENU_TIMEOUT);
+      }
+    }, [ref]);
+
+    return <RefComponent {...props} ref={ref} updateRightMenu={updateMenus} />;
   };
 };
 

@@ -2,8 +2,10 @@ import React, { useCallback, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import { Typography } from "@material-ui/core";
+import { withAlerts } from "../../../decorators";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
-import { PLUGINS } from "../../../utils/Constants";
+import { SUCCESS_MESSAGES } from "../../../utils/Messages";
+import { PLUGINS, ALERT_SEVERITIES } from "../../../utils/Constants";
 import AppSettings from "../../../App/AppSettings";
 import ListItemsTreeWithSearch, {
   toggleExpandRow
@@ -11,7 +13,7 @@ import ListItemsTreeWithSearch, {
 import { explorerStyles } from "./styles";
 
 const Explorer = props => {
-  const { call, on, off } = props;
+  const { call, on, off, alert } = props;
   const classes = explorerStyles();
   const [data, setData] = useState([]);
 
@@ -180,10 +182,13 @@ const Explorer = props => {
             scope
           })
             .then(res => {
-              console.log("debug document deleted", res);
-              // TODO: https://movai.atlassian.net/browse/FP-2032
-              // - Trigger success alert
-              // - Delete document locally
+              console.warn("Debug document deleted", res);
+              alert({
+                message: t(SUCCESS_MESSAGES.DOC_DELETE_SUCCESSFULLY, {
+                  docName: name
+                }),
+                severity: ALERT_SEVERITIES.SUCCESS
+              });
             })
             .catch(error =>
               console.warn(
@@ -299,7 +304,7 @@ const Explorer = props => {
   );
 };
 
-export default withViewPlugin(Explorer);
+export default withViewPlugin(withAlerts(Explorer));
 
 Explorer.propTypes = {
   call: PropTypes.func.isRequired,

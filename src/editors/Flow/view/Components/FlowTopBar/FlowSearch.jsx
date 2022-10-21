@@ -99,7 +99,7 @@ const FlowSearch = props => {
   if (!visible) {
     return (
       <IconButton
-        testId="input_search-icon"
+        data-testid="input_search-icon"
         onClick={handleSearchToggle}
         size="small"
         variant="contained"
