@@ -179,7 +179,8 @@ export const PLUGINS = {
 };
 
 export const KEYBIND_SCOPES = {
-  APP: "all"
+  APP: "all",
+  DIALOG: "dialog"
 };
 
 export const TABLE_KEYS_NAMES = {

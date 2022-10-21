@@ -3,13 +3,11 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import { CircularProgress } from "@material-ui/core";
 import { withTheme } from "../../../../decorators/withTheme";
+import AppDialog from "../AppDialog/AppDialog";
 
 import { appDialogStyles } from "./styles";
 
@@ -31,6 +29,7 @@ const FormDialog = props => {
     loadingMessage,
     defaultValue,
     maxLength,
+    closeOnBackdrop,
     onValidation = DEFAULT_VALIDATION,
     inputLabel = t("Name"),
     submitText = t("Submit")
@@ -121,18 +120,6 @@ const FormDialog = props => {
   };
 
   /**
-   * Handle the onKeyPress event of Textfield
-   * @param {event} evt
-   */
-  const handleKeyPress = evt => {
-    let isEnter = evt.key === "Enter";
-    if (isEnter) {
-      evt.preventDefault();
-      handleSubmit();
-    }
-  };
-
-  /**
    * Handle the onChange event of Textfield
    * @param {event} evt
    */
@@ -157,9 +144,9 @@ const FormDialog = props => {
       .replace(/(\r\n|\n|\r)/gm, "");
     // Set new value
     const newValue = [
-      oldValue.slice(0, position),
+      oldValue?.slice(0, position),
       pastedText,
-      oldValue.slice(position)
+      oldValue?.slice(position)
     ].join("");
     // Validate pasted text
     validateValue(newValue);
@@ -168,45 +155,14 @@ const FormDialog = props => {
   };
 
   return (
-    <Dialog
+    <AppDialog
       open={open}
       onClose={handleClose}
       fullWidth={!!size}
       maxWidth={size}
-    >
-      <div data-testid="section_form-dialog">
-        <DialogTitle>
-          {loadingMessage && isLoading ? loadingMessage : title}
-        </DialogTitle>
-        <DialogContent className={classes.dialogContent}>
-          {message && <DialogContentText>{message}</DialogContentText>}
-          {isLoading ? (
-            <div className={classes.loadingContainer}>
-              <CircularProgress />
-            </div>
-          ) : (
-            <TextField
-              ref={inputRef}
-              autoFocus={true}
-              error={validation.error}
-              helperText={validation.message}
-              className={classes.textfield}
-              label={t(inputLabel)}
-              InputLabelProps={{ shrink: true }}
-              defaultValue={value}
-              placeholder={placeholder}
-              multiline={multiline}
-              onPaste={handlePaste}
-              onKeyPress={handleKeyPress}
-              onChange={handleOnChange}
-              inputProps={{
-                "data-testid": "input_value",
-                maxLength: multiline ? "" : maxLength
-              }} // limit of characters here
-              margin="normal"
-            />
-          )}
-        </DialogContent>
+      closeOnBackdrop={closeOnBackdrop}
+      title={loadingMessage && isLoading ? loadingMessage : title}
+      actions={
         <DialogActions data-testid="section_dialog-actions">
           <Button
             data-testid="input_close"
@@ -224,8 +180,37 @@ const FormDialog = props => {
             {submitText}
           </Button>
         </DialogActions>
+      }
+    >
+      <div data-testid="section_form-dialog">
+        {message && <DialogContentText>{message}</DialogContentText>}
+        {isLoading ? (
+          <div className={classes.loadingContainer}>
+            <CircularProgress />
+          </div>
+        ) : (
+          <TextField
+            ref={inputRef}
+            autoFocus={true}
+            error={validation.error}
+            helperText={validation.message}
+            className={classes.textfield}
+            label={t(inputLabel)}
+            InputLabelProps={{ shrink: true }}
+            defaultValue={value}
+            placeholder={placeholder}
+            multiline={multiline}
+            onPaste={handlePaste}
+            onChange={handleOnChange}
+            inputProps={{
+              "data-testid": "input_value",
+              maxLength: multiline ? "" : maxLength
+            }} // limit of characters here
+            margin="normal"
+          />
+        )}
       </div>
-    </Dialog>
+    </AppDialog>
   );
 };
 

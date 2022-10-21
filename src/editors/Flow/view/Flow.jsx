@@ -18,9 +18,9 @@ import {
   PLUGINS,
   ALERT_SEVERITIES
 } from "../../../utils/Constants";
-import { SUCCESS_MESSAGES } from "../../../utils/Messages";
 import Workspace from "../../../utils/Workspace";
-import { KEYBINDINGS } from "../../../tools/AppShortcuts/shortcuts";
+import { KEYBINDINGS } from "../../../utils/shortcuts";
+import { SUCCESS_MESSAGES } from "../../../utils/Messages";
 import Clipboard, { KEYS } from "./Utils/Clipboard";
 import Vec2 from "./Utils/Vec2";
 import BaseFlow from "./Views/BaseFlow";
@@ -756,7 +756,6 @@ const Flow = (props, ref) => {
     onNodeSelected(null);
     onLinkSelected(null);
     // Update render of right menu
-    renderRightMenu();
     // broadcast event to other flows
     call(
       PLUGINS.DOC_MANAGER.NAME,
@@ -764,7 +763,7 @@ const Flow = (props, ref) => {
       PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR,
       { action: "setMode", value: EVT_NAMES.DEFAULT }
     );
-  }, [call, onLinkSelected, onNodeSelected, renderRightMenu]);
+  }, [call, onLinkSelected, onNodeSelected]);
 
   /**
    * Subscribe to mainInterface and canvas events
@@ -1041,7 +1040,7 @@ const Flow = (props, ref) => {
    */
   const handleDelete = useCallback(
     ({ message, callback }) => {
-      call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, {
+      confirmationAlert({
         submitText: t("Delete"),
         title: t("ConfirmDelete"),
         onSubmit: callback,
@@ -1283,7 +1282,6 @@ const Flow = (props, ref) => {
       handleSearchEnable
     );
     addKeyBind(KEYBINDINGS.FLOW.KEYBINDS.RESET_ZOOM.SHORTCUTS, handleResetZoom);
-
     addKeyBind(
       KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.CANCEL.SHORTCUTS,
       setFlowsToDefault

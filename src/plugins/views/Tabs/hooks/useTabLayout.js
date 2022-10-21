@@ -345,8 +345,7 @@ const useTabLayout = (props, dockRef) => {
         const dock = getDockFromTabId(tabId);
         removeTabFromStack(tabId, dock);
         applyLayout(newLayout);
-        // Reset bookmarks
-        PluginManagerIDE.resetBookmarks();
+        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: getNextTabFromStack() });
       }
     },
     [
@@ -597,10 +596,9 @@ const useTabLayout = (props, dockRef) => {
    */
   const close = useCallback(
     data => {
-      const { tabId, keepBookmarks } = data;
+      const { tabId } = data;
       // Close tab dynamically
       _closeTab(tabId);
-      !keepBookmarks && PluginManagerIDE.resetBookmarks();
     },
     [call, _closeTab]
   );
@@ -679,8 +677,6 @@ const useTabLayout = (props, dockRef) => {
       if (newActiveTabId) {
         activeTabId.current = newActiveTabId;
         emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
-      } else {
-        PluginManagerIDE.resetBookmarks();
       }
     },
     [
