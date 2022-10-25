@@ -1,4 +1,4 @@
-import { randomId } from "../../../utils/Utils";
+import { CORE_UTILS } from "@mov-ai/mov-fe-lib-core";
 import { Model, Manager } from "../../../models";
 import { Parameter } from "../../../models/subModels"; // from shared subModels
 import {
@@ -150,7 +150,7 @@ class Flow extends Model {
    * @returns {Flow}
    */
   addGroup(groupName) {
-    const groupId = randomId();
+    const groupId = CORE_UTILS.randomId();
     this.groups.setItem({
       name: groupId,
       content: { id: groupId, name: groupName, enabled: true }
@@ -393,7 +393,7 @@ class Flow extends Model {
    */
   addLink(link) {
     const [from, to] = link;
-    const id = randomId();
+    const id = CORE_UTILS.randomId();
 
     this.getLinks().setItem({ name: id, content: { from, to } });
 

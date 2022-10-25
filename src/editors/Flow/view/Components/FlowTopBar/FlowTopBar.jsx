@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import { RobotManager, CORE_CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import {
   Typography,
   Tooltip,
@@ -22,13 +23,11 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
-import { RobotManager } from "@mov-ai/mov-fe-lib-core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import Workspace from "../../../../../utils/Workspace";
 import {
   SCOPES,
   PLUGINS,
-  GLOBAL_WORKSPACE,
   ALERT_SEVERITIES,
   ROBOT_BLACKLIST
 } from "../../../../../utils/Constants";
@@ -602,7 +601,7 @@ FlowTopBar.defaultProps = {
   onViewModeChange: () => defaultFunction("onViewModeChange"),
   onStartStopFlow: () => defaultFunction("onStartStopFlow"),
   nodeStatusUpdated: () => defaultFunction("nodeStatusUpdated"),
-  workspace: GLOBAL_WORKSPACE,
+  workspace: CORE_CONSTANTS.GLOBAL_WORKSPACE,
   type: SCOPES.FLOW,
   version: "__UNVERSIONED__"
 };

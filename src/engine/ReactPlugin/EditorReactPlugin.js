@@ -1,4 +1,5 @@
 import React, { forwardRef, useCallback, useEffect, useRef } from "react";
+import { CORE_UTILS } from "@mov-ai/mov-fe-lib-core";
 import withAlerts from "../../decorators/withAlerts";
 import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
@@ -6,7 +7,7 @@ import withLoader from "../../decorators/withLoader";
 import { withDataHandler } from "../../plugins/DocManager/DataHandler";
 import { KEYBINDINGS } from "../../utils/shortcuts";
 import { PLUGINS } from "../../utils/Constants";
-import { composeDecorators, getNameFromURL } from "../../utils/Utils";
+import { composeDecorators } from "../../utils/Utils";
 import { ViewPlugin } from "./ViewReactPlugin";
 
 /**
@@ -49,7 +50,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
     const activateThisEditor = useCallback(
       data => {
         const { instance } = data;
-        if (data.id === id || instance?.id === getNameFromURL(id))
+        if (data.id === id || instance?.id === CORE_UTILS.getNameFromURL(id))
           activateEditor();
       },
       [id, activateEditor]

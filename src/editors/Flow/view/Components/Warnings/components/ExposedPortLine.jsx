@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
+import { CORE_UTILS } from "@mov-ai/mov-fe-lib-core";
 import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
-import { buildDocPath } from "../../../../../../utils/Utils";
 import { PLUGINS } from "../../../../../../utils/Constants";
 
 import { parameterLineStyles } from "../styles";
@@ -54,7 +54,7 @@ const ExposedPortLine = props => {
   const handleOpenDocument = useCallback(() => {
     const name = exposedPortInfo.nodeInst.templateName;
     const scope = exposedPortInfo.nodeInst.data.model;
-    const id = buildDocPath({ name, scope });
+    const id = CORE_UTILS.buildDocPath({ name, scope });
 
     closeModal();
 

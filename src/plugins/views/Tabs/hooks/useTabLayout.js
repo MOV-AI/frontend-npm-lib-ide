@@ -5,6 +5,7 @@ import React, {
   useState,
   useRef
 } from "react";
+import { CORE_UTILS } from "@mov-ai/mov-fe-lib-core";
 import { Tooltip } from "@material-ui/core";
 import {
   DEFAULT_LAYOUT,
@@ -12,7 +13,7 @@ import {
   DOCK_MODES,
   PLUGINS
 } from "../../../../utils/Constants";
-import { getIconByScope, buildDocPath } from "../../../../utils/Utils";
+import { getIconByScope } from "../../../../utils/Utils";
 import PluginManagerIDE from "../../../../engine/PluginManagerIDE/PluginManagerIDE";
 import Workspace from "../../../../utils/Workspace";
 import { getToolTabData } from "../../../../tools";
@@ -759,7 +760,7 @@ const useTabLayout = (props, dockRef) => {
         const scope = doc.type;
         const name = data.newName;
         const newTabData = {
-          id: buildDocPath({
+          id: CORE_UTILS.buildDocPath({
             workspace: doc.workspace,
             scope,
             name

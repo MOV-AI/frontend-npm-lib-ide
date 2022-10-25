@@ -1,17 +1,19 @@
 import React, { useState, useRef } from "react";
 import PropTypes from "prop-types";
-import { SHORTCUTS_PROFILE } from "../../utils/Constants";
+import { SHORTCUTS_PROFILE, KEYBIND_SCOPES } from "../../utils/Constants";
 import ShortcutsList from "./components/ShortcutsList";
 import ShortcutsTable from "./components/ShortcutsTable";
-import { KEYBINDINGS } from "../../utils/shortcuts";
+import AppSettings from "../../App/AppSettings";
+import { withToolPlugin } from "../../engine";
 
 import { shortcutsStyles } from "./styles";
-import { withToolPlugin } from "../../engine";
 
 const AppShortcuts = props => {
   // Hooks
-  const shortcutsData = useRef(formatData(KEYBINDINGS));
-  const [selectedScope, setSelectedScope] = useState(KEYBINDINGS.GENERAL.NAME);
+  const shortcutsData = useRef(formatData(AppSettings.SHORTCUTS));
+  const [selectedScope, setSelectedScope] = useState(
+    AppSettings.SHORTCUTS.GENERAL.NAME ?? KEYBIND_SCOPES.APP
+  );
 
   // Style hook
   const classes = shortcutsStyles();
