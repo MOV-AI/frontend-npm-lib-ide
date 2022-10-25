@@ -1,5 +1,5 @@
 import React, { forwardRef, useCallback, useEffect, useRef } from "react";
-import { CORE_UTILS } from "@mov-ai/mov-fe-lib-core";
+import { Utils } from "@mov-ai/mov-fe-lib-core";
 import withAlerts from "../../decorators/withAlerts";
 import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
@@ -50,7 +50,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
     const activateThisEditor = useCallback(
       data => {
         const { instance } = data;
-        if (data.id === id || instance?.id === CORE_UTILS.getNameFromURL(id))
+        if (data.id === id || instance?.id === Utils.getNameFromURL(id))
           activateEditor();
       },
       [id, activateEditor]

@@ -44,7 +44,7 @@
     "@material-ui/lab": ">=4.0.0-alpha.60",
     "@material-ui/styles": ">=4.11.4",
     "@mov-ai/mov-fe-lib-code-editor": "^1.0.8-1",
-    "@mov-ai/mov-fe-lib-core": "^1.1.1-16",
+    "@mov-ai/mov-fe-lib-core": "^1.1.2-1",
     "@mov-ai/mov-fe-lib-react": "^1.1.1-12",
     "@remixproject/engine": "^0.3.19",
     "@remixproject/engine-web": "^0.3.19",

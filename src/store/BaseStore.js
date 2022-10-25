@@ -1,4 +1,4 @@
-import { Document, CORE_CONSTANTS } from "@mov-ai/mov-fe-lib-core";
+import { Document, CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import { StorePluginManager } from "./plugins";
 import Subscriber from "../subscriber/Subscriber";
 
@@ -18,7 +18,7 @@ class BaseStore extends StorePluginManager {
 
     super(plugins);
 
-    this._workspace = workspace || CORE_CONSTANTS.GLOBAL_WORKSPACE;
+    this._workspace = workspace || CONSTANTS.GLOBAL_WORKSPACE;
     this._plugin = plugin;
     this._model = model;
     this._scope = model.SCOPE;

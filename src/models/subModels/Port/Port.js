@@ -1,4 +1,4 @@
-import { CORE_UTILS } from "@mov-ai/mov-fe-lib-core";
+import { Utils } from "@mov-ai/mov-fe-lib-core";
 import Model from "../../Model";
 import Manager from "../../Manager";
 import schema from "./schema";
@@ -26,7 +26,7 @@ class Port extends Model {
    *                                                                                      */
   //========================================================================================
 
-  id = CORE_UTILS.randomId();
+  id = Utils.randomId();
   description = "";
   template = "";
   msgPackage = "";

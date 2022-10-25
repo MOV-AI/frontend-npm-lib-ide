@@ -1,4 +1,4 @@
-import { Document, CORE_CONSTANTS } from "@mov-ai/mov-fe-lib-core";
+import { Document, CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import i18n from "../../i18n/i18n";
 import {
   PLUGINS,
@@ -45,7 +45,7 @@ class DocManager extends IDEPlugin {
       onDocumentDeleted: (store, name) => this.onDocumentDeleted(store, name)
     };
 
-    this.docsMap = docsFactory(CORE_CONSTANTS.GLOBAL_WORKSPACE, observer, this);
+    this.docsMap = docsFactory(CONSTANTS.GLOBAL_WORKSPACE, observer, this);
   }
 
   onDocumentUpdate(doc) {

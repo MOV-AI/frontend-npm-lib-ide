@@ -1,7 +1,7 @@
 import React, { Component, createRef } from "react";
 import ReactResizeDetector from "react-resize-detector";
 import PropTypes from "prop-types";
-import { Rest, CORE_CONSTANTS, CORE_UTILS } from "@mov-ai/mov-fe-lib-core";
+import { Rest, CONSTANTS, Utils } from "@mov-ai/mov-fe-lib-core";
 import { Backdrop, CircularProgress } from "@material-ui/core";
 import { SCOPES } from "../../../../../utils/Constants";
 import { defaultFunction } from "../../../../../utils/Utils";
@@ -25,7 +25,7 @@ class Monitoring extends Component {
   warnings = createRef();
   tooltip = createRef();
 
-  containerId = `baseTree-${CORE_UTILS.randomId()}`;
+  containerId = `baseTree-${Utils.randomId()}`;
 
   //========================================================================================
   /*                                                                                      *
@@ -242,7 +242,7 @@ Monitoring.defaultProps = {
   masterComponent: { alert: window.alert, ALERTS: { error: 1 } },
   model: SCOPES.FLOW,
   readOnly: false,
-  workspace: CORE_CONSTANTS.GLOBAL_WORKSPACE,
+  workspace: CONSTANTS.GLOBAL_WORKSPACE,
   version: "__UNVERSIONED__"
 };
 

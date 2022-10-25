@@ -1,4 +1,4 @@
-import { CORE_CONSTANTS } from "@mov-ai/mov-fe-lib-core";
+import { CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import Observable from "./Observable";
 
 /**
@@ -9,7 +9,7 @@ export default class Model extends Observable {
     id,
     name,
     version = "-",
-    workspace = CORE_CONSTANTS.GLOBAL_WORKSPACE
+    workspace = CONSTANTS.GLOBAL_WORKSPACE
   }) {
     super();
     this.id = id ?? name;

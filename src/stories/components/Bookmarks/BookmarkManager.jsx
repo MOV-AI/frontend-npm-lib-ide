@@ -1,5 +1,5 @@
 import React from "react";
-import { CORE_UTILS } from "@mov-ai/mov-fe-lib-core";
+import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { Button } from "@mov-ai/mov-fe-lib-react";
 import { useTheme } from "@material-ui/core/styles";
 import { PLUGINS } from "../../../utils/Constants";
@@ -60,7 +60,7 @@ const BookmarkManager = props => {
    */
   const addBookmark = position => () => {
     if (!position) return;
-    const id = CORE_UTILS.randomId();
+    const id = Utils.randomId();
     const bookmark = {
       icon: getIcon(),
       name: id,

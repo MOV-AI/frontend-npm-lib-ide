@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { CORE_UTILS } from "@mov-ai/mov-fe-lib-core";
+import { Utils } from "@mov-ai/mov-fe-lib-core";
 import {
   ALERT_SEVERITIES,
   HOMETAB_PROFILE,
@@ -34,7 +34,7 @@ const HomeTab = props => {
    */
   const openExistingDocument = useCallback(
     doc => {
-      if (!doc.name) doc.name = CORE_UTILS.getNameFromURL(doc.id);
+      if (!doc.name) doc.name = Utils.getNameFromURL(doc.id);
 
       if (doc.isDeleted) {
         alert({

@@ -1,4 +1,4 @@
-import { CORE_UTILS, Document } from "@mov-ai/mov-fe-lib-core";
+import { Utils, Document } from "@mov-ai/mov-fe-lib-core";
 import BaseStore from "./BaseStore";
 
 class Store extends BaseStore {
@@ -179,7 +179,7 @@ class Store extends BaseStore {
     if (!doc) {
       return this.observer.onDocumentDeleted(this.name, {
         name,
-        url: CORE_UTILS.buildDocPath({ scope: this.name, name })
+        url: Utils.buildDocPath({ scope: this.name, name })
       });
     }
 
@@ -195,7 +195,7 @@ class Store extends BaseStore {
       if (this.deleteDocFromStore(name)) {
         this.observer.onDocumentDeleted(this.name, {
           name,
-          url: CORE_UTILS.buildDocPath(doc)
+          url: Utils.buildDocPath(doc)
         });
       }
     } else {

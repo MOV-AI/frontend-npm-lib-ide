@@ -5,7 +5,7 @@ import React, {
   useState,
   useRef
 } from "react";
-import { CORE_UTILS } from "@mov-ai/mov-fe-lib-core";
+import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { Tooltip } from "@material-ui/core";
 import {
   DEFAULT_LAYOUT,
@@ -760,7 +760,7 @@ const useTabLayout = (props, dockRef) => {
         const scope = doc.type;
         const name = data.newName;
         const newTabData = {
-          id: CORE_UTILS.buildDocPath({
+          id: Utils.buildDocPath({
             workspace: doc.workspace,
             scope,
             name

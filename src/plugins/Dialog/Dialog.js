@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom";
 import hotkeys from "hotkeys-js";
-import { CORE_UTILS } from "@mov-ai/mov-fe-lib-core";
+import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
 import i18n from "../../i18n/i18n";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
@@ -366,7 +366,7 @@ class Dialog extends IDEPlugin {
     document.body.classList.add(Dialog.BODY_CLASS_NAME);
     const containerElement = document.getElementById("alertPanel");
     const targetElement = document.createElement("div");
-    targetElement.id = CORE_UTILS.randomId();
+    targetElement.id = Utils.randomId();
     containerElement.appendChild(targetElement);
     this.oldScope = hotkeys.getScope();
 

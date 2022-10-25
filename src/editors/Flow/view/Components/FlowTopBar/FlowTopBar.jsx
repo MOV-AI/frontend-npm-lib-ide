@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { RobotManager, CORE_CONSTANTS } from "@mov-ai/mov-fe-lib-core";
+import { RobotManager, CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import {
   Typography,
   Tooltip,
@@ -601,7 +601,7 @@ FlowTopBar.defaultProps = {
   onViewModeChange: () => defaultFunction("onViewModeChange"),
   onStartStopFlow: () => defaultFunction("onStartStopFlow"),
   nodeStatusUpdated: () => defaultFunction("nodeStatusUpdated"),
-  workspace: CORE_CONSTANTS.GLOBAL_WORKSPACE,
+  workspace: CONSTANTS.GLOBAL_WORKSPACE,
   type: SCOPES.FLOW,
   version: "__UNVERSIONED__"
 };
