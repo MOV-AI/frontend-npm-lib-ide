@@ -5,8 +5,6 @@ export const APP_CUSTOM_CONFIG = "app-custom-ide-ce";
 
 export const MANAGER = "manager";
 
-export const GLOBAL_WORKSPACE = "global";
-
 export const DEFAULT_VALUE = undefined;
 export const DISABLED_VALUE = "None";
 

@@ -44,7 +44,7 @@ export const setName = name => {
 
 export const setShortcuts = (shortcuts, keepBase) => {
   const baseShortcuts = keepBase ? KEYBINDINGS : {};
-  AppSettings.SHORTCUTS = { ...baseShortcuts, shortcuts };
+  AppSettings.SHORTCUTS = { ...baseShortcuts, ...shortcuts };
 };
 
 export default AppSettings;
