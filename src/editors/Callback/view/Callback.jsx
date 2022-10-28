@@ -19,7 +19,7 @@ const useStyles = makeStyles(_theme => ({
   }
 }));
 
-const Callback = (props, ref) => {
+export const Callback = (props, ref) => {
   const {
     id,
     name,

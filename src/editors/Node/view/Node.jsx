@@ -31,7 +31,7 @@ import Menu from "./Menu";
 
 import { nodeStyles } from "./styles";
 
-const Node = (props, ref) => {
+export const Node = (props, ref) => {
   const { id, name, call, alert, instance, editable = true } = props;
 
   // Hooks

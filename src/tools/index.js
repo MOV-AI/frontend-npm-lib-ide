@@ -1,3 +1,4 @@
+import React from "react";
 import PluginManagerIDE from "../engine/PluginManagerIDE/PluginManagerIDE";
 import { getTabData } from "./NotInstalled/NotInstalled";
 
@@ -18,6 +19,11 @@ export const getToolTabData = (tab, props = {}) => {
   }
   if (props.tabTitle) data.name = props.tabTitle;
   if ("parent" in data) delete data.parent;
+  if (data.plugin) {
+    const mergedProps = { ...data.content.props, ...props };
+    data.content = React.cloneElement(data.content, mergedProps);
+  }
+
   return data;
 };
 

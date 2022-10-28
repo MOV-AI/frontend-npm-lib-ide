@@ -16,7 +16,7 @@ import Menu from "./Menu";
 
 import { configurationStyles } from "./styles";
 
-const Configuration = (props, ref) => {
+export const Configuration = (props, ref) => {
   const {
     id,
     name,

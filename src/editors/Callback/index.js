@@ -1,5 +1,5 @@
 import CallbackModel from "./model/Callback";
 import CallbackStore from "./store/CallbackStore";
-import CallbackView from "./view/Callback";
+import CallbackEditor, { Callback } from "./view/Callback";
 
-export { CallbackModel, CallbackStore, CallbackView };
+export { CallbackModel, CallbackStore, CallbackEditor, Callback };

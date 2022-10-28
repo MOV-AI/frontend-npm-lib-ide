@@ -1,5 +1,6 @@
 import FlowModel from "./model/Flow";
 import FlowStore from "./store/FlowStore";
-import FlowView from "./view/Flow";
+import FlowEditor, { Flow } from "./view/Flow";
+import { getBaseContextOptions } from "./view/contextOptions";
 
-export { FlowModel, FlowStore, FlowView };
+export { FlowModel, FlowStore, FlowEditor, Flow, getBaseContextOptions };
