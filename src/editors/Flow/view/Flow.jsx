@@ -15,6 +15,7 @@ import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
 import {
   FLOW_EXPLORER_PROFILE,
+  FLOW_CONTEXT_MODES,
   PLUGINS,
   ALERT_SEVERITIES
 } from "../../../utils/Constants";
@@ -30,7 +31,6 @@ import NodeMenu from "./Components/Menus/NodeMenu";
 import FlowTopBar from "./Components/FlowTopBar/FlowTopBar";
 import FlowBottomBar from "./Components/FlowBottomBar/FlowBottomBar";
 import FlowContextMenu from "./Components/Menus/ContextMenu/FlowContextMenu";
-import { MODE as FLOW_CONTEXT_MODE } from "./Components/Menus/ContextMenu";
 import ContainerMenu from "./Components/Menus/ContainerMenu";
 import Explorer from "./Components/Explorer/Explorer";
 import LinkMenu from "./Components/Menus/LinkMenu";
@@ -42,12 +42,14 @@ import { EVT_NAMES, EVT_TYPES } from "./events";
 import { FLOW_VIEW_MODE, TYPES } from "./Constants/constants";
 import GraphBase from "./Core/Graph/GraphBase";
 import GraphTreeView from "./Core/Graph/GraphTreeView";
+import { getBaseContextOptions } from "./contextOptions";
 
 import "./Resources/css/Flow.css";
 import { flowStyles } from "./styles";
+
 let activeBookmark = null;
 
-const Flow = (props, ref) => {
+export const Flow = (props, ref) => {
   // Props
   const {
     id,
@@ -62,6 +64,7 @@ const Flow = (props, ref) => {
     activateKeyBind,
     deactivateKeyBind,
     confirmationAlert,
+    contextOptions,
     on,
     off
   } = props;
@@ -95,6 +98,7 @@ const Flow = (props, ref) => {
   const [tooltipConfig, setTooltipConfig] = useState(null);
   const [contextMenuOptions, setContextMenuOptions] = useState({
     open: false,
+    options: [],
     position: { x: 0, y: 0 }
   });
   const [searchVisible, setSearchVisible] = useState(false);
@@ -835,10 +839,12 @@ const Flow = (props, ref) => {
             top: evtData.event.clientY
           };
           setContextMenuOptions({
-            args: evtData.node,
-            mode: evtData.node?.data?.type,
             anchorPosition,
-            onClose: handleContextClose
+            args: evtData.node,
+            options: getContextOptions(evtData.node?.data?.type, evtData.node, {
+              handleCopyNode,
+              handleDeleteNode
+            })
           });
         }
       );
@@ -887,10 +893,11 @@ const Flow = (props, ref) => {
             top: evtData.event.clientY
           };
           setContextMenuOptions({
-            args: evtData,
-            mode: FLOW_CONTEXT_MODE.LINK,
             anchorPosition,
-            onClose: handleContextClose
+            args: evtData,
+            options: getContextOptions(FLOW_CONTEXT_MODES.LINK, evtData, {
+              handleDeleteLink
+            })
           });
         }
       );
@@ -903,10 +910,15 @@ const Flow = (props, ref) => {
             top: evtData.event.clientY
           };
           setContextMenuOptions({
-            args: evtData.position,
-            mode: FLOW_CONTEXT_MODE.CANVAS,
             anchorPosition,
-            onClose: handleContextClose
+            args: evtData.position,
+            options: getContextOptions(
+              FLOW_CONTEXT_MODES.CANVAS,
+              evtData.position,
+              {
+                handlePasteNodes
+              }
+            )
           });
         }
       );
@@ -919,10 +931,11 @@ const Flow = (props, ref) => {
             top: evtData.event.clientY
           };
           setContextMenuOptions({
-            args: evtData.port,
-            mode: FLOW_CONTEXT_MODE.PORT,
             anchorPosition,
-            onClose: handleContextClose
+            args: evtData.port,
+            options: getContextOptions(FLOW_CONTEXT_MODES.PORT, evtData.port, {
+              handleToggleExposedPort
+            })
           });
         }
       );
@@ -1002,6 +1015,7 @@ const Flow = (props, ref) => {
         .subscribe(evtData => console.log("onLinkErrorMouseOver", evtData));
     },
     [
+      getContextOptions,
       onNodeSelected,
       onLinkSelected,
       setFlowsToDefault,
@@ -1010,7 +1024,6 @@ const Flow = (props, ref) => {
       invalidExposedPortsAlert,
       invalidContainersParamAlert,
       openDoc,
-      handleContextClose,
       call,
       t
     ]
@@ -1188,6 +1201,16 @@ const Flow = (props, ref) => {
   const handleSearchDisabled = useCallback(() => {
     setSearchVisible(false);
   }, []);
+
+  const getContextOptions = useCallback(
+    (mode, data, args) => {
+      const baseContextOptions = getBaseContextOptions(mode, args);
+      return (
+        contextOptions(baseContextOptions)?.[mode]?.(data) ?? baseContextOptions
+      );
+    },
+    [contextOptions]
+  );
 
   //========================================================================================
   /*                                                                                      *
@@ -1375,16 +1398,7 @@ const Flow = (props, ref) => {
         flowDebugging={flowDebugging}
       />
       {contextMenuOptions && isEditableComponentRef.current && (
-        <FlowContextMenu
-          onClose={handleContextClose}
-          onNodeCopy={handleCopyNode}
-          onCanvasPaste={handlePasteNodes}
-          onLinkDelete={handleDeleteLink}
-          onNodeDelete={handleDeleteNode}
-          onSubFlowDelete={handleDeleteNode}
-          onPortToggle={handleToggleExposedPort}
-          {...contextMenuOptions}
-        />
+        <FlowContextMenu onClose={handleContextClose} {...contextMenuOptions} />
       )}
       {tooltipConfig && <PortTooltip {...tooltipConfig} />}
     </div>
