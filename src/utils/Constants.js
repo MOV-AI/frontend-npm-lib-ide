@@ -1,4 +1,5 @@
 import i18n from "../i18n/i18n";
+import { TYPES } from "../editors/Flow/view/Constants/constants";
 
 export const APP_DEFAULT_CONFIG = "app-ide-ce";
 export const APP_CUSTOM_CONFIG = "app-custom-ide-ce";
@@ -261,6 +262,17 @@ export const LINK_DEPENDENCY = {
     VALUE: 3,
     COLOR: "darkseagreen"
   }
+};
+
+/**
+ * Related to Flow Context Modes
+ */
+export const FLOW_CONTEXT_MODES = {
+  NODE: TYPES.NODE,
+  SUBFLOW: TYPES.CONTAINER,
+  LINK: "Link",
+  PORT: "Port",
+  CANVAS: "Canvas"
 };
 
 //========================================================================================

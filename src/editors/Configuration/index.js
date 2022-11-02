@@ -1,5 +1,10 @@
 import ConfigurationModel from "./model/Configuration";
 import ConfigurationStore from "./store/ConfigurationStore";
-import ConfigurationView from "./view/Configuration";
+import ConfigurationEditor, { Configuration } from "./view/Configuration";
 
-export { ConfigurationModel, ConfigurationStore, ConfigurationView };
+export {
+  ConfigurationModel,
+  ConfigurationStore,
+  ConfigurationEditor,
+  Configuration
+};

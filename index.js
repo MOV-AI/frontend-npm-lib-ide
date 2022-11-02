@@ -15,15 +15,23 @@ import { withEditorPlugin, withViewPlugin, withToolPlugin } from "./src/engine";
 import {
   CallbackModel,
   CallbackStore,
-  CallbackView
+  CallbackEditor,
+  Callback
 } from "./src/editors/Callback";
 import {
   ConfigurationModel,
   ConfigurationStore,
-  ConfigurationView
+  ConfigurationEditor,
+  Configuration
 } from "./src/editors/Configuration";
-import { NodeModel, NodeStore, NodeView } from "./src/editors/Node";
-import { FlowModel, FlowStore, FlowView } from "./src/editors/Flow";
+import { NodeModel, NodeStore, NodeEditor, Node } from "./src/editors/Node";
+import {
+  FlowModel,
+  FlowStore,
+  FlowEditor,
+  Flow,
+  getBaseContextOptions
+} from "./src/editors/Flow";
 import FlowExplorer from "./src/editors/Flow/view/Components/Explorer/Explorer";
 // Tools
 import HomeTabPlugin, { getHomeTab } from "./src/tools/HomeTab/HomeTab";
@@ -54,10 +62,22 @@ export { Store, DBSubscriber };
 export { Model, Manager };
 export { withAlerts, withTheme, withKeyBinds, withMenuHandler };
 export { withEditorPlugin, withViewPlugin, withToolPlugin };
-export { CallbackModel, CallbackStore, CallbackView };
-export { ConfigurationModel, ConfigurationStore, ConfigurationView };
-export { NodeModel, NodeStore, NodeView };
-export { FlowModel, FlowStore, FlowView, reportWebVitals };
+export { CallbackModel, CallbackStore, CallbackEditor, Callback };
+export {
+  ConfigurationModel,
+  ConfigurationStore,
+  ConfigurationEditor,
+  Configuration
+};
+export { NodeModel, NodeStore, NodeEditor, Node };
+export {
+  FlowModel,
+  FlowStore,
+  FlowEditor,
+  Flow,
+  reportWebVitals,
+  getBaseContextOptions
+};
 export { CONSTANTS, ERROR_MESSAGES, SUCCESS_MESSAGES, KEYBINDINGS };
 export { Workspace, LocalStorage, Utils };
 export { HomeTabPlugin, getHomeTab };
