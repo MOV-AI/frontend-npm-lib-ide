@@ -1,10 +1,10 @@
 import React, { Component, createRef } from "react";
 import ReactResizeDetector from "react-resize-detector";
 import PropTypes from "prop-types";
-import { Rest } from "@mov-ai/mov-fe-lib-core";
+import { Rest, CONSTANTS, Utils } from "@mov-ai/mov-fe-lib-core";
 import { Backdrop, CircularProgress } from "@material-ui/core";
-import { SCOPES, GLOBAL_WORKSPACE } from "../../../../../utils/Constants";
-import { randomId, defaultFunction } from "../../../../../utils/Utils";
+import { SCOPES } from "../../../../../utils/Constants";
+import { defaultFunction } from "../../../../../utils/Utils";
 import MainInterface from "../Components/interface/MainInterface";
 import GraphTreeView from "../Core/Graph/GraphTreeView";
 import Warnings from "../Components/Warnings/Warnings";
@@ -25,7 +25,7 @@ class Monitoring extends Component {
   warnings = createRef();
   tooltip = createRef();
 
-  containerId = `baseTree-${randomId()}`;
+  containerId = `baseTree-${Utils.randomId()}`;
 
   //========================================================================================
   /*                                                                                      *
@@ -242,7 +242,7 @@ Monitoring.defaultProps = {
   masterComponent: { alert: window.alert, ALERTS: { error: 1 } },
   model: SCOPES.FLOW,
   readOnly: false,
-  workspace: GLOBAL_WORKSPACE,
+  workspace: CONSTANTS.GLOBAL_WORKSPACE,
   version: "__UNVERSIONED__"
 };
 

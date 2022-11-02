@@ -1,8 +1,8 @@
 import React from "react";
-import { useTheme } from "@material-ui/core/styles";
+import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { Button } from "@mov-ai/mov-fe-lib-react";
+import { useTheme } from "@material-ui/core/styles";
 import { PLUGINS } from "../../../utils/Constants";
-import { randomId } from "../../../utils/Utils";
 import { withToolPlugin } from "../../../engine";
 // Icons
 import AccessAlarmIcon from "@material-ui/icons/AccessAlarm";
@@ -60,7 +60,7 @@ const BookmarkManager = props => {
    */
   const addBookmark = position => () => {
     if (!position) return;
-    const id = randomId();
+    const id = Utils.randomId();
     const bookmark = {
       icon: getIcon(),
       name: id,

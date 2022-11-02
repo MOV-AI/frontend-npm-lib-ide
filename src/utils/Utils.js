@@ -8,7 +8,6 @@ import KeyboardIcon from "@material-ui/icons/Keyboard";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import movaiIcon from "../Branding/movai-logo-white.png";
 import { ERROR_MESSAGES } from "./Messages";
-import { GLOBAL_WORKSPACE } from "./Constants";
 
 /**
  * Export a non implemented empty function
@@ -17,13 +16,6 @@ import { GLOBAL_WORKSPACE } from "./Constants";
  */
 export const defaultFunction = (name, logToConsole = true) => {
   if (logToConsole) console.warn(`${name} not implemented`);
-};
-
-/**
- * Simple empty function
- */
-export const emptyFunction = () => {
-  /* Empty on purpose*/
 };
 
 /**
@@ -37,19 +29,6 @@ export const getRefComponent = Component => {
     RefComponent = forwardRef((props, ref) => Component(props, ref));
 
   return RefComponent;
-};
-
-/**
- * Generate random ID
- * @returns {String} Random ID in format : "1c76107c-146e-40bc-93fb-8148750cf50a"
- */
-export const randomId = () => {
-  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-    (
-      c ^
-      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-    ).toString(16)
-  );
 };
 
 /**
@@ -97,50 +76,6 @@ export const getIconByScope = (scope, style) => {
 };
 
 /**
- * Returns the document version from an URL
- * @param {String} url
- * @returns {String}
- */
-export function getVersionFromUrl(url) {
-  if (!url) return "";
-  const splittedUrl = url.split("/");
-  return splittedUrl[3];
-}
-
-/**
- * Returns the document name from an URL
- * @param {String} url
- * @returns {String}
- */
-export function getNameFromURL(url) {
-  if (!url) return "";
-  const splittedUrl = url.split("/");
-  return splittedUrl.length === 1 ? url : splittedUrl[2];
-}
-
-/**
- * Returns the document scope from an URL
- * @param {String} url
- * @returns {String}
- */
-export function getScopeFromURL(url) {
-  if (!url) return "";
-  const splittedUrl = url.split("/");
-  return splittedUrl[1];
-}
-
-/**
- * Returns the document workspace from an URL
- * @param {String} url
- * @returns {String}
- */
-export function getWorkspaceFromUrl(url) {
-  if (!url) return "";
-  const splittedUrl = url.split("/");
-  return splittedUrl[0];
-}
-
-/**
  * Validate document name and throw error if validation doesn't pass
  * @param {string} name : Document name
  * @returns {boolean}
@@ -151,17 +86,6 @@ export function validateDocumentName(name) {
   } else {
     return true;
   }
-}
-
-/**
- * Build a document path from a doc
- * @param {Document} doc
- * @returns
- */
-export function buildDocPath(doc) {
-  const { scope, name } = doc;
-  const workspace = doc.workspace ?? GLOBAL_WORKSPACE;
-  return `${workspace}/${scope}/${name}`;
 }
 
 const boolToPythonOptions = {

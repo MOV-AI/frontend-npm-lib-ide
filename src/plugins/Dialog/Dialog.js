@@ -1,10 +1,11 @@
 import ReactDOM from "react-dom";
 import hotkeys from "hotkeys-js";
+import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
 import i18n from "../../i18n/i18n";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
 import { KEYBINDINGS } from "../../utils/shortcuts";
-import { parseKeybinds, randomId } from "../../utils/Utils";
+import { parseKeybinds } from "../../utils/Utils";
 import {
   PLUGINS,
   KEYBIND_SCOPES,
@@ -332,6 +333,7 @@ class Dialog extends IDEPlugin {
       KEYBINDINGS.MODAL.KEYBINDS.CANCEL.SHORTCUTS,
       KEYBIND_SCOPES.DIALOG,
       e => {
+        e.preventDefault();
         e.stopPropagation();
         this._handleDialogClose(targetElement, onClose);
       }
@@ -341,6 +343,7 @@ class Dialog extends IDEPlugin {
       KEYBINDINGS.MODAL.KEYBINDS.CONFIRM.SHORTCUTS,
       KEYBIND_SCOPES.DIALOG,
       e => {
+        e.preventDefault();
         e.stopPropagation();
         onSubmit && onSubmit();
         this._handleDialogClose(targetElement, onClose);
@@ -365,7 +368,7 @@ class Dialog extends IDEPlugin {
     document.body.classList.add(Dialog.BODY_CLASS_NAME);
     const containerElement = document.getElementById("alertPanel");
     const targetElement = document.createElement("div");
-    targetElement.id = randomId();
+    targetElement.id = Utils.randomId();
     containerElement.appendChild(targetElement);
     this.oldScope = hotkeys.getScope();
 
