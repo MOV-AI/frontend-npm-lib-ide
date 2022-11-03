@@ -1,36 +1,35 @@
-import React, { useEffect } from "react";
 import { Style, withDefaults } from "@mov-ai/mov-fe-lib-react";
+import React, { useEffect } from "react";
 // Base App
 import BaseApp, { installEditor, installTool } from "../App/BaseApp";
 // Editors
 import {
-  ConfigurationModel,
-  ConfigurationStore,
-  ConfigurationView
-} from "../editors/Configuration";
-import {
-  CallbackModel,
-  CallbackStore,
-  CallbackView
+  CallbackEditor, CallbackModel,
+  CallbackStore
 } from "../editors/Callback";
-import { NodeModel, NodeStore, NodeView } from "../editors/Node";
-import { FlowModel, FlowStore, FlowView } from "../editors/Flow";
+import {
+  ConfigurationEditor,
+  ConfigurationModel,
+  ConfigurationStore
+} from "../editors/Configuration";
+import { FlowEditor, FlowModel, FlowStore } from "../editors/Flow";
 import FlowExplorer from "../editors/Flow/view/Components/Explorer/Explorer";
+import { NodeEditor, NodeModel, NodeStore } from "../editors/Node";
 // Tools
-import HomeTabPlugin, { getHomeTab } from "../tools/HomeTab/HomeTab";
 import ShortcutsPlugin, {
   getShortcutsTab
 } from "../tools/AppShortcuts/AppShortcuts";
+import HomeTabPlugin, { getHomeTab } from "../tools/HomeTab/HomeTab";
 // Utils
-import * as CONSTANTS from "../utils/Constants";
 import i18n from "../i18n/i18n";
 import { ApplicationTheme } from "../themes";
+import * as CONSTANTS from "../utils/Constants";
 // Externals
-import { I18nextProvider } from "react-i18next";
 import { ThemeProvider } from "@material-ui/core/styles";
+import { I18nextProvider } from "react-i18next";
 // Icons
-import KeyboardIcon from "@material-ui/icons/Keyboard";
 import HomeIcon from "@material-ui/icons/Home";
+import KeyboardIcon from "@material-ui/icons/Keyboard";
 
 const AppCE = props => {
   //========================================================================================
@@ -45,7 +44,7 @@ const AppCE = props => {
     installEditor({
       scope: FlowModel.SCOPE,
       store: FlowStore,
-      editorPlugin: FlowView,
+      editorPlugin: FlowEditor,
       otherPlugins: [
         {
           profile: CONSTANTS.FLOW_EXPLORER_PROFILE,
@@ -56,17 +55,17 @@ const AppCE = props => {
     installEditor({
       scope: NodeModel.SCOPE,
       store: NodeStore,
-      editorPlugin: NodeView
+      editorPlugin: NodeEditor
     });
     installEditor({
       scope: CallbackModel.SCOPE,
       store: CallbackStore,
-      editorPlugin: CallbackView
+      editorPlugin: CallbackEditor
     });
     installEditor({
       scope: ConfigurationModel.SCOPE,
       store: ConfigurationStore,
-      editorPlugin: ConfigurationView
+      editorPlugin: ConfigurationEditor
     });
     // Install tools
     installTool({

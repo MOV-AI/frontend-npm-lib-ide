@@ -62,12 +62,12 @@ const useTabStack = workspaceManager => {
     },
     [workspaceManager, removeTabFromStack]
   );
-
+  
   /**
    * Get next tab from stack
    */
   const getNextTabFromStack = useCallback((dock = DOCK_POSITIONS.DOCK) => {
-    const thisStack = tabStack.current[dock] || [];
+    let thisStack = tabStack.current[dock] || [];
     return thisStack[thisStack.length - 1]?.id;
   }, []);
 
