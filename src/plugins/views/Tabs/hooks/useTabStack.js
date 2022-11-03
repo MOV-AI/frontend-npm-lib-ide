@@ -62,20 +62,12 @@ const useTabStack = workspaceManager => {
     },
     [workspaceManager, removeTabFromStack]
   );
-
-  /**
-   * TODO
-   */
-  const _findTabInOtherDocks = useCallback(() => {
-    // TODO: Don't return empty if there is something on other docks
-    return [];
-  }, []);
-
+  
   /**
    * Get next tab from stack
    */
   const getNextTabFromStack = useCallback((dock = DOCK_POSITIONS.DOCK) => {
-    const thisStack = tabStack.current[dock] || _findTabInOtherDocks() || [];
+    let thisStack = tabStack.current[dock] || [];
     return thisStack[thisStack.length - 1]?.id;
   }, []);
 
