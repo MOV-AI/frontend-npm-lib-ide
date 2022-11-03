@@ -157,9 +157,10 @@ const FormDialog = props => {
   return (
     <AppDialog
       open={open}
-      onClose={handleClose}
-      fullWidth={!!size}
       maxWidth={size}
+      fullWidth={!!size}
+      onClose={handleClose}
+      onSubmit={handleSubmit}
       closeOnBackdrop={closeOnBackdrop}
       title={loadingMessage && isLoading ? loadingMessage : title}
       actions={

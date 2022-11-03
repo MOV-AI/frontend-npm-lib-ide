@@ -1,23 +1,18 @@
-import ReactDOM from "react-dom";
-import hotkeys from "hotkeys-js";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
-import i18n from "../../i18n/i18n";
-import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
-import { KEYBINDINGS } from "../../utils/shortcuts";
-import { parseKeybinds } from "../../utils/Utils";
-import {
-  PLUGINS,
-  KEYBIND_SCOPES,
-  SAVE_OUTDATED_DOC_ACTIONS
-} from "../../utils/Constants";
+import ReactDOM from "react-dom";
 import { withTheme } from "../../decorators/withTheme";
-import ConfirmationDialog from "./components/ConfirmationDialog/ConfirmationDialog";
-import NewDocumentDialog from "./components/FormDialog/NewDocumentDialog";
-import FormDialog from "./components/FormDialog/FormDialog";
-import AlertDialog from "./components/AlertDialog/AlertDialog";
+import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
+import i18n from "../../i18n/i18n";
+import {
+  PLUGINS, SAVE_OUTDATED_DOC_ACTIONS
+} from "../../utils/Constants";
 import AlertBeforeAction from "./components/AlertDialog/AlertBeforeAction";
+import AlertDialog from "./components/AlertDialog/AlertDialog";
 import AppDialog from "./components/AppDialog/AppDialog";
+import ConfirmationDialog from "./components/ConfirmationDialog/ConfirmationDialog";
+import FormDialog from "./components/FormDialog/FormDialog";
+import NewDocumentDialog from "./components/FormDialog/NewDocumentDialog";
 
 class Dialog extends IDEPlugin {
   constructor(profile = {}) {
@@ -29,7 +24,6 @@ class Dialog extends IDEPlugin {
       ])
     );
     super({ ...profile, methods });
-    this.oldScope = KEYBIND_SCOPES.APP;
   }
 
   //========================================================================================
@@ -53,7 +47,6 @@ class Dialog extends IDEPlugin {
       targetElement
     );
 
-    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -73,7 +66,6 @@ class Dialog extends IDEPlugin {
       targetElement
     );
 
-    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -95,7 +87,6 @@ class Dialog extends IDEPlugin {
       targetElement
     );
 
-    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -117,7 +108,6 @@ class Dialog extends IDEPlugin {
       targetElement
     );
 
-    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -156,8 +146,6 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
-
-    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -189,8 +177,6 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
-
-    this.addDialogKeybinds(targetElement, data);
   }
 
   saveOutdatedDocument(data) {
@@ -229,8 +215,6 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
-
-    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -265,8 +249,6 @@ class Dialog extends IDEPlugin {
       </AppDialog>,
       targetElement
     );
-
-    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -284,8 +266,6 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
-
-    this.addDialogKeybinds(targetElement, data);
   }
 
   /**
@@ -316,8 +296,6 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
-
-    this.addDialogKeybinds(targetElement, data);
   }
 
   //========================================================================================
@@ -326,39 +304,7 @@ class Dialog extends IDEPlugin {
    *                                                                                      */
   //========================================================================================
 
-  addDialogKeybinds(targetElement, { onSubmit, onClose }) {
-    hotkeys.setScope(KEYBIND_SCOPES.DIALOG);
 
-    hotkeys(
-      KEYBINDINGS.MODAL.KEYBINDS.CANCEL.SHORTCUTS,
-      KEYBIND_SCOPES.DIALOG,
-      e => {
-        e.preventDefault();
-        e.stopPropagation();
-        this._handleDialogClose(targetElement, onClose);
-      }
-    );
-
-    hotkeys(
-      KEYBINDINGS.MODAL.KEYBINDS.CONFIRM.SHORTCUTS,
-      KEYBIND_SCOPES.DIALOG,
-      e => {
-        e.preventDefault();
-        e.stopPropagation();
-        onSubmit && onSubmit();
-        this._handleDialogClose(targetElement, onClose);
-      }
-    );
-  }
-
-  removeDialogKeybinds() {
-    const keysToUnbind = parseKeybinds([
-      KEYBINDINGS.MODAL.KEYBINDS.CANCEL.SHORTCUTS,
-      KEYBINDINGS.MODAL.KEYBINDS.CONFIRM.SHORTCUTS
-    ]);
-    hotkeys.unbind(keysToUnbind, KEYBIND_SCOPES.DIALOG);
-    hotkeys.setScope(this.oldScope);
-  }
 
   /**
    * @private Handle dialog open : Prepare element where the dialog will be rendered
@@ -370,7 +316,6 @@ class Dialog extends IDEPlugin {
     const targetElement = document.createElement("div");
     targetElement.id = Utils.randomId();
     containerElement.appendChild(targetElement);
-    this.oldScope = hotkeys.getScope();
 
     return targetElement;
   }
@@ -383,7 +328,6 @@ class Dialog extends IDEPlugin {
     ReactDOM.unmountComponentAtNode(targetElement);
     targetElement.parentNode.removeChild(targetElement);
     this.call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_ACTIVE_TAB);
-    this.removeDialogKeybinds();
 
     onClose && onClose();
   }

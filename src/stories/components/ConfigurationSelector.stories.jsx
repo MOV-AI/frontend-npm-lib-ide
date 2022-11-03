@@ -47,7 +47,6 @@ const Template = args => {
         snackbar({ message, severity });
       })
       .catch(err => {
-        console.log("debug validation err", err);
         snackbar({ message: "Failed to validate", severity: "error" });
       });
   };
