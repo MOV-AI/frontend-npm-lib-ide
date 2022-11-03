@@ -35,7 +35,7 @@ const withMenuHandler = Component => {
     }, [on, off, profile]);
 
     /**
-     * Reset right menu : clear menu and close right drawer
+     * Reset menus : clear menus and close right drawer
      */
     const updateMenus = useCallback(() => {
       PluginManagerIDE.resetBookmarks();

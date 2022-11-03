@@ -393,7 +393,7 @@ export default class GraphBase {
         await this.addNode({ id: nodeId, ...data }, nodeType);
         this.update();
       } catch (error) {
-        console.log("debug failed to add node", error);
+        console.error("Failed to add node", error);
       }
     }
   };

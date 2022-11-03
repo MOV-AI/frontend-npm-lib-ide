@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { IconButton, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-import { IconButton, Typography } from "@material-ui/core";
-import { defaultFunction } from "../../../../utils/Utils";
+import PropTypes from "prop-types";
+import React, { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { withTheme } from "../../../../decorators/withTheme";
+import { defaultFunction } from "../../../../utils/Utils";
 
-import { appDialogTitleStyles, appDialogStyles } from "./styles";
+import { appDialogStyles, appDialogTitleStyles } from "./styles";
 
 /**
  * Custom Dialog Title : Render close icon button
@@ -69,18 +69,27 @@ const AppDialog = props => {
   /**
    * Handle Dialog close
    */
-  const handleClose = (_, reason) => {
-    if (!closeOnBackdrop && reason === "backdropClick") return;
-    setOpen(false);
-    onClose();
-  };
+  const handleClose = useCallback(
+    (_, reason) => {
+      if (!closeOnBackdrop && reason === "backdropClick") return;
+      setOpen(false);
+      onClose();
+    },
+    [setOpen, onClose]
+  );
 
   /**
    * Handle Dialog Submit and close
    */
   const handleSubmit = () => {
-    onSubmit();
+    onSubmit && onSubmit();
     handleClose();
+  };
+
+  const handleKeyUp = event => {
+    if (event.key === "Enter") {
+      handleSubmit();
+    }
   };
 
   const getDefaultActions = () => {
@@ -103,7 +112,7 @@ const AppDialog = props => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} onKeyUp={handleKeyUp}>
       <div data-testid={testId}>
         <DialogTitle onClose={handleClose} {...props}>
           {title}

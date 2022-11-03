@@ -38,7 +38,9 @@ const TestPluginManager = props => {
       {
         title: "Dialog Title",
         message: "My dialog long text description:",
-        onSubmit: () => {}
+        onSubmit: () => {
+          alert("Hello world!")
+        }
       },
       Component
     );
