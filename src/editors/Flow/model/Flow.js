@@ -4,7 +4,6 @@ import { Parameter } from "../../../models/subModels"; // from shared subModels
 import {
   ExposedPorts,
   ExposedPortsManager,
-  Group,
   Link,
   NodeInstance,
   SubFlow
@@ -39,7 +38,6 @@ class Flow extends Model {
       ExposedPorts,
       this.propEvents
     );
-    this.groups = new IdBasedManager("groups", Group, this.propEvents);
     this.links = new Manager("links", Link, this.propEvents);
     this.nodeInstances = new Manager(
       "nodeInstances",
@@ -125,76 +123,6 @@ class Flow extends Model {
    */
   getLinks() {
     return this.links;
-  }
-
-  /**
-   * Returns the groups manager
-   * @returns {IdBasedManager}
-   */
-  getGroups() {
-    return this.groups;
-  }
-
-  /**
-   * Returns a group
-   * @param {String} groupId : the id of the group to retrieve
-   * @returns {Group}
-   */
-  getGroup(groupId) {
-    return this.groups.getItem(groupId);
-  }
-
-  /**
-   * Adds a new Group
-   * @param {String} groupName : The name of the group to be added
-   * @returns {Flow}
-   */
-  addGroup(groupName) {
-    const groupId = Utils.randomId();
-    this.groups.setItem({
-      name: groupId,
-      content: { id: groupId, name: groupName, enabled: true }
-    });
-    return this;
-  }
-
-  /**
-   * Deletes a group
-   * @param {String} groupId : The id of the group to be deleted
-   * @returns {Flow}
-   */
-  deleteGroup(groupId) {
-    this.groups.deleteItem(groupId);
-    return this;
-  }
-
-  /**
-   * Toggles a group visibility
-   * @param {String} groupId : The id of the group to toggle the visibility
-   * @returns {Flow}
-   */
-  toggleGroupVisibility(groupId, enabled) {
-    const thisGroup = this.getGroup(groupId);
-    this.groups.updateItem({
-      name: groupId,
-      content: { ...thisGroup, enabled }
-    });
-    return this;
-  }
-
-  /**
-   * Rename group
-   * @param {String} groupId : The id of the group to edit
-   * @param {Object} content : The content to replace on the group
-   * @returns {Flow}
-   */
-  editGroup(groupId, content = {}) {
-    const thisGroup = this.getGroup(groupId);
-    this.groups.updateItem({
-      name: groupId,
-      content: { ...thisGroup, ...content }
-    });
-    return this;
   }
 
   /**
@@ -304,7 +232,6 @@ class Flow extends Model {
       subFlows,
       exposedPorts,
       links,
-      groups,
       parameters
     } = json;
 
@@ -314,7 +241,6 @@ class Flow extends Model {
     this.subFlows.clear().setData(subFlows);
     this.exposedPorts.clear().setData(exposedPorts);
     this.links.clear().setData(links);
-    this.groups.clear().setData(groups);
     this.parameters.clear().setData(parameters);
 
     return this;
@@ -470,7 +396,6 @@ class Flow extends Model {
       subFlows: this.getSubFlows().serialize(),
       exposedPorts: this.getExposedPorts().serialize(),
       links: this.getLinks().serialize(),
-      groups: this.getGroups().serialize(),
       parameters: this.getParameters().serialize()
     };
   }
@@ -496,7 +421,6 @@ class Flow extends Model {
       Container: this.getSubFlows().serializeToDB(),
       ExposedPorts: getValueToSave(this.getExposedPorts()),
       Links: getValueToSave(this.getLinks()),
-      Layers: getValueToSave(this.getGroups()),
       Parameter: this.getParameters().serializeToDB()
     };
   }
@@ -524,7 +448,6 @@ class Flow extends Model {
       Container: subFlows,
       ExposedPorts: exposedPorts,
       Links: links,
-      Layers: groups,
       Parameter: parameters
     } = json;
 
@@ -542,7 +465,6 @@ class Flow extends Model {
         ExposedPorts
       ),
       links: Manager.serializeOfDB(links, Link),
-      groups: Manager.serializeOfDB(groups, Group),
       parameters: Manager.serializeOfDB(parameters, Parameter)
     };
   }
