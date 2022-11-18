@@ -4,17 +4,17 @@ import FileCopyIcon from "@material-ui/icons/FileCopy";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
 import { FLOW_CONTEXT_MODES } from "../../../utils/Constants";
 
-export const baseContextOptions = () => {
+export const baseContextOptions = data => {
   const nodeOptions = ({ handleCopyNode, handleDeleteNode }) => [
     {
       label: "Copy",
       icon: <FileCopyIcon />,
-      onClick: handleCopyNode
+      onClick: () => handleCopyNode(data)
     },
     {
       label: "Delete",
       icon: <DeleteOutlineIcon />,
-      onClick: handleDeleteNode
+      onClick: () => handleDeleteNode(data)
     }
   ];
 
@@ -24,7 +24,7 @@ export const baseContextOptions = () => {
     {
       label: "Delete",
       icon: <DeleteOutlineIcon />,
-      onClick: handleDeleteLink
+      onClick: () => handleDeleteLink(data)
     }
   ];
 
@@ -32,7 +32,7 @@ export const baseContextOptions = () => {
     {
       label: "ToggleExposed",
       icon: <ToggleOnIcon />,
-      onClick: handleToggleExposedPort
+      onClick: () => handleToggleExposedPort(data)
     }
   ];
 
@@ -40,7 +40,7 @@ export const baseContextOptions = () => {
     {
       label: "Paste",
       icon: <NoteAddIcon />,
-      onClick: handlePasteNodes
+      onClick: () => handlePasteNodes(data)
     }
   ];
 
@@ -53,5 +53,5 @@ export const baseContextOptions = () => {
   };
 };
 
-export const getBaseContextOptions = (mode, args) =>
-  baseContextOptions()[mode](args);
+export const getBaseContextOptions = (mode, data, args) =>
+  baseContextOptions(data)[mode](args);
