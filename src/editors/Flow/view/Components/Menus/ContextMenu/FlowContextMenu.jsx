@@ -5,7 +5,7 @@ import { ContextMenu } from ".";
 
 const FlowContextMenu = props => {
   const { t } = useTranslation();
-  const { anchorPosition, onClose, options } = props;
+  const { anchorPosition, options, onClose } = props;
 
   const generateOptions = useCallback(() => {
     return options?.map(
