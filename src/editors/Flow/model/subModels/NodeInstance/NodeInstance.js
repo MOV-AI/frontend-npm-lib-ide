@@ -28,7 +28,6 @@ class NodeInstance extends Model {
     this.persistent = false;
     this.launch = true;
     this.remappable = true;
-    this.groups = [];
     this.position = new Position();
     this.parameters = new Manager("parameters", Parameter, this.propEvents);
     this.envVars = new Manager("envVars", EnvVar, this.propEvents);
@@ -113,45 +112,6 @@ class NodeInstance extends Model {
    */
   setRemappable(value) {
     this.remappable = value;
-    return this;
-  }
-
-  /**
-   * Returns the groups property
-   * @returns {array}
-   */
-  getGroups() {
-    return this.groups;
-  }
-
-  /**
-   * Sets the new value of the groups
-   * @param {array} value : The groups
-   * @returns {NodeInstance} : The instance
-   */
-  setGroups(value) {
-    this.groups = value;
-    return this;
-  }
-
-  /**
-   * Adds a new id to the groups
-   * @param {string} groupId : The groupId
-   * @returns {NodeInstance} : The instance
-   */
-  addGroup(groupId) {
-    this.groups.push(groupId);
-    return this;
-  }
-
-  /**
-   * Remove Group by groupId
-   * @param {string} groupId : The groupId
-   * @returns {NodeInstance} : The instance
-   */
-  removeGroup(groupId) {
-    const indexOfGroupId = this.groups.indexOf(groupId);
-    if (indexOfGroupId >= 0) this.groups.splice(indexOfGroupId, 1);
     return this;
   }
 
@@ -279,7 +239,6 @@ class NodeInstance extends Model {
       persistent,
       launch,
       remappable,
-      groups,
       position,
       parameters,
       envVars,
@@ -291,8 +250,7 @@ class NodeInstance extends Model {
       template,
       persistent,
       launch,
-      remappable,
-      groups
+      remappable
     });
 
     this.position.setData(position);
@@ -338,7 +296,6 @@ class NodeInstance extends Model {
       persistent: this.getPersistent(),
       launch: this.getLaunch(),
       remappable: this.getRemappable(),
-      groups: this.getGroups(),
       position: this.getPosition().serialize(),
       parameters: this.getParameters().serialize(),
       envVars: this.getEnvVars().serialize(),
@@ -352,8 +309,7 @@ class NodeInstance extends Model {
    * @returns {object}
    */
   serializeToDB() {
-    const { name, template, persistent, launch, remappable, groups } =
-      this.serialize();
+    const { name, template, persistent, launch, remappable } = this.serialize();
 
     return {
       NodeLabel: name,
@@ -361,7 +317,6 @@ class NodeInstance extends Model {
       Persistent: persistent,
       Launch: launch,
       Remappable: remappable,
-      NodeLayers: groups,
       Visualization: {
         ...this.getPosition().serializeToDB()
       },
@@ -391,7 +346,6 @@ class NodeInstance extends Model {
       Persistent: persistent,
       Launch: launch,
       Remappable: remappable,
-      NodeLayers: groups,
       Visualization: position,
       Parameter: parameters,
       EnvVar: envVars,
@@ -404,7 +358,6 @@ class NodeInstance extends Model {
       persistent,
       launch,
       remappable,
-      groups,
       position: Position.serializeOfDB(position),
       parameters: Manager.serializeOfDB(parameters, Parameter),
       envVars: Manager.serializeOfDB(envVars, EnvVar),
@@ -417,7 +370,6 @@ class NodeInstance extends Model {
     TEMPLATE: "template",
     PERSISTENT: "persistent",
     REMAPPABLE: "remappable",
-    GROUPS: "groups",
     POSITION: "persistent"
   };
 }

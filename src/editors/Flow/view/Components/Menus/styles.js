@@ -13,18 +13,6 @@ const common = {
   }
 };
 
-const groupItem = {
-  ...common,
-  groupRow: {
-    display: "flex",
-    flexDirection: "row"
-  },
-  groupItem: {
-    flexGrow: 1,
-    padding: "10px 25px"
-  }
-};
-
 const parameters = {
   parametersContainer: {
     overflowY: "auto",
@@ -54,12 +42,6 @@ const menuStyles = makeStyles(_theme => ({
   link: {
     fontSize: "1rem"
   }
-}));
-
-export const groupItemStyles = makeStyles(_theme => groupItem);
-export const nodeGroupStyles = makeStyles(_theme => ({
-  ...groupItem,
-  ...parameters
 }));
 
 export const propertiesStyles = makeStyles(_theme => ({

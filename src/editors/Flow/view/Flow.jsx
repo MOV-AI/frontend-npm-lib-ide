@@ -132,21 +132,6 @@ export const Flow = (props, ref) => {
   };
 
   /**
-   * Used to handle group visibility
-   */
-  const handleGroupVisibility = useCallback((groupId, visibility) => {
-    getMainInterface().onGroupChange(groupId, visibility);
-  }, []);
-
-  /**
-   * Handle group visibilities
-   */
-  const groupsVisibilities = useCallback(() => {
-    if (!instance.current) return;
-    getMainInterface().onGroupsChange(instance.current.getGroups()?.data);
-  }, [instance]);
-
-  /**
    * Updates the status of flow debugging variable on graph
    * And then re strokes the links (to add or remove the debug colors)
    */
@@ -418,21 +403,11 @@ export const Flow = (props, ref) => {
             flowModel={instance}
             openDoc={openDoc}
             editable={true}
-            groupsVisibilities={groupsVisibilities}
           />
         )
       };
     },
-    [
-      MENUS,
-      call,
-      id,
-      instance,
-      openDoc,
-      getMenuComponent,
-      groupsVisibilities,
-      t
-    ]
+    [MENUS, call, id, instance, openDoc, getMenuComponent, t]
   );
 
   /**
@@ -512,7 +487,6 @@ export const Flow = (props, ref) => {
             name={name}
             details={details}
             model={instance}
-            handleGroupVisibility={handleGroupVisibility}
             editable={true}
           ></Menu>
         )
@@ -563,7 +537,6 @@ export const Flow = (props, ref) => {
     call,
     getNodeMenuToAdd,
     getLinkMenuToAdd,
-    handleGroupVisibility,
     t
   ]);
 
@@ -793,7 +766,6 @@ export const Flow = (props, ref) => {
       mainInterface.graph.onFlowValidated.subscribe(evtData => {
         const persistentWarns = evtData.warnings.filter(el => el.isPersistent);
 
-        groupsVisibilities();
         onFlowValidated({ warnings: persistentWarns });
       });
 
@@ -1022,7 +994,6 @@ export const Flow = (props, ref) => {
       onNodeSelected,
       onLinkSelected,
       setFlowsToDefault,
-      groupsVisibilities,
       invalidLinksAlert,
       invalidExposedPortsAlert,
       invalidContainersParamAlert,

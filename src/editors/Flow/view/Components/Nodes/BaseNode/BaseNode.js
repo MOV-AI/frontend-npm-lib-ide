@@ -869,24 +869,6 @@ class BaseNode extends BaseNodeStruct {
   };
 
   /**
-   * onGroupsChange - on groups event handler
-   *
-   * @param {object} groups flow groups
-   */
-  onGroupsChange = groups => {
-    const nodeGroups = this.data.NodeLayers ?? [];
-    const hide =
-      nodeGroups.every(group => {
-        const groupItem = groups.get(group);
-        if (groupItem) {
-          return !groupItem.enabled;
-        }
-        return false;
-      }) && nodeGroups.length > 0;
-    this.visibility = !hide;
-  };
-
-  /**
    * addToCanvas - append node element to canvas
    *
    */

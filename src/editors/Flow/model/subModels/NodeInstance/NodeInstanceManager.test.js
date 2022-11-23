@@ -16,7 +16,6 @@ test("Serialize OF db", () => {
       Persistent: true,
       Launch: true,
       Remappable: true,
-      NodeLayers: ["0"],
       CmdLine: { cmd1: { Value: "exec.sh" } },
       EnvVar: { path: { Value: "/opt/movai" } },
       Visualization: {
@@ -37,7 +36,6 @@ test("Serialize OF db", () => {
       persistent: content.align.Persistent,
       launch: content.align.Launch,
       remappable: content.align.Remappable,
-      groups: content.align.NodeLayers,
       commands: { cmd1: { name: "cmd1", value: "exec.sh" } },
       envVars: { path: { name: "path", value: "/opt/movai" } },
       position: { x: 0.01, y: 0.02 },
@@ -65,7 +63,6 @@ test("Serialize TO db", () => {
       Persistent: true,
       Launch: true,
       Remappable: true,
-      NodeLayers: ["0"],
       CmdLine: { cmd1: { Value: "exec.sh" } },
       EnvVar: { path: { Value: "/opt/movai" } },
       Visualization: {

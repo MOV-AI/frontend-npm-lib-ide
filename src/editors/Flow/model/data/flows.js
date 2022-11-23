@@ -12,7 +12,6 @@ const flows = {
         Persistent: true,
         Launch: true,
         Remappable: true,
-        NodeLayers: ["0"],
         CmdLine: { cmd1: { Value: "exec.sh" } },
         EnvVar: { path: { Value: "/opt/movai" } },
         Visualization: {
@@ -46,7 +45,6 @@ const flows = {
         To: "subflow__actuator_v2/trans_in/in"
       }
     },
-    Layers: { 0: { name: "layer1", on: true } },
     Parameter: {
       var1: { Value: "movai", Description: "", Type: DATA_TYPES.ANY }
     }
@@ -61,7 +59,6 @@ const flows = {
       align: {
         Template: "align_cart",
         NodeLabel: "align",
-        NodeLayers: [],
         Visualization: {
           y: { Value: 0.02011501921062771 },
           x: { Value: 0.022897170968381453 }
@@ -70,7 +67,6 @@ const flows = {
       viewer: {
         Template: "actuator_client_test",
         NodeLabel: "viewer",
-        NodeLayers: [],
         Visualization: {
           x: { Value: 0.033985346476236994 },
           y: { Value: 0.021107220458984385 }
@@ -156,11 +152,6 @@ const flows = {
         From: "start/start/start",
         To: "cacaca__testing/p1/in"
       }
-    },
-    Layers: {
-      0: { name: "mylayer", on: true },
-      1: { name: "myLayer2", on: true },
-      2: { name: "dfghjk", on: true }
     },
     Parameter: {
       myvar: { Value: "99879", Description: "myvar" },
