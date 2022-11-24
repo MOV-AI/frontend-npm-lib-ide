@@ -40,9 +40,12 @@ class DocManager extends IDEPlugin {
     const observer = {
       onLoad: store => this.onStoreLoad(store),
       onUpdate: (store, doc, action) => this.onStoreUpdate(store, doc, action),
-      onDocumentDirty: (store, instance, value) =>
-        this.onDocumentDirty(store, instance, value),
-      onDocumentDeleted: (store, name) => this.onDocumentDeleted(store, name)
+      onDocumentDirty: (store, instance, value) => {
+        return this.onDocumentDirty(store, instance, value);
+      },
+      onDocumentDeleted: (store, name) => {
+        return this.onDocumentDeleted(store, name);
+      }
     };
 
     this.docsMap = docsFactory(CONSTANTS.GLOBAL_WORKSPACE, observer, this);

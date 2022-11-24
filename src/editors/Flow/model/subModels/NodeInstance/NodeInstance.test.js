@@ -7,7 +7,6 @@ test("Smoke test", () => {
   const obj = new NodeInstance();
 
   expect(obj).toBeInstanceOf(NodeInstance);
-  expect(obj.getGroups()).toMatchObject([]);
   expect(obj.getPosition()).toBeInstanceOf(Position);
   expect(obj.getParameters()).toBeInstanceOf(Manager);
   expect(obj.getEnvVars()).toBeInstanceOf(Manager);
@@ -22,7 +21,6 @@ test("Serialize OF db", () => {
       Persistent: true,
       Launch: true,
       Remappable: true,
-      NodeLayers: ["0"],
       CmdLine: { cmd1: { Value: "exec.sh" } },
       EnvVar: { path: { Value: "/opt/movai" } },
       Visualization: {
@@ -42,7 +40,6 @@ test("Serialize OF db", () => {
     persistent: true,
     launch: true,
     remappable: true,
-    groups: ["0"],
     position: { x: 0.01, y: 0.02 },
     parameters: {
       camera: { name: "camera", value: "back1", type: DATA_TYPES.STRING },
@@ -66,7 +63,6 @@ test("Serialize TO db", () => {
     persistent: true,
     launch: true,
     remappable: true,
-    groups: ["0"],
     commands: { cmd1: { name: "cmd1", value: "exec.sh" } },
     envVars: { path: { name: "path", value: "/opt/movai" } },
     position: { x: 0.01, y: 0.03 },
@@ -86,7 +82,6 @@ test("Serialize TO db", () => {
     Persistent: true,
     Launch: true,
     Remappable: true,
-    NodeLayers: ["0"],
     CmdLine: { cmd1: { Value: "exec.sh" } },
     EnvVar: { path: { Value: "/opt/movai" } },
     Visualization: {
@@ -112,7 +107,6 @@ test("Create node", () => {
     persistent: true,
     launch: true,
     remappable: true,
-    groups: ["0"],
     commands: { cmd1: { name: "cmd1", value: "exec.sh" } },
     envVars: { path: { name: "path", value: "/opt/movai" } },
     position: { x: 0.01, y: 0.03 },

@@ -10,19 +10,19 @@ test("smoke test", () => {
 test("serialize OF db", () => {
   const content = {
     0: {
-      name: "layer1"
+      name: "data1"
     },
     1: {
-      name: "layer2"
+      name: "data2"
     }
   };
 
   const expected = {
     0: {
-      name: "layer1",
+      name: "data1"
     },
     1: {
-      name: "layer2",
+      name: "data2"
     }
   };
 
@@ -34,10 +34,10 @@ test("serialize OF db", () => {
 test("serialize TO db", () => {
   const content = {
     0: {
-      name: "layer1"
+      name: "data1"
     },
     1: {
-      name: "layer2"
+      name: "data2"
     }
   };
 

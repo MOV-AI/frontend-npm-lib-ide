@@ -17,6 +17,9 @@ const Explorer = props => {
   const classes = explorerStyles();
   const [data, setData] = useState([]);
 
+  // to debug data
+  window.ExplorerData = data;
+
   const { t } = useTranslation();
 
   //========================================================================================

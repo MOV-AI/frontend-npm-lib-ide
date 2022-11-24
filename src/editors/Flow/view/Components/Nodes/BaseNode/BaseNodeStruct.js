@@ -11,7 +11,6 @@ export default class BaseNodeStruct {
       Parameter: data.Parameter || {},
       Template: data.Template || "",
       Visualization: convertVisualization(data.Visualization) || [50, 50],
-      NodeLayers: data.NodeLayers || [],
       Persistent: data.Persistent,
       Remappable: data.Remappable,
       Launch: data.Launch,
@@ -27,7 +26,6 @@ export default class BaseNodeStruct {
   noReloadRequired = [
     "Dummy",
     "Persistent",
-    "NodeLayers",
     "Parameter",
     "CmdLine",
     "EnvVar",

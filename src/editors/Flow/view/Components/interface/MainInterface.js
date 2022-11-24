@@ -383,24 +383,6 @@ export default class MainInterface {
     return this.stateSub.subscribe(fn);
   };
 
-  onGroupsChange = groups => {
-    const visitedLinks = new Set();
-    this.graph.nodes.forEach(node => {
-      node.obj.onGroupsChange(groups);
-      this.hideLinks(node, visitedLinks);
-    });
-  };
-
-  onGroupChange = (groupId, visibility) => {
-    const visitedLinks = new Set();
-    this.graph.nodes.forEach(node => {
-      if (node.obj.data.NodeLayers?.includes(groupId)) {
-        node.obj.visibility = !visibility;
-        this.hideLinks(node, visitedLinks);
-      }
-    });
-  };
-
   /**
    * Resets all Node status (Turns of the center)
    */

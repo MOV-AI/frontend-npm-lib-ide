@@ -749,9 +749,9 @@ const useTabLayout = (props, dockRef) => {
       data => _updateDocDirty(data)
     );
     // On delete document
-    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.DELETE_DOC, data =>
-      _closeTab(data.url, true)
-    );
+    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.DELETE_DOC, data => {
+      return _closeTab(data.url, true);
+    });
 
     // We want to reload the tabData if it was a new tab
     on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.SAVE_DOC, data => {

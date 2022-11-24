@@ -7,11 +7,11 @@ test("Smoke test", () => {
 });
 
 test("Serialize OF db", () => {
-  const data = { 0: { name: "layer1"} };
+  const data = { 0: { name: "data1" } };
 
   const expected = {
     id: "0",
-    name: "layer1",
+    name: "data1"
   };
 
   expect(IdBased.serializeOfDB(data)).toMatchObject(expected);
@@ -20,10 +20,10 @@ test("Serialize OF db", () => {
 test("Serialize TO db", () => {
   const data = {
     id: "0",
-    name: "layer1",
+    name: "data1"
   };
 
-  const expected = { name: "layer1" };
+  const expected = { name: "data1" };
 
   const obj = new IdBased();
   obj.setData(data);

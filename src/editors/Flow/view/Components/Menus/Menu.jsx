@@ -30,23 +30,14 @@ import { validateDocumentName } from "../../../../../utils/Utils";
 import ParametersEditorDialog from "../../../../_shared/KeyValueTable/ParametersEditorDialog";
 import DetailsMenu from "../../../../_shared/DetailsMenu/DetailsMenu";
 import TableKeyValue from "./sub-components/TableKeyValue";
-import GroupItem from "./sub-components/GroupItem";
 import menuStyles from "./styles";
 
 const ACTIVE_ITEM = {
   description: 1,
-  parameters: 2,
-  groups: 3
+  parameters: 2
 };
 
-const Menu = ({
-  name,
-  model,
-  details: detailsProp,
-  editable,
-  call,
-  handleGroupVisibility
-}) => {
+const Menu = ({ name, model, details: detailsProp, editable, call }) => {
   // State hook
   const [activeItem, setActiveItem] = useState(0);
   const { data } = useDataSubscriber({
@@ -95,37 +86,6 @@ const Menu = ({
     });
     return output;
   }, [data?.parameters, renderValue]);
-
-  /**
-   * @private Use this to change a group name
-   * @param {String} prevName : previous name (used to discern if is new or edit)
-   * @param {Function} submitCallback : Callback to be called on Submit
-   */
-  const openGroupModal = useCallback(
-    (submitCallback, prevName = "") => {
-      const args = {
-        size: "sm",
-        title: prevName ? t("EditGroup") : t("AddGroup"),
-        inputLabel: t("GroupName"),
-        value: prevName,
-        onValidation: value => {
-          try {
-            const validation = validateDocumentName(value);
-            return { result: validation, error: "" };
-          } catch (err) {
-            return {
-              result: false,
-              error: err.message
-            };
-          }
-        },
-        onSubmit: submitCallback
-      };
-
-      call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
-    },
-    [call, t]
-  );
 
   /**
    * @summary: Validate document name against invalid characters. It accept ROS valid names
@@ -283,13 +243,6 @@ const Menu = ({
   );
 
   /**
-   * Handle Add group click
-   */
-  const handleAddGroupClick = useCallback(() => {
-    openGroupModal(groupName => model.current.addGroup(groupName));
-  }, [openGroupModal, model]);
-
-  /**
    * Handle Description Edit
    * @param {*} e
    */
@@ -305,15 +258,6 @@ const Menu = ({
   const handleAddParameter = e => {
     e.stopPropagation();
     handleAddParameterClick();
-  };
-
-  /**
-   * Handle Add Group
-   * @param {*} e
-   */
-  const handleAddGroup = e => {
-    e.stopPropagation();
-    handleAddGroupClick();
   };
 
   //========================================================================================
@@ -362,39 +306,6 @@ const Menu = ({
       </Typography>
     );
   }, [classes, editable, getParameters, handleParamDelete, handleParamEdit, t]);
-
-  /**
-   * Render groups
-   * @returns {ReactElement} Groups to render in collapsible content
-   */
-  const renderGroups = useCallback(() => {
-    const groups = Object.values(data.groups || {});
-    return groups.length ? (
-      groups.map(group => (
-        <GroupItem
-          data-testid="section_group-item"
-          key={group.id}
-          item={group}
-          model={model}
-          editGroupName={openGroupModal}
-          editable={editable}
-          handleGroupVisibility={handleGroupVisibility}
-        />
-      ))
-    ) : (
-      <Typography className={`${classes.itemValue} ${classes.disabled}`}>
-        {t("NoGroups")}
-      </Typography>
-    );
-  }, [
-    classes,
-    data.groups,
-    model,
-    editable,
-    openGroupModal,
-    handleGroupVisibility,
-    t
-  ]);
 
   return (
     <Typography data-testid="section_flow-details-menu" component="div">
@@ -454,31 +365,6 @@ const Menu = ({
           {renderParameters()}
           <Divider />
         </Collapse>
-        {/* ============ GROUPS ============ */}
-        <ListItem
-          data-testid="input_groups-expand"
-          button
-          data-menu-id={ACTIVE_ITEM.groups}
-          onClick={handleExpandClick}
-        >
-          <ListItemText primary={t("Groups")} />
-          <IconButton
-            data-testid="input_groups-add"
-            disabled={!editable}
-            onClick={handleAddGroup}
-          >
-            <Add />
-          </IconButton>
-          {activeItem === ACTIVE_ITEM.groups ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse
-          data-testid="section_groups-table"
-          in={activeItem === ACTIVE_ITEM.groups}
-          unmountOnExit
-        >
-          {renderGroups()}
-          <Divider />
-        </Collapse>
       </List>
     </Typography>
   );
@@ -489,7 +375,6 @@ Menu.propTypes = {
   model: PropTypes.object.isRequired,
   details: PropTypes.object.isRequired,
   call: PropTypes.func.isRequired,
-  handleGroupVisibility: PropTypes.func.isRequired,
   editable: PropTypes.bool
 };
 

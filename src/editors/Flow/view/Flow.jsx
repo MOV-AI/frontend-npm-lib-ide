@@ -96,18 +96,16 @@ export const Flow = (props, ref) => {
   const [warningsVisibility, setWarningsVisibility] = useState(false);
   const [viewMode, setViewMode] = useState(FLOW_VIEW_MODE.default);
   const [tooltipConfig, setTooltipConfig] = useState(null);
-  const [contextMenuOptions, setContextMenuOptions] = useState({
-    open: false,
-    options: [],
-    position: { x: 0, y: 0 }
-  });
+  const [contextMenuOptions, setContextMenuOptions] = useState(null);
   const [searchVisible, setSearchVisible] = useState(false);
 
   // Other Hooks
   const classes = flowStyles();
   const { t } = useTranslation();
   const clipboard = useMemo(() => new Clipboard(), []);
+
   // Refs
+  const contextArgs = useRef(null);
   const mainInterfaceRef = useRef();
   const debounceSelection = useRef();
   const selectedNodeRef = useRef();
@@ -132,21 +130,6 @@ export const Flow = (props, ref) => {
     };
     return flowClasses[viewMode] ?? GraphBase;
   };
-
-  /**
-   * Used to handle group visibility
-   */
-  const handleGroupVisibility = useCallback((groupId, visibility) => {
-    getMainInterface().onGroupChange(groupId, visibility);
-  }, []);
-
-  /**
-   * Handle group visibilities
-   */
-  const groupsVisibilities = useCallback(() => {
-    if (!instance.current) return;
-    getMainInterface().onGroupsChange(instance.current.getGroups()?.data);
-  }, [instance]);
 
   /**
    * Updates the status of flow debugging variable on graph
@@ -192,12 +175,12 @@ export const Flow = (props, ref) => {
    * @returns {array} Selected nodes
    */
   const getSelectedNodes = useCallback(() => {
-    const { args: node } = contextMenuOptions || {};
+    const node = contextArgs.current || {};
     const selectedNodesSet = new Set(
       [node].concat(getMainInterface().selectedNodes)
     );
     return Array.from(selectedNodesSet).filter(el => el);
-  }, [contextMenuOptions]);
+  }, []);
 
   /**
    * Get search options
@@ -420,21 +403,11 @@ export const Flow = (props, ref) => {
             flowModel={instance}
             openDoc={openDoc}
             editable={true}
-            groupsVisibilities={groupsVisibilities}
           />
         )
       };
     },
-    [
-      MENUS,
-      call,
-      id,
-      instance,
-      openDoc,
-      getMenuComponent,
-      groupsVisibilities,
-      t
-    ]
+    [MENUS, call, id, instance, openDoc, getMenuComponent, t]
   );
 
   /**
@@ -514,7 +487,6 @@ export const Flow = (props, ref) => {
             name={name}
             details={details}
             model={instance}
-            handleGroupVisibility={handleGroupVisibility}
             editable={true}
           ></Menu>
         )
@@ -565,7 +537,6 @@ export const Flow = (props, ref) => {
     call,
     getNodeMenuToAdd,
     getLinkMenuToAdd,
-    handleGroupVisibility,
     t
   ]);
 
@@ -748,6 +719,7 @@ export const Flow = (props, ref) => {
    * Close context menu
    */
   const handleContextClose = useCallback(() => {
+    contextArgs.current = null;
     setContextMenuOptions(null);
     getMainInterface().setMode(EVT_NAMES.DEFAULT);
   }, []);
@@ -794,7 +766,6 @@ export const Flow = (props, ref) => {
       mainInterface.graph.onFlowValidated.subscribe(evtData => {
         const persistentWarns = evtData.warnings.filter(el => el.isPersistent);
 
-        groupsVisibilities();
         onFlowValidated({ warnings: persistentWarns });
       });
 
@@ -838,9 +809,10 @@ export const Flow = (props, ref) => {
             left: evtData.event.clientX,
             top: evtData.event.clientY
           };
+
+          contextArgs.current = evtData.node;
           setContextMenuOptions({
             anchorPosition,
-            args: evtData.node,
             options: getContextOptions(evtData.node?.data?.type, evtData.node, {
               handleCopyNode,
               handleDeleteNode
@@ -892,9 +864,10 @@ export const Flow = (props, ref) => {
             left: evtData.event.clientX,
             top: evtData.event.clientY
           };
+
+          contextArgs.current = evtData;
           setContextMenuOptions({
             anchorPosition,
-            args: evtData,
             options: getContextOptions(FLOW_CONTEXT_MODES.LINK, evtData, {
               handleDeleteLink
             })
@@ -909,9 +882,10 @@ export const Flow = (props, ref) => {
             left: evtData.event.clientX,
             top: evtData.event.clientY
           };
+
+          contextArgs.current = evtData.position;
           setContextMenuOptions({
             anchorPosition,
-            args: evtData.position,
             options: getContextOptions(
               FLOW_CONTEXT_MODES.CANVAS,
               evtData.position,
@@ -930,9 +904,10 @@ export const Flow = (props, ref) => {
             left: evtData.event.clientX,
             top: evtData.event.clientY
           };
+
+          contextArgs.current = evtData.port;
           setContextMenuOptions({
             anchorPosition,
-            args: evtData.port,
             options: getContextOptions(FLOW_CONTEXT_MODES.PORT, evtData.port, {
               handleToggleExposedPort
             })
@@ -1019,7 +994,6 @@ export const Flow = (props, ref) => {
       onNodeSelected,
       onLinkSelected,
       setFlowsToDefault,
-      groupsVisibilities,
       invalidLinksAlert,
       invalidExposedPortsAlert,
       invalidContainersParamAlert,
@@ -1067,8 +1041,7 @@ export const Flow = (props, ref) => {
    * Handle copy node
    */
   const handleCopyNode = useCallback(
-    evt => {
-      evt && evt.preventDefault();
+    data => {
       const selectedNodes = getSelectedNodes();
       const nodesPos = selectedNodes.map(n =>
         Vec2.of(n.center.xCenter, n.center.yCenter)
@@ -1090,30 +1063,22 @@ export const Flow = (props, ref) => {
   /**
    * Handle paste nodes in canvas
    */
-  const handlePasteNodes = useCallback(
-    async evt => {
-      evt && evt.preventDefault();
-      const { args: position = getMainInterface().canvas.mousePosition } =
-        contextMenuOptions || {};
-      const nodesToCopy = clipboard.read(KEYS.NODES_TO_COPY);
-      if (!nodesToCopy) return;
+  const handlePasteNodes = useCallback(async () => {
+    const position = (contextArgs.current =
+      getMainInterface().canvas.mousePosition);
+    const nodesToCopy = clipboard.read(KEYS.NODES_TO_COPY);
+    if (!nodesToCopy) return;
 
-      for (const [i, node] of nodesToCopy.nodes.entries()) {
-        const nodesPosFromCenter = nodesToCopy.nodesPosFromCenter || [
-          Vec2.ZERO
-        ];
-        const newPos = Vec2.of(position.x, position.y).add(
-          nodesPosFromCenter[i]
-        );
-        // Open dialog for each node to copy
-        await pasteNodeDialog(newPos.toObject(), {
-          node: node,
-          flow: nodesToCopy.flow
-        });
-      }
-    },
-    [clipboard, contextMenuOptions, pasteNodeDialog]
-  );
+    for (const [i, node] of nodesToCopy.nodes.entries()) {
+      const nodesPosFromCenter = nodesToCopy.nodesPosFromCenter || [Vec2.ZERO];
+      const newPos = Vec2.of(position.x, position.y).add(nodesPosFromCenter[i]);
+      // Open dialog for each node to copy
+      await pasteNodeDialog(newPos.toObject(), {
+        node: node,
+        flow: nodesToCopy.flow
+      });
+    }
+  }, [clipboard, pasteNodeDialog]);
 
   /**
    * Handle delete node
@@ -1137,25 +1102,23 @@ export const Flow = (props, ref) => {
     });
     // Show confirmation before delete
     handleDelete({ message, callback });
-
-    setContextMenuOptions(prevValue => ({ ...prevValue, anchorEl: null }));
   }, [handleDelete, unselectNode, getSelectedNodes, t]);
 
   /**
    * Handle delete link
    */
   const handleDeleteLink = useCallback(() => {
-    const { args: link } = contextMenuOptions;
+    const link = contextArgs.current || {};
     getMainInterface().deleteLink(link.id);
-  }, [contextMenuOptions]);
+  }, []);
 
   /**
    * Toggle exposed port
    */
   const handleToggleExposedPort = useCallback(() => {
-    const { args: port } = contextMenuOptions;
+    const port = contextArgs.current;
     getMainInterface().toggleExposedPort(port);
-  }, [contextMenuOptions]);
+  }, []);
 
   /**
    * Handle zoom reset
@@ -1204,10 +1167,11 @@ export const Flow = (props, ref) => {
 
   const getContextOptions = useCallback(
     (mode, data, args) => {
-      const baseContextOptions = getBaseContextOptions(mode, args);
-      return (
-        contextOptions(baseContextOptions)?.[mode]?.(data) ?? baseContextOptions
-      );
+      const baseContextOptions = getBaseContextOptions(mode, data, args);
+      const contextOpts =
+        contextOptions && contextOptions(baseContextOptions)?.[mode]?.(data);
+
+      return contextOpts ?? baseContextOptions;
     },
     [contextOptions]
   );
