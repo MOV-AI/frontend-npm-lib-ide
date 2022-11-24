@@ -53,7 +53,7 @@
     "@testing-library/user-event": "^12.8.3",
     "babel-loader": "^8.2.2",
     "css-loader": "^6.3.0",
-    "d3": "^7.6.1",
+    "d3": "^5.16.0",
     "hotkeys-js": "^3.8.7",
     "joi": "^17.4.2",
     "lodash": "^4.17.21",
