@@ -444,6 +444,16 @@ export const Node = (props, ref) => {
         onRowDelete={deleteKeyValue}
         varName="commands"
       ></KeyValueTable>
+      <KeyValueTable
+        testId="section_container-configuration"
+        title={t("ContainerConfigurations")}
+        editable={editable}
+        data={data.containerConfigs}
+        columns={defaultColumns}
+        openEditDialog={handleOpenEditDialog}
+        onRowDelete={deleteKeyValue}
+        varName="containerConf"
+      ></KeyValueTable>
     </Typography>
   );
 };
