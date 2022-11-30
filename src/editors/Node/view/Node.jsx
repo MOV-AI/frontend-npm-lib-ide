@@ -448,7 +448,7 @@ export const Node = (props, ref) => {
         testId="section_container-configuration"
         title={t("ContainerConfigurations")}
         editable={editable}
-        data={data.containerConfigs}
+        data={data.containerConf}
         columns={defaultColumns}
         openEditDialog={handleOpenEditDialog}
         onRowDelete={deleteKeyValue}
