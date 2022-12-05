@@ -41,7 +41,10 @@ const withMenuHandler = Component => {
       PluginManagerIDE.resetBookmarks();
       const editorRef = ref?.current;
 
-      if (editorRef) return editorRef.renderRightMenu();
+      if (editorRef) {
+        const renderMenus = editorRef.renderRightMenu || editorRef.renderMenus;
+        return renderMenus();
+      }
 
       // If some tool or editor doesn't have a ref, let's just
       // Try the MAXIMUM_RETRIES, and then stop trying.
