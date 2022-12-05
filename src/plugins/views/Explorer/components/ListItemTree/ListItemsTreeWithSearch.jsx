@@ -88,11 +88,9 @@ const ListItemsTreeWithSearch = props => {
       .map(node => {
         return {
           ...node,
-          children: (node?.children ?? []).filter(
+          children: (node.children ?? []).filter(
             ch =>
-              ch.name &&
-              (node.name.toLowerCase().includes(valueLower) ||
-                ch.name.toLowerCase().includes(valueLower))
+              ch.name && ch.name.toLowerCase().includes(valueLower)
           )
         };
       });
