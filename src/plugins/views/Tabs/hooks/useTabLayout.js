@@ -48,6 +48,7 @@ const useTabLayout = (props, dockRef) => {
           const tabData = getToolTabData(tab, tab.tabProps);
           tabsById.current.set(tabData.id, tabData);
           workspaceManager.setTabs(tabsById.current);
+          addTabToStack(tabData, DOCK_POSITIONS.DOCK);
           dockRef.current &&
             dockRef.current.updateTab(toolName, tabData, false);
         }
@@ -270,7 +271,7 @@ const useTabLayout = (props, dockRef) => {
         }
       );
     },
-    [call, applyLayout, getDockFromTabId, removeTabFromStack]
+    [call]
   );
 
   /**
@@ -288,7 +289,7 @@ const useTabLayout = (props, dockRef) => {
         close({ tabId: id });
       });
     },
-    [call, applyLayout, getDockFromTabId, removeTabFromStack]
+    [call]
   );
 
   /**
