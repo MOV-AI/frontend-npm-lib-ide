@@ -16,15 +16,24 @@ const withMenuHandler = Component => {
   const RefComponent = getRefComponent(Component);
 
   return (props, ref) => {
-    const { on, off, profile } = props;
+    const { call, on, off, profile } = props;
     const retryUpdateMenusCounter = useRef(0);
 
     /**
      * Component did mount
      */
     useEffect(() => {
-      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, data => {
-        if (data.id === profile.name && lastActiveTabName !== data.id) {
+      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async data => {
+        const validTab = await call(
+          PLUGINS.TABS.NAME,
+          PLUGINS.TABS.CALL.FIND_TAB,
+          data.id
+        );
+
+        if (
+          !validTab ||
+          (data.id === profile.name && lastActiveTabName !== data.id)
+        ) {
           updateMenus();
           lastActiveTabName = data.id;
         }
@@ -41,7 +50,10 @@ const withMenuHandler = Component => {
       PluginManagerIDE.resetBookmarks();
       const editorRef = ref?.current;
 
-      if (editorRef) return editorRef.renderRightMenu();
+      if (editorRef) {
+        const renderMenus = editorRef.renderRightMenu || editorRef.renderMenus;
+        return renderMenus();
+      }
 
       // If some tool or editor doesn't have a ref, let's just
       // Try the MAXIMUM_RETRIES, and then stop trying.
