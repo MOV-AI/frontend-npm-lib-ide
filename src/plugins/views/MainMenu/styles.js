@@ -12,6 +12,7 @@ export const mainMenuStyles = makeStyles(theme => ({
     }
   },
   movaiIcon: {
+    boxSizing: "border-box",
     padding: "10px",
     width: "50px",
     height: "50px"
