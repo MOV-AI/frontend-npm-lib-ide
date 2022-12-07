@@ -9,6 +9,9 @@ export const listItemsTreeWithSearchStyles = makeStyles(_theme => ({
     display: "flex",
     flexDirection: "column"
   },
+  searchHolder: {
+    marginBottom: "10px"
+  },
   listHolder: {
     height: "100%",
     paddingBottom: "10px"
