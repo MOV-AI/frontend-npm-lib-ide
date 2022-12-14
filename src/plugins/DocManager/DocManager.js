@@ -149,8 +149,16 @@ class DocManager extends IDEPlugin {
    * @param {{name: String, scope: String}} modelKey
    */
   reloadDoc(modelKey) {
-    const { name, scope } = modelKey;
-    return this.getStore(scope)?.loadDoc(name);
+    this.read(modelKey).then(doc => {
+      this.call(
+        PLUGINS.TABS.NAME,
+        PLUGINS.TABS.CALL.OPEN_EDITOR,
+        {
+          ...modelKey,
+          id: doc.getUrl(),
+        }
+      );
+    });
   }
 
   /**
@@ -257,6 +265,8 @@ class DocManager extends IDEPlugin {
         doc: Document.parsePath(name, scope),
         newName
       });
+
+      this.reloadDoc({ name: newName, scope });
 
       if (!opts?.preventAlert) {
         this.call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
