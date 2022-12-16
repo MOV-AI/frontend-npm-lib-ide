@@ -10,7 +10,7 @@ const AppSettings = {
   SHORTCUTS: KEYBINDINGS,
   HELP: {
     DOCUMENTATION: "https://flow.mov.ai/",
-    FORUM: "https://forum.flow.mov.ai/"
+    FORUM: "https://github.com/MOV-AI/movai-flow/discussions"
   },
   APP_INFORMATION: {
     VERSION: APPLICATION_DATA?.Version || "0.0.1",
