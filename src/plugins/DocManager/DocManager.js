@@ -9,6 +9,11 @@ import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "../../utils/Messages";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
 import docsFactory from "./factory";
 
+const eventListenerTypes = [
+  "load",
+  "update",
+];
+
 /**
  * Document Manager plugin to handle requests, subscribers and more
  */
@@ -30,6 +35,10 @@ class DocManager extends IDEPlugin {
     // Subscriber
     this.docSubscriptions = new Map();
     this.saveStack = new Map();
+    this.eventListeners = eventListenerTypes.reduce((a, key) => ({
+      ...a,
+      [key]: []
+    }), {});
   }
 
   getName() {
@@ -39,7 +48,9 @@ class DocManager extends IDEPlugin {
   activate() {
     const observer = {
       onLoad: store => this.onStoreLoad(store),
-      onUpdate: (store, doc, action) => this.onStoreUpdate(store, doc, action),
+      onUpdate: (store, doc, action) => {
+        this.onStoreUpdate(store, doc, action);
+      },
       onDocumentDirty: (store, instance, value) => {
         return this.onDocumentDirty(store, instance, value);
       },
@@ -266,7 +277,7 @@ class DocManager extends IDEPlugin {
         newName
       });
 
-      this.reloadDoc({ name: newName, scope });
+      this.reloadDoc({ name: newName || name, scope });
 
       if (!opts?.preventAlert) {
         this.call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
@@ -366,6 +377,7 @@ class DocManager extends IDEPlugin {
    * @param {string} store : The name of the store firing the event
    */
   onStoreLoad() {
+    this.executeListeners("load");
     this.emit(PLUGINS.DOC_MANAGER.ON.LOAD_DOCS, this);
   }
 
@@ -375,6 +387,10 @@ class DocManager extends IDEPlugin {
    * @param {object<{documentName, documentType}>} doc
    */
   onStoreUpdate(_, doc, action = "set") {
+    this.executeListeners("update", {
+      action,
+      ...doc,
+    });
     this.emit(PLUGINS.DOC_MANAGER.ON.UPDATE_DOCS, this, {
       action,
       ...doc
@@ -437,6 +453,19 @@ class DocManager extends IDEPlugin {
       store.destroy();
     });
   };
+
+  addEventListener(type, callback) {
+    this.eventListeners[type].push(callback);
+  }
+
+  removeEventListener(type, callback) {
+    this.eventListeners[type] = this.eventListeners[type].filter(cb => callback === cb);
+  }
+
+  executeListeners(type, ...args) {
+    for (let eventListener of this.eventListeners[type])
+      eventListener(...args);
+  }
 }
 
 export default DocManager;
