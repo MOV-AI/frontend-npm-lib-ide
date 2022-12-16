@@ -19,32 +19,6 @@ Function.prototype.use = function (...preArgs) {
   );
 };
 
-function useDocManager(on, off, cb) {
-  const [ docManager, setDocManager ] = useState(null);
-
-  useEffect(() => {
-    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.LOAD_DOCS, docManager => {
-      setDocManager(docManager);
-      cb && cb(docManager);
-    });
-    return () => off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.LOAD_DOCS);
-  }, []);
-
-  return docManager;
-}
-
-/**
- * Push element into list in correct position
- * @private function
- * @param {Array} list
- * @param {TreeNode} element
- */
-function pushSorted(list, element) {
-  return list.concat([element]).sort(
-    (a, b) => a.name.localeCompare(b.name, "en", { sensitivity: "base" })
-  ).map((x, id) => ({ ...x, id }));
-}
-
 // return updated store data (to use with setData)
 function storeData(data, docManager) {
   if (data.length)
@@ -72,8 +46,35 @@ function storeData(data, docManager) {
   });
 }
 
+function useDocManager(on, off) {
+  const dataState = useState([]);
+  const [ docManager, setDocManager ] = useState(null);
+
+  useEffect(() => {
+    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.LOAD_DOCS, docManager => {
+      setDocManager(docManager);
+      dataState[1](storeData([], docManager))
+    });
+    return () => off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.LOAD_DOCS);
+  }, []);
+
+  return [ dataState, docManager ];
+}
+
 function openEditor(call, config) {
   return call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, config);
+}
+
+/**
+ * Push element into list in correct position
+ * @private function
+ * @param {Array} list
+ * @param {TreeNode} element
+ */
+function pushSorted(list, element) {
+  return list.concat([element]).sort(
+    (a, b) => a.name.localeCompare(b.name, "en", { sensitivity: "base" })
+  ).map((x, id) => ({ ...x, id }));
 }
 
 // modify child of data item
@@ -142,11 +143,20 @@ function deleteDocument(dataState, docManager, docData) {
   });
 }
 
+function _onUpdate(dataState, docManager, docData) {
+  // console.log("_onUpdate", dataState, docManager, docData);
+
+  return ({
+    del: deleteDocument,
+    set: addDocument,
+  })[docData.action](dataState, docManager, docData);
+}
+
 /**
  * Handle click to copy document
  * @param {{name: string, scope: string}} node : Clicked document node
  */
-function handleCopy(dataState, docManager, call, node) {
+function handleCopy(call, node) {
   const { name, scope } = node;
 
   call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.COPY_DOC, {
@@ -165,12 +175,6 @@ function handleCopy(dataState, docManager, call, node) {
         scope,
         name,
       });
-
-      addDocument(dataState, docManager, {
-        documentName: name,
-        documentType: scope,
-        document: copiedDoc,
-      });
     })
   });
 }
@@ -179,7 +183,7 @@ function handleCopy(dataState, docManager, call, node) {
  * Handle click to delete document
  * @param {{name: string, scope: string}} node : Clicked document node
  */
-function handleDelete(dataState, docManager, call, t, alert, node) {
+function handleDelete(call, t, alert, node) {
   const { name, scope } = node;
 
   call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, {
@@ -196,10 +200,6 @@ function handleDelete(dataState, docManager, call, t, alert, node) {
             docName: name
           }),
           severity: ALERT_SEVERITIES.SUCCESS
-        });
-        deleteDocument(dataState, docManager, {
-          documentName: name,
-          documentType: scope,
         });
       }).catch(error =>
         console.warn(
@@ -222,21 +222,13 @@ function handleClickNode(dataState, call, node) {
   }
 }
 
-function _onUpdate(dataState, docManager, docData) {
-  return ({
-    del: deleteDocument,
-    set: addDocument,
-  })[docData.action](dataState, docManager, docData);
-}
-
 const Explorer = props => {
   const { call, on, off, alert } = props;
   const classes = explorerStyles();
-  const dataState = useState([]);
-  const [data, setData] = dataState;
-  const docManager = useDocManager(on, off,
-    docManager => setData(storeData([], docManager))
-  );
+  const [ dataState, docManager ] = useDocManager(on, off);
+  const [ data ] = dataState;
+
+  // console.log("Explorer", data);
 
   window.ExplorerData = data;
 
@@ -248,8 +240,8 @@ const Explorer = props => {
     if (!docManager)
       return;
 
-    docManager.addEventListener("update", onUpdate);
-    return () => docManager.removeEventListener("update", onUpdate);
+    docManager.addEventListener("update", "Explorer", onUpdate);
+    return () => { docManager.removeEventListener("update", "Explorer"); };
   }, [docManager, onUpdate]);
 
   return (
@@ -266,8 +258,8 @@ const Explorer = props => {
           <ListItemsTreeWithSearch
             data={data}
             onClickNode={handleClickNode.use(dataState, call)}
-            handleCopyClick={handleCopy.use(dataState, docManager, call)}
-            handleDeleteClick={handleDelete.use(dataState, docManager, call, t, alert)}
+            handleCopyClick={handleCopy.use(call)}
+            handleDeleteClick={handleDelete.use(call, t, alert)}
             showIcons
           ></ListItemsTreeWithSearch>
         )}

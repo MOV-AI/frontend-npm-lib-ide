@@ -37,7 +37,7 @@ class DocManager extends IDEPlugin {
     this.saveStack = new Map();
     this.eventListeners = eventListenerTypes.reduce((a, key) => ({
       ...a,
-      [key]: []
+      [key]: {}
     }), {});
   }
 
@@ -454,16 +454,16 @@ class DocManager extends IDEPlugin {
     });
   };
 
-  addEventListener(type, callback) {
-    this.eventListeners[type].push(callback);
+  addEventListener(type, key, callback) {
+    this.eventListeners[type][key] = callback;
   }
 
-  removeEventListener(type, callback) {
-    this.eventListeners[type] = this.eventListeners[type].filter(cb => callback === cb);
+  removeEventListener(type, key) {
+    delete this.eventListeners[type][key];
   }
 
   executeListeners(type, ...args) {
-    for (let eventListener of this.eventListeners[type])
+    for (let eventListener of Object.values(this.eventListeners[type]))
       eventListener(...args);
   }
 }
