@@ -89,8 +89,7 @@ const ListItemsTreeWithSearch = props => {
         return {
           ...node,
           children: (node.children ?? []).filter(
-            ch =>
-              ch.name && ch.name.toLowerCase().includes(valueLower)
+            ch => ch.name && ch.name.toLowerCase().includes(valueLower)
           )
         };
       });
@@ -160,7 +159,7 @@ const ListItemsTreeWithSearch = props => {
 
   return (
     <List className={classes.list} dense={true} component="div">
-      <ListItem>
+      <ListItem className={classes.searchHolder} component="div">
         <Search onSearch={handleOnSearch} />
       </ListItem>
       <Divider />
