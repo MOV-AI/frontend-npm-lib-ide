@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 import {
   VerticalBar,
   ProfileMenu,
-  ContextMenu
+  ContextMenu,
+  HomeMenuPopper
 } from "@mov-ai/mov-fe-lib-react";
 import TextSnippetIcon from "@material-ui/icons/Description";
 import AddBoxIcon from "@material-ui/icons/AddBox";
@@ -21,6 +22,32 @@ import movaiIcon from "../../../Branding/movai-logo-transparent.png";
 import { mainMenuStyles } from "./styles";
 import { openTool } from "../SystemBar/builder/buildFunctions";
 
+const MENUS = [
+  {
+    name: PLUGINS.EXPLORER.NAME,
+    icon: props => <TextSnippetIcon {...props}></TextSnippetIcon>,
+    title: "Explorer",
+    isActive: true,
+    getOnClick: () => {
+      // Toggle left drawer
+      call(HOSTS.LEFT_DRAWER.NAME, HOSTS.LEFT_DRAWER.CALL.ACTIVATE_PLUGIN_VIEW);
+    }
+  },
+  ...getMainMenuTools().map(tool => {
+    const Icon = tool.icon;
+    return {
+      name: tool.id,
+      icon: props => <Icon {...props} />,
+      title: tool.profile.title,
+      isActive: true,
+      getOnClick: () => {
+        // Open tool
+        openTool(call, tool.profile.name);
+      }
+    };
+  })
+];
+
 const MainMenu = props => {
   const { call } = props;
   // State hooks
@@ -31,34 +58,6 @@ const MainMenu = props => {
   const { t } = useTranslation();
   const { isDarkTheme, handleLogOut } = useContext(MainContext);
   // Refs
-  const MENUS = [
-    {
-      name: PLUGINS.EXPLORER.NAME,
-      icon: _props => <TextSnippetIcon {..._props}></TextSnippetIcon>,
-      title: "Explorer",
-      isActive: true,
-      getOnClick: () => {
-        // Toggle left drawer
-        call(
-          HOSTS.LEFT_DRAWER.NAME,
-          HOSTS.LEFT_DRAWER.CALL.ACTIVATE_PLUGIN_VIEW
-        );
-      }
-    },
-    ...getMainMenuTools().map(tool => {
-      const Icon = tool.icon;
-      return {
-        name: tool.id,
-        icon: _props => <Icon {..._props} />,
-        title: tool.profile.title,
-        isActive: true,
-        getOnClick: () => {
-          // Open tool
-          openTool(call, tool.profile.name);
-        }
-      };
-    })
-  ];
 
   //========================================================================================
   /*                                                                                      *
@@ -98,36 +97,46 @@ const MainMenu = props => {
         unsetAccountAreaPadding={true}
         backgroundColor={theme.palette.background.default}
         upperElement={
-          <ContextMenu
-            element={
-              <Tooltip title={t("CreateNewDoc")} placement="right" arrow>
-                <AddBoxIcon
-                  id="mainMenuCreateNewDocument"
-                  className={classes.icon}
-                ></AddBoxIcon>
-              </Tooltip>
-            }
-            menuList={docTypes.map(docType => ({
-              onClick: () =>
-                call(
-                  PLUGINS.DOC_MANAGER.NAME,
-                  PLUGINS.DOC_MANAGER.CALL.CREATE,
-                  {
-                    scope: docType.scope
-                  }
-                ).then(document => {
-                  call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
-                    id: document.getUrl(),
-                    name: document.getName(),
-                    scope: docType.scope,
-                    isNew: true
-                  });
-                }),
-              element: docType.name || docType.scope,
-              icon: getIconByScope(docType.scope),
-              onClose: true
-            }))}
-          ></ContextMenu>
+          <>
+            {AppSettings.APP_PROPS.SHOW_APP_SELECTION && (
+              <div className={classes.appsHolder}>
+                <Tooltip title={t("Home")}>
+                  <HomeMenuPopper />
+                </Tooltip>
+                <hr />
+              </div>
+            )}
+            <ContextMenu
+              element={
+                <Tooltip title={t("CreateNewDoc")} placement="right" arrow>
+                  <AddBoxIcon
+                    id="mainMenuCreateNewDocument"
+                    className={classes.icon}
+                  ></AddBoxIcon>
+                </Tooltip>
+              }
+              menuList={docTypes.map(docType => ({
+                onClick: () =>
+                  call(
+                    PLUGINS.DOC_MANAGER.NAME,
+                    PLUGINS.DOC_MANAGER.CALL.CREATE,
+                    {
+                      scope: docType.scope
+                    }
+                  ).then(document => {
+                    call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
+                      id: document.getUrl(),
+                      name: document.getName(),
+                      scope: docType.scope,
+                      isNew: true
+                    });
+                  }),
+                element: docType.name || docType.scope,
+                icon: getIconByScope(docType.scope),
+                onClose: true
+              }))}
+            />
+          </>
         }
         navigationList={MENUS.map(menu => (
           <Tooltip key={menu.name} title={menu.title} placement="right" arrow>
