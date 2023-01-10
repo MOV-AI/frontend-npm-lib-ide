@@ -18,8 +18,8 @@ const BookmarkManagerStory = props => {
       tabData: getTabData(),
       icon: BookmarkIcon,
       quickAccess: true,
-      toolBar: false,
-      mainMenu: false
+      toolBar: true,
+      mainMenu: true
     });
   }, []);
 
