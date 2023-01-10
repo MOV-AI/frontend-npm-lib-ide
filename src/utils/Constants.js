@@ -185,19 +185,22 @@ export const KEYBIND_SCOPES = {
 export const TABLE_KEYS_NAMES = {
   PARAMETERS: "parameters",
   ENVVARS: "envVars",
-  CMDLINE: "commands"
+  CMDLINE: "commands",
+  CONTAINERCONF: "containerConf"
 };
 
 export const EMPTY_MESSAGE = {
   PARAMETERS: "No Parameters",
   ENVVARS: "No Environment Variables",
-  COMMANDS: "No Command Lines"
+  COMMANDS: "No Command Lines",
+  CONTAINERCONF: "No Container Configurations",
 };
 
 export const DIALOG_TITLE = {
   PARAMETERS: "Parameter",
   ENVVARS: "EnvironmentVariable",
-  COMMANDS: "Command Line"
+  COMMANDS: "Command Line",
+  CONTAINERCONF: "Container Configuration"
 };
 
 export const SAVE_OUTDATED_DOC_ACTIONS = {

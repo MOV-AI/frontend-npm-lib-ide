@@ -85,6 +85,7 @@
   "EnvVars": "Var. de Ambiente",
   "EnvironmentVariable": "Variável de Ambiente",
   "EnvironmentVariables": "Variáveis de Ambiente",
+  "ContainerConfigurations": "Configurações do Container",
   "Examples": "Exemplos",
   "ExecutionParameters": "Parâmetros de Execução",
   "ErrorRunningSpecificCallback": "Erro ao tentar correr a Callback {{callbackName}}",
