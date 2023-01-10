@@ -215,7 +215,7 @@ const Explorer = props => {
    * @param {DocManager} docManager
    */
   const loadDocs = useCallback(docManager => {
-    return setData(_ =>
+    return setData(
       docManager.getStores().map((store, id) => {
         const { name, title, model } = store;
         return {
@@ -261,6 +261,10 @@ const Explorer = props => {
   //========================================================================================
 
   useEffect(() => {
+    // Ugly but needed to compensate for what we believe to be a bug on the
+    // Remixproject library. The on function is being called on mount with
+    // Previously used data.
+    let mounting = true;
     on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.LOAD_DOCS, loadDocs);
     on(
       PLUGINS.DOC_MANAGER.NAME,
@@ -268,8 +272,11 @@ const Explorer = props => {
       updateDocs
     );
     on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.DELETE_DOC, data => {
+      if (mounting) return;
       deleteDocument({ documentName: data.name, documentType: data.scope });
     });
+
+    mounting = false;
 
     return () => {
       off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.LOAD_DOCS);

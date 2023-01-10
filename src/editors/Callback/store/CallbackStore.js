@@ -19,7 +19,8 @@ class CallbackStore extends Store {
       "backend.CallbackEditor",
       "backend.DataValidation",
       "backend.FlowTopBar",
-      "backend.getPortsData"
+      "backend.getPortsData",
+      "backend.viewer"
     ];
   }
 

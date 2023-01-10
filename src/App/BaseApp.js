@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Style } from "@mov-ai/mov-fe-lib-react";
 import { Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -22,7 +22,13 @@ import { PLUGINS, HOSTS } from "../utils/Constants";
 import { MainContext } from "../main-context";
 import { addEditor } from "../plugins/DocManager/factory";
 import { addTool } from "../tools";
-import { setLinks, setLogo, setName, setShortcuts } from "./AppSettings";
+import {
+  setLogo,
+  setName,
+  setLinks,
+  setAppProps,
+  setShortcuts
+} from "./AppSettings";
 
 import "./App.css";
 import { appStyles } from "./styles";
@@ -32,16 +38,42 @@ const DEBUG_MODE = false;
 function BaseApp(props) {
   // Props
   const {
-    theme,
-    handleToggleTheme,
-    handleLogOut,
     logo,
+    theme,
     links,
+    appName,
+    appProps,
     shortcuts,
-    appName
+    handleLogOut,
+    handleToggleTheme
   } = props;
+
   // Style hook
   const classes = appStyles(DEBUG_MODE)();
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                    Private Methods                                   *
+   *                                                                                      */
+  //========================================================================================
+
+  const mainContextMemo = useMemo(
+    () => ({
+      handleLogOut,
+      handleToggleTheme,
+      selectedTheme: theme,
+      isDarkTheme: theme === "dark"
+    }),
+    [theme, handleLogOut, handleToggleTheme]
+  );
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                       Handlers                                       *
+   *                                                                                      */
+  //========================================================================================
+
+  const onContextMenu = event => event.preventDefault();
 
   //========================================================================================
   /*                                                                                      *
@@ -74,14 +106,9 @@ function BaseApp(props) {
     if (appName) setName(appName);
   }, [appName]);
 
-  //========================================================================================
-  /*                                                                                      *
-   *                                       Handlers                                       *
-   *                                                                                      */
-  //========================================================================================
-
-  const onContextMenu = event => event.preventDefault();
-
+  useEffect(() => {
+    if (appProps) setAppProps(appProps);
+  }, [appProps]);
   //========================================================================================
   /*                                                                                      *
    *                                        Render                                        *
@@ -89,14 +116,7 @@ function BaseApp(props) {
   //========================================================================================
 
   return (
-    <MainContext.Provider
-      value={{
-        selectedTheme: theme,
-        isDarkTheme: theme === "dark",
-        handleToggleTheme: handleToggleTheme,
-        handleLogOut: handleLogOut
-      }}
-    >
+    <MainContext.Provider value={mainContextMemo}>
       <Style />
       <div className="App" onContextMenu={onContextMenu}>
         {getHostedPlugins(classes)}

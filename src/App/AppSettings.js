@@ -10,7 +10,10 @@ const AppSettings = {
   SHORTCUTS: KEYBINDINGS,
   HELP: {
     DOCUMENTATION: "https://flow.mov.ai/",
-    FORUM: "https://forum.flow.mov.ai/"
+    FORUM: "https://github.com/MOV-AI/movai-flow/discussions"
+  },
+  APP_PROPS: {
+    SHOW_APP_SELECTION: false
   },
   APP_INFORMATION: {
     VERSION: APPLICATION_DATA?.Version || "0.0.1",
@@ -45,6 +48,10 @@ export const setName = name => {
 export const setShortcuts = (shortcuts, keepBase) => {
   const baseShortcuts = keepBase ? KEYBINDINGS : {};
   AppSettings.SHORTCUTS = { ...baseShortcuts, ...shortcuts };
+};
+
+export const setAppProps = props => {
+  AppSettings.APP_PROPS = props;
 };
 
 export default AppSettings;
