@@ -201,13 +201,16 @@ export const Node = (props, ref) => {
     [instance, alert, validateName]
   );
 
-  const deleteKeyValue = (varName, key) => {
-    return new Promise((resolve, reject) => {
-      if (instance.current) instance.current.deleteKeyValue(varName, key);
-      if (instance.current.getKeyValue(varName, key)) reject();
-      else resolve();
-    });
-  };
+  const deleteKeyValue = useCallback(
+    (varName, key) => {
+      return new Promise((resolve, reject) => {
+        if (instance.current) instance.current.deleteKeyValue(varName, key);
+        if (instance.current.getKeyValue(varName, key)) reject();
+        else resolve();
+      });
+    },
+    [instance]
+  );
 
   //========================================================================================
   /*                                                                                      *
