@@ -1,5 +1,5 @@
+import { Manager } from "../../../../../models";
 import Link from "./Link";
-import Manager from "../../../Manager";
 
 test("Smoke test", () => {
   const obj = new Manager("links", Link);

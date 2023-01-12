@@ -1,4 +1,4 @@
-import { DATA_TYPES } from "../../utils/Constants";
+import { DATA_TYPES } from "../../../utils/Constants";
 import Flow from "./Flow";
 import flows from "./__mock__/data/flows";
 
