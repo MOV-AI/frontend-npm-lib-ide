@@ -1,6 +1,6 @@
 import Store from "./ConfigurationStore";
-import Model from "../models/Configuration";
 import { DBSubscriber } from "../../../store";
+import { Model } from "../../../models";
 
 test("Smoke test", () => {
   const obj = new Store();
