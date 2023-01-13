@@ -1,5 +1,5 @@
-import { DATA_TYPES } from "../../utils/Constants";
-import { Command, EnvVar, Parameter, Port } from "../subModels";
+import { DATA_TYPES } from "../../../utils/Constants";
+import { Command, EnvVar, Parameter, Port } from "../../../models/subModels";
 import Node from "./Node";
 
 test("Smoke test", () => {

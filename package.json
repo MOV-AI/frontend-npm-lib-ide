@@ -92,6 +92,7 @@
     "@storybook/react": "^6.5.12",
     "@storybook/testing-library": "^0.0.13",
     "http-proxy-middleware": "^2.0.4",
+    "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.0.3",
     "storybook-addon-mock": "^2.4.1",
     "webpack": "^5.53.0",

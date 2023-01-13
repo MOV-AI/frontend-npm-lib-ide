@@ -22,32 +22,6 @@ import movaiIcon from "../../../Branding/movai-logo-transparent.png";
 import { mainMenuStyles } from "./styles";
 import { openTool } from "../SystemBar/builder/buildFunctions";
 
-const MENUS = [
-  {
-    name: PLUGINS.EXPLORER.NAME,
-    icon: props => <TextSnippetIcon {...props}></TextSnippetIcon>,
-    title: "Explorer",
-    isActive: true,
-    getOnClick: () => {
-      // Toggle left drawer
-      call(HOSTS.LEFT_DRAWER.NAME, HOSTS.LEFT_DRAWER.CALL.ACTIVATE_PLUGIN_VIEW);
-    }
-  },
-  ...getMainMenuTools().map(tool => {
-    const Icon = tool.icon;
-    return {
-      name: tool.id,
-      icon: props => <Icon {...props} />,
-      title: tool.profile.title,
-      isActive: true,
-      getOnClick: () => {
-        // Open tool
-        openTool(call, tool.profile.name);
-      }
-    };
-  })
-];
-
 const MainMenu = props => {
   const { call } = props;
   // State hooks
@@ -58,6 +32,34 @@ const MainMenu = props => {
   const { t } = useTranslation();
   const { isDarkTheme, handleLogOut } = useContext(MainContext);
   // Refs
+  const MENUS = [
+    {
+      name: PLUGINS.EXPLORER.NAME,
+      icon: _props => <TextSnippetIcon {..._props}></TextSnippetIcon>,
+      title: "Explorer",
+      isActive: true,
+      getOnClick: () => {
+        // Toggle left drawer
+        call(
+          HOSTS.LEFT_DRAWER.NAME,
+          HOSTS.LEFT_DRAWER.CALL.ACTIVATE_PLUGIN_VIEW
+        );
+      }
+    },
+    ...getMainMenuTools().map(tool => {
+      const Icon = tool.icon;
+      return {
+        name: tool.id,
+        icon: _props => <Icon {..._props} />,
+        title: tool.profile.title,
+        isActive: true,
+        getOnClick: () => {
+          // Open tool
+          openTool(call, tool.profile.name);
+        }
+      };
+    })
+  ];
 
   //========================================================================================
   /*                                                                                      *
