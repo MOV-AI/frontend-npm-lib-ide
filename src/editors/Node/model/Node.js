@@ -1,5 +1,5 @@
 import { Model, Manager } from "../../../models";
-import { Command, EnvVar, Parameter, Port } from "../../../models/subModels";
+import { Command, EnvVar, ContainerConf, Parameter, Port } from "../../../models/subModels";
 import schema from "./schema";
 
 class Node extends Model {
@@ -32,6 +32,7 @@ class Node extends Model {
     this.parameters = new Manager("parameters", Parameter, this.events);
     this.envVars = new Manager("envVars", EnvVar, this.events);
     this.commands = new Manager("commands", Command, this.events);
+    this.containerConf = new Manager("containerConf", ContainerConf, this.events);
     this.ports = new Manager("ports", Port, this.events);
 
     // Define observable properties
@@ -259,6 +260,14 @@ class Node extends Model {
   }
 
   /**
+   * Returns the containerConf property
+   * @returns {Manager}
+   */
+  getContainerConf() {
+    return this.containerConf;
+  }
+
+  /**
    * Adds a port
    * @param {object} data : The data to set the port
    * @returns {Node} : The instance
@@ -376,6 +385,7 @@ class Node extends Model {
       parameters,
       envVars,
       commands,
+      containerConf,
       ports
     } = json;
 
@@ -394,6 +404,7 @@ class Node extends Model {
     this.parameters.setData(parameters);
     this.envVars.setData(envVars);
     this.commands.setData(commands);
+    this.containerConf.setData(containerConf);
     this.ports.setData(ports);
 
     return this;
@@ -442,6 +453,7 @@ class Node extends Model {
       parameters: this.getParameters().serialize(),
       envVars: this.getEnvVars().serialize(),
       commands: this.getCommands().serialize(),
+      containerConf: this.getContainerConf().serialize(),
       ports: this.getPorts().serialize()
     };
   }
@@ -478,6 +490,7 @@ class Node extends Model {
       Parameter: this.getParameters().serializeToDB(),
       EnvVar: this.getEnvVars().serializeToDB(),
       CmdLine: this.getCommands().serializeToDB(),
+      ContainerConf: this.getContainerConf().serializeToDB(),
       PortsInst: this.getPorts().serializeToDB()
     };
   }
@@ -511,6 +524,7 @@ class Node extends Model {
       Parameter: parameters,
       EnvVar: envVars,
       CmdLine: commands,
+      ContainerConf: containerConf,
       PortsInst: ports
     } = json;
 
@@ -530,6 +544,7 @@ class Node extends Model {
       parameters: Manager.serializeOfDB(parameters, Parameter),
       envVars: Manager.serializeOfDB(envVars, EnvVar),
       commands: Manager.serializeOfDB(commands, Command),
+      containerConf: Manager.serializeOfDB(containerConf, ContainerConf),
       ports: Manager.serializeOfDB(ports, Port)
     };
   }

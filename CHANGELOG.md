@@ -12,3 +12,5 @@
 - [FP-2074 - Fixed a bug that was preventing Containers from triggering the status animation](https://movai.atlassian.net/browse/FP-2074)
 - [FP-2147 - Search nodes in flow not working with strings with low characters](https://movai.atlassian.net/browse/FP-2147)
 - [FP-2152 - Create new editor will close editor window](https://movai.atlassian.net/browse/FP-2152)
+- [FP-2128 - Add container configurations in Node editor](https://movai.atlassian.net/browse/FP-2147)
+- [FP-2186 - Main Menu tools are not showing up](https://movai.atlassian.net/browse/FP-2186)

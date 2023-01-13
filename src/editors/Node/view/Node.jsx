@@ -201,13 +201,16 @@ export const Node = (props, ref) => {
     [instance, alert, validateName]
   );
 
-  const deleteKeyValue = (varName, key) => {
-    return new Promise((resolve, reject) => {
-      if (instance.current) instance.current.deleteKeyValue(varName, key);
-      if (instance.current.getKeyValue(varName, key)) reject();
-      else resolve();
-    });
-  };
+  const deleteKeyValue = useCallback(
+    (varName, key) => {
+      return new Promise((resolve, reject) => {
+        if (instance.current) instance.current.deleteKeyValue(varName, key);
+        if (instance.current.getKeyValue(varName, key)) reject();
+        else resolve();
+      });
+    },
+    [instance]
+  );
 
   //========================================================================================
   /*                                                                                      *
@@ -443,6 +446,16 @@ export const Node = (props, ref) => {
         openEditDialog={handleOpenEditDialog}
         onRowDelete={deleteKeyValue}
         varName="commands"
+      ></KeyValueTable>
+      <KeyValueTable
+        testId="section_container-configuration"
+        title={t("ContainerConfigurations")}
+        editable={editable}
+        data={data.containerConf}
+        columns={defaultColumns}
+        openEditDialog={handleOpenEditDialog}
+        onRowDelete={deleteKeyValue}
+        varName="containerConf"
       ></KeyValueTable>
     </Typography>
   );
