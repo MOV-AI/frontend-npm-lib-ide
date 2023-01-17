@@ -10,6 +10,8 @@
  * @returns {string} Uniform document path
  */
 const parseDocumentPath = path => {
+  if (!path) return;
+
   const splittedPath = path.split("/");
   const version = splittedPath[3] || "-";
   const basePath = splittedPath.slice(0, 3).join("/");
@@ -19,20 +21,18 @@ const parseDocumentPath = path => {
     : `${basePath}/${version}`;
 };
 
-
 //========================================================================================
 /*                                                                                      *
  *                                    Public Methods                                    *
  *                                                                                      */
 //========================================================================================
 
-
 /**
  * Flatten object
- * @param {*} obj 
- * @param {*} prefix 
- * @param {*} separator 
- * @returns 
+ * @param {*} obj
+ * @param {*} prefix
+ * @param {*} separator
+ * @returns
  */
 export function flattenObject(obj, prefix = "", separator = ".") {
   return Object.keys(obj).reduce((acc, k) => {

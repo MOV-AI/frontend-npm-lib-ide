@@ -150,14 +150,10 @@ class DocManager extends IDEPlugin {
    */
   reloadDoc(modelKey) {
     this.read(modelKey).then(doc => {
-      this.call(
-        PLUGINS.TABS.NAME,
-        PLUGINS.TABS.CALL.OPEN_EDITOR,
-        {
-          ...modelKey,
-          id: doc.getUrl(),
-        }
-      );
+      this.call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
+        ...modelKey,
+        id: doc.getUrl()
+      });
     });
   }
 
@@ -265,9 +261,6 @@ class DocManager extends IDEPlugin {
         doc: Document.parsePath(name, scope),
         newName
       });
-
-      this.reloadDoc({ name: newName, scope });
-
       if (!opts?.preventAlert) {
         this.call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
           message: i18n.t(SUCCESS_MESSAGES.SAVED_SUCCESSFULLY),
