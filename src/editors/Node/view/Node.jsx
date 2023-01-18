@@ -97,19 +97,19 @@ export const Node = (props, ref) => {
    *                                                                                      */
   //========================================================================================
 
-  const updateDescription = value => {
+  const updateDescription = useCallback(value => {
     if (instance.current) instance.current.setDescription(value);
-  };
+  }, []);
 
-  const updateExecutionParams = (param, value) => {
+  const updateExecutionParams = useCallback((param, value) => {
     if (instance.current) instance.current.setExecutionParameter(param, value);
-  };
+  }, []);
 
-  const updatePath = value => {
+  const updatePath = useCallback(value => {
     if (instance.current) instance.current.setPath(value);
-  };
+  }, []);
 
-  const setPort = (value, resolve, reject, previousData) => {
+  const setPort = useCallback((value, resolve, reject, previousData) => {
     try {
       // Trim name
       value.name = value.name.trim();
@@ -144,12 +144,12 @@ export const Node = (props, ref) => {
       // Reject promise
       reject();
     }
-  };
+  }, []);
 
-  const deletePort = (port, resolve) => {
+  const deletePort = useCallback((port, resolve) => {
     if (instance.current) instance.current.deletePort(port.name);
     resolve();
-  };
+  }, []);
 
   const updatePortCallback = useCallback(
     (ioConfigId, portName, callback) => {
@@ -158,21 +158,18 @@ export const Node = (props, ref) => {
     [instance]
   );
 
-  const updateIOPortInputs = (
-    value,
-    ioConfigName,
-    direction,
-    ioPortKey,
-    paramName
-  ) => {
-    instance.current.setPortParameter(
-      ioConfigName,
-      direction,
-      ioPortKey,
-      paramName,
-      value
-    );
-  };
+  const updateIOPortInputs = useCallback(
+    (value, ioConfigName, direction, ioPortKey, paramName) => {
+      instance.current.setPortParameter(
+        ioConfigName,
+        direction,
+        ioPortKey,
+        paramName,
+        value
+      );
+    },
+    []
+  );
 
   const updateKeyValue = useCallback(
     (varName, newData, oldData, isNew) => {
