@@ -161,6 +161,7 @@ const FormDialog = props => {
       fullWidth={!!size}
       onClose={handleClose}
       onSubmit={handleSubmit}
+      allowSubmit={!validation.error}
       closeOnBackdrop={closeOnBackdrop}
       title={loadingMessage && isLoading ? loadingMessage : title}
       actions={
