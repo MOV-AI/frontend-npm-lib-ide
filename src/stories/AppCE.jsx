@@ -4,7 +4,8 @@ import React, { useEffect } from "react";
 import BaseApp, { installEditor, installTool } from "../App/BaseApp";
 // Editors
 import {
-  CallbackEditor, CallbackModel,
+  CallbackEditor,
+  CallbackModel,
   CallbackStore
 } from "../editors/Callback";
 import {
