@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-ide",
-  "version": "1.0.0-19",
+  "version": "1.0.0-24",
   "main": "./dist/index.js",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/mov-ai"
@@ -44,8 +44,8 @@
     "@material-ui/lab": ">=4.0.0-alpha.60",
     "@material-ui/styles": ">=4.11.4",
     "@mov-ai/mov-fe-lib-code-editor": "^1.0.8-2",
-    "@mov-ai/mov-fe-lib-core": "^1.1.2-1",
-    "@mov-ai/mov-fe-lib-react": "^1.1.2-4",
+    "@mov-ai/mov-fe-lib-core": "^1.1.2-3",
+    "@mov-ai/mov-fe-lib-react": "^1.1.2-6",
     "@remixproject/engine": "^0.3.19",
     "@remixproject/engine-web": "^0.3.19",
     "@testing-library/jest-dom": "^5.14.1",
