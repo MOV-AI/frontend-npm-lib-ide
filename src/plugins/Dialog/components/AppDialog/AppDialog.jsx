@@ -55,6 +55,7 @@ export const DialogTitle = props => {
 const AppDialog = props => {
   const { t } = useTranslation();
   const {
+    allowSubmit = true,
     actions,
     onSubmit,
     onClose,
@@ -82,6 +83,8 @@ const AppDialog = props => {
    * Handle Dialog Submit and close
    */
   const handleSubmit = () => {
+    if (!allowSubmit) return;
+
     onSubmit && onSubmit();
     handleClose();
   };
