@@ -19,6 +19,13 @@ export const defaultFunction = (name, logToConsole = true) => {
 };
 
 /**
+ * Returns a given icon with props in a method
+ * @param {SvgIcon} Icon
+ * @returns {function} Icon with props
+ */
+export const getIconFn = Icon => props => <Icon {...props}></Icon>;
+
+/**
  * Checks if it's a React Component or Functional Component to return it's ref
  * @param {*} Component
  * @returns {Component} RefComponent
