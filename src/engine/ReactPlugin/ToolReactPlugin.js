@@ -21,10 +21,6 @@ export const useStyles = makeStyles(_theme => ({
 export function withToolPlugin(ReactComponent, methods = []) {
   const RefComponent = forwardRef((props, ref) => ReactComponent(props, ref));
 
-  /**
-   * Component responsible to handle common editor lifecycle
-   */
-
   // Decorate component
   const DecoratedToolComponent = composeDecorators(RefComponent, [
     withAlerts,
