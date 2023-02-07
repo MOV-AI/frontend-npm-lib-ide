@@ -191,10 +191,10 @@ const withBookmarks = Component => {
         return (
           side === anchor && (
             <div className={classes.panel}>
-              {Object.values(bookmarks).map((bookmark, index) => (
+              {Object.values(bookmarks).map(bookmark => (
                 <BookmarkTab
                   data-testid="section_bookmark-tab"
-                  key={index}
+                  key={bookmark.name}
                   classes={classes}
                   bookmark={bookmark}
                   active={active}

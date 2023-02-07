@@ -13,7 +13,8 @@ const AppSettings = {
     FORUM: "https://github.com/MOV-AI/movai-flow/discussions"
   },
   APP_PROPS: {
-    SHOW_APP_SELECTION: false
+    SHOW_APP_SELECTION: false,
+    SHOW_TOGGLE_THEME: false
   },
   APP_INFORMATION: {
     VERSION: APPLICATION_DATA?.Version || "0.0.1",

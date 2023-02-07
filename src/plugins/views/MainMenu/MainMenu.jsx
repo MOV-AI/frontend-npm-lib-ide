@@ -16,7 +16,7 @@ import { MainContext } from "../../../main-context";
 import AppSettings from "../../../App/AppSettings";
 import { PLUGINS, HOSTS } from "../../../utils/Constants";
 import { getMainMenuTools } from "../../../tools";
-import { getIconByScope } from "../../../utils/Utils";
+import { getIconByScope, getIconFn } from "../../../utils/Utils";
 import movaiIcon from "../../../Branding/movai-logo-transparent.png";
 
 import { mainMenuStyles } from "./styles";
@@ -30,12 +30,13 @@ const MainMenu = props => {
   const classes = mainMenuStyles();
   const theme = useTheme();
   const { t } = useTranslation();
-  const { isDarkTheme, handleLogOut } = useContext(MainContext);
+  const { isDarkTheme, handleLogOut, handleToggleTheme } =
+    useContext(MainContext);
   // Refs
   const MENUS = [
     {
       name: PLUGINS.EXPLORER.NAME,
-      icon: _props => <TextSnippetIcon {..._props}></TextSnippetIcon>,
+      icon: getIconFn(TextSnippetIcon),
       title: "Explorer",
       isActive: true,
       getOnClick: () => {
@@ -47,10 +48,9 @@ const MainMenu = props => {
       }
     },
     ...getMainMenuTools().map(tool => {
-      const Icon = tool.icon;
       return {
         name: tool.id,
-        icon: _props => <Icon {..._props} />,
+        icon: getIconFn(tool.icon),
         title: tool.profile.title,
         isActive: true,
         getOnClick: () => {
@@ -156,6 +156,9 @@ const MainMenu = props => {
             version={AppSettings.APP_INFORMATION.VERSION}
             isDarkTheme={isDarkTheme}
             handleLogout={handleLogoutClick}
+            handleToggleTheme={
+              AppSettings.APP_PROPS.SHOW_TOGGLE_THEME ? handleToggleTheme : null
+            }
           />,
           <img
             key={"movaiIcon"}
