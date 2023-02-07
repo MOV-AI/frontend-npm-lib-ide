@@ -24,31 +24,9 @@ export function withToolPlugin(ReactComponent, methods = []) {
   /**
    * Component responsible to handle common editor lifecycle
    */
-  const ToolComponent = forwardRef((props, ref) => {
-    const { deactivateKeyBind } = props;
-
-    const classes = useStyles();
-
-    const toolContainer = useRef();
-
-    return (
-      <div
-        tabIndex="-1"
-        ref={toolContainer}
-        onBlur={deactivateKeyBind}
-        className={classes.root}
-      >
-        <RefComponent
-          {...props}
-          deactivateKeyBind={deactivateKeyBind}
-          ref={ref}
-        />
-      </div>
-    );
-  });
 
   // Decorate component
-  const DecoratedToolComponent = composeDecorators(ToolComponent, [
+  const DecoratedToolComponent = composeDecorators(RefComponent, [
     withAlerts,
     withKeyBinds,
     withMenuHandler
