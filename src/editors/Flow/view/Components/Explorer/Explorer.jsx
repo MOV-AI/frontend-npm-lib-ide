@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { Typography } from "@material-ui/core";
 import ListItemsTreeWithSearch, {
   toggleExpandRow
@@ -86,30 +87,35 @@ const Explorer = props => {
    * Load documents
    * @param {DocManager} docManager
    */
-  const loadDocs = useCallback(docManager => {
-    return setData(_node =>
-      [docManager.getStore("Node"), docManager.getStore("Flow")].map(
-        (store, id) => {
-          const { name, title } = store;
-          const filteredChildren = store.getDocs().filter(d => !d.isNew);
-          return {
-            id,
-            name,
-            title,
-            children: filteredChildren.map((doc, childId) => {
-              return {
-                id: childId,
-                name: doc.getName(),
-                title: doc.getName(),
-                scope: doc.getScope(),
-                url: doc.getUrl()
-              };
-            })
-          };
-        }
-      )
-    );
-  }, []);
+  const loadDocs = useCallback(
+    docManager => {
+      return setData(_node =>
+        [docManager.getStore("Node"), docManager.getStore("Flow")].map(
+          (store, id) => {
+            const { name, title } = store;
+            const filteredChildren = store
+              .getDocs()
+              .filter(d => !d.isNew && d.id !== Utils.getNameFromURL(flowId));
+            return {
+              id,
+              name,
+              title,
+              children: filteredChildren.map((doc, childId) => {
+                return {
+                  id: childId,
+                  name: doc.getName(),
+                  title: doc.getName(),
+                  scope: doc.getScope(),
+                  url: doc.getUrl()
+                };
+              })
+            };
+          }
+        )
+      );
+    },
+    [flowId]
+  );
 
   //========================================================================================
   /*                                                                                      *
