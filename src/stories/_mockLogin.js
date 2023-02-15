@@ -8,10 +8,10 @@ export const authParams = {
       response: _ => {
         // MUST BE A REAL TOKEN FROM MOVAI BE
         return {
-          access_token: "",
-          refresh_token: "",
-          error: false
-        };
+          "refresh_token": "",
+          "access_token": "",
+          "error": false
+        }
       }
     },
     {
