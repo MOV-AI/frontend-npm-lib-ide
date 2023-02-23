@@ -11,7 +11,7 @@ export const searchStyles = makeStyles(theme => ({
     marginLeft: 10,
     flex: 1,
     "& input::placeholder": {
-      color: theme.backdrop.color
+      color: theme.backdrop?.color
     }
   },
   iconButton: { padding: 10 },
