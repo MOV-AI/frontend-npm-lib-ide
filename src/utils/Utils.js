@@ -195,3 +195,13 @@ export const composeDecorators = (Component, decorators) => {
     return composeDecorators(composed, otherDecorators);
   else return composed;
 };
+
+/**
+ * Inserts new entries on an array if condition is met
+ * @param {boolean} condition
+ * @param  {...any} elements
+ * @returns {boolean} elements or empty array
+ */
+export function insertIf(condition, ...elements) {
+  return condition ? elements : [];
+}

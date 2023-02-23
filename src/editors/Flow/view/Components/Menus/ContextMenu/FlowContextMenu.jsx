@@ -11,7 +11,7 @@ const FlowContextMenu = props => {
     return options?.map(
       opt =>
         opt.onClick && {
-          label: t(opt.label),
+          label: t(opt.label, opt.labelVars),
           icon: opt.icon,
           onClick: e => {
             opt.onClick(e);
