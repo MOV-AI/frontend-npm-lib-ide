@@ -2,9 +2,12 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import ToggleOnIcon from "@material-ui/icons/ToggleOn";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { FLOW_CONTEXT_MODES } from "../../../utils/Constants";
+import { insertIf } from "../../../utils/Utils";
 
 export const baseContextOptions = data => {
+  const callbackName = data.data.callback;
   const nodeOptions = ({ handleCopyNode, handleDeleteNode }) => [
     {
       label: "Copy",
@@ -28,12 +31,18 @@ export const baseContextOptions = data => {
     }
   ];
 
-  const portOptions = ({ handleToggleExposedPort }) => [
+  const portOptions = ({ handleToggleExposedPort, handleOpenCallback }) => [
     {
       label: "ToggleExposed",
       icon: <ToggleOnIcon />,
       onClick: () => handleToggleExposedPort(data)
-    }
+    },
+    ...insertIf(callbackName, {
+      label: "OpenCallbackName",
+      labelVars: { callbackName: callbackName },
+      icon: <OpenInNewIcon />,
+      onClick: () => handleOpenCallback(callbackName)
+    })
   ];
 
   const canvasOptions = ({ handlePasteNodes }) => [

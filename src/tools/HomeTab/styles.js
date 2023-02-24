@@ -24,7 +24,7 @@ export const homeTabStyles = makeStyles(theme => ({
     display: "flex",
     overflow: "auto",
     flexDirection: "column",
-    backgroundColor: theme.robotDetails.backgroundColor
+    backgroundColor: theme.robotDetails?.backgroundColor
   },
   body: {
     flex: "1 1 auto",

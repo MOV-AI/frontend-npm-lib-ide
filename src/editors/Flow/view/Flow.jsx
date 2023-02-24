@@ -22,6 +22,7 @@ import {
 import Workspace from "../../../utils/Workspace";
 import { KEYBINDINGS } from "../../../utils/shortcuts";
 import { SUCCESS_MESSAGES } from "../../../utils/Messages";
+import CallbackModel from "../../Callback/model/Callback";
 import Clipboard, { KEYS } from "./Utils/Clipboard";
 import Vec2 from "./Utils/Vec2";
 import BaseFlow from "./Views/BaseFlow";
@@ -909,7 +910,8 @@ export const Flow = (props, ref) => {
           setContextMenuOptions({
             anchorPosition,
             options: getContextOptions(FLOW_CONTEXT_MODES.PORT, evtData.port, {
-              handleToggleExposedPort
+              handleToggleExposedPort,
+              handleOpenCallback
             })
           });
         }
@@ -1119,6 +1121,30 @@ export const Flow = (props, ref) => {
     const port = contextArgs.current;
     getMainInterface().toggleExposedPort(port);
   }, []);
+
+  /**
+   * Open Callback
+   * @param {string} callbackName : Callback name
+   */
+  const handleOpenCallback = useCallback(
+    callbackName => {
+      // If no callback name is passed -> returns
+      if (!callbackName) return;
+      // Open existing callback
+      const scope = CallbackModel.SCOPE;
+      call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.READ, {
+        scope,
+        name: callbackName
+      }).then(doc => {
+        call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
+          id: doc.getUrl(),
+          name: doc.getName(),
+          scope
+        });
+      });
+    },
+    [call]
+  );
 
   /**
    * Handle zoom reset

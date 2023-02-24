@@ -20,7 +20,7 @@ export const tabsStyles = makeStyles(theme => ({
     "& .dock-layout": {
       width: "100%",
       height: "100%",
-      background: theme.dockLayout.background,
+      background: theme.dockLayout?.background,
       "& .dock-panel": {
         background: theme.palette.background.default,
         borderColor: theme.palette.background.default,
@@ -33,8 +33,8 @@ export const tabsStyles = makeStyles(theme => ({
           "& .dock-tab": {
             borderTopLeftRadius: "5px",
             borderTopRightRadius: "5px",
-            background: theme.backdrop.background,
-            color: theme.backdrop.color,
+            background: theme.backdrop?.background,
+            color: theme.backdrop?.color,
             padding: "0 10px",
             "& .dock-tab-close-btn": {
               right: "1px"
@@ -49,8 +49,8 @@ export const tabsStyles = makeStyles(theme => ({
         },
         "& .dock-drop-layer .dock-drop-square": {
           background: theme.palette.background.primary,
-          color: theme.backdrop.color,
-          borderColor: `${theme.backdrop.color}95`
+          color: theme.backdrop?.color,
+          borderColor: `${theme.backdrop?.color}95`
         }
       },
       "& .dock-style-place-holder": {
