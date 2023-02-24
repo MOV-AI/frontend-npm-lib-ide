@@ -6,6 +6,7 @@ import React, {
   useRef
 } from "react";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
+import { withError } from "@mov-ai/mov-fe-lib-react";
 import { Tooltip } from "@material-ui/core";
 import {
   DEFAULT_LAYOUT,
@@ -20,7 +21,7 @@ import { getToolTabData } from "../../../../tools";
 import useTabStack from "./useTabStack";
 
 const useTabLayout = (props, dockRef) => {
-  const { emit, call, on, off } = props;
+  const { dependencies, emit, call, on, off } = props;
   const workspaceManager = useMemo(() => new Workspace(), []);
   const activeTabId = useRef(null);
   const firstLoad = useRef(true);
@@ -461,6 +462,8 @@ const useTabLayout = (props, dockRef) => {
 
         return installTabPlugin(docFactory, docData)
           .then(viewPlugin => {
+            const Decorated = withError(() => viewPlugin.render(), dependencies);
+
             // Create and return tab data
             const extension = docFactory.store.model.EXTENSION ?? "";
             // Return TabData
@@ -472,7 +475,7 @@ const useTabLayout = (props, dockRef) => {
               title: _getCustomTab(docData, _closeTab, docData.isDirty),
               extension: extension,
               scope: docData.scope,
-              content: viewPlugin.render()
+              content: <Decorated />
             };
           })
           .catch(err => {

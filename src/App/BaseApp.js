@@ -45,7 +45,8 @@ function BaseApp(props) {
     appProps,
     shortcuts,
     handleLogOut,
-    handleToggleTheme
+    handleToggleTheme,
+    dependencies
   } = props;
 
   // Style hook
@@ -83,7 +84,7 @@ function BaseApp(props) {
 
   useEffect(() => {
     installAppPlugins();
-    installViewPlugins();
+    installViewPlugins(dependencies);
     // Write log in consle
     writeMovaiLogo();
   }, []);
@@ -179,36 +180,37 @@ function installAppPlugins() {
   });
 }
 
-function installViewPlugins() {
+function installViewPlugins(dependencies) {
+  const cProps = { dependencies };
   const plugins = [
     {
       profile: {
         name: PLUGINS.MAIN_MENU.NAME,
         location: HOSTS.LEFT_PANEL.NAME
       },
-      factory: profile => new MainMenu(profile)
+      factory: profile => new MainMenu(profile, cProps)
     },
     {
       profile: {
         name: PLUGINS.EXPLORER.NAME,
         location: HOSTS.LEFT_DRAWER.NAME
       },
-      factory: profile => new Explorer(profile)
+      factory: profile => new Explorer(profile, cProps)
     },
     {
       profile: { name: PLUGINS.TABS.NAME, location: HOSTS.MAIN_PANEL.NAME },
-      factory: profile => new Tabs(profile)
+      factory: profile => new Tabs(profile, cProps)
     },
     {
       profile: {
         name: PLUGINS.PLACEHOLDER.NAME,
         location: PLUGINS.RIGHT_DRAWER.NAME
       },
-      factory: profile => new Placeholder(profile)
+      factory: profile => new Placeholder(profile, cProps)
     },
     {
       profile: { name: PLUGINS.SYSTEM_BAR.NAME, location: HOSTS.TOP_BAR.NAME },
-      factory: profile => new SystemBar(profile)
+      factory: profile => new SystemBar(profile, cProps)
     }
   ];
   plugins.forEach(pluginDescription => {
