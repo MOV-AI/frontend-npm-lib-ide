@@ -216,23 +216,24 @@ class BaseStore extends StorePluginManager {
   loadDocs(data) {
     const docType = this.scope;
 
-    Object.values(data.value[docType]).forEach(doc => {
-      const name = doc.Label;
+    if (data.value)
+      Object.values(data.value[docType]).forEach(doc => {
+        const name = doc.Label;
 
-      // Check if is doc protected
-      const isProtected = this.protectedDocs.includes(doc.Label);
+        // Check if is doc protected
+        const isProtected = this.protectedDocs.includes(doc.Label);
 
-      // create only if the instance does not exist yet
-      if (!this.getDoc(name) && !isProtected) {
-        const newDoc = this.newDoc(name);
-        newDoc
-          .enableObservables(false)
-          .setIsNew(false)
-          .setIsLoaded(false)
-          .setDirty(false)
-          .enableObservables(true);
-      }
-    });
+        // create only if the instance does not exist yet
+        if (!this.getDoc(name) && !isProtected) {
+          const newDoc = this.newDoc(name);
+          newDoc
+            .enableObservables(false)
+            .setIsNew(false)
+            .setIsLoaded(false)
+            .setDirty(false)
+            .enableObservables(true);
+        }
+      });
 
     // fire subject onLoad
     if (typeof this.observer?.onLoad === "function") {

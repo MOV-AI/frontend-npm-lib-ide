@@ -127,7 +127,7 @@ export const Configuration = (props, ref) => {
         <MonacoCodeEditor
           value={data.code}
           language={data.extension}
-          theme={theme.codeEditor.theme}
+          theme={theme.codeEditor?.theme}
           options={{ readOnly: !editable }}
           onChange={updateConfigCode}
           onSave={saveDocument}
