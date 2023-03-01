@@ -108,6 +108,7 @@ const FlowTopBar = props => {
    */
   const changeRobotSubscriber = useCallback(
     robotId => {
+      // robotUnsubscribe here means unsubscribe from what robot?
       robotUnsubscribe();
       robotSubscribe(robotId);
     },
@@ -242,7 +243,7 @@ const FlowTopBar = props => {
      * On component unmount
      */
     return () => {
-      robotUnsubscribe();
+      robotUnsubscribe(); // unsubscribe what robot? All robots?
       // Unmount
       isMounted.current = false;
     };
