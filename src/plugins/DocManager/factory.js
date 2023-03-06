@@ -1,7 +1,7 @@
 const EDITORS = {};
 
-export const addEditor = (scope, store, plugin) => {
-  EDITORS[scope] = { store, plugin };
+export const addEditor = ({ scope, store, plugin, props }) => {
+  EDITORS[scope] = { store, plugin, props };
 };
 
 /**
@@ -16,7 +16,8 @@ const factory = (workspace, observer, docManager) => {
     const Store = editor.store;
     EDITORS[scope] = {
       store: new Store(workspace, observer, docManager),
-      plugin: editor.plugin
+      plugin: editor.plugin,
+      props: editor.props
     };
   });
   return EDITORS;

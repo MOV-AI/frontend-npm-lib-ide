@@ -198,9 +198,8 @@ const useTabLayout = (props, dockRef) => {
       const newLayout = { ...prevLayout };
       const box = _getTabContainer(newLayout[location], prevTabId);
       if (box) {
-        tabData.id = `${tabData.id.substring(0, tabData.id.lastIndexOf("/"))}/${
-          tabData.name
-        }`;
+        tabData.id = `${tabData.id.substring(0, tabData.id.lastIndexOf("/"))}/${tabData.name
+          }`;
         const tabIndex = box.tabs.findIndex(_el => _el.id === prevTabId);
         box.tabs[tabIndex] = tabData;
         box.activeId = tabData.id;
@@ -459,10 +458,9 @@ const useTabLayout = (props, dockRef) => {
         docData.scope
       ).then(docFactory => {
         if (!docFactory) return docData;
-
         return installTabPlugin(docFactory, docData)
           .then(viewPlugin => {
-            const Decorated = withError(() => viewPlugin.render(), dependencies);
+            const Decorated = withError(() => viewPlugin.render(docFactory.props ?? {}), dependencies);
 
             // Create and return tab data
             const extension = docFactory.store.model.EXTENSION ?? "";

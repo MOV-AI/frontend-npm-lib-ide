@@ -128,11 +128,11 @@ function BaseApp(props) {
 
 /**
  * Install app editors
- * @param {{scope: string, store: Store, plugin: IDEPlugin}} editor
+ * @param {{scope: string, store: Store, plugin: IDEPlugin, props: Object}} editor
  */
 export function installEditor(editor) {
-  const { scope, store, editorPlugin, otherPlugins = [] } = editor;
-  addEditor(scope, store, editorPlugin);
+  const { scope, store, editorPlugin, otherPlugins = [], props = {} } = editor;
+  addEditor({scope, store, plugin: editorPlugin, props});
   // Install other plugins relead to editor
   otherPlugins.forEach(pluginDescription => {
     const plugin = pluginDescription.factory(pluginDescription.profile);
