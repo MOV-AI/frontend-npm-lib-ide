@@ -28,7 +28,8 @@ export const Callback = (props, ref) => {
     instance,
     data,
     saveDocument,
-    editable = true
+    editable = true,
+    useLanguageServer=false
   } = props;
 
   // Style Hooks
@@ -80,7 +81,6 @@ export const Callback = (props, ref) => {
    *                                   Render Functions                                   *
    *                                                                                      */
   //========================================================================================
-
   return (
     <div data-testid="section_callback-editor" className={classes.container}>
       <MonacoCodeEditor
@@ -91,7 +91,7 @@ export const Callback = (props, ref) => {
         onChange={updateCallbackCode}
         onSave={saveDocument}
         onLoad={onEditorLoad}
-        useLanguageServer
+        useLanguageServer={useLanguageServer}
         builtins={Object.values(data.pyLibs).map(libs => libs.name)}
       />
     </div>
@@ -106,6 +106,7 @@ Callback.propTypes = {
   data: PropTypes.object,
   instance: PropTypes.object,
   editable: PropTypes.bool,
+  useLanguageServer: PropTypes.bool,
   saveDocument: PropTypes.func
 };
 

@@ -117,9 +117,10 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       super(profile, props, methods);
     }
 
-    render() {
+    render(otherProps) {
       return (
         <DecoratedEditorComponent
+          {...otherProps}
           {...this.props}
           ref={this.ref}
           call={this.call}
