@@ -14,7 +14,7 @@ const AppSettings = {
   },
   APP_PROPS: {
     SHOW_APP_SELECTION: false,
-    SHOW_TOGGLE_THEME: false
+    SHOW_TOGGLE_THEME: true
   },
   APP_INFORMATION: {
     VERSION: APPLICATION_DATA?.Version || "0.0.1",
