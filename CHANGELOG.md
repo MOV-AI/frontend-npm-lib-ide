@@ -1,11 +1,6 @@
 # 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
-## Current
-
 - [FP-2261 - Added Open Callback option to Port Context Menu](https://movai.atlassian.net/browse/FP-2261)
-
-## Miscellaneous
-
 - [FP-2027 - Editor shouldn't require method "renderRightMenu" implementation](https://movai.atlassian.net/browse/FP-2027)
 - [FP-2036 - Fix data type validation](https://movai.atlassian.net/browse/FP-2036)
   - [Fix Boolean type validation : Accept js boolean](https://github.com/MOV-AI/frontend-npm-lib-ide/commit/0fe2d8e4d121fe702bfcfd9db1a1ac1702d35625)
