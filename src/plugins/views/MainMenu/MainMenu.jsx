@@ -78,17 +78,6 @@ const MainMenu = props => {
 
   //========================================================================================
   /*                                                                                      *
-   *                                     Handle Events                                    *
-   *                                                                                      */
-  //========================================================================================
-
-  const handleLogoutClick = useCallback(
-    () => handleLogOut(window.location.href),
-    [handleLogOut]
-  );
-
-  //========================================================================================
-  /*                                                                                      *
    *                                        Render                                        *
    *                                                                                      */
   //========================================================================================
@@ -155,7 +144,7 @@ const MainMenu = props => {
             key={"profileMenu"}
             version={AppSettings.APP_INFORMATION.VERSION}
             isDarkTheme={isDarkTheme}
-            handleLogout={handleLogoutClick}
+            handleLogout={handleLogOut}
             handleToggleTheme={
               AppSettings.APP_PROPS.SHOW_TOGGLE_THEME ? handleToggleTheme : null
             }
