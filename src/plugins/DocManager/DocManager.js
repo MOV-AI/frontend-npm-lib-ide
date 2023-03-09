@@ -158,13 +158,23 @@ class DocManager extends IDEPlugin {
   }
 
   /**
-   * Read model from DB
+   * Read model
    * @param {{name: String, scope: String}} modelKey
    * @returns {Promise<Model>}
    */
   read(modelKey) {
     const { name, scope } = modelKey;
     return this.getStore(scope)?.readDoc(name) ?? Promise.reject();
+  }
+
+  /**
+   * Force Read model from DB
+   * @param {{name: String, scope: String}} modelKey
+   * @returns {Promise<Model>}
+   */
+  forceRead(modelKey) {
+    const { name, scope } = modelKey;
+    return this.getStore(scope)?.readDoc(name, true) ?? Promise.reject();
   }
 
   /**

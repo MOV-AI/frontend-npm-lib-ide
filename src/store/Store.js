@@ -13,11 +13,12 @@ class Store extends BaseStore {
   /**
    * Returns a document instance
    * @param {string} name : The name of the document
+   * @param {boolean} force : Will always fetch the data from the DB
    * @returns {Promise<{<Model>}}
    */
-  readDoc(name) {
+  readDoc(name, force) {
     const doc = this.getDoc(name);
-    return doc?.isLoaded ? Promise.resolve(doc) : this.loadDoc(name);
+    return doc?.isLoaded && !force ? Promise.resolve(doc) : this.loadDoc(name);
   }
 
   /**
@@ -119,15 +120,20 @@ class Store extends BaseStore {
       }
     };
 
-    return saveMethodByIsNew[doc.getIsNew()](data).then(res => {
+    return saveMethodByIsNew[doc.getIsNew()](data).then(async res => {
       if (res.success) {
         doc.setIsNew(false).setDirty(false);
         this.observer.onDocumentDirty(this.name, doc, doc.getDirty());
         res.model = doc;
 
-        // We don't need the untitled anymore, so let's kill it
-        // Without this line we were getting the prompt to save untitled
-        if (newName) this.discardDocChanges(name);
+        if (newName) {
+          // Let's fetch the new information since this was a new file
+          res.model = await this.readDoc(newName, true);
+
+          // We don't need the untitled anymore, so let's kill it
+          // Without this line we were getting the prompt to save untitled
+          this.discardDocChanges(name);
+        }
       }
       return res;
     });

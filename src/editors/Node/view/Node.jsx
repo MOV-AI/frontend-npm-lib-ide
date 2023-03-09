@@ -183,12 +183,10 @@ export const Node = (props, ref) => {
         }
         if (isNew) {
           // update key value
-          if (instance.current)
-            instance.current.setKeyValue(varName, dataToSave);
+          instance.current?.setKeyValue(varName, dataToSave);
         } else {
           // add key value
-          if (instance.current)
-            instance.current.updateKeyValueItem(varName, newData, oldData.name);
+          instance.current?.updateKeyValueItem(varName, newData, oldData.name);
         }
       } catch (err) {
         if (err.message)
@@ -201,8 +199,8 @@ export const Node = (props, ref) => {
   const deleteKeyValue = useCallback(
     (varName, key) => {
       return new Promise((resolve, reject) => {
-        if (instance.current) instance.current.deleteKeyValue(varName, key);
-        if (instance.current.getKeyValue(varName, key)) reject();
+        instance.current?.deleteKeyValue(varName, key);
+        if (instance.current?.getKeyValue(varName, key)) reject();
         else resolve();
       });
     },
