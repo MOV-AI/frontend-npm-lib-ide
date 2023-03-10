@@ -22,8 +22,7 @@ const useDataSubscriber = props => {
     setData(modelRef.serialize());
     setDetails(modelRef.getDetails());
     subscriberId = modelRef.subscribe((_, key, value) => {
-      if (!keysToDisconsider) return;
-      if (keysToDisconsider.includes(key)) return;
+      if (!keysToDisconsider || keysToDisconsider.includes(key)) return;
       // Update doc data to be used locally
       setData(prevState => {
         if (_isEqual(prevState[key], value)) return prevState;
@@ -33,7 +32,7 @@ const useDataSubscriber = props => {
       setDetails(prevState => {
         const newDetails = modelRef.getDetails();
         if (prevState === newDetails) return prevState;
-        else return newDetails;
+        return newDetails;
       });
     });
 
