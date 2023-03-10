@@ -7,7 +7,7 @@ import { FLOW_CONTEXT_MODES } from "../../../utils/Constants";
 import { insertIf } from "../../../utils/Utils";
 
 export const baseContextOptions = data => {
-  const callbackName = data.data.callback;
+  const callbackName = data?.data?.callback;
   const nodeOptions = ({ handleCopyNode, handleDeleteNode }) => [
     {
       label: "Copy",
