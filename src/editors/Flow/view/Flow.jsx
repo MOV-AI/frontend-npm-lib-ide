@@ -176,7 +176,7 @@ export const Flow = (props, ref) => {
    * @returns {array} Selected nodes
    */
   const getSelectedNodes = useCallback(() => {
-    const node = contextArgs.current || {};
+    const node = contextArgs.current;
     const selectedNodesSet = new Set(
       [node].concat(getMainInterface().selectedNodes)
     );
@@ -350,7 +350,10 @@ export const Flow = (props, ref) => {
         const args = {
           title: t("PasteNodeModel", { nodeModel: node.model }),
           value: `${node.id}_copy`,
-          onClose: resolve,
+          onClose: () => {
+            setFlowsToDefault();
+            resolve();
+          },
           onValidation: newName =>
             getMainInterface().graph.validator.validateNodeName(
               newName,
@@ -657,6 +660,7 @@ export const Flow = (props, ref) => {
   const onNodeSelected = useCallback(
     node => {
       clearTimeout(debounceSelection.current);
+      contextArgs.current = node;
       debounceSelection.current = setTimeout(() => {
         if (!node) {
           unselectNode();
@@ -680,6 +684,7 @@ export const Flow = (props, ref) => {
    */
   const onLinkSelected = useCallback(
     link => {
+      activateKeyBind();
       selectedLinkRef.current = link;
       getMainInterface().selectedLink = link;
       if (!link) {
@@ -729,6 +734,7 @@ export const Flow = (props, ref) => {
    * Call broadcast method to emit event to all open flows
    */
   const setFlowsToDefault = useCallback(() => {
+    activateKeyBind();
     // Remove selected node and link bookmark
     onNodeSelected(null);
     onLinkSelected(null);
@@ -1033,6 +1039,7 @@ export const Flow = (props, ref) => {
         submitText: t("Delete"),
         title: t("ConfirmDelete"),
         onSubmit: callback,
+        onClose: setFlowsToDefault,
         message
       });
     },
@@ -1043,7 +1050,8 @@ export const Flow = (props, ref) => {
    * Handle copy node
    */
   const handleCopyNode = useCallback(
-    data => {
+    evt => {
+      evt && evt.preventDefault();
       const selectedNodes = getSelectedNodes();
       const nodesPos = selectedNodes.map(n =>
         Vec2.of(n.center.xCenter, n.center.yCenter)
@@ -1065,22 +1073,30 @@ export const Flow = (props, ref) => {
   /**
    * Handle paste nodes in canvas
    */
-  const handlePasteNodes = useCallback(async () => {
-    const position = (contextArgs.current =
-      getMainInterface().canvas.mousePosition);
-    const nodesToCopy = clipboard.read(KEYS.NODES_TO_COPY);
-    if (!nodesToCopy) return;
+  const handlePasteNodes = useCallback(
+    async evt => {
+      evt && evt.preventDefault();
+      const position = (contextArgs.current =
+        getMainInterface().canvas.mousePosition);
+      const nodesToCopy = clipboard.read(KEYS.NODES_TO_COPY);
+      if (!nodesToCopy) return;
 
-    for (const [i, node] of nodesToCopy.nodes.entries()) {
-      const nodesPosFromCenter = nodesToCopy.nodesPosFromCenter || [Vec2.ZERO];
-      const newPos = Vec2.of(position.x, position.y).add(nodesPosFromCenter[i]);
-      // Open dialog for each node to copy
-      await pasteNodeDialog(newPos.toObject(), {
-        node: node,
-        flow: nodesToCopy.flow
-      });
-    }
-  }, [clipboard, pasteNodeDialog]);
+      for (const [i, node] of nodesToCopy.nodes.entries()) {
+        const nodesPosFromCenter = nodesToCopy.nodesPosFromCenter || [
+          Vec2.ZERO
+        ];
+        const newPos = Vec2.of(position.x, position.y).add(
+          nodesPosFromCenter[i]
+        );
+        // Open dialog for each node to copy
+        await pasteNodeDialog(newPos.toObject(), {
+          node: node,
+          flow: nodesToCopy.flow
+        });
+      }
+    },
+    [clipboard, pasteNodeDialog]
+  );
 
   /**
    * Handle delete node
@@ -1110,9 +1126,18 @@ export const Flow = (props, ref) => {
    * Handle delete link
    */
   const handleDeleteLink = useCallback(() => {
-    const link = contextArgs.current || {};
-    getMainInterface().deleteLink(link.id);
+    const link = selectedLinkRef.current ?? contextArgs.current;
+    link.id && getMainInterface().deleteLink(link.id);
   }, []);
+
+  /**
+   * Triggers the correct deletion
+   * (if a link is selected delete link, else delete nodes)
+   */
+  const handleShortcutDelete = () => {
+    if (selectedLinkRef.current) handleDeleteLink();
+    else handleDeleteNode();
+  };
 
   /**
    * Toggle exposed port
@@ -1301,7 +1326,7 @@ export const Flow = (props, ref) => {
     );
     addKeyBind(
       KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.DELETE.SHORTCUTS,
-      handleDeleteNode
+      handleShortcutDelete
     );
     // remove keyBind on unmount
     return () => {
