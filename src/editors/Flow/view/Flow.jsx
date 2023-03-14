@@ -1051,7 +1051,7 @@ export const Flow = (props, ref) => {
    */
   const handleCopyNode = useCallback(
     evt => {
-      evt && evt.preventDefault();
+      evt?.preventDefault?.();
       const selectedNodes = getSelectedNodes();
       const nodesPos = selectedNodes.map(n =>
         Vec2.of(n.center.xCenter, n.center.yCenter)
@@ -1075,7 +1075,7 @@ export const Flow = (props, ref) => {
    */
   const handlePasteNodes = useCallback(
     async evt => {
-      evt && evt.preventDefault();
+      evt?.preventDefault?.();
       const position = (contextArgs.current =
         getMainInterface().canvas.mousePosition);
       const nodesToCopy = clipboard.read(KEYS.NODES_TO_COPY);
