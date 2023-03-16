@@ -65,6 +65,13 @@ class BaseStore extends StorePluginManager {
    * @returns {Object} Loaded Document
    */
   loadDoc(name) {
+    if (this.docMan)
+      return this.docMan.load({
+        workspace: this.workspace,
+        scope: this.model.SCOPE,
+        name,
+      }); 
+
     return this.fetchDoc(name)
       .then(file => {
         // get or create document
@@ -92,7 +99,7 @@ class BaseStore extends StorePluginManager {
    */
   fetchDoc(name) {
     const { scope } = this;
-    return new Document(Document.parsePath(name, scope)).read();
+    return new Document(Document.parsePath(name ?? "undefined", scope)).read();
   }
 
   /**
@@ -101,6 +108,13 @@ class BaseStore extends StorePluginManager {
    * @returns {Object} Document
    */
   getDoc(name) {
+    if (this.docMan)
+      return this.docMan.get({
+        workspace: this.workspace,
+        scope: this.name,
+        name,
+      });
+
     return this.data.get(name);
   }
 
@@ -129,6 +143,12 @@ class BaseStore extends StorePluginManager {
    * @returns
    */
   deleteDocFromStore(name) {
+    if (this.docMan)
+      return this.docMan.delete({
+        workspace: this.workspace,
+        scope: this.name,
+        name,
+      });
     this.getDoc(name)?.destroy();
     return this.delDoc(name);
   }

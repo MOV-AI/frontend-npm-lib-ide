@@ -126,9 +126,10 @@ const MainMenu = props => {
                       scope: docType.scope
                     }
                   ).then(document => {
+                    console.log("MainMenu CREATE", document);
                     call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
-                      id: document.getUrl(),
-                      name: document.getName(),
+                      id: document.url ?? document.getUrl(),
+                      name: document.name ?? document.getName(),
                       scope: docType.scope,
                       isNew: true
                     });

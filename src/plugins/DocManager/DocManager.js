@@ -152,7 +152,7 @@ class DocManager extends IDEPlugin {
     this.read(modelKey).then(doc => {
       this.call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
         ...modelKey,
-        id: doc.getUrl()
+        id: doc.url ?? doc.getUrl()
       });
     });
   }
@@ -187,7 +187,7 @@ class DocManager extends IDEPlugin {
 
     this.emit(PLUGINS.DOC_MANAGER.ON.BEFORE_SAVE_DOC, {
       docManager: this,
-      doc: Document.parsePath(name, scope),
+      doc: Document.parsePath(name ?? "undefined", scope),
       thisDoc
     });
 
@@ -258,7 +258,7 @@ class DocManager extends IDEPlugin {
 
       this.emit(PLUGINS.DOC_MANAGER.ON.SAVE_DOC, {
         docManager: this,
-        doc: Document.parsePath(name, scope),
+        doc: Document.parsePath(name ?? "undefined", scope),
         newName
       });
       if (!opts?.preventAlert) {
