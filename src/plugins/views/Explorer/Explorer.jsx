@@ -13,9 +13,11 @@ import ListItemsTreeWithSearch, {
 import { explorerStyles } from "./styles";
 
 const Explorer = props => {
-  const { call, on, off, alert } = props;
+  const { dependencies, call, on, off, alert } = props;
+  const docMan = dependencies.docMan;
   const classes = explorerStyles();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
+  const [registered, setRegistered] = useState({});
 
   // to debug data
   window.ExplorerData = data;
@@ -29,32 +31,6 @@ const Explorer = props => {
   //========================================================================================
 
   /**
-   * Push element into list in correct position
-   * @private function
-   * @param {Array} list
-   * @param {TreeNode} element
-   */
-  const pushSorted = useCallback((list, element) => {
-    /**
-     * Compare objects' name property to sort
-     * @param {*} a
-     * @param {*} b
-     * @returns
-     */
-    const compareByName = (a, b) => {
-      const nameA = a.name.toLowerCase();
-      const nameB = b.name.toLowerCase();
-      if (nameA < nameB) return -1;
-      if (nameA > nameB) return 1;
-      return 0;
-    };
-    // Insert element
-    list.push(element);
-    // Return sorted list
-    return list.sort(compareByName).map((x, i) => ({ ...x, id: i }));
-  }, []);
-
-  /**
    * Delete document from local list
    * @private function
    * @param {{documentName: String, documentType: String}} docData
@@ -62,18 +38,9 @@ const Explorer = props => {
   const deleteDocument = useCallback(docData => {
     const { documentName, documentType } = docData;
     setData(prevState => {
-      const newData = [...prevState];
-      // TODO: optimize time
-      const typeIndex = newData.findIndex(type => type.scope === documentType);
-      if (typeIndex >= 0) {
-        const documentIndex = newData[typeIndex].children.findIndex(
-          doc => doc.name === documentName
-        );
-        if (documentIndex >= 0) {
-          newData[typeIndex].children.splice(documentIndex, 1);
-        }
-      }
-      return newData;
+      const newState = _cloneDeep(prevState);
+      delete newState[documentType].children[documentName];
+      return newState;
     });
   }, []);
 
@@ -85,30 +52,31 @@ const Explorer = props => {
    */
   const addDocument = useCallback(
     (_, docData) => {
-      const { documentName, documentType, document } = docData;
+      const { documentName, documentType } = docData;
+      const document = docData.document ?? docMan.load({
+        workspace: "global",
+        scope: documentType,
+        name: documentName,
+      });
       setData(prevState => {
-        // TODO: optimize time
-        const newData = [...prevState];
-        const typeIndex = newData.findIndex(
-          type => type.scope === documentType
-        );
-        if (typeIndex >= 0) {
-          const documentIndex = newData[typeIndex].children.findIndex(
-            doc => doc.name === documentName
-          );
-          if (documentIndex < 0) {
-            pushSorted(newData[typeIndex].children, {
-              name: document.getName(),
-              title: document.getName(),
-              scope: document.getScope(),
-              url: document.getUrl()
-            });
-          }
-        }
-        return newData;
+        return {
+          ...prevState,
+          [documentType]: {
+            ...prevState[documentType],
+            children: {
+              ...prevState[documentType].children,
+              [documentName]: {
+                name: document.name ?? document.getName(),
+                title: document.name ?? document.getName(),
+                scope: document.scope ?? document.getScope(),
+                url: document.url ?? document.getUrl()
+              },
+            }
+          },
+        };
       });
     },
-    [pushSorted]
+    []
   );
 
   //========================================================================================
@@ -123,7 +91,7 @@ const Explorer = props => {
    */
   const requestScopeVersions = useCallback(
     node => {
-      if (node.children?.length) {
+      if (node.children) {
         setData(toggleExpandRow(node, data));
       } else {
         call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
@@ -133,7 +101,7 @@ const Explorer = props => {
         });
       }
     },
-    [data, call]
+    [data, call, setData]
   );
 
   /**
@@ -159,8 +127,8 @@ const Explorer = props => {
               requestScopeVersions({
                 scope,
                 deepness: 1,
-                name: copiedDoc.getName(),
-                url: copiedDoc.getUrl()
+                name: copiedDoc.name ?? copiedDoc.getName(),
+                url: copiedDoc.url ?? copiedDoc.getUrl()
               });
             });
           })
@@ -211,31 +179,52 @@ const Explorer = props => {
   //========================================================================================
 
   /**
+   * Load document
+   * @param DocumentEx docManager
+   */
+  const loadDoc = useCallback(doc => {
+    const url = doc.url ?? doc.getUrl();
+
+    if (registered[url])
+      return;
+
+    const scope = doc.scope ?? doc.getScope();
+    const name = doc.name ?? doc.getName();
+
+    const store = data[scope] ?? {
+      id: scope,
+      name: scope,
+      scope: scope,
+      title: scope,
+      children: {},
+    };
+
+    setData({
+      ...data,
+      [scope]: {
+        ...store,
+        children: {
+          ...store.children,
+          [name]: {
+            id: name,
+            name,
+            title: name,
+            scope,
+            url,
+          },
+        },
+      }
+    });
+    setRegistered({ ...registered, [url]: true });
+  }, [data, setData, registered, setRegistered]);
+
+  /**
    * Load documents
    * @param {DocManager} docManager
    */
-  const loadDocs = useCallback(docManager => {
-    return setData(
-      docManager.getStores().map((store, id) => {
-        const { name, title, model } = store;
-        return {
-          id,
-          name,
-          scope: model.SCOPE || name,
-          title,
-          children: store.getDocs().map((doc, childId) => {
-            return {
-              id: childId,
-              name: doc.getName(),
-              title: doc.getName(),
-              scope: doc.getScope(),
-              url: doc.getUrl()
-            };
-          })
-        };
-      })
-    );
-  }, []);
+  const loadDocs = useCallback(
+    docManager => docManager.getStores().forEach(store => store.getDocs().forEach(doc => loadDoc(doc)))
+  , [loadDoc]);
 
   /**
    *
@@ -266,6 +255,7 @@ const Explorer = props => {
     // Previously used data.
     let mounting = true;
     on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.LOAD_DOCS, loadDocs);
+    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.LOAD_DOC, loadDoc);
     on(
       PLUGINS.DOC_MANAGER.NAME,
       PLUGINS.DOC_MANAGER.ON.UPDATE_DOCS,
@@ -280,6 +270,7 @@ const Explorer = props => {
 
     return () => {
       off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.LOAD_DOCS);
+      off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.LOAD_DOC); // FIXME how does "off" know how to unsubscribe this specific callback
       off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.UPDATE_DOCS);
       off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.DELETE_DOC);
     };

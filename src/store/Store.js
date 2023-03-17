@@ -16,8 +16,11 @@ class Store extends BaseStore {
    * @returns {Promise<{<Model>}}
    */
   readDoc(name) {
-    if (this.docMan)
+    if (this.docMan) {
+      if (this.getDoc(doc))
+        return Promise.resolve(doc);
       return this.loadDoc(name).promise;
+    }
 
     const doc = this.getDoc(name);
     return doc?.isLoaded ? Promise.resolve(doc) : this.loadDoc(name);
@@ -216,7 +219,7 @@ class Store extends BaseStore {
         name,
       };
 
-      this.docMan.data.delete(this.docMan.index(index));
+      this.docMan.delete(this.docMan.getUrl(index));
 
       return this.observer.onDocumentDeleted(this.name, {
         name,

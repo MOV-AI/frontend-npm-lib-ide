@@ -78,6 +78,9 @@ class BaseStore extends StorePluginManager {
         const obj = this.getDoc(name) || this.newDoc(name).setIsNew(false);
 
         const data = obj.constructor.serializeOfDB(file);
+        if (!obj.enableObservables)
+          return obj;
+
         return obj
           .enableObservables(false)
           .setData(data)
@@ -246,12 +249,14 @@ class BaseStore extends StorePluginManager {
         // create only if the instance does not exist yet
         if (!this.getDoc(name) && !isProtected) {
           const newDoc = this.newDoc(name);
-          newDoc
-            .enableObservables(false)
-            .setIsNew(false)
-            .setIsLoaded(false)
-            .setDirty(false)
-            .enableObservables(true);
+
+          if (newDoc.enableObservables)
+            newDoc
+              .enableObservables(false)
+              .setIsNew(false)
+              .setIsLoaded(false)
+              .setDirty(false)
+              .enableObservables(true);
         }
       });
 

@@ -9,30 +9,39 @@ import ItemRow from "./ItemRow";
 
 export function toggleExpandRow(node, data) {
   // Toggle the expansion of the clicked panel«
-  const nextData = [...data];
-  const isExpanded = data[node.id]?.state?.expanded ?? false;
-  nextData[node.id].state = {
-    ...nextData[node.id].state,
-    expanded: !isExpanded
-  };
+  const isExpanded = data[node.scope]?.expanded ?? false;
+  return {
+    ...Object.values(data).reduce((a, store) => ({
+      ...a,
+      [store.scope]: {
+        ...store,
+        expanded: false,
+      }
+    }), {}),
 
-  // Close other panels
-  data
-    .filter(elem => elem.id !== node.id)
-    .forEach(panel => {
-      nextData[panel.id].state = {
-        ...nextData[panel.id].state,
-        expanded: false
-      };
-    });
-  return nextData;
+    [node.scope]: {
+      ...data[node.scope],
+      expanded: !isExpanded,
+    }
+  };
+}
+
+function transform(data) {
+  return Object.values(data).reduce((a, store) => {
+    const ret = a.concat([store]);
+
+    if (store.expanded)
+      return ret.concat(Object.values(store.children));
+
+    return ret;
+  }, []);
 }
 
 const ListItemsTreeWithSearch = props => {
   const { data } = props;
 
   // State hooks
-  const [itemData, setItemData] = useState([]);
+  const [itemData, setItemData] = useState(transform(data));
   const [searchInput, setSearchInput] = useState("");
 
   // Style hook
@@ -45,71 +54,37 @@ const ListItemsTreeWithSearch = props => {
   //========================================================================================
 
   /**
-   * Takes in an array to normalize, returns normalized array
-   * @param {Array} dataToNormalize : data that we want to normalize
-   * @returns {Array} normalized data
-   */
-  function normalizeData(dataToNormalize) {
-    const finalData = [];
-
-    dataToNormalize.forEach(node => {
-      finalData.push(node);
-      if (node.state?.expanded && node.children) {
-        node.children
-          // We'll sort the children array first to avoid opened file being set in first position
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .forEach(childNode => {
-            finalData.push({
-              ...childNode,
-              id: `${childNode.scope}_${childNode.id}`
-            });
-          });
-      }
-    });
-
-    return finalData;
-  }
-
-  /**
    * Filters given array of data
    * @param {Array} searchData : data that we want to filter from
    * @param {String} value : string to filter by
    * @return {Array} filtered array
    */
-  const searchFilter = useCallback((searchData, value = "") => {
+  const searchFilter = useCallback((value = "") => {
     const valueLower = value.toLowerCase();
-    const filteredNodes = searchData
-      .filter(
-        node =>
-          node.children.findIndex(ch =>
-            ch.name.toLowerCase().includes(valueLower)
-          ) >= 0
-      )
-      .map(node => {
-        return {
-          ...node,
-          children: (node.children ?? []).filter(
-            ch => ch.name && ch.name.toLowerCase().includes(valueLower)
-          )
-        };
-      });
+    const rawMap = Object.entries(data).reduce((a, [key, store]) => {
+      const childrenArr = Object.entries(store.children)
+        .filter(entry => entry[1].name.toLowerCase().includes(valueLower));
 
-    // Add children id if missing
-    filteredNodes.forEach(node => {
-      node.children.forEach((child, i) => {
-        child.id = child.id ?? i;
-        child.url = child.url ?? child.id;
-        if (child.children) {
-          child.children.forEach((grandChild, j) => {
-            grandChild.id = grandChild.id ?? j;
-            grandChild.url = grandChild.url ?? grandChild.id;
-          });
-        }
-      });
-    });
+      if (!childrenArr.length)
+        return searchData;
+        
 
-    return normalizeData(filteredNodes);
-  }, []);
+      return ({
+        ...a,
+        [key]: {
+          ...store,
+          children: {
+            ...childrenArr.reduce((a, entry) => ({
+              ...a,
+              [entry[0]]: entry[1],
+            }), {})
+          },
+        },
+      });
+    }, {});
+
+    setItemData(transform(rawMap));
+  }, [data, setItemData]);
 
   //========================================================================================
   /*                                                                                      *
@@ -121,10 +96,10 @@ const ListItemsTreeWithSearch = props => {
    * Search handler
    * @param {String} searchValue : String used to search
    */
-  const handleOnSearch = searchValue => {
+  const handleOnSearch = useCallback(searchValue => {
     setSearchInput(searchValue);
-    setItemData(searchFilter(data, searchValue));
-  };
+    searchFilter(searchValue);
+  }, [searchFilter, setSearchInput]);
 
   //========================================================================================
   /*                                                                                      *
@@ -136,8 +111,8 @@ const ListItemsTreeWithSearch = props => {
    * Will trigger mostly when data changes
    */
   useEffect(() => {
-    setItemData(searchFilter(data, searchInput));
-  }, [data, searchInput, searchFilter, setItemData]);
+    searchFilter(searchInput);
+  }, [searchInput, searchFilter]);
 
   //========================================================================================
   /*                                                                                      *

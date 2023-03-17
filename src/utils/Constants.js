@@ -100,6 +100,7 @@ export const PLUGINS = {
       DELETE_DOC: "deleteDoc",
       UPDATE_DOCS: "updateDocs",
       LOAD_DOCS: "loadDocs",
+      LOAD_DOC: "loadDoc",
       SAVE_DOC: "saveDoc",
       BEFORE_SAVE_DOC: "beforeSaveDoc"
     }

@@ -425,7 +425,7 @@ const useTabLayout = (props, dockRef) => {
     data => {
       const { instance, value: isDirty } = data;
       console.log("_updateDocDirty", data, instance, arguments);
-      const tabId = instance.getUrl();
+      const tabId = instance.url ?? instance.getUrl();
       const currentTabData = tabsById.get(tabId);
       const currentDirtyState = Boolean(currentTabData?.isDirty);
       // Doesn't trigger update if dirty state didn't change
