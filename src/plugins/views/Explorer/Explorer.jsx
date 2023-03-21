@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
+import { cloneDeep } from "lodash";
 import { Typography } from "@material-ui/core";
 import { withAlerts } from "../../../decorators";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
@@ -38,7 +39,7 @@ const Explorer = props => {
   const deleteDocument = useCallback(docData => {
     const { documentName, documentType } = docData;
     setData(prevState => {
-      const newState = _cloneDeep(prevState);
+      const newState = cloneDeep(prevState);
       delete newState[documentType].children[documentName];
       return newState;
     });
@@ -92,7 +93,7 @@ const Explorer = props => {
   const requestScopeVersions = useCallback(
     node => {
       if (node.children) {
-        setData(toggleExpandRow(node, data));
+        setData(data => toggleExpandRow(node, data));
       } else {
         call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
           id: node.url,
@@ -101,7 +102,7 @@ const Explorer = props => {
         });
       }
     },
-    [data, call, setData]
+    [call]
   );
 
   /**
@@ -183,13 +184,19 @@ const Explorer = props => {
    * @param DocumentEx docManager
    */
   const loadDoc = useCallback(doc => {
-    const url = doc.url ?? doc.getUrl();
+    console.log("Explorer.loadDoc", doc);
+    const [url, scope, name] = doc.url ? [
+      doc.url,
+      doc.scope,
+      doc.name,
+    ] : [
+      doc.getUrl(),
+      doc.getScope(),
+      doc.getName(),
+    ];
 
     if (registered[url])
       return;
-
-    const scope = doc.scope ?? doc.getScope();
-    const name = doc.name ?? doc.getName();
 
     const store = data[scope] ?? {
       id: scope,

@@ -333,7 +333,7 @@ const useTabLayout = (props, dockRef) => {
       const { name, scope, isNew, isDirty } = tabsById.get(tabId);
       let doc = null;
       if (docMan.registered(scope))
-        doc = docMan.load({
+        doc = docMan.get({
           workspace: "global",
           scope,
           name,
@@ -484,21 +484,19 @@ const useTabLayout = (props, dockRef) => {
             // Create and return tab data
             const extension = docFactory.store.model.EXTENSION ?? "";
             if (docMan.registered(docData.scope)) {
-              const doc = docMan.load({
+              return docMan.read({
                 workspace: "global",
                 scope: docData.scope,
                 name: docData.name,
-              });
-
-              return doc.promise.then(() => ({
-                id: docData.id,
-                name: docData.name,
+              }).then(doc => ({
+                id: doc.url,
+                name: doc.name,
                 isNew: doc.isNew,
                 isDirty: doc.isDirty,
                 // instance: { doc },
                 title: _getCustomTab(docData, _closeTab, doc.isDirty),
                 extension: extension,
-                scope: docData.scope,
+                scope: doc.scope,
                 content: <Decorated />,
               }));
             } else return {
@@ -616,8 +614,8 @@ const useTabLayout = (props, dockRef) => {
           { name: docData.name, scope: docData.scope }
         );
 
-        docData.isNew = docData.isNew ?? doc.isNew;
-        docData.isDirty = docData.isDirty ?? doc.isDirty;
+        docData.isNew = doc.isNew;
+        docData.isDirty = doc.isDirty;
 
         _getTabData(docData).then(tabData => {
           emit(PLUGINS.TABS.ON.OPEN_EDITOR, tabData);

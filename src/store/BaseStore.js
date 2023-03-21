@@ -68,9 +68,9 @@ class BaseStore extends StorePluginManager {
     if (this.docMan)
       return this.docMan.load({
         workspace: this.workspace,
-        scope: this.model.SCOPE,
+        scope: this.name,
         name,
-      }); 
+      });
 
     return this.fetchDoc(name)
       .then(file => {
@@ -172,6 +172,13 @@ class BaseStore extends StorePluginManager {
    * @param {string} newName The new name of the document
    */
   renameDoc(doc, newName) {
+    if (this.docMan)
+      return this.docMan.rename({
+        workspace: this.workspace,
+        scope: this.model.SCOPE,
+        name: doc.name,
+      }, newName);
+
     // remove the document from the local store
     this.delDoc(doc.getName());
     // re add the document with the new name

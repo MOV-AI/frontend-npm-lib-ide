@@ -16,12 +16,6 @@ class Store extends BaseStore {
    * @returns {Promise<{<Model>}}
    */
   readDoc(name) {
-    if (this.docMan) {
-      if (this.getDoc(doc))
-        return Promise.resolve(doc);
-      return this.loadDoc(name).promise;
-    }
-
     const doc = this.getDoc(name);
     return doc?.isLoaded ? Promise.resolve(doc) : this.loadDoc(name);
   }
@@ -63,7 +57,11 @@ class Store extends BaseStore {
    */
   deleteDoc(name) {
     if (this.docMan)
-      return this.getDoc().then(doc => doc.destroy());
+      this.docMan.delete({
+        workspace: this.workspace,
+        scope: this.name,
+        name,
+      }, true);
 
     const docUrl = this.data.get(name).getUrl();
     return new Document.delete({
@@ -87,6 +85,13 @@ class Store extends BaseStore {
    * @returns {Promise<{success: boolean}>} Request promise
    */
   saveNewDoc(data) {
+    if (this.docMan)
+      return this.docMan.save({
+        workspace: this.workspace,
+        scope: this.name,
+        name,
+      }, name);
+
     const { name } = this;
     const payload = {
       type: name,
@@ -104,10 +109,11 @@ class Store extends BaseStore {
    */
   saveExistingDoc(name, data) {
     if (this.docMan)
-      return this.readDoc(name).then(doc => {
-        doc.serialize(data);
-        doc.save();
-      });
+      return this.docMan.save({
+        workspace: this.workspace,
+        scope: this.name,
+        name,
+      }, name);
 
     const document = new Document(Document.parsePath(name, scope));
     return document.overwrite(data);
@@ -120,13 +126,12 @@ class Store extends BaseStore {
    * @returns {Promise<{success, name, model}>}
    */
   saveDoc(name, newName) {
-    if (this.docMan) {
-      const doc = this.getDoc(name ?? "undefined");
-      doc.save(newName);
-      if (newName)
-        this.discardDocChanges(name);
-      return Promise.resolve(doc);
-    }
+    if (this.docMan)
+      return this.docMan.save({
+        workspace: this.workspace,
+        scope: this.name,
+        name,
+      }, newName);
 
     // get document from store
     const doc = this.getDoc(name);
@@ -170,13 +175,11 @@ class Store extends BaseStore {
    */
   async copyDoc(name, newName) {
     if (this.docMan)
-      return this.readDoc(name).then(existingDoc => {
-        return this.docMan.load({
-          workspace: this.workspace,
-          scope: this.name,
-          name: newName,
-        }, existingDoc.unserialize());
-      });
+      return this.docMan.copy({
+        workspace: this.workspace,
+        scope: this.name,
+        name,
+      }, newName);
 
     return this.readDoc(name).then(doc => {
       const newObj = this.model
@@ -212,20 +215,12 @@ class Store extends BaseStore {
    * @returns {boolean}
    */
   discardDocChanges(name) {
-    if (this.docMan) {
-      const index = {
+    if (this.docMan)
+      return this.docMan.discard({
         workspace: this.workspace,
         scope: this.name,
         name,
-      };
-
-      this.docMan.delete(this.docMan.getUrl(index));
-
-      return this.observer.onDocumentDeleted(this.name, {
-        name,
-        url: this.docMan.index(index)
       });
-    }
 
     const doc = this.getDoc(name);
 

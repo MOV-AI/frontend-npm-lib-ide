@@ -55,7 +55,7 @@ const ListItemsTreeWithSearch = props => {
 
   /**
    * Filters given array of data
-   * @param {Array} searchData : data that we want to filter from
+   * @param {Array} data : data that we want to filter from # yes, callback deps are like arguments. but should we put this here?
    * @param {String} value : string to filter by
    * @return {Array} filtered array
    */
@@ -66,7 +66,7 @@ const ListItemsTreeWithSearch = props => {
         .filter(entry => entry[1].name.toLowerCase().includes(valueLower));
 
       if (!childrenArr.length)
-        return searchData;
+        return data;
         
 
       return ({
@@ -146,7 +146,7 @@ const ListItemsTreeWithSearch = props => {
 };
 
 ListItemsTreeWithSearch.propTypes = {
-  data: PropTypes.array.isRequired
+  data: PropTypes.object.isRequired
 };
 
 export default ListItemsTreeWithSearch;
