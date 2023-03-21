@@ -128,12 +128,21 @@ export default class GraphValidator {
     // Check rule nr. 2 : Links between ports with different message types
     if (linksMismatches) warnings.push(WARNINGS[WARNING_TYPES.LINK_MISMATCH]);
     // Check rule nr. 3 : Links that don't have start or end port
-    if (this.graph.invalidLinks.length)
+    if (this.graph.invalidLinks.length) {
       warnings.push({
         ...WARNINGS[WARNING_TYPES.INVALID_LINKS],
+        onClick: data => {
+          WARNINGS[WARNING_TYPES.INVALID_LINKS].onClick(
+            data,
+            // This is needed because somehow we're losing the
+            // True interface context when we have invalid links
+            this.graph.mInterface
+          );
+        },
         data: this.graph.invalidLinks,
         callback: this.graph.clearInvalidLinks
       });
+    }
 
     return warnings;
   };
