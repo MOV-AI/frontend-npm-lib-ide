@@ -13,7 +13,7 @@ import docsFactory from "./factory";
  * Document Manager plugin to handle requests, subscribers and more
  */
 class DocManager extends IDEPlugin {
-  constructor(profile = {}) {
+  constructor(profile = {}, dependencies = {}) {
     // Remove duplicated if needed
     const methods = Array.from(
       new Set([
@@ -30,6 +30,7 @@ class DocManager extends IDEPlugin {
     // Subscriber
     this.docSubscriptions = new Map();
     this.saveStack = new Map();
+    this.docMan = dependencies.docMan;
   }
 
   getName() {
@@ -179,6 +180,13 @@ class DocManager extends IDEPlugin {
   async save(modelKey, callback, opts) {
     const { name, scope, data } = modelKey;
 
+    if (this.docMan.registered(scope))
+      return this.docMan.save({
+        workspace: "global",
+        scope,
+        name,
+      }, name ?? "undefined");
+
     const thisDoc = await this.read(modelKey);
     const { isNew, isDirty, isOutdated } = thisDoc;
 
@@ -319,6 +327,15 @@ class DocManager extends IDEPlugin {
    */
   delete(modelKey) {
     const { name, scope } = modelKey;
+    console.log("DocManager.delete", modelKey);
+
+    if (this.docMan.registered(scope))
+      return this.docMan.delete({
+        workspace: "global",
+        scope,
+        name,
+      }, true);
+
     return this.getStore(scope)?.deleteDoc(name);
   }
 

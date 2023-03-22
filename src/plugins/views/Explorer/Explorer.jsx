@@ -19,6 +19,7 @@ const Explorer = props => {
   const classes = explorerStyles();
   const [data, setData] = useState({});
   const [registered, setRegistered] = useState({});
+  console.log("Explorer", data);
 
   // to debug data
   window.ExplorerData = data;
@@ -40,6 +41,7 @@ const Explorer = props => {
     const { documentName, documentType } = docData;
     setData(prevState => {
       const newState = cloneDeep(prevState);
+      console.log("Explorer.deleteDocument", docData, prevState, documentType, documentName);
       delete newState[documentType].children[documentName];
       return newState;
     });
@@ -184,7 +186,7 @@ const Explorer = props => {
    * @param DocumentEx docManager
    */
   const loadDoc = useCallback(doc => {
-    console.log("Explorer.loadDoc", doc);
+    console.log("Explorer.loadDoc", doc, doc.url);
     const [url, scope, name] = doc.url ? [
       doc.url,
       doc.scope,
@@ -194,6 +196,7 @@ const Explorer = props => {
       doc.getScope(),
       doc.getName(),
     ];
+    console.log("Explorer.loadDoc2", url, scope, name);
 
     if (registered[url])
       return;

@@ -83,7 +83,7 @@ function BaseApp(props) {
   //========================================================================================
 
   useEffect(() => {
-    installAppPlugins();
+    installAppPlugins(dependencies);
     installViewPlugins(dependencies);
     // Write log in consle
     writeMovaiLogo();
@@ -159,11 +159,11 @@ export function installTool(tool) {
   });
 }
 
-function installAppPlugins() {
+function installAppPlugins(dependencies) {
   const plugins = [
     {
       profile: { name: PLUGINS.DOC_MANAGER.NAME },
-      factory: profile => new DocManager(profile)
+      factory: profile => new DocManager(profile, dependencies)
     },
     {
       profile: { name: PLUGINS.DIALOG.NAME },

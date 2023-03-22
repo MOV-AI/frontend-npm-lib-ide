@@ -244,6 +244,10 @@ class BaseStore extends StorePluginManager {
    * @param {object} data Object with the list of existing documents
    */
   loadDocs(data) {
+    // if (this.docMan)
+    //   return;
+
+    console.log("BaseStore loadDocs", this, data);
     const docType = this.scope;
 
     if (data.value)

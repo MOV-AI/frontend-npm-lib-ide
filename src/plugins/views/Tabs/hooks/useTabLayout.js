@@ -345,12 +345,12 @@ const useTabLayout = (props, dockRef) => {
         };
       console.log("_onLayoutRemoveTab", tabId, forceClose, tabsById, tabsById.get(tabId));
 
-      if (doc.isDirty && !forceClose) {
+      if (doc && doc.isDirty && !forceClose) {
         const document = { id: tabId, name, scope, isNew };
         _closeDirtyTab(document);
       } else {
         // Remove doc locally if is new and not dirty
-        if (doc.isNew && !doc.isDirty) {
+        if (!doc || doc.isNew && !doc.isDirty) {
           call(
             PLUGINS.DOC_MANAGER.NAME,
             PLUGINS.DOC_MANAGER.CALL.DISCARD_DOC_CHANGES,
@@ -483,8 +483,8 @@ const useTabLayout = (props, dockRef) => {
 
             // Create and return tab data
             const extension = docFactory.store.model.EXTENSION ?? "";
-            if (docMan.registered(docData.scope)) {
-              return docMan.read({
+            if (docMan.registered(docData.scope))
+              return docMan.load({
                 workspace: "global",
                 scope: docData.scope,
                 name: docData.name,
@@ -499,7 +499,7 @@ const useTabLayout = (props, dockRef) => {
                 scope: doc.scope,
                 content: <Decorated />,
               }));
-            } else return {
+            else return {
               id: docData.id,
               name: docData.name,
               isNew: docData.isNew,
