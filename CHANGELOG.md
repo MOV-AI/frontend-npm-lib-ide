@@ -18,3 +18,4 @@
 - [FP-2186 - Main Menu tools are not showing up](https://movai.atlassian.net/browse/FP-2186)
 - [FP-2221 - Disable the Language server](https://movai.atlassian.net/browse/FP-2221)
 - [FP-2238 - Logout behavior is different in IDE](https://movai.atlassian.net/browse/FP-2238)
+
