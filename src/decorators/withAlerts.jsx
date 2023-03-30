@@ -26,11 +26,18 @@ const withAlerts = Component => {
      * Show Confirmation before action
      * @param {{title: string, message: string, submitText: string, onSubmit: function}} confirmationData
      */
-    const confirmationAlert = ({ title, message, onSubmit, submitText }) => {
+    const confirmationAlert = ({
+      title,
+      message,
+      onSubmit,
+      onClose,
+      submitText
+    }) => {
       call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, {
         title,
         message,
         onSubmit,
+        onClose,
         submitText
       });
     };

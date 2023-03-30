@@ -216,7 +216,7 @@ class BaseStore extends StorePluginManager {
   loadDocs(data) {
     const docType = this.scope;
 
-    if (data.value)
+    if (data?.value)
       Object.values(data.value[docType]).forEach(doc => {
         const name = doc.Label;
 

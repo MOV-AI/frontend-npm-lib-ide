@@ -1,5 +1,6 @@
 # 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
+- [FP-2365 - Fixed shortcut interaction in flow](https://movai.atlassian.net/browse/FP-2365)
 - [FP-2240 - Add event.preventDefault to save function to not cause the HTML save popup to open](https://movai.atlassian.net/browse/FP-2240)
 - [FP-2241: Now reloading the files after saving a new file](https://movai.atlassian.net/browse/FP-2241)
 - [FP-2329 - Added conditional chaining for context menu](https://movai.atlassian.net/browse/FP-2329)

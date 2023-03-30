@@ -249,6 +249,7 @@ class Dialog extends IDEPlugin {
       </AppDialog>,
       targetElement
     );
+    return closeModal;
   }
 
   /**
