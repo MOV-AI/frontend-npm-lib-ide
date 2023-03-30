@@ -885,7 +885,7 @@ export const Flow = (props, ref) => {
           contextArgs.current = node;
           setContextMenuOptions({
             anchorPosition,
-            options: getContextOptions(evtData.node?.data?.type, node, {
+            options: getContextOptions(node?.data?.type, node, {
               handleCopyNode,
               handleDeleteNode,
               nodeDebug: {
