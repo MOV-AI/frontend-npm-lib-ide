@@ -205,3 +205,13 @@ export const composeDecorators = (Component, decorators) => {
 export function insertIf(condition, ...elements) {
   return condition ? elements : [];
 }
+
+/**
+ * Receives a string and returns a string that
+ * doesn't contain spaces and is all lower case
+ * @param {string} text
+ * @returns
+ */
+export function convertToValidString(text) {
+  return text.replaceAll(" ", "_").toLowerCase();
+}

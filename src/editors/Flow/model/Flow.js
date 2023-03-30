@@ -8,7 +8,6 @@ import {
   NodeInstance,
   SubFlow
 } from "./subModels"; // from internal subModels
-import IdBasedManager from "../../../models/subModels/IdBasedModel/IdBasedManager";
 import schema from "./schema";
 
 class Flow extends Model {
