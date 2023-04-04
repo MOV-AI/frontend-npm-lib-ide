@@ -503,7 +503,7 @@ const FlowTopBar = props => {
                 const isDefaultRobot = robotList[robotId].isDefault;
                 return (
                   <MenuItem
-                    key={`robotList-${robotIndex}`}
+                    key={`robotList-${robotId}`}
                     value={robotId}
                     className={isDefaultRobot ? classes.defaultRobot : ""}
                   >
