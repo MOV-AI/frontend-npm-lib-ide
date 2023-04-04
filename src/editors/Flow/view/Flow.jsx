@@ -215,10 +215,10 @@ export const Flow = (props, ref) => {
    * @param {*} callback
    */
   const deleteInvalidLinks = useCallback(
-    (links, callback) => {
-      links.forEach(link => instance.current.deleteLink(link.id));
+    (links, callback, instance = instance.current) => {
+      links.forEach(link => instance.deleteLink(link.id));
 
-      getMainInterface().graph.clearInvalidLinks().validateFlow();
+      instance.graph.clearInvalidLinks().validateFlow();
 
       callback && callback();
     },
@@ -266,7 +266,7 @@ export const Flow = (props, ref) => {
    * @param {{invalidLinks: Array, callback: Function}} eventData
    */
   const invalidLinksAlert = useCallback(
-    warning => {
+    (warning, customInterface) => {
       const { data: invalidLinks, callback } = warning;
 
       if (invalidLinks.length) {
@@ -276,7 +276,8 @@ export const Flow = (props, ref) => {
           {
             submitText: t("Fix"),
             title: t("InvalidLinksFoundTitle"),
-            onSubmit: () => deleteInvalidLinks(invalidLinks, callback),
+            onSubmit: () =>
+              deleteInvalidLinks(invalidLinks, callback, customInterface),
             invalidLinks
           },
           InvalidLinksWarning
@@ -287,8 +288,8 @@ export const Flow = (props, ref) => {
   );
 
   /**
-   * On Links validation
-   * @param {{invalidLinks: Array, callback: Function}} eventData
+   * On Exposed ports validation
+   * @param {{invalidExposedPorts: Array, callback: Function}} eventData
    */
   const invalidExposedPortsAlert = useCallback(
     warning => {
