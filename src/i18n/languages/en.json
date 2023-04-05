@@ -212,6 +212,8 @@
   "ResetSearch": "Reset Search",
   "ResetZoom": "Reset Zoom",
   "ResetZoomKeybindDescription": "Reset the flow original Zoom",
+  "RobotOffline": "Robot is offline",
+  "RobotOnline": "Robot is online",
   "Run": "Run",
   "Save": "Save",
   "SaveDoc": "Save Document",
