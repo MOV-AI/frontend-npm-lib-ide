@@ -20,7 +20,8 @@ const MESSAGES = {
   SUCCESS_MESSAGES: {
     SAVED_SUCCESSFULLY: "SavedSuccessfully",
     DOC_DELETE_SUCCESSFULLY: "DocDeleteSuccessfully",
-    CALLBACK_CREATED: "CallbackCreated"
+    CALLBACK_CREATED: "CallbackCreated",
+    NODE_IS_ACTION: "NodeIsAction"
   }
 };
 

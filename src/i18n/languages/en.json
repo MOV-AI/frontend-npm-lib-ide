@@ -1,6 +1,8 @@
 {
   "About": "About",
   "Actions": "Actions",
+  "ACTION_KILL": "Stopping",
+  "ACTION_RUN": "Starting",
   "Add": "Add",
   "AddAction": "Add {{actionTitle}}",
   "AddImport": "Add Import",
@@ -164,6 +166,7 @@
   "NodeDetailsMenuTitle": "Node Details Menu",
   "NodeInstanceMenuTitle": "Node Instance Menu",
   "NodeInstance-Colon": "Node Instance:",
+  "NodeIsAction": "Node is {{action}}",
   "NodeTemplate": "Node Template",
   "NodeTemplate-Colon": "Node Template:",
   "NotPersistent": "Not persistent",

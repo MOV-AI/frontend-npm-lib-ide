@@ -4,7 +4,10 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import { defaultFunction } from "../../../../../../utils/Utils";
+import {
+  defaultFunction,
+  convertToValidString
+} from "../../../../../../utils/Utils";
 
 const ContextMenu = props => {
   const { anchorPosition, menuList, onClose, readOnly } = props;
@@ -39,20 +42,19 @@ const ContextMenu = props => {
       anchorPosition={anchorPosition}
       open={Boolean(anchorPosition)}
       onClose={onClose}
+      disabled={readOnly}
     >
-      {menuList.map((item, index) => {
-        return (
-          <MenuItem
-            data-testid="input_context-option"
-            onClick={item.onClick}
-            disabled={readOnly}
-            key={index}
-          >
-            {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
-            <ListItemText>{item.label || item.element}</ListItemText>
-          </MenuItem>
-        );
-      })}
+      {menuList.map(item => (
+        <MenuItem
+          data-testid="input_context-option"
+          key={`key_${convertToValidString(item.label)}`}
+          onClick={!item.disabled ? item.onClick : undefined}
+          disabled={readOnly || item.disabled}
+        >
+          {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
+          <ListItemText>{item.label || item.element}</ListItemText>
+        </MenuItem>
+      ))}
     </Menu>
   );
 };

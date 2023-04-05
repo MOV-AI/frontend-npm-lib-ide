@@ -54,6 +54,8 @@ class TreeNode extends BaseNode {
     this.object.on("mousedown", () => this.eventsOn(this.onMouseDown));
     this.object.on("dblclick", () => this.eventsOn(this.onDblClick));
 
+    this.object.on("contextmenu", () => this.eventsOn(this.onContext));
+
     return this;
   };
 

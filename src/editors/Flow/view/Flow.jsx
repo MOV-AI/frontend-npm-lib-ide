@@ -11,6 +11,7 @@ import { filter } from "rxjs/operators";
 import InfoIcon from "@material-ui/icons/Info";
 import Add from "@material-ui/icons/Add";
 import CompareArrowsIcon from "@material-ui/icons/CompareArrows";
+import { Rest } from "@mov-ai/mov-fe-lib-core";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
 import {
@@ -21,7 +22,7 @@ import {
 } from "../../../utils/Constants";
 import Workspace from "../../../utils/Workspace";
 import { KEYBINDINGS } from "../../../utils/shortcuts";
-import { SUCCESS_MESSAGES } from "../../../utils/Messages";
+import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "../../../utils/Messages";
 import CallbackModel from "../../Callback/model/Callback";
 import Clipboard, { KEYS } from "./Utils/Clipboard";
 import Vec2 from "./Utils/Vec2";
@@ -150,6 +151,69 @@ export const Flow = (props, ref) => {
     updateLinkStroke();
   }, [flowDebugging, updateLinkStroke]);
 
+  /**
+   * Start node
+   * @param {Object} target : Node to be started
+   */
+  const startNode = node => {
+    commandNode("RUN", node).then(() => {
+      node.statusLoading = true;
+    });
+  };
+
+  /**
+   * Stop node
+   * @param {Object} target : Node to be stopped
+   */
+  const stopNode = node => {
+    commandNode("KILL", node).then(() => {
+      node.statusLoading = true;
+    });
+  };
+
+  /**
+   * Execute command action to node to start or stop
+   *
+   * @param {String} action : One of values "RUN" or "KILL"
+   * @param {TreeNode} node : Node to be started/stopped
+   * @param {Function} callback : Success callback
+   */
+  const commandNode = (action, node) => {
+    const nodeNamePath = node.getNodePath();
+    return Rest.cloudFunction({
+      cbName: "backend.FlowTopBar",
+      func: "commandNode",
+      args: {
+        command: action,
+        nodeName: nodeNamePath,
+        robotName: robotSelected
+      }
+    })
+      .then(res => {
+        if (!res.success) {
+          console.warn(res.error);
+          call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
+            message: t(ERROR_MESSAGES.SOMETHING_WENT_WRONG),
+            severity: ALERT_SEVERITIES.ERROR
+          });
+        } else {
+          call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
+            message: t(SUCCESS_MESSAGES.NODE_IS_ACTION, {
+              action: t(`ACTION_${action}`)
+            }),
+            severity: ALERT_SEVERITIES.INFO
+          });
+        }
+      })
+      .catch(err => {
+        console.warn(err.toString());
+        call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
+          message: t(ERROR_MESSAGES.SOMETHING_WENT_WRONG),
+          severity: ALERT_SEVERITIES.ERROR
+        });
+      });
+  };
+
   //========================================================================================
   /*                                                                                      *
    *                                        Helper                                        *
@@ -215,10 +279,10 @@ export const Flow = (props, ref) => {
    * @param {*} callback
    */
   const deleteInvalidLinks = useCallback(
-    (links, callback) => {
-      links.forEach(link => instance.current.deleteLink(link.id));
+    (links, callback, instance = instance.current) => {
+      links.forEach(link => instance.deleteLink(link.id));
 
-      getMainInterface().graph.clearInvalidLinks().validateFlow();
+      instance.graph.clearInvalidLinks().validateFlow();
 
       callback && callback();
     },
@@ -266,7 +330,7 @@ export const Flow = (props, ref) => {
    * @param {{invalidLinks: Array, callback: Function}} eventData
    */
   const invalidLinksAlert = useCallback(
-    warning => {
+    (warning, customInterface) => {
       const { data: invalidLinks, callback } = warning;
 
       if (invalidLinks.length) {
@@ -276,7 +340,8 @@ export const Flow = (props, ref) => {
           {
             submitText: t("Fix"),
             title: t("InvalidLinksFoundTitle"),
-            onSubmit: () => deleteInvalidLinks(invalidLinks, callback),
+            onSubmit: () =>
+              deleteInvalidLinks(invalidLinks, callback, customInterface),
             invalidLinks
           },
           InvalidLinksWarning
@@ -287,8 +352,8 @@ export const Flow = (props, ref) => {
   );
 
   /**
-   * On Links validation
-   * @param {{invalidLinks: Array, callback: Function}} eventData
+   * On Exposed ports validation
+   * @param {{invalidExposedPorts: Array, callback: Function}} eventData
    */
   const invalidExposedPortsAlert = useCallback(
     warning => {
@@ -812,17 +877,33 @@ export const Flow = (props, ref) => {
       // Subscribe to node instance/sub flow context menu events
       mainInterface.mode[EVT_NAMES.ON_NODE_CTX_MENU].onEnter.subscribe(
         evtData => {
+          const node = evtData.node;
           const anchorPosition = {
             left: evtData.event.clientX,
             top: evtData.event.clientY
           };
 
-          contextArgs.current = evtData.node;
+          contextArgs.current = node;
           setContextMenuOptions({
             anchorPosition,
-            options: getContextOptions(evtData.node?.data?.type, evtData.node, {
+            options: getContextOptions(node?.data?.type, node, {
               handleCopyNode,
-              handleDeleteNode
+              handleDeleteNode,
+              nodeDebug: {
+                startNode: {
+                  func: startNode,
+                  disabled: !(node.data.type === TYPES.CONTAINER
+                    ? false
+                    : runningFlow && !node.status)
+                },
+                stopNode: {
+                  func: stopNode,
+                  disabled: !(node.data.type === TYPES.CONTAINER
+                    ? false
+                    : runningFlow && node.status)
+                }
+              },
+              viewMode
             })
           });
         }
@@ -876,7 +957,8 @@ export const Flow = (props, ref) => {
           setContextMenuOptions({
             anchorPosition,
             options: getContextOptions(FLOW_CONTEXT_MODES.LINK, evtData, {
-              handleDeleteLink
+              handleDeleteLink,
+              viewMode
             })
           });
         }
@@ -897,7 +979,8 @@ export const Flow = (props, ref) => {
               FLOW_CONTEXT_MODES.CANVAS,
               evtData.position,
               {
-                handlePasteNodes
+                handlePasteNodes,
+                viewMode
               }
             )
           });
@@ -917,7 +1000,8 @@ export const Flow = (props, ref) => {
             anchorPosition,
             options: getContextOptions(FLOW_CONTEXT_MODES.PORT, evtData.port, {
               handleToggleExposedPort,
-              handleOpenCallback
+              handleOpenCallback,
+              viewMode
             })
           });
         }
@@ -998,6 +1082,8 @@ export const Flow = (props, ref) => {
         .subscribe(evtData => console.log("onLinkErrorMouseOver", evtData));
     },
     [
+      viewMode,
+      runningFlow,
       getContextOptions,
       onNodeSelected,
       onLinkSelected,
@@ -1412,7 +1498,7 @@ export const Flow = (props, ref) => {
         toggleFlowDebug={handleFlowDebugChange}
         flowDebugging={flowDebugging}
       />
-      {contextMenuOptions && isEditableComponentRef.current && (
+      {contextMenuOptions?.options && (
         <FlowContextMenu onClose={handleContextClose} {...contextMenuOptions} />
       )}
       {tooltipConfig && <PortTooltip {...tooltipConfig} />}

@@ -1,6 +1,8 @@
 {
   "About": "Sobre",
   "Actions": "Ações",
+  "ACTION_KILL": "Parar",
+  "ACTION_RUN": "Começar",
   "Add": "Adicionar",
   "AddAction": "Adicionar {{actionTitle}}",
   "AddImport": "Adicionar Importação",
@@ -164,6 +166,7 @@
   "NodeDetailsMenuTitle": "Menu de detalhes do Node",
   "NodeInstanceMenuTitle": "Menu de detalhes da instância do Node",
   "NodeInstance-Colon": "Instância do Nó:",
+  "NodeIsAction": "O nó está a {{action}}",
   "NodeTemplate": "Template do Nó",
   "NodeTemplate-Colon": "Template do Nó:",
   "NotPersistent": "Não persistente",
