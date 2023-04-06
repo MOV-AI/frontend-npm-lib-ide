@@ -9,8 +9,7 @@ const AppSettings = {
   LOGO: Logo,
   SHORTCUTS: KEYBINDINGS,
   HELP: {
-    DOCUMENTATION: "https://flow.mov.ai/",
-    FORUM: "https://github.com/MOV-AI/movai-flow/discussions"
+    DOCUMENTATION: "https://flow.mov.ai/"
   },
   APP_PROPS: {
     SHOW_APP_SELECTION: false,
@@ -36,9 +35,8 @@ export const setLogo = logo => {
   AppSettings.LOGO = logo;
 };
 
-export const setLinks = ({ documentation, forum }) => {
+export const setLinks = ({ documentation }) => {
   AppSettings.HELP.DOCUMENTATION = documentation;
-  AppSettings.HELP.FORUM = forum;
 };
 
 export const setName = name => {
