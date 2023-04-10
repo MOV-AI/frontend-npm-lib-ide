@@ -1,5 +1,4 @@
 import { useState, useRef, useMemo, useEffect, useCallback } from "react";
-import _debounce from "lodash/debounce";
 import _isEqual from "lodash/isEqual";
 import { RobotManager } from "@mov-ai/mov-fe-lib-core";
 import i18n from "../../../../../../i18n/i18n";
@@ -248,38 +247,35 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
    * Subscribe to changes in robot status
    * @param {*} robotId
    */
-  const robotSubscribe = _debounce(
-    useCallback(
-      robotId => {
-        const robot = robotManager.getRobot(robotId);
-        const robotStatusData = robot.data?.Status;
-        // Set robot status from robot manager data (if any)
-        if (robotStatusData) {
-          onStartStopFlow(robotStatusData.active_flow);
-          setRobotStatus(prevState => {
-            return {
-              ...prevState,
-              activeFlow: robotStatusData.active_flow
-            };
-          });
-        }
-        // Subscribe to status change
-        robot.subscribe({
-          property: "Status",
-          onLoad: data => {
-            updateNodeStatus("value", robotId, data);
-          },
-          onUpdate: updateData => {
-            if (updateData.event === "hset") {
-              if (robotId !== selectedRobotRef.current) return;
-              updateNodeStatus("key", robotId, updateData);
-            }
-          }
+  const robotSubscribe = useCallback(
+    robotId => {
+      const robot = robotManager.getRobot(robotId);
+      const robotStatusData = robot.data?.Status;
+      // Set robot status from robot manager data (if any)
+      if (robotStatusData) {
+        onStartStopFlow(robotStatusData.active_flow);
+        setRobotStatus(prevState => {
+          return {
+            ...prevState,
+            activeFlow: robotStatusData.active_flow
+          };
         });
-      },
-      [onStartStopFlow, robotManager, updateNodeStatus]
-    ),
-    DEBOUNCE_NODE_STATUS_TIME
+      }
+      // Subscribe to status change
+      robot.subscribe({
+        property: "Status",
+        onLoad: data => {
+          updateNodeStatus("value", robotId, data);
+        },
+        onUpdate: updateData => {
+          if (updateData.event === "hset") {
+            if (robotId !== selectedRobotRef.current) return;
+            updateNodeStatus("key", robotId, updateData);
+          }
+        }
+      });
+    },
+    [onStartStopFlow, robotManager, updateNodeStatus]
   );
 
   /**
