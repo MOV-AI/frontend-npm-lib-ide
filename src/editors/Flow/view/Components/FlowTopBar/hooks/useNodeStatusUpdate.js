@@ -1,4 +1,5 @@
 import { useState, useRef, useMemo, useEffect, useCallback } from "react";
+import _debounce from "lodash/debounce";
 import { RobotManager } from "@mov-ai/mov-fe-lib-core";
 import i18n from "../../../../../../i18n/i18n";
 import { FLOW_VIEW_MODE } from "../../../Constants/constants";
