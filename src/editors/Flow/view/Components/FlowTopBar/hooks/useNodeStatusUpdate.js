@@ -1,10 +1,10 @@
 import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import _debounce from "lodash/debounce";
+import _isEqual from "lodash/isEqual";
 import { RobotManager } from "@mov-ai/mov-fe-lib-core";
 import i18n from "../../../../../../i18n/i18n";
 import { FLOW_VIEW_MODE } from "../../../Constants/constants";
 import { compareDocumentPaths } from "../../../Utils/utils";
-import _isEqual from "lodash/isEqual";
 
 const DEBOUNCE_TIME = 600; // ms
 const DEBOUNCE_NODE_STATUS_TIME = 1000; // ms
