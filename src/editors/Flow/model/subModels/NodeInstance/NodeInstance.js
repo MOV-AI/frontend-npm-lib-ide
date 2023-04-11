@@ -24,10 +24,10 @@ class NodeInstance extends Model {
      *                                                                                      */
     //========================================================================================
 
+    this.persistent = undefined;
+    this.launch = undefined;
+    this.remappable = undefined;
     this.template = "";
-    this.persistent = false;
-    this.launch = true;
-    this.remappable = true;
     this.position = new Position();
     this.parameters = new Manager("parameters", Parameter, this.propEvents);
     this.envVars = new Manager("envVars", EnvVar, this.propEvents);
