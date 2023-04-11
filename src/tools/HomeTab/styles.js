@@ -82,6 +82,8 @@ export const quickAccessStyles = makeStyles(theme => ({
   },
   linkIcon: {
     color: theme.palette.text.primary,
+    width: "20px",
+    height: "20px",
     marginRight: "10px",
     fontSize: "20px"
   }
