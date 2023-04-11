@@ -13,6 +13,7 @@ const FlowContextMenu = props => {
         opt.onClick && {
           label: t(opt.label, opt.labelVars),
           icon: opt.icon,
+          disabled: opt.disabled,
           onClick: e => {
             opt.onClick(e);
             !opt.persist && onClose();

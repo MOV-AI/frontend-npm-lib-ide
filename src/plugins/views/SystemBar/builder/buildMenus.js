@@ -133,7 +133,6 @@ const buildMenus = async (call, classes) => {
     const hasHomeTab = hasTool(HOMETAB_PROFILE.name);
     const hasShortcutsTab = hasTool(SHORTCUTS_PROFILE.name);
     const hasDocumentation = Boolean(AppSettings.HELP.DOCUMENTATION);
-    const hasForum = Boolean(AppSettings.HELP.FORUM);
     return {
       id: "helpMenu",
       title: "Help",
@@ -172,15 +171,7 @@ const buildMenus = async (call, classes) => {
               callback: () => openLink(AppSettings.HELP.DOCUMENTATION)
             }
           : null,
-        hasForum
-          ? {
-              id: "forum",
-              title: i18n.t("Forum"),
-              externalLink: true,
-              callback: () => openLink(AppSettings.HELP.FORUM)
-            }
-          : null,
-        hasDocumentation || hasForum ? {} : null,
+        hasDocumentation ? {} : null,
         {
           id: "about",
           title: i18n.t("About"),

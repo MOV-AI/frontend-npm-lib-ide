@@ -117,20 +117,6 @@ const QuickAccess = props => {
         ) : (
           <></>
         )}
-        {AppSettings.HELP.FORUM ? (
-          <a
-            data-testid="input_forum"
-            href={AppSettings.HELP.FORUM}
-            target="_blank"
-            rel="noreferrer"
-            className={classes.link}
-          >
-            <ChromeReaderModeIcon className={classes.linkIcon} />
-            {t("Forum")}
-          </a>
-        ) : (
-          <></>
-        )}
 
         {/* <div data-testid="input_app-config" className={classes.link} onClick={handleOpenAppConfig}>
           <BuildIcon className={classes.linkIcon} />
