@@ -82,7 +82,7 @@
     "@storybook/addon-links": "^6.5.12",
     "@storybook/builder-webpack5": "^6.5.12",
     "@storybook/manager-webpack5": "^6.5.12",
-    "@storybook/react": "^6.5.12",
+    "@storybook/react": "^7.0.3",
     "@storybook/testing-library": "^0.0.13",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
@@ -100,7 +100,7 @@
     "style-loader": "^3.3.0",
     "svg-url-loader": "^7.1.1",
     "url-loader": "^4.1.1",
-    "webpack": "^5.53.0",
+    "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
     "webpack-node-externals": "^3.0.0"
   },
