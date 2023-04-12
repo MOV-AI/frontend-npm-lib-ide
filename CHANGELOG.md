@@ -1,5 +1,6 @@
 # 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
+- [FP-2250 - Added a debounce and verification for the robot status going offline snackbar](https://movai.atlassian.net/browse/FP-2250)
 - [FP-2319 - Removed all references to forum](https://movai.atlassian.net/browse/FP-2319)
 - [FP-2348 - Added context menu to nodes in tree view](https://movai.atlassian.net/browse/FP-2348)
 - [FP-2365 - Fixed shortcut interaction in flow](https://movai.atlassian.net/browse/FP-2365)
