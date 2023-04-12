@@ -1,10 +1,12 @@
 import { useState, useRef, useMemo, useEffect, useCallback } from "react";
+import _isEqual from "lodash/isEqual";
 import { RobotManager } from "@mov-ai/mov-fe-lib-core";
+import i18n from "../../../../../../i18n/i18n";
 import { FLOW_VIEW_MODE } from "../../../Constants/constants";
 import { compareDocumentPaths } from "../../../Utils/utils";
-import _isEqual from "lodash/isEqual";
 
 const DEBOUNCE_TIME = 600; // ms
+const DEBOUNCE_NODE_STATUS_TIME = 1000; // ms
 const ROBOT_OFFLINE_TIME = 8; // sec
 
 const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
@@ -30,6 +32,8 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
   const nodeStatusViewModeRef = useRef(FLOW_VIEW_MODE.default);
   const nodeStatusRef = useRef({});
   const allNodeStatusRef = useRef({});
+  const lastMessage = useRef("");
+
   //========================================================================================
   /*                                                                                      *
    *                                    Private Methods                                   *
@@ -96,9 +100,14 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
   const onlineAlert = useCallback(
     isOnline => {
       const msg = isOnline
-        ? { text: "Robot is online", type: "info" }
-        : { text: "Robot is offline", type: "warning" };
-      if (isOnline !== robotStatus.isOnline) {
+        ? { text: i18n.t("RobotOnline"), type: "info" }
+        : { text: i18n.t("RobotOffline"), type: "warning" };
+
+      if (
+        isOnline !== robotStatus.isOnline &&
+        lastMessage.current !== msg.text
+      ) {
+        lastMessage.current = msg.text;
         alert({ message: msg.text, severity: msg.type });
       }
     },
