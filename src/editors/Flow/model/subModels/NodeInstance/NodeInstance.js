@@ -1,5 +1,6 @@
 import { Command, EnvVar, Parameter } from "../../../../../models/subModels";
 import { Model, Manager } from "../../../../../models";
+import Node from "../../../../Node/model/Node";
 import Position from "../Position/Position";
 import schema from "./schema";
 
@@ -314,9 +315,13 @@ class NodeInstance extends Model {
     return {
       NodeLabel: name,
       Template: template,
-      Persistent: persistent,
-      Launch: launch,
-      Remappable: remappable,
+      // I don't love this hack, but we need it for the backend to fetch
+      // The template values in case the user sets a default on a nodeInstance
+      Persistent:
+        persistent === Node.defaults.persistent ? undefined : persistent,
+      Launch: launch === Node.defaults.launch ? undefined : launch,
+      Remappable:
+        remappable === Node.defaults.remappable ? undefined : remappable,
       Visualization: {
         ...this.getPosition().serializeToDB()
       },
@@ -368,6 +373,7 @@ class NodeInstance extends Model {
   static OBSERVABLE_KEYS = {
     NAME: "name",
     TEMPLATE: "template",
+    LAUNCH: "launch",
     PERSISTENT: "persistent",
     REMAPPABLE: "remappable",
     POSITION: "persistent"

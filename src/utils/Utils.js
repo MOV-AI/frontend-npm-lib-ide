@@ -213,5 +213,5 @@ export function insertIf(condition, ...elements) {
  * @returns
  */
 export function convertToValidString(text) {
-  return text.toString().replaceAll(" ", "_").toLowerCase();
+  return text && text.toString().replaceAll(" ", "_").toLowerCase();
 }
