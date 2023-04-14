@@ -8,6 +8,7 @@ import {
   MenuItem,
   Select
 } from "@material-ui/core";
+import { convertToValidString } from "../../../../../../../utils/Utils";
 
 import { propertiesStyles } from "../../styles";
 
@@ -62,20 +63,24 @@ const PropertyItem = ({
     <Grid item xs={12} className={classes.gridAlign}>
       <FormControl fullWidth={true}>
         <InputLabel>{title}</InputLabel>
-        <Select value={value} onChange={handleOnChange} disabled={!editable}>
-          {options.map((option, optIndex) => {
-            return (
-              <MenuItem
-                key={"properties-options-" + optIndex}
-                value={option.value}
-                data-prop={name}
-              >
-                {`${option.text} ${getDefaultText(
-                  option.value === templateValue
-                )}`}
-              </MenuItem>
-            );
-          })}
+        <Select
+          value={value ?? templateValue}
+          onChange={handleOnChange}
+          disabled={!editable}
+        >
+          {options.map(option => (
+            <MenuItem
+              key={`properties-options-${convertToValidString(
+                option.text
+              )}_${convertToValidString(option.value)}`}
+              value={option.value}
+              data-prop={name}
+            >
+              {`${option.text} ${getDefaultText(
+                option.value === templateValue
+              )}`}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
     </Grid>
