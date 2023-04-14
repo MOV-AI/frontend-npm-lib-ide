@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Typography } from "@material-ui/core";
+import { convertToValidString } from "../../../../../../utils/Utils";
 import Search, { filter } from "../../../../../_shared/Search/Search";
 import RowKeyValue from "./RowKeyValue";
 
@@ -28,7 +29,9 @@ const TableKeyValue = props => {
           <RowKeyValue
             data-testid="section_key-value-row"
             {...props}
-            key={index}
+            key={`key-value-row_${convertToValidString(
+              item.key
+            )}_${convertToValidString(item.value)}`}
             item={item}
             allowEdit={!item.invalid && allowEdit}
             allowDelete={item.invalid || allowDelete}
