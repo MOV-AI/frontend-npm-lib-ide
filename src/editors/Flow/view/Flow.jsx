@@ -627,6 +627,14 @@ export const Flow = (props, ref) => {
     setRobotSelected(robotId);
   }, []);
 
+  function hasNodesToStart() {
+    for (const entry of instance.current.links.data)
+      if (entry[1].from === "start/start/start")
+        return true;
+
+    return false;
+  }
+
   /**
    * On change running flow
    * @param {*} flow
@@ -1464,6 +1472,7 @@ export const Flow = (props, ref) => {
           version={instance.current?.version}
           mainInterface={mainInterfaceRef}
           onRobotChange={onRobotChange}
+          canRun={hasNodesToStart()}
           onStartStopFlow={onStartStopFlow}
           nodeStatusUpdated={onNodeStatusUpdate}
           nodeCompleteStatusUpdated={onNodeCompleteStatusUpdated}
