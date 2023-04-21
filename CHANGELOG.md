@@ -1,5 +1,6 @@
 # 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
+- [FP-2414 - Fixed an issue where we were always removing the bookmarks, even when not needed](https://movai.atlassian.net/browse/FP-2414)
 - [FP-2250 - Added a debounce and verification for the robot status going offline snackbar](https://movai.atlassian.net/browse/FP-2250)
 - [FP-2319 - Removed all references to forum](https://movai.atlassian.net/browse/FP-2319)
 - [FP-2348 - Added context menu to nodes in tree view](https://movai.atlassian.net/browse/FP-2348)
@@ -23,5 +24,4 @@
 - [FP-2221 - Disable the Language server](https://movai.atlassian.net/browse/FP-2221)
 - [FP-2238 - Logout behavior is different in IDE](https://movai.atlassian.net/browse/FP-2238)
 - [FP-2411 - Only save flow nodeInstance parameters when necessary](https://movai.atlassian.net/browse/FP-2411)
-
-
+- [FP-2364 - Flows without links to start node should only show "Save"](https://movai.atlassian.net/browse/FP-2364)

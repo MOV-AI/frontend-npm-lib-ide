@@ -75,7 +75,8 @@ const FlowTopBar = props => {
     onViewModeChange,
     viewMode,
     searchProps,
-    confirmationAlert
+    confirmationAlert,
+    canRun,
   } = props;
   // State hooks
   const [actionLoading, setActionLoading] = useState(false);
@@ -526,7 +527,7 @@ const FlowTopBar = props => {
             <ButtonTopBar
               testId="input_save-before-start"
               ref={buttonDOMRef}
-              disabled={!robotStatus.isOnline || actionLoading}
+              disabled={!robotStatus.isOnline || actionLoading || !canRun}
               onClick={handleSaveBeforeStart}
             >
               {renderStartButton()}

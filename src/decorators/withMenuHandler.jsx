@@ -5,7 +5,6 @@ import { getRefComponent } from "../utils/Utils";
 
 const RETRY_UPDATE_MENU_TIMEOUT = 100;
 const MAXIMUM_RETRIES = 3;
-let lastActiveTabName = undefined;
 
 /**
  * Handle actions to update right menu of each editor
@@ -30,12 +29,14 @@ const withMenuHandler = Component => {
           data.id
         );
 
-        if (
-          !validTab ||
-          (data.id === profile.name && lastActiveTabName !== data.id)
-        ) {
+        const activeTab = await call(
+          PLUGINS.TABS.NAME,
+          PLUGINS.TABS.CALL.GET_ACTIVE_TAB
+        );
+
+        if (!validTab || (data.id === profile.name && activeTab !== data.id)) {
+          PluginManagerIDE.resetBookmarks();
           updateMenus();
-          lastActiveTabName = data.id;
         }
       });
       return () => {
@@ -47,7 +48,6 @@ const withMenuHandler = Component => {
      * Reset menus : clear menus and close right drawer
      */
     const updateMenus = useCallback(() => {
-      PluginManagerIDE.resetBookmarks();
       const editorRef = ref?.current;
 
       if (editorRef) {
