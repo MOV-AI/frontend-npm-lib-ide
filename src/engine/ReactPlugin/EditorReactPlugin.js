@@ -27,6 +27,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       id,
       on,
       off,
+      call,
       scope,
       addKeyBind,
       removeKeyBind,
@@ -48,8 +49,15 @@ export function withEditorPlugin(ReactComponent, methods = []) {
      * Triggers activateEditor if is this editor
      */
     const activateThisEditor = useCallback(
-      data => {
+      async data => {
         const { instance } = data;
+        const activeTab = await call(
+          PLUGINS.TABS.NAME,
+          PLUGINS.TABS.CALL.GET_ACTIVE_TAB
+        );
+
+        if (activeTab.id !== id) return;
+
         if (data.id === id || instance?.id === Utils.getNameFromURL(id))
           activateEditor();
       },
