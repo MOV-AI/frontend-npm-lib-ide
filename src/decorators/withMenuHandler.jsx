@@ -33,8 +33,8 @@ const withMenuHandler = Component => {
           PLUGINS.TABS.NAME,
           PLUGINS.TABS.CALL.GET_ACTIVE_TAB
         );
-
-        if (!validTab || (data.id === profile.name && activeTab !== data.id)) {
+        
+        if (!validTab || (data.id === profile.name && activeTab.id !== data.id)) {
           PluginManagerIDE.resetBookmarks();
           updateMenus();
         }
