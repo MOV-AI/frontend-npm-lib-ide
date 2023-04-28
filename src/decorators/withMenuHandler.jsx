@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef } from "react";
-import PluginManagerIDE from "../engine/PluginManagerIDE/PluginManagerIDE";
 import { PLUGINS } from "../utils/Constants";
 import { getRefComponent } from "../utils/Utils";
 
 const RETRY_UPDATE_MENU_TIMEOUT = 100;
 const MAXIMUM_RETRIES = 3;
+let lastActiveTabName = undefined;
 
 /**
  * Handle actions to update right menu of each editor
@@ -29,14 +29,12 @@ const withMenuHandler = Component => {
           data.id
         );
 
-        const activeTab = await call(
-          PLUGINS.TABS.NAME,
-          PLUGINS.TABS.CALL.GET_ACTIVE_TAB
-        );
-        
-        if (!validTab || (data.id === profile.name && activeTab.id !== data.id)) {
-          PluginManagerIDE.resetBookmarks();
+        if (
+          !validTab ||
+          (data.id === profile.name && lastActiveTabName !== data.id)
+        ) {
           updateMenus();
+          lastActiveTabName = data.id;
         }
       });
       return () => {
