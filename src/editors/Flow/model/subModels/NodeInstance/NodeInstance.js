@@ -1,6 +1,7 @@
+import PluginManagerIDE from "../../../../../engine/PluginManagerIDE/PluginManagerIDE";
+import { PLUGINS } from "../../../../../utils/Constants";
 import { Command, EnvVar, Parameter } from "../../../../../models/subModels";
 import { Model, Manager } from "../../../../../models";
-import Node from "../../../../Node/model/Node";
 import Position from "../Position/Position";
 import schema from "./schema";
 
@@ -29,6 +30,7 @@ class NodeInstance extends Model {
     this.launch = undefined;
     this.remappable = undefined;
     this.template = "";
+    this.templateDoc = {};
     this.position = new Position();
     this.parameters = new Manager("parameters", Parameter, this.propEvents);
     this.envVars = new Manager("envVars", EnvVar, this.propEvents);
@@ -43,6 +45,24 @@ class NodeInstance extends Model {
    *                                     Data Handlers                                    *
    *                                                                                      */
   //========================================================================================
+
+  async setTemplateDoc() {
+    if (this.templateDoc && this.templateDoc.id === this.template) return this;
+
+    const manager = PluginManagerIDE.getInstance().manager;
+
+    const templateDoc = await manager.call(
+      PLUGINS.DOC_MANAGER.NAME,
+      PLUGINS.DOC_MANAGER.CALL.READ,
+      {
+        scope: "Node",
+        name: this.template
+      }
+    );
+
+    this.templateDoc = templateDoc;
+    return this;
+  }
 
   /**
    * Returns the template property
@@ -59,6 +79,7 @@ class NodeInstance extends Model {
    */
   setTemplate(value) {
     this.template = value;
+    this.setTemplateDoc();
     return this;
   }
 
@@ -259,6 +280,8 @@ class NodeInstance extends Model {
     this.envVars.setData(envVars);
     this.commands.setData(commands);
 
+    this.setTemplateDoc();
+
     return this;
   }
 
@@ -318,10 +341,10 @@ class NodeInstance extends Model {
       // I don't love this hack, but we need it for the backend to fetch
       // The template values in case the user sets a default on a nodeInstance
       Persistent:
-        persistent === Node.defaults.persistent ? undefined : persistent,
-      Launch: launch === Node.defaults.launch ? undefined : launch,
+        persistent === this.templateDoc.persistent ? undefined : persistent,
+      Launch: launch === this.templateDoc.launch ? undefined : launch,
       Remappable:
-        remappable === Node.defaults.remappable ? undefined : remappable,
+        remappable === this.templateDoc.remappable ? undefined : remappable,
       Visualization: {
         ...this.getPosition().serializeToDB()
       },
