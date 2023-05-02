@@ -27,10 +27,12 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       id,
       on,
       off,
+      call,
       scope,
       addKeyBind,
       removeKeyBind,
       save,
+      updateRightMenu,
       activateKeyBind,
       deactivateKeyBind
     } = props;
@@ -45,13 +47,34 @@ export function withEditorPlugin(ReactComponent, methods = []) {
     }, [activateKeyBind]);
 
     /**
+     * Activate editor : activate editor's keybinds and update right menu
+     */
+    const deactivateEditor = useCallback(() => {
+      deactivateKeyBind();
+    }, [deactivateKeyBind]);
+
+    /**
      * Triggers activateEditor if is this editor
      */
     const activateThisEditor = useCallback(
-      data => {
+      (data = {}) => {
         const { instance } = data;
+
         if (data.id === id || instance?.id === Utils.getNameFromURL(id))
           activateEditor();
+      },
+      [id, activateEditor]
+    );
+
+    /**
+     * Triggers activateEditor if is this editor
+     */
+    const deactivateThisEditor = useCallback(
+      (data = {}) => {
+        const { instance } = data;
+
+        if (data.id !== id || instance?.id !== Utils.getNameFromURL(id))
+          deactivateEditor();
       },
       [id, activateEditor]
     );
@@ -61,11 +84,19 @@ export function withEditorPlugin(ReactComponent, methods = []) {
      */
     useEffect(() => {
       addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
-      on(
-        PLUGINS.TABS.NAME,
-        PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE,
-        activateThisEditor
-      );
+
+      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async data => {
+        const validTab = await call(
+          PLUGINS.TABS.NAME,
+          PLUGINS.TABS.CALL.FIND_TAB,
+          data.id
+        );
+
+        if (validTab && data.id === id) {
+          updateRightMenu();
+          activateEditor();
+        }
+      });
 
       on(
         PLUGINS.DOC_MANAGER.NAME,
@@ -85,15 +116,15 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       <div
         tabIndex="-1"
         ref={editorContainer}
-        onFocus={activateEditor}
+        onFocus={activateThisEditor}
         onBlur={deactivateKeyBind}
         className={`container-${scope}`}
       >
         <RefComponent
           {...props}
-          activateEditor={activateEditor}
+          activateEditor={activateThisEditor}
+          deactivateEditor={deactivateThisEditor}
           saveDocument={save}
-          deactivateKeyBind={deactivateKeyBind}
           ref={ref}
         />
       </div>

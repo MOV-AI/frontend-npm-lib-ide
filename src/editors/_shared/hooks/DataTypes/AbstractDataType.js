@@ -149,7 +149,7 @@ class AbstractDataType {
           }}
           language="python"
           disableMinimap={true}
-          theme={this._theme.codeEditor.theme}
+          theme={this._theme?.codeEditor?.theme ?? "dark"}
           options={{ readOnly: props.disabled }}
           onChange={value => props.onChange(value)}
         />
