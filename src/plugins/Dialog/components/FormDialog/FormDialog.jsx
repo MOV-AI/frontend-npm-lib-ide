@@ -55,10 +55,11 @@ const FormDialog = props => {
 
   // Trigger input focus in first render
   useEffect(() => {
+    validateValue(defaultValue);
     setTimeout(() => {
       inputRef.current?.querySelector("input")?.focus();
     });
-  }, []);
+  }, [defaultValue]);
 
   //========================================================================================
   /*                                                                                      *
