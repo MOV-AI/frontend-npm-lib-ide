@@ -1,6 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
-import PluginManagerIDE from "../engine/PluginManagerIDE/PluginManagerIDE";
-import { PLUGINS } from "../utils/Constants";
+import React, { useCallback, useRef } from "react";
 import { getRefComponent } from "../utils/Utils";
 
 const RETRY_UPDATE_MENU_TIMEOUT = 100;
@@ -15,34 +13,7 @@ const withMenuHandler = Component => {
   const RefComponent = getRefComponent(Component);
 
   return (props, ref) => {
-    const { call, on, off, profile } = props;
     const retryUpdateMenusCounter = useRef(0);
-
-    /**
-     * Component did mount
-     */
-    useEffect(() => {
-      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async data => {
-        const validTab = await call(
-          PLUGINS.TABS.NAME,
-          PLUGINS.TABS.CALL.FIND_TAB,
-          data.id
-        );
-
-        const activeTab = await call(
-          PLUGINS.TABS.NAME,
-          PLUGINS.TABS.CALL.GET_ACTIVE_TAB
-        );
-
-        if (!validTab || (data.id === profile.name && activeTab !== data.id)) {
-          PluginManagerIDE.resetBookmarks();
-          updateMenus();
-        }
-      });
-      return () => {
-        off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
-      };
-    }, [on, off, profile]);
 
     /**
      * Reset menus : clear menus and close right drawer

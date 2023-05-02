@@ -63,8 +63,8 @@ export const Flow = (props, ref) => {
     alert,
     addKeyBind,
     removeKeyBind,
-    activateKeyBind,
-    deactivateKeyBind,
+    activateEditor,
+    deactivateEditor,
     confirmationAlert,
     contextOptions,
     on,
@@ -629,8 +629,7 @@ export const Flow = (props, ref) => {
 
   function hasNodesToStart() {
     for (const entry of instance.current.links.data)
-      if (entry[1].from === "start/start/start")
-        return true;
+      if (entry[1].from === "start/start/start") return true;
 
     return false;
   }
@@ -757,7 +756,7 @@ export const Flow = (props, ref) => {
    */
   const onLinkSelected = useCallback(
     link => {
-      activateKeyBind();
+      activateEditor();
       selectedLinkRef.current = link;
       getMainInterface().selectedLink = link;
       if (!link) {
@@ -807,7 +806,7 @@ export const Flow = (props, ref) => {
    * Call broadcast method to emit event to all open flows
    */
   const setFlowsToDefault = useCallback(() => {
-    activateKeyBind();
+    activateEditor();
     // Remove selected node and link bookmark
     onNodeSelected(null);
     onLinkSelected(null);
@@ -1289,9 +1288,9 @@ export const Flow = (props, ref) => {
       if (!nodeInstance) return;
       nodeInstance.handleSelectionChange();
       mainInterface.onFocusNode(nodeInstance);
-      deactivateKeyBind();
+      deactivateEditor();
     },
-    [deactivateKeyBind]
+    [deactivateEditor]
   );
 
   const handleSearchEnabled = useCallback(
@@ -1446,10 +1445,10 @@ export const Flow = (props, ref) => {
 
   useEffect(() => {
     if (searchVisible) {
-      return deactivateKeyBind();
+      return deactivateEditor();
     }
-    activateKeyBind();
-  }, [searchVisible, deactivateKeyBind, activateKeyBind]);
+    activateEditor();
+  }, [searchVisible, deactivateEditor, activateEditor]);
 
   //========================================================================================
   /*                                                                                      *
