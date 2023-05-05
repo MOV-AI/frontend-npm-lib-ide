@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import {
@@ -30,8 +30,13 @@ const MainMenu = props => {
   const classes = mainMenuStyles();
   const theme = useTheme();
   const { t } = useTranslation();
-  const { isDarkTheme, handleLogOut, handleToggleTheme } =
-    useContext(MainContext);
+  const {
+    isDarkTheme,
+    isMenuOpen,
+    onCloseMenu,
+    handleLogOut,
+    handleToggleTheme
+  } = useContext(MainContext);
   // Refs
   const MENUS = [
     {
@@ -148,6 +153,8 @@ const MainMenu = props => {
             handleToggleTheme={
               AppSettings.APP_PROPS.SHOW_TOGGLE_THEME ? handleToggleTheme : null
             }
+            isMenuOpen={isMenuOpen}
+            onClose={onCloseMenu}
           />,
           <img
             key={"movaiIcon"}
