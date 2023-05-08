@@ -116,7 +116,14 @@ const IOConfig = props => {
    */
   const setPortDataIn = useCallback(
     rowData => {
-      rowData.portIn = scopePorts[rowData.template]?.In || {};
+      const portIn = scopePorts[rowData.template]?.In;
+
+      if (!portIn) {
+        delete rowData.portIn;
+        return rowData;
+      }
+
+      rowData.portIn = portIn;
 
       // Update CallbackOptions and EffectiveMessage = (pkg/msg) of in ioport
       Object.keys(rowData.portIn).forEach(key => {
@@ -132,7 +139,14 @@ const IOConfig = props => {
    */
   const setPortDataOut = useCallback(
     rowData => {
-      rowData.portOut = scopePorts[rowData.template]?.Out || {};
+      const portOut = scopePorts[rowData.template]?.Out;
+
+      if (!portOut) {
+        delete rowData.portOut;
+        return rowData;
+      }
+
+      rowData.portOut = portOut;
 
       // Update CallbackOptions and EffectiveMessage = (pkg/msg) of out ioport
       Object.keys(rowData.portOut).forEach(key => {
@@ -176,27 +190,8 @@ const IOConfig = props => {
   const handleRowUpdate = useCallback(
     (newData, oldData) => {
       return new Promise((resolve, reject) => {
-        const templateChanged = newData.template !== oldData.template;
-
-        // Set templated port in
-        if (
-          // template changed
-          templateChanged ||
-          // or there's no previous data in the port IN
-          !newData.portIn?.in
-        ) {
-          newData = setPortDataIn(newData);
-        }
-
-        // Set templated port out
-        if (
-          // template changed
-          templateChanged ||
-          // or there's no previous data in the port OUT
-          !newData.portOut?.out
-        ) {
-          newData = setPortDataOut(newData);
-        }
+        newData = setPortDataIn(newData);
+        newData = setPortDataOut(newData);
         // Call method to set row
         onIOConfigRowSet(newData, resolve, reject, oldData);
       });
