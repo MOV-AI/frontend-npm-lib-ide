@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Style } from "@mov-ai/mov-fe-lib-react";
 import { Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -49,6 +49,8 @@ function BaseApp(props) {
     dependencies
   } = props;
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   // Style hook
   const classes = appStyles(DEBUG_MODE)();
 
@@ -58,14 +60,25 @@ function BaseApp(props) {
    *                                                                                      */
   //========================================================================================
 
+  const onToggleTheme = () => {
+    setIsMenuOpen(true);
+    handleToggleTheme && handleToggleTheme();
+  };
+
+  const onCloseMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   const mainContextMemo = useMemo(
     () => ({
       handleLogOut,
-      handleToggleTheme,
+      handleToggleTheme: onToggleTheme,
+      isMenuOpen,
+      onCloseMenu,
       selectedTheme: theme,
       isDarkTheme: theme === "dark"
     }),
-    [theme, handleLogOut, handleToggleTheme]
+    [theme, handleLogOut, onToggleTheme]
   );
 
   //========================================================================================
@@ -110,6 +123,7 @@ function BaseApp(props) {
   useEffect(() => {
     if (appProps) setAppProps(appProps);
   }, [appProps]);
+
   //========================================================================================
   /*                                                                                      *
    *                                        Render                                        *
@@ -132,7 +146,7 @@ function BaseApp(props) {
  */
 export function installEditor(editor) {
   const { scope, store, editorPlugin, otherPlugins = [], props = {} } = editor;
-  addEditor({scope, store, plugin: editorPlugin, props});
+  addEditor({ scope, store, plugin: editorPlugin, props });
   // Install other plugins relead to editor
   otherPlugins.forEach(pluginDescription => {
     const plugin = pluginDescription.factory(pluginDescription.profile);

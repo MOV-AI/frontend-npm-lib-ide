@@ -1,6 +1,6 @@
 # 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
-- [FP-2427 - Update node instances when port messages change](https://movai.atlassian.net/browse/FP-2427)
+- [FP-2406 - Make menu be able to persist on IDE](https://movai.atlassian.net/browse/FP-2406)
 - [FP-2409 - Added a validation to activateEditor based on the activeTab](https://movai.atlassian.net/browse/FP-2409)
 - [FP-2414 - Fixed an issue where we were always removing the bookmarks, even when not needed](https://movai.atlassian.net/browse/FP-2414)
 - [FP-2250 - Added a debounce and verification for the robot status going offline snackbar](https://movai.atlassian.net/browse/FP-2250)
@@ -27,3 +27,4 @@
 - [FP-2238 - Logout behavior is different in IDE](https://movai.atlassian.net/browse/FP-2238)
 - [FP-2411 - Only save flow nodeInstance parameters when necessary](https://movai.atlassian.net/browse/FP-2411)
 - [FP-2364 - Flows without links to start node should only show "Save"](https://movai.atlassian.net/browse/FP-2364)
+- [FP-2427 - Update node instances when port messages change](https://movai.atlassian.net/browse/FP-2427)
