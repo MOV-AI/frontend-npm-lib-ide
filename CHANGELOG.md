@@ -27,3 +27,4 @@
 - [FP-2238 - Logout behavior is different in IDE](https://movai.atlassian.net/browse/FP-2238)
 - [FP-2411 - Only save flow nodeInstance parameters when necessary](https://movai.atlassian.net/browse/FP-2411)
 - [FP-2364 - Flows without links to start node should only show "Save"](https://movai.atlassian.net/browse/FP-2364)
+- [FP-2427 - Update node instances when port messages change](https://movai.atlassian.net/browse/FP-2427)
