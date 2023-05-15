@@ -1,5 +1,6 @@
 # 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
+- [FP-2359 - Added a way for the BaseApp keybinds to work](https://movai.atlassian.net/browse/FP-2359)
 - [FP-2406 - Make menu be able to persist on IDE](https://movai.atlassian.net/browse/FP-2406)
 - [FP-2409 - Added a validation to activateEditor based on the activeTab](https://movai.atlassian.net/browse/FP-2409)
 - [FP-2414 - Fixed an issue where we were always removing the bookmarks, even when not needed](https://movai.atlassian.net/browse/FP-2414)

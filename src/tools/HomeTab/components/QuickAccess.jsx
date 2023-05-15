@@ -9,9 +9,9 @@ import ChromeReaderModeIcon from "@material-ui/icons/ChromeReaderMode";
 import AppSettings from "../../../App/AppSettings";
 import { PLUGINS } from "../../../utils/Constants";
 import { getIconByScope } from "../../../utils/Utils";
+import { openTool } from "../../../utils/generalFunctions";
 import { getQuickAccessTools } from "../../";
 import { quickAccessStyles } from "../styles";
-import { openTool } from "../../../plugins/views/SystemBar/builder/buildFunctions";
 
 const QuickAccess = props => {
   const { call } = props;
@@ -127,6 +127,7 @@ const QuickAccess = props => {
           const { name, title } = tool.profile;
           return (
             <div
+              key={`input_tool_${name}`}
               data-testid={`input_tool_${name}`}
               className={classes.link}
               onClick={() => openTool(call, name)}

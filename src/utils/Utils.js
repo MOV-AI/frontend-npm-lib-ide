@@ -1,4 +1,5 @@
 import { forwardRef } from "react";
+import hotkeys from "hotkeys-js";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import BuildIcon from "@material-ui/icons/Build";
 import CodeIcon from "@material-ui/icons/Code";
@@ -8,6 +9,7 @@ import KeyboardIcon from "@material-ui/icons/Keyboard";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import movaiIcon from "../Branding/movai-logo-white.png";
 import { ERROR_MESSAGES } from "./Messages";
+import { KEYBIND_SCOPES } from "./Constants";
 
 /**
  * Export a non implemented empty function
@@ -215,3 +217,43 @@ export function insertIf(condition, ...elements) {
 export function convertToValidString(text) {
   return text && text.toString().replaceAll(" ", "_").toLowerCase();
 }
+
+export function openLink(link) {
+  window.open(link, "_blank");
+}
+
+/**
+ * Activate scope shortcuts.
+ * This will automatically deactivate all other scopes
+ */
+export const activateKeyBind = (scope = scopeRef.current) => {
+  hotkeys.setScope(scope);
+};
+
+/**
+ * Set scope to global
+ *  This will deactivate the current scope
+ */
+export const deactivateKeyBind = () => {
+  hotkeys.setScope(KEYBIND_SCOPES.APP);
+};
+
+/**
+ * Add Key bind to its scope
+ * @param {*} keys
+ * @param {*} callback
+ */
+export const addKeyBind = (keys, callback, scope = KEYBIND_SCOPES.APP) => {
+  const keysToBind = parseKeybinds(keys);
+  activateKeyBind(scope);
+  hotkeys(keysToBind, scope, callback);
+};
+
+/**
+ * Remove key bind from scope
+ * @param {*} key
+ */
+export const removeKeyBind = (keys, scope = KEYBIND_SCOPES.APP) => {
+  const keysToUnbind = parseKeybinds(keys);
+  hotkeys.unbind(keysToUnbind, scope);
+};

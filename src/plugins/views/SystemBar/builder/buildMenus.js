@@ -1,20 +1,19 @@
 import i18n from "../../../../i18n/i18n";
 import { getSystemBarTools, hasTool } from "../../../../tools";
 import AppSettings from "../../../../App/AppSettings";
-import { parseKeybinds } from "../../../../utils/Utils";
+import { parseKeybinds, openLink } from "../../../../utils/Utils";
 import {
   HOMETAB_PROFILE,
   SHORTCUTS_PROFILE
 } from "../../../../utils/Constants";
 import { KEYBINDINGS } from "../../../../utils/shortcuts";
-import { buildNewFileSubmenu } from "./buildSubMenus";
 import {
   saveDocument,
   saveAllDocument,
   aboutPopup,
-  openLink,
   openTool
-} from "./buildFunctions";
+} from "../../../../utils/generalFunctions";
+import { buildNewFileSubmenu } from "./buildSubMenus";
 
 const buildMenus = async (call, classes) => {
   const buildFileMenu = async () => {

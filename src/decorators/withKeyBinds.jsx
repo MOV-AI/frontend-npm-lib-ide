@@ -1,8 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import hotkeys from "hotkeys-js";
 import { KEYBINDINGS } from "../utils/shortcuts";
-import { KEYBIND_SCOPES } from "../utils/Constants";
-import { getRefComponent, parseKeybinds } from "../utils/Utils";
+import {
+  getRefComponent,
+  addKeyBind as utilsAddKeyBind,
+  removeKeyBind as utilsRemoveKeyBind,
+  activateKeyBind,
+  deactivateKeyBind
+} from "../utils/Utils";
 
 /**
  * By default hotkeys are not enabled for INPUT SELECT TEXTAREA elements.
@@ -31,31 +36,12 @@ const withKeyBinds = Component => {
     const scopeRef = useRef();
 
     /**
-     * Activate scope shortcuts.
-     * This will automatically deactivate all other scopes
-     */
-    const activateKeyBind = (scope = scopeRef.current) => {
-      hotkeys.setScope(scope);
-    };
-
-    /**
-     * Set scope to global
-     *  This will deactivate the current scope
-     */
-    const deactivateKeyBind = () => {
-      hotkeys.setScope(KEYBIND_SCOPES.APP);
-    };
-
-    /**
      * Add Key bind to its scope
      * @param {*} keys
      * @param {*} callback
      */
     const addKeyBind = (keys, callback, scope = scopeRef.current) => {
-      if (!scope) return;
-      const keysToBind = parseKeybinds(keys);
-      activateKeyBind(scope);
-      hotkeys(keysToBind, scope, callback);
+      utilsAddKeyBind(keys, callback, scope);
     };
 
     /**
@@ -63,8 +49,7 @@ const withKeyBinds = Component => {
      * @param {*} key
      */
     const removeKeyBind = (keys, scope = scopeRef.current) => {
-      const keysToUnbind = parseKeybinds(keys);
-      hotkeys.unbind(keysToUnbind, scope);
+      utilsRemoveKeyBind(keys, callback, scope);
     };
 
     /**
