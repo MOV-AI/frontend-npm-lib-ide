@@ -14,7 +14,7 @@ class Parameter extends Model {
     //========================================================================================
 
     this.value = "";
-    this.type = Parameter.defaults.type;
+    this.type = undefined;
     this.description = "";
 
     // Define observable properties
@@ -50,7 +50,10 @@ class Parameter extends Model {
    * @returns {string}
    */
   getType() {
-    return this.type;
+    // If we later want to go back to saving the type
+    // Ticket where this changed: https://movai.atlassian.net/browse/FP-2438
+    // return this.type;
+    return undefined;
   }
 
   /**
@@ -149,7 +152,7 @@ class Parameter extends Model {
    * Defalt values
    */
   static defaults = {
-    type: DATA_TYPES.ANY
+    type: undefined
   };
 }
 
