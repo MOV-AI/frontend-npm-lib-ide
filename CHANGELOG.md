@@ -32,3 +32,4 @@
 - [FP-2427 - Update node instances when port messages change](https://movai.atlassian.net/browse/FP-2427)
 - [FP-2474 - Search node tool fails for big flows](https://movai.atlassian.net/browse/FP-2474)
 - [FP-2466 - Persistent "add node" window](https://movai.atlassian.net/browse/FP-2466)
+- [FP-2473 - IDE: Flows appear as running but nodes don't in tree view](https://movai.atlassian.net/browse/FP-2473)

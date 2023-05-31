@@ -41,7 +41,7 @@ import InvalidLinksWarning from "./Components/Warnings/InvalidLinksWarning";
 import InvalidParametersWarning from "./Components/Warnings/InvalidParametersWarning";
 import InvalidExposedPortsWarning from "./Components/Warnings/InvalidExposedPortsWarning";
 import { EVT_NAMES, EVT_TYPES } from "./events";
-import { FLOW_VIEW_MODE, TYPES } from "./Constants/constants";
+import { FLOW_VIEW_MODE, TYPES, generateContainerId } from "./Constants/constants";
 import GraphBase from "./Core/Graph/GraphBase";
 import GraphTreeView from "./Core/Graph/GraphTreeView";
 import { getBaseContextOptions } from "./contextOptions";
@@ -542,18 +542,6 @@ export const Flow = (props, ref) => {
   }
 
   /**
-   * On change running flow
-   * @param {*} flow
-   */
-  const onStartStopFlow = useCallback(flow => {
-    // Update state variable
-    setRunningFlow(prevState => {
-      if (prevState === flow) return prevState;
-      return flow;
-    });
-  }, []);
-
-  /**
    * On view mode change
    * @param {string} newViewMode : One of the following "default" or "treeView"
    */
@@ -938,7 +926,6 @@ export const Flow = (props, ref) => {
       && event.type === EVT_TYPES.LINK
     ))).subscribe(evtData => console.log("onLinkErrorMouseOver", evtData));
   }, [
-    mainInterface,
     runningFlow,
     getContextOptions,
     onNodeSelected,
@@ -1285,6 +1272,11 @@ export const Flow = (props, ref) => {
     }
     activateEditor();
   }, [searchVisible, deactivateEditor, activateEditor]);
+
+  const onStartStopFlow = useCallback((flow) => {
+    setRunningFlow(flow);
+    mainInterface?.nodeStatusUpdated({}); 
+  }, [setRunningFlow, mainInterface]);
 
   //========================================================================================
   /*                                                                                      *

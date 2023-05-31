@@ -12,6 +12,12 @@ import InterfaceModes from "./InterfaceModes";
 import Events from "./Events";
 import Canvas from "./canvas";
 
+export
+let _cachedNodeStatus = {};
+
+export
+let cachedNodeStatus = {};
+
 const NODE_PROPS = {
   Node: {
     LABEL: "NodeLabel",
@@ -45,6 +51,49 @@ const flowEmit = flowSub.easyEmit(({ id, ...rest }) => {
     }),
   };
 });
+
+function _set(obj, splits = [], value) {
+  if (splits.length === 0) {
+    throw new Error("Invalid splits array");
+  }
+
+  let currentObj = obj;
+
+  for (let i = 0; i < splits.length - 1; i++) {
+    const split = splits[i];
+    currentObj = currentObj[split] = currentObj[split] || {};
+  }
+
+  currentObj[splits[splits.length - 1]] = value;
+}
+
+function _marks(obj) {
+  const result = {};
+  const stack = [{ obj: obj, prefix: '' }];
+
+  while (stack.length > 0) {
+    const { obj, prefix } = stack.pop();
+
+    for (const key in obj) {
+      const value = obj[key];
+      const newPrefix = prefix + key;
+
+      result[newPrefix] = value ? 1 : 0;
+
+      if (typeof value === 'object' && value !== null)
+        stack.push({ obj: value, prefix: newPrefix + '__' });
+    }
+  }
+
+  return result;
+}
+
+function ensureParents(json) {
+  for (const [key, value] of Object.entries(json))
+    _set(_cachedNodeStatus, key.split("__"), value)
+
+  return _marks(_cachedNodeStatus);
+}
 
 export default class MainInterface {
   constructor({
@@ -101,6 +150,7 @@ export default class MainInterface {
   majorUpdate() {
     this.canvas.appendDocumentFragment();
     this.graph.updateAllPositions();
+    this.nodeStatusUpdated({});
     this.update();
   }
 
@@ -195,7 +245,8 @@ export default class MainInterface {
   };
 
   nodeStatusUpdated = (nodeStatus, robotStatus) => {
-    this.graph.nodeStatusUpdated(nodeStatus, robotStatus);
+    cachedNodeStatus = ensureParents(nodeStatus);
+    this.graph.nodeStatusUpdated(robotStatus);
   };
 
   addLink = () => {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import MainInterface from "../../Components/interface/MainInterface";
 
 const useMainInterface = (props, deps = []) => {
@@ -10,7 +10,7 @@ const useMainInterface = (props, deps = []) => {
 
   useEffect(() => {
     return () => mi.destroy();
-  }, [mi]);
+  }, deps.concat([mi]));
 
   return { mainInterface: mi };
 };

@@ -89,8 +89,10 @@ export default class GraphTreeView extends GraphBase {
     }
 
     try {
-      this._loadLinks(flow.Links, this.rootNode);
+      this.loadLinks(flow.Links, this.rootNode);
       this.onFlowValidated.next({ warnings: [] });
+      this.nodesLoaded();
+      this.update();
     } catch (error) {
       console.warn("Error has ocurred loading links", flow, error);
     }
@@ -127,7 +129,7 @@ export default class GraphTreeView extends GraphBase {
         }
 
         // Add parent children to canvas
-        this.update(parent);
+        this.update();
         parent !== this.rootNode && this.subFlows.push(parent);
       }
     } catch (error) {
@@ -242,11 +244,9 @@ export default class GraphTreeView extends GraphBase {
    * @param {Object} nodes
    * @param {*} robotStatus
    */
-  nodeStatusUpdated(nodes, _) {
-    Object.keys(nodes).forEach(nodeName => {
-      const status = nodes[nodeName];
-      this.updateNodeStatus(nodeName, status);
-    });
+  nodeStatusUpdated() {
+    if (this.allNodesLoaded)
+      this.nodesLoaded();
   }
 
   /**
@@ -316,34 +316,13 @@ export default class GraphTreeView extends GraphBase {
    *                                                                                      */
   //========================================================================================
 
-  /**
-   * @private function
-   * @override updateNodeStatus: Iterate through the nodes in tree to update its running status
-   *
-   * @param {String} nodeName : Node instance name
-   * @param {Boolean} status : True -> Running / False -> Not Running
-   * @param {TreeContainerNode} parent : Flow to look for the node
-   */
-  updateNodeStatus = (nodeName, status, parent = this.rootNode) => {
-    if (!parent) return;
+  getNodeParent(nodePath, i, parent = this.rootNode) {
+    return parent.children.find(n => n.data.name === nodePath[i]);
+  }
 
-    // is this a subflow node?
-    if (nodeName.indexOf("__") >= 0) {
-      const nodePath = nodeName.split("__");
-      const nodeParent = parent.children.find(n => n.data.name === nodePath[0]);
-      const newNodeName = nodePath.splice(1).join("__");
-
-      // Let's also set the Container status to true, given that we are animating is child as well
-      if (nodeParent) nodeParent.status = [1, true, "true"].includes(status);
-
-      // let's call this function again with the newNodeName (child) and the parent is the node
-      return this.updateNodeStatus(newNodeName, status, nodeParent);
-    }
-
-    const node = parent.children.find(n => n.data.name === nodeName);
-
-    if (node) node.status = [1, true, "true"].includes(status);
-  };
+  setNodeStatus(node, status) {
+    node.status = [1, true, "true"].includes(status);
+  }
 
   /**
    * @override _loadLinks : parse each link and add it to port
@@ -353,7 +332,7 @@ export default class GraphTreeView extends GraphBase {
    *
    * @returns {GraphTreeView} instance
    */
-  _loadLinks(links, parent) {
+  loadLinks(links, parent) {
     const _links = links || {};
     Object.keys(_links).forEach(linkId => {
       const linksData = { id: linkId, name: linkId, ..._links[linkId] };
@@ -466,19 +445,6 @@ export default class GraphTreeView extends GraphBase {
     const value = { obj: inst, links: [] };
     this.nodes.set(inst.data.id, value);
   };
-
-  /**
-   * @private
-   * @override update : Add to canvas all children of parent node
-   *
-   * @param {TreeContainerNode} parent
-   */
-  update(parent) {
-    // Render parent children
-    parent.children.forEach(node => {
-      node.addToCanvas();
-    });
-  }
 
   reStrokeLinks = () => {
     /* empty on purpose */
