@@ -19,6 +19,7 @@ import {
   SCOPES,
   DEFAULT_VALUE
 } from "../../../../../utils/Constants";
+import { call, dialog } from "../../../../../utils/noremix";
 import ParameterEditorDialog from "../../../../_shared/KeyValueTable/ParametersEditorDialog";
 import MenuDetails from "./sub-components/MenuDetails";
 import PortsDetails from "./sub-components/PortsDetails";
@@ -45,7 +46,7 @@ const ACTIVE_ITEM = {
  * @param {*} props : Component props
  * @returns {ReaactElement} Node Menu
  */
-const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
+const NodeMenu = memo(({ nodeInst, openDoc, editable, flowModel }) => {
   const data = nodeInst.data;
   // State hooks
   const [templateData, setTemplateData] = useState({});
@@ -102,7 +103,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
     );
 
     return subFlowInst.getNodeInstanceItem(data.name);
-  }, [data.name, nodeInst, flowModel, call]);
+  }, [data.name, nodeInst, flowModel]);
 
   const setNodeDataInst = nodeInstance => {
     setNodeData(nodeInstance.serialize());
@@ -172,7 +173,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
     ).then(store => {
       setProtectedDocs(store.protectedDocs);
     });
-  }, [getNodeData, call]);
+  }, [getNodeData]);
 
   useEffect(() => {
     const name = data?.Template;
@@ -184,7 +185,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
     }).then(doc => {
       setTemplateData(doc.serialize());
     });
-  }, [data, call]);
+  }, [data]);
 
   //========================================================================================
   /*                                                                                      *
@@ -213,59 +214,47 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
    * @param {string} param : varName ("parameters", "envVars" or "cmdLine")
    * @param {boolean} viewOnly : Disable all inputs if True
    */
-  const handleKeyValueDialog = useCallback(
-    (objData, param, viewOnly) => {
-      const paramType = t(DIALOG_TITLE[param.toUpperCase()]);
-      const obj = {
+  const handleKeyValueDialog = useCallback((objData, param, viewOnly) => {
+    const paramType = t(DIALOG_TITLE[param.toUpperCase()]);
+
+    return dialog({
+      onSubmit: handleSubmitParameter,
+      title: t("EditParamType", { paramType }),
+      data: {
         ...objData,
         varName: param,
         type: objData.type ?? DATA_TYPES.ANY,
         name: objData.key,
         paramType
-      };
-
-      const args = {
-        onSubmit: handleSubmitParameter,
-        title: t("EditParamType", { paramType }),
-        data: obj,
-        showDefault: !viewOnly,
-        showValueOptions: true,
-        showDescription: !viewOnly,
-        disableName: true,
-        disableType: true,
-        disableDescription: true,
-        preventRenderType: param !== TABLE_KEYS_NAMES.PARAMETERS,
-        disabled: viewOnly,
-        call
-      };
-
-      call(
-        PLUGINS.DIALOG.NAME,
-        PLUGINS.DIALOG.CALL.CUSTOM_DIALOG,
-        args,
-        ParameterEditorDialog
-      );
-    },
-    [call, handleSubmitParameter, t]
-  );
+      },
+      showDefault: !viewOnly,
+      showValueOptions: true,
+      showDescription: !viewOnly,
+      disableName: true,
+      disableType: true,
+      disableDescription: true,
+      preventRenderType: param !== TABLE_KEYS_NAMES.PARAMETERS,
+      disabled: viewOnly,
+      type: "customDialog",
+      Dialog: ParameterEditorDialog,
+    });
+  }, [handleSubmitParameter, t]);
 
   /**
    * Show confirmation dialog before deleting parameter
    * @param {{key: string}} item : Object containing a key holding the param name
    * @param {string} varName : keyValue type (parameters, envVars or cmdLine)
    */
-  const handleKeyValueDelete = useCallback(
-    (item, varName) => {
-      const paramName = item.key;
-      call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, {
-        submitText: t("Delete"),
-        title: t("DeleteDocConfirmationTitle"),
-        onSubmit: () => handleDeleteParameter(paramName, varName),
-        message: t("DeleteKeyConfirmationMessage", { key: paramName })
-      });
-    },
-    [call, handleDeleteParameter, t]
-  );
+  const handleKeyValueDelete = useCallback((item, varName) => {
+    const paramName = item.key;
+
+    return dialog({
+      submitText: t("Delete"),
+      title: t("DeleteDocConfirmationTitle"),
+      onSubmit: () => handleDeleteParameter(paramName, varName),
+      message: t("DeleteKeyConfirmationMessage", { key: paramName })
+    });
+  }, [handleDeleteParameter, t]);
 
   //========================================================================================
   /*                                                                                      *
@@ -399,7 +388,6 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
 NodeMenu.propTypes = {
   nodeInst: PropTypes.object.isRequired,
   flowModel: PropTypes.object.isRequired,
-  call: PropTypes.func.isRequired,
   openDoc: PropTypes.func.isRequired,
   editable: PropTypes.bool
 };

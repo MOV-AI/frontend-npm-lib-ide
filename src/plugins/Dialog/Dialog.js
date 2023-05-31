@@ -1,353 +1,167 @@
-import { Utils } from "@mov-ai/mov-fe-lib-core";
-import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
-import ReactDOM from "react-dom";
-import { withTheme } from "../../decorators/withTheme";
-import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
+import React, { useState, useEffect, useCallback } from "react";
 import i18n from "../../i18n/i18n";
-import {
-  PLUGINS, SAVE_OUTDATED_DOC_ACTIONS
-} from "../../utils/Constants";
-import AlertBeforeAction from "./components/AlertDialog/AlertBeforeAction";
-import AlertDialog from "./components/AlertDialog/AlertDialog";
-import AppDialog from "./components/AppDialog/AppDialog";
-import ConfirmationDialog from "./components/ConfirmationDialog/ConfirmationDialog";
-import FormDialog from "./components/FormDialog/FormDialog";
-import NewDocumentDialog from "./components/FormDialog/NewDocumentDialog";
+import { IconButton, Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import BaseDialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import TextField from "@material-ui/core/TextField";
+import CloseIcon from "@material-ui/icons/Close";
+import WarningIcon from "@material-ui/icons/Warning";
+import { PLUGINS } from "../../utils/Constants";
+import { withViewPlugin } from "./../../engine/ReactPlugin/ViewReactPlugin";
+import { withHostReactPlugin } from "./../../engine/ReactPlugin/HostReactPlugin";
+import { subscribe, useRemix } from "./../../utils/noremix";
+import formJson from "./../../utils/form";
 
-class Dialog extends IDEPlugin {
-  constructor(profile = {}) {
-    // Remove duplicated if needed
-    const methods = Array.from(
-      new Set([
-        ...(profile.methods ?? []),
-        ...Object.values(PLUGINS.DIALOG.CALL)
-      ])
-    );
-    super({ ...profile, methods });
-  }
+function OtherDialogBase(props, ref) {
+  const [ dialog, setDialog ] = useState({});
+  const {
+    onSubmit = () => {},
+    onClose = () => {},
+    onValidation = () => ({}),
+    open = false,
+    closeOnBackdrop = true,
+    allowSubmit = true,
+    showAlertIcon = false,
+    actions = false, // can be an object
+    submitText = "Submit",
+    message,
+    Component = null,
+    title = "",
+    showForm = true,
+    form,
+    children,
+    Dialog,
+    ...rest
+  } = dialog;
 
-  //========================================================================================
-  /*                                                                                      *
-   *                                     Public Methods                                   *
-   *                                                                                      */
-  //========================================================================================
+  const reform = message
+    ? (form ?? {})
+    : (form ?? { name: { label: "Name", placeholder: "Name" } });
 
-  /**
-   *
-   * @param {*} data
-   */
-  alert(data) {
-    const targetElement = this._handleDialogOpen();
-    ReactDOM.render(
-      <AlertDialog
-        title={data.title}
-        message={data.message}
-        onClose={() => this._handleDialogClose(targetElement, data.onClose)}
-      />,
-      targetElement
-    );
+  useRemix(props);
+  useEffect(() => subscribe(PLUGINS.DIALOG_2.NAME, PLUGINS.DIALOG_2.CALL.OPEN, setDialog), [setDialog]);
 
-  }
+  const dialogOpen = useCallback(dialog => setDialog({
+    ...dialog,
+    open: true,
+  }), [setDialog]);
 
-  /**
-   * Show confirmation alert before action
-   * @param {{onSubmit: Function, message: String, title: String}} data
-   */
-  confirmation(data) {
-    const targetElement = this._handleDialogOpen();
-    ReactDOM.render(
-      <ConfirmationDialog
-        title={data.title}
-        onSubmit={data.onSubmit}
-        message={data.message}
-        submitText={data.submitText}
-        onClose={() => this._handleDialogClose(targetElement, data.onClose)}
-      />,
-      targetElement
-    );
+  useEffect(() => { ref.current = { open: dialogOpen }; }, [open]);
 
-  }
+  const handleClose = useCallback((_, reason) => {
+    if (!closeOnBackdrop && reason === "backdropClick") return;
+    setDialog(dialog => ({ ...dialog, open: false }));
+    onClose();
+  }, [closeOnBackdrop, setDialog, onClose]);
 
-  /**
-   * Open modal to enter new document name
-   * @param {*} data
-   */
-  newDocument(data) {
-    const targetElement = this._handleDialogOpen();
-    ReactDOM.render(
-      <NewDocumentDialog
-        call={this.call}
-        title={i18n.t("NewDocTitle", { scope: data.scope })}
-        submitText={i18n.t("Create")}
-        placeholder={data.placeholder}
-        scope={data.scope}
-        onSubmit={data.onSubmit}
-        onClose={() => this._handleDialogClose(targetElement, data.onClose)}
-      />,
-      targetElement
-    );
+  const submit = useCallback(async (json, key) => {
+    const errors = await onValidation(json);
+    const errorCount = Object.values(errors).reduce((a, b) => a.concat(b), []).length;
+    if (errorCount)
+      return setDialog(dialog => ({
+        ...dialog,
+        form: Object.entries(reform).reduce((a, [key, value]) => Object.assign(a, {
+          [key]: {
+            ...value,
+            errors: errors[key],
+          },
+        }), {}),
+      }));
+    onSubmit(json, key);
+    handleClose();
+  }, [handleClose, onSubmit, setDialog, reform]);
 
-  }
+  const handleSubmit = useCallback((e, key) => {
+    e.preventDefault();
+    if (!allowSubmit) return;
+    const json = formJson(e.target.tagName === "FORM" ? e.target : e.target.form);
+    submit(json, key);
+  }, [allowSubmit, submit]);
 
-  /**
-   * Open modal to enter copy name
-   * @param {*} data
-   */
-  copyDocument(data) {
-    const targetElement = this._handleDialogOpen();
-    ReactDOM.render(
-      <NewDocumentDialog
-        call={this.call}
-        scope={data.scope}
-        title={i18n.t("CopyDocTo", { docName: data.name })}
-        loadingMessage={i18n.t("CopyingDoc")}
-        submitText={i18n.t("Copy")}
-        onSubmit={data.onSubmit}
-        onClose={() => this._handleDialogClose(targetElement, data.onClose)}
-      />,
-      targetElement
-    );
+  if (Dialog)
+    return (<Dialog
+      onClose={handleClose}
+      { ...dialog }
+    />);
 
-  }
-
-  /**
-   * Open modal with basic input form
-   * @param {*} data
-   */
-  formDialog(data) {
-    const targetElement = this._handleDialogOpen();
-    const {
-      title,
-      submitText,
-      message,
-      onSubmit,
-      onClose,
-      size,
-      multiline,
-      inputLabel,
-      value,
-      onValidation,
-      onPostValidation
-    } = data;
-    ReactDOM.render(
-      <FormDialog
-        call={this.call}
-        size={size}
-        title={title}
-        multiline={multiline}
-        message={message}
-        defaultValue={value}
-        inputLabel={inputLabel}
-        submitText={submitText}
-        onSubmit={onSubmit}
-        onValidation={onValidation}
-        onPostValidation={onPostValidation}
-        onClose={() => this._handleDialogClose(targetElement, onClose)}
-      />,
-      targetElement
-    );
-  }
-
-  /**
-   * Open Modal to confirm desired action : save, dontSave or cancel
-   *  save: close and save
-   *  dontSave: close and discard changes
-   *  cancel: doesn't close tab
-   * @param {{name: string, scope: string, onSubmit: function}} data
-   */
-  closeDirtyDocument(data) {
-    const targetElement = this._handleDialogOpen();
-    const title = i18n.t("SaveChangesConfirmationTitle");
-    const message = i18n.t("SaveChangesConfirmationMessage", {
-      scope: data.scope,
-      name: data.name
-    });
-    const actions = {
-      dontSave: { label: i18n.t("DontSave"), testId: "input_dont-save" },
-      cancel: { label: i18n.t("Cancel"), testId: "input_close" },
-      save: { label: i18n.t("Save"), testId: "input_save" }
-    };
-    ReactDOM.render(
-      <AlertBeforeAction
-        title={title}
-        message={message}
-        actions={actions}
-        onSubmit={data.onSubmit}
-        onClose={() => this._handleDialogClose(targetElement, data.onClose)}
-      />,
-      targetElement
-    );
-  }
-
-  saveOutdatedDocument(data) {
-    const targetElement = this._handleDialogOpen();
-    // Set dialog message
-    const title = i18n.t("SaveOutdatedDocTitle", {
-      docName: data.name
-    });
-    const message = i18n.t("SaveOutdatedDocMessage", {
-      docType: data.scope,
-      docName: data.name
-    });
-    // Set dialog actions
-    const actions = {
-      [SAVE_OUTDATED_DOC_ACTIONS.UPDATE_DOC]: {
-        label: i18n.t("UpdateDoc"),
-        testId: "input_update"
-      },
-      [SAVE_OUTDATED_DOC_ACTIONS.OVERWRITE_DOC]: {
-        label: i18n.t("OverwriteDoc"),
-        testId: "input_overwrite"
-      },
-      [SAVE_OUTDATED_DOC_ACTIONS.CANCEL]: {
-        label: i18n.t("Cancel"),
-        testId: "input_cancel"
-      }
-    };
-    // Show dialog
-    ReactDOM.render(
-      <AlertBeforeAction
-        title={title}
-        message={message}
-        actions={actions}
-        onSubmit={data.onSubmit}
-        onClose={() => this._handleDialogClose(targetElement, data.onClose)}
-      />,
-      targetElement
-    );
-  }
-
-  /**
-   * App dialog with Custom content
-   * @param {{title: string, message: string, actions: Array, onSubmit: function}} data : Data to AppDialog props and Component props
-   * @param {ReactComponent} Component : Component to render custom content in app dialog
-   */
-  custom(data, Component) {
-    const {
-      title,
-      actions,
-      onSubmit,
-      submitText,
-      message = [],
-      ...props
-    } = data;
-    const targetElement = this._handleDialogOpen();
-    const closeModal = () =>
-      this._handleDialogClose(targetElement, data.onClose);
-
-    // Show dialog
-    ReactDOM.render(
-      <AppDialog
-        title={title}
-        actions={actions}
-        submitText={submitText}
-        onSubmit={onSubmit}
-        onClose={closeModal}
+  const actionsEl = actions ? Object.entries(actions).map(([key, action]) => (
+    <Button data-testid={"action_" + key} onClick={e => handleSubmit(e, key)} color={ action.color ?? "default" }>
+      { i18n.t(action.label ?? key) }
+    </Button>
+  )) : (<>
+    <Button data-testid="input_close" onClick={handleClose} color="secondary">
+      { onSubmit ? "Cancel" : "Ok" }
+    </Button>
+    { onSubmit && (
+      <Button
+        data-testid="input_confirm"
+        type="submit"
+        color="primary"
       >
-        {message}
-        <Component {...props} closeModal={closeModal} />
-      </AppDialog>,
-      targetElement
-    );
-    return closeModal;
-  }
+        { submitText }
+      </Button>
+    ) }
+  </>);
 
-  /**
-   * Show custom dialog component
-   * @param {*} data : Props to pass to DialogComponent
-   * @param {ReactComponent} DialogComponent : Custom dialog component
-   */
-  customDialog(data, DialogComponent) {
-    const targetElement = this._handleDialogOpen();
-    // Show dialog
-    ReactDOM.render(
-      <DialogComponent
-        {...data}
-        onClose={() => this._handleDialogClose(targetElement, data.onClose)}
-      />,
-      targetElement
-    );
-  }
+  const childrenEl = Component ? <Component { ...dialog } /> : (<>
+    { message && (
+      <Typography className="styles-horizontal">
+        { showAlertIcon && <WarningIcon fontSize={"large"} /> }
+        { message }
+      </Typography>
+    ) }
 
-  /**
-   * Show SelectScopeModal
-   * @param {*} data : Modal props
-   */
-  selectScopeModal(data) {
-    const { onSubmit, message, selected, scopeList, onClose } = data;
-    const targetElement = this._handleDialogOpen();
-    const ThemedModal = withTheme(SelectScopeModal);
+    { Object.entries(reform).map(([key, { label = "Value", placeholder = "", multiline, maxLength, errors = [], defaultValue, ...rest }]) => (
+      <TextField
+        autoFocus={rest.autoFocus} key={key} name={key} error={errors.length !== 0}
+        helperText={errors}
+        label={label}
+        InputLabelProps={{ shrink: true }}
+        defaultValue={defaultValue ?? dialog[key] ?? ""}
+        placeholder={placeholder}
+        multiline={multiline}
+        inputProps={{
+          "data-testid": "input_" + key,
+          maxLength: multiline ? "" : maxLength,
+        }} // limit of characters here
+        { ...rest }
+      />
+    )) }
+  </>);
 
-    // Handle submit
-    const handleDialogSubmit = selectedItem => {
-      onSubmit(selectedItem);
-      this._handleDialogClose(targetElement, onClose);
-    };
-
-    // Show dialog
-    ReactDOM.render(
-      <ThemedModal
-        open={true}
-        message={message}
-        selected={selected}
-        allowArchive={false}
-        scopeList={scopeList}
-        onCancel={() => this._handleDialogClose(targetElement, onClose)}
-        onSubmit={handleDialogSubmit}
-      />,
-      targetElement
-    );
-  }
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                    Private Methods                                   *
-   *                                                                                      */
-  //========================================================================================
-
-
-
-  /**
-   * @private Handle dialog open : Prepare element where the dialog will be rendered
-   * @returns {DOMElement} Target element to render dialog
-   */
-  _handleDialogOpen() {
-    document.body.classList.add(Dialog.BODY_CLASS_NAME);
-    const containerElement = document.getElementById("alertPanel");
-    const targetElement = document.createElement("div");
-    targetElement.id = Utils.randomId();
-    containerElement.appendChild(targetElement);
-
-    return targetElement;
-  }
-
-  /**
-   * @private Handle dialog close : Unmount dialog component and remove target element
-   */
-  _handleDialogClose(targetElement, onClose) {
-    document.body.classList.remove(Dialog.BODY_CLASS_NAME);
-    ReactDOM.unmountComponentAtNode(targetElement);
-    targetElement.parentNode.removeChild(targetElement);
-    this.call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_ACTIVE_TAB);
-
-    onClose && onClose();
-  }
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                  Static Attributes                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  /**
-   * Class added to the body element when there's a dialog rendered in the app
-   */
-  static BODY_CLASS_NAME = "react-portal-body-dialog";
-
-  /**
-   * Target DOM element ID : Element where the dialog will be rendered
-   */
-  static TARGET_ELEMENT_ID = "dialog-container";
+  return (<BaseDialog open={open} onClose={handleClose}>
+    <form onSubmit={handleSubmit}>
+      <DialogTitle disableTypography>
+        <Typography variant="h6">{ title }</Typography>
+        { dialog.hasCloseButton ? (
+          <IconButton
+            data-testid="input_close"
+            aria-label="close"
+            onClick={onClose}
+          >
+            <CloseIcon />
+          </IconButton>
+        ) : null }
+      </DialogTitle>
+      <DialogContent dividers className="styles-verticalSmall" style={{ minWidth: "450px" }}>
+        { childrenEl }
+      </DialogContent>
+      <DialogActions data-testid="section_dialog-actions">
+        { actionsEl }
+      </DialogActions>
+    </form>
+  </BaseDialog>);
 }
 
-export default Dialog;
+export
+const OtherDialog = withViewPlugin(OtherDialogBase, Object.values(PLUGINS.DIALOG_2.CALL));
+
+export
+const OtherDialogHost = withHostReactPlugin(function (props) {
+  const { hostName, viewPlugins } = props;
+
+  return <div id={hostName}>{ viewPlugins }</div>;
+});

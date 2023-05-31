@@ -174,7 +174,7 @@ const buildMenus = async (call, classes) => {
         {
           id: "about",
           title: i18n.t("About"),
-          callback: () => aboutPopup(call, classes)
+          callback: () => aboutPopup(classes)
         }
       ].filter(el => el)
     };

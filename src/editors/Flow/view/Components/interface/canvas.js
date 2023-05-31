@@ -20,6 +20,7 @@ class Canvas {
     this.maxMovingPixels = MAX_MOVING_PIXELS;
     this.mInterface = mInterface;
     this.width = width;
+    this.unsubscribes = [];
 
     this.initialize();
   }
@@ -421,20 +422,20 @@ class Canvas {
     return this;
   };
 
+  addSub(type, onEnter, onExit) {
+    this.unsubscribes.push(this.mode[type].onEnter.subscribe(onEnter));
+    this.unsubscribes.push(this.mode[type].onExit.subscribe(onExit));
+  }
+
   /**
    * @private
    */
   addSubscribers = () => {
-    this.mode.addNode.onEnter.subscribe(node => this.onAddNodeEnter(node));
-    this.mode.addNode.onExit.subscribe(() => this.onAddNodeExit());
-    this.mode.addFlow.onEnter.subscribe(flow => this.onAddFlowEnter(flow));
-    this.mode.addFlow.onExit.subscribe(() => this.onAddFlowExit());
-    this.mode.addState.onEnter.subscribe(state => this.onAddStateEnter(state));
-    this.mode.addState.onExit.subscribe(() => this.onAddStateExit());
-    this.mode.linking.onEnter.subscribe(data => this.onLinkingEnter(data));
-    this.mode.linking.onExit.subscribe(() => this.onLinkingExit());
-    this.mode.default.onEnter.subscribe(() => this.delBrushCanvas());
-
+    this.addSub("addNode", node => this.onAddNodeEnter(node), () => this.onAddNodeExit());
+    this.addSub("addFlow", flow => this.onAddFlowEnter(flow), () => this.onAddFlowExit());
+    this.addSub("addState", state => this.onAddStateEnter(state), () => this.onAddStateExit());
+    this.addSub("linking", data => this.onLinkingEnter(data), () => this.onLinkingExit());
+    this.addSub("default", () => this.delBrushCanvas(), () => {});
     return this;
   };
 
@@ -711,6 +712,11 @@ class Canvas {
         )
       );
   };
+
+  destroy() {
+    for (const sub of this.unsubscribes)
+      sub.unsubscribe();
+  }
 }
 
 export default Canvas;

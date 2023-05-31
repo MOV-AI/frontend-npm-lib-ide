@@ -26,9 +26,59 @@ const COMPONENTS = {
   VALUE: "value"
 };
 
+// TODO
+/*
+function keyValueEditorDialog(conf) {
+  const { isNew, name = {}, description = {}, value = {} } = conf;
+
+  return dialog({
+    ...conf,
+    form: {
+      name: {
+        label: "Name",
+        placeholder: "name",
+        autoFocus: isNew,
+        disabled: name.disabled,
+        value: name.value,
+      },
+      description: {
+        hide: description.hide,
+        label: "Description",
+        placeholder: "Description",
+        disabled: description.disabled,
+        value: description.value,
+        multiline: true,
+        minRows: 3,
+        maxRows: 10,
+      },
+      custom: renderCustomContent && renderCustomContent(),
+      value: {
+        label: "Value",
+        placeholder: "Value",
+        disabled: value.disabled,
+        defaultValue: value.defaultValue,
+        Component: ValueEditor,
+        isNew,
+      },
+      default: {
+        label: "Default Value",
+        placeholder: "Default Value",
+        type: "accordion",
+        defaultValue: value.defaultValue,
+        Component: ValueEditor,
+        isDefault: true,
+        disabled: true,
+        isNew,
+      },
+    },
+  });
+}
+*/
+
 const KeyValueEditorDialog = props => {
   // Props
   const {
+    open,
     onClose,
     onSubmit,
     nameValidation,
@@ -180,7 +230,7 @@ const KeyValueEditorDialog = props => {
   //========================================================================================
 
   return (
-    <Dialog open={true} onClose={onClose} classes={{ paper: classes.paper }}>
+    <Dialog open={open} onClose={onClose} classes={{ paper: classes.paper }}>
       <div data-testid="section_key-value-editor-dialog">
         <DialogTitle onClose={onClose} hasCloseButton={true}>
           {title}

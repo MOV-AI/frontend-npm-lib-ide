@@ -11,6 +11,7 @@ import {
   DIALOG_TITLE,
   DEFAULT_VALUE
 } from "../../../../../utils/Constants";
+import { dialog } from "../../../../../utils/noremix";
 import ParameterEditorDialog from "../../../../_shared/KeyValueTable/ParametersEditorDialog";
 import KeyValuesSection from "./sub-components/collapsibleSections/KeyValuesSection";
 import MenuDetails from "./sub-components/MenuDetails";
@@ -114,59 +115,45 @@ const ContainerMenu = props => {
    * @param {string} varName : keyValue type (parameters, envVars or cmdLine)
    * @param {boolean} viewOnly : Disable all inputs if True
    */
-  const handleKeyValueDialog = useCallback(
-    (keyValueData, varName, viewOnly) => {
-      const paramType = t(DIALOG_TITLE[varName.toUpperCase()]);
-      const obj = {
+  const handleKeyValueDialog = useCallback((keyValueData, varName, viewOnly) => {
+    const paramType = t(DIALOG_TITLE[varName.toUpperCase()]);
+
+    return dialog({
+      onSubmit: handleSubmitParameter,
+      title: t("EditParamType", { paramType }),
+      data: {
         ...keyValueData,
         varName: varName,
         type: keyValueData.type ?? DATA_TYPES.ANY,
         name: keyValueData.key,
         paramType
-      };
-
-      const args = {
-        onSubmit: handleSubmitParameter,
-        title: t("EditParamType", { paramType }),
-        data: obj,
-        showDefault: !viewOnly,
-        showValueOptions: true,
-        showDescription: !viewOnly,
-        disableName: true,
-        disableType: true,
-        disableDescription: true,
-        preventRenderType: varName !== TABLE_KEYS_NAMES.PARAMETERS,
-        disabled: viewOnly,
-        call
-      };
-
-      call(
-        PLUGINS.DIALOG.NAME,
-        PLUGINS.DIALOG.CALL.CUSTOM_DIALOG,
-        args,
-        ParameterEditorDialog
-      );
-    },
-    [call, handleSubmitParameter, t]
-  );
+      },
+      showDefault: !viewOnly,
+      showValueOptions: true,
+      showDescription: !viewOnly,
+      disableName: true,
+      disableType: true,
+      disableDescription: true,
+      preventRenderType: varName !== TABLE_KEYS_NAMES.PARAMETERS,
+      disabled: viewOnly,
+      Dialog: ParameterEditorDialog,
+    });
+  }, [handleSubmitParameter, t]);
 
   /**
    * Show confirmation dialog before deleting parameter
    * @param {{key: string}} item : Object containing a key holding the param name
    * @param {string} varName : keyValue type (parameters, envVars or cmdLine)
    */
-  const handleKeyValueDelete = useCallback(
-    (item, varName) => {
-      const paramName = item.key;
-      call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, {
-        submitText: t("Delete"),
-        title: t("DeleteDocConfirmationTitle"),
-        onSubmit: () => handleDeleteParameter(paramName, varName),
-        message: t("DeleteKeyConfirmationMessage", { key: paramName })
-      });
-    },
-    [call, handleDeleteParameter, t]
-  );
+  const handleKeyValueDelete = useCallback((item, varName) => {
+    const paramName = item.key;
+    dialog({
+      submitText: t("Delete"),
+      title: t("DeleteDocConfirmationTitle"),
+      onSubmit: () => handleDeleteParameter(paramName, varName),
+      message: t("DeleteKeyConfirmationMessage", { key: paramName })
+    });
+  }, [call, handleDeleteParameter, t]);
 
   //========================================================================================
   /*                                                                                      *

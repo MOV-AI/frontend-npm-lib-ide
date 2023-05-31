@@ -5,6 +5,7 @@ import _isEqual from "lodash/isEqual";
 import { MTableToolbar, MTableEditRow } from "material-table";
 import { Typography } from "@material-ui/core";
 import { PLUGINS } from "../../../../../utils/Constants";
+import { call } from "../../../../../utils/noremix";
 import MaterialTable from "../../../../_shared/MaterialTable/MaterialTable";
 import CollapsibleHeader from "../../../../_shared/CollapsibleHeader/CollapsibleHeader";
 import useIOConfigColumns from "./hooks/useIOConfigColumns";
@@ -21,7 +22,6 @@ const IOConfig = props => {
   // Props
   const {
     ioConfig,
-    call,
     scope,
     protectedCallbacks,
     onIOConfigRowSet,
@@ -235,7 +235,7 @@ const IOConfig = props => {
         if (res) setScopeSystemPortsData(res);
       });
     });
-  }, [call, scope]);
+  }, [scope]);
 
   useEffect(() => {
     formatData(ioConfig);

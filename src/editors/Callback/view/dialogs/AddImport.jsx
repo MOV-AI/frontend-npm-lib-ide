@@ -9,6 +9,7 @@ import {
   DialogActions
 } from "@material-ui/core";
 import { PLUGINS } from "../../../../utils/Constants";
+import { call } from "../../../../utils/noremix";
 import { withTheme } from "../../../../decorators/withTheme";
 import { DialogTitle } from "../../../../plugins/Dialog/components/AppDialog/AppDialog";
 import Loader from "../../../_shared/Loader/Loader";
@@ -25,7 +26,7 @@ const useStyles = makeStyles(_theme => ({
 
 const AddImportDialog = props => {
   // Props
-  const { call, scope, onClose, onSubmit } = props;
+  const { open, scope, onClose, onSubmit } = props;
   // State hooks
   const [loading, setLoading] = useState(false);
   const [pyLibs, setPyLibs] = useState();
@@ -57,7 +58,7 @@ const AddImportDialog = props => {
         setLoading(false);
       });
     });
-  }, [call, scope]);
+  }, [scope]);
 
   //========================================================================================
   /*                                                                                      *
@@ -125,7 +126,7 @@ const AddImportDialog = props => {
   return (
     <Dialog
       data-testid="section_add-import-dialog"
-      open={true}
+      open={open}
       onClose={onClose}
       classes={{ paper: classes.paper }}
     >
