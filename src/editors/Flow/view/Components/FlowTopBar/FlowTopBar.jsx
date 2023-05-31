@@ -25,7 +25,7 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import Workspace from "../../../../../utils/Workspace";
-import { call, emit } from "../../../../../utils/noremix";
+import { call } from "../../../../../utils/noremix";
 import {
   SCOPES,
   PLUGINS,

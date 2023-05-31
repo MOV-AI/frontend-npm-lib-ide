@@ -77,10 +77,10 @@ const BaseFlow = props => {
     });
 
     return unsub;
-  }, [dataFromDB]);
+  }, [dataFromDB, mainInterface]);
 
   // because this sets mainInterface stuff, if we put it in dependencies, we cause infinite re-render.
-  useEffect(() => { onReady(mainInterface); }, [onReady]);
+  useEffect(() => { onReady(mainInterface); }, [mainInterface]);
 
   return (
     <div id={`${viewMode}-${id}`} className={classes.flowContainer}>

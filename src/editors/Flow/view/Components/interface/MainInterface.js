@@ -10,6 +10,9 @@ import InterfaceModes from "./InterfaceModes";
 import Events from "./Events";
 import Canvas from "./canvas";
 
+export
+let cachedNodeStatus = {};
+
 const NODE_PROPS = {
   Node: {
     LABEL: "NodeLabel",
@@ -91,13 +94,16 @@ export default class MainInterface {
     });
 
     // Load document and add subscribers
+    this.onMount();
+  };
+
+  onMount() {
     this.addSubscribers()
       .loadDoc()
       .then(() => {
         this.canvas.el.focus();
-        this.setMode(EVT_NAMES.DEFAULT);
       });
-  };
+  }
 
   /**
    * @private
@@ -141,7 +147,8 @@ export default class MainInterface {
   };
 
   nodeStatusUpdated = (nodeStatus, robotStatus) => {
-    this.graph.nodeStatusUpdated(nodeStatus, robotStatus);
+    cachedNodeStatus = { ...(cachedNodeStatus ?? {}), ...nodeStatus };
+    this.graph.nodeStatusUpdated(robotStatus);
   };
 
   addLink = () => {
@@ -286,6 +293,11 @@ export default class MainInterface {
     // Linking mode events
     this.mode.linking.onEnter.subscribe(this.onLinkingEnter);
     this.mode.linking.onExit.subscribe(this.onLinkingExit);
+
+    this.mode[EVT_NAMES.LOADING].onExit.subscribe(() => {
+      this.canvas.appendDocumentFragment();
+      this.graph.updateAllPositions();
+    });
 
     // Canvas events (not modes)
     // toggle warnings

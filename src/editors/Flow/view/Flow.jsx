@@ -41,7 +41,7 @@ import InvalidLinksWarning from "./Components/Warnings/InvalidLinksWarning";
 import InvalidParametersWarning from "./Components/Warnings/InvalidParametersWarning";
 import InvalidExposedPortsWarning from "./Components/Warnings/InvalidExposedPortsWarning";
 import { EVT_NAMES, EVT_TYPES } from "./events";
-import { FLOW_VIEW_MODE, TYPES } from "./Constants/constants";
+import { FLOW_VIEW_MODE, TYPES, generateContainerId } from "./Constants/constants";
 import GraphBase from "./Core/Graph/GraphBase";
 import GraphTreeView from "./Core/Graph/GraphTreeView";
 import { getBaseContextOptions } from "./contextOptions";
@@ -110,7 +110,7 @@ export const Flow = (props, ref) => {
 
   // Refs
   const contextArgs = useRef(null);
-  const mainInterfaceRef = useRef();
+  const mainInterfaceRef = useRef(null);
   const debounceSelection = useRef();
   const selectedNodeRef = useRef();
   const selectedLinkRef = useRef();
@@ -546,24 +546,13 @@ export const Flow = (props, ref) => {
   }
 
   /**
-   * On change running flow
-   * @param {*} flow
-   */
-  const onStartStopFlow = useCallback(flow => {
-    // Update state variable
-    setRunningFlow(prevState => {
-      if (prevState === flow) return prevState;
-      return flow;
-    });
-  }, []);
-
-  /**
    * On view mode change
    * @param {string} newViewMode : One of the following "default" or "treeView"
    */
   const onViewModeChange = useCallback(newViewMode => {
     if (!newViewMode || viewMode === newViewMode) return;
     isEditableComponentRef.current = newViewMode === FLOW_VIEW_MODE.default;
+    mainInterfaceRef.current.graph.allNodesLoaded = false;
     setViewMode(newViewMode);
     setLoading(true);
     setMode(EVT_NAMES.LOADING);
@@ -750,12 +739,7 @@ export const Flow = (props, ref) => {
 
     // Subscribe to on loading exit (finish) event
     mainInterface.mode[EVT_NAMES.LOADING].onExit.subscribe(() => {
-      // Append the document frame to the canvas
-      mainInterface.canvas.appendDocumentFragment();
-      // Reposition all nodes and subflows
-      mainInterface.graph.updateAllPositions();
       setLoading(false);
-      // Set initial warning visibility value
       setWarningsVisibility(true);
     });
 
@@ -950,6 +934,7 @@ export const Flow = (props, ref) => {
       && event.type === EVT_TYPES.LINK
     ))).subscribe(evtData => console.log("onLinkErrorMouseOver", evtData));
   }, [
+    id,
     viewMode,
     runningFlow,
     getContextOptions,
@@ -1316,7 +1301,7 @@ export const Flow = (props, ref) => {
           mainInterface={mainInterfaceRef}
           canRun={hasNodesToStart()}
           onRobotChange={setRobotSelected}
-          onStartStopFlow={onStartStopFlow}
+          onStartStopFlow={setRunningFlow}
           nodeStatusUpdated={onNodeStatusUpdate}
           nodeCompleteStatusUpdated={onNodeCompleteStatusUpdated}
           onViewModeChange={onViewModeChange}
