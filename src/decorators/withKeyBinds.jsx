@@ -36,6 +36,15 @@ const withKeyBinds = Component => {
     const scopeRef = useRef();
 
     /**
+     * Activate Editor's Keybinds
+     * @param {*} keys
+     * @param {*} callback
+     */
+    const activateEditorKeybind = (scope = scopeRef.current) => {
+      activateKeyBind(scope);
+    };
+
+    /**
      * Add Key bind to its scope
      * @param {*} keys
      * @param {*} callback
@@ -69,7 +78,7 @@ const withKeyBinds = Component => {
         ref={ref}
         addKeyBind={addKeyBind}
         removeKeyBind={removeKeyBind}
-        activateKeyBind={activateKeyBind}
+        activateKeyBind={activateEditorKeybind}
         deactivateKeyBind={deactivateKeyBind}
       />
     );

@@ -175,7 +175,7 @@ export function runBeforeUnload(callback) {
   const onAppUnload = window.onbeforeunload;
   // Set new beforeunload method with given callback
   window.onbeforeunload = event => {
-    callback && callback(event);
+    callback?.(event);
     return onAppUnload(event);
   };
 }
@@ -215,7 +215,7 @@ export function insertIf(condition, ...elements) {
  * @returns
  */
 export function convertToValidString(text) {
-  return text && text.toString().replaceAll(" ", "_").toLowerCase();
+  return text?.toString().replaceAll(" ", "_").toLowerCase();
 }
 
 export function openLink(link) {
@@ -226,7 +226,7 @@ export function openLink(link) {
  * Activate scope shortcuts.
  * This will automatically deactivate all other scopes
  */
-export const activateKeyBind = (scope = scopeRef.current) => {
+export const activateKeyBind = (scope = KEYBIND_SCOPES.APP) => {
   hotkeys.setScope(scope);
 };
 
