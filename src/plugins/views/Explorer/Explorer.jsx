@@ -147,7 +147,7 @@ const Explorer = props => {
       name: {
         label: "Name",
         placeholder: "Name",
-        defaultValue: node.name,
+        defaultValue: `${node.name}_copy`,
       }
     },
     onValidation: async json => ({ name: await invalidDocName(node.scope, json) }),
