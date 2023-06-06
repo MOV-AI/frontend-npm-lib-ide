@@ -1,5 +1,4 @@
 import { forwardRef } from "react";
-import hotkeys from "hotkeys-js";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import BuildIcon from "@material-ui/icons/Build";
 import CodeIcon from "@material-ui/icons/Code";
@@ -7,9 +6,9 @@ import DescriptionIcon from "@material-ui/icons/Description";
 import DeviceHubIcon from "@material-ui/icons/DeviceHub";
 import KeyboardIcon from "@material-ui/icons/Keyboard";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
+import { PLUGINS, KEYBIND_SCOPES } from "../utils/Constants";
+import { call } from "../utils/noremix";
 import movaiIcon from "../Branding/movai-logo-white.png";
-import { ERROR_MESSAGES } from "./Messages";
-import { KEYBIND_SCOPES } from "./Constants";
 
 /**
  * Export a non implemented empty function
@@ -83,19 +82,6 @@ export const getIconByScope = (scope, style) => {
 
   return icon[scope];
 };
-
-/**
- * Validate document name and throw error if validation doesn't pass
- * @param {string} name : Document name
- * @returns {boolean}
- */
-export function validateDocumentName(name) {
-  if (!Utils.validateEntityName(name)) {
-    throw new Error(ERROR_MESSAGES.INVALID_NAME);
-  } else {
-    return true;
-  }
-}
 
 const boolToPythonOptions = {
   true: "True",
@@ -257,3 +243,17 @@ export const removeKeyBind = (keys, scope = KEYBIND_SCOPES.APP) => {
   const keysToUnbind = parseKeybinds(keys);
   hotkeys.unbind(keysToUnbind, scope);
 };
+
+export async function invalidDocName(scope, { name }) {
+  if (!Utils.validateEntityName(name))
+    return ["invalid name"];
+
+  if (await call(
+    PLUGINS.DOC_MANAGER.NAME,
+    PLUGINS.DOC_MANAGER.CALL.CHECK_DOCUMENT_EXISTS,
+    { scope: scope, name }
+  ))
+    return ["Document already exists"];
+
+  return [];
+}

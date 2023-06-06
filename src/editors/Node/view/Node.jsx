@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Typography } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
+import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
 import Model from "../model/Node";
 import CallbackModel from "../../Callback/model/Callback";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
@@ -19,6 +20,7 @@ import {
   ALERT_SEVERITIES
 } from "../../../utils/Constants";
 import { ERROR_MESSAGES } from "../../../utils/Messages";
+import { call, dialog } from "./../../../utils/noremix";
 import ParameterEditorDialog from "../../_shared/KeyValueTable/ParametersEditorDialog";
 import KeyValueTable from "../../_shared/KeyValueTable/KeyValueTable";
 import useDataSubscriber from "../../../plugins/DocManager/useDataSubscriber";
@@ -31,8 +33,19 @@ import Menu from "./Menu";
 
 import { nodeStyles } from "./styles";
 
+function SelectScopeDialog(props) {
+  const { onClose, onSubmit, ...rest } = props;
+
+  const innerOnSubmit = useCallback(selected => {
+    onSubmit(selected);
+    onClose();
+  }, []);
+
+  return <SelectScopeModal onCancel={onClose} onSubmit={innerOnSubmit} { ...rest } />;
+}
+
 export const Node = (props, ref) => {
-  const { id, name, call, alert, instance, editable = true } = props;
+  const { id, name, alert, instance, editable = true } = props;
 
   // Hooks
   const [protectedCallbacks, setProtectedCallbacks] = useState([]);
@@ -228,7 +241,7 @@ export const Node = (props, ref) => {
         )
       }
     });
-  }, [call, id, name, props.data, instance, t]);
+  }, [id, name, props.data, instance, t]);
 
   usePluginMethods(ref, {
     renderRightMenu
@@ -257,26 +270,18 @@ export const Node = (props, ref) => {
         name: objData.key || dataId,
         paramType
       };
-      const args = {
-        onSubmit: formData => {
-          return updateKeyValue(param, formData, obj, isNew);
-        },
+
+      return dialog({
+        onSubmit: formData => updateKeyValue(param, formData, obj, isNew),
         nameValidation: newData =>
           Promise.resolve(validateName(newData, param, obj.name)),
         title: t("EditParamType", { paramType }),
         data: obj,
         preventRenderType: param !== TABLE_KEYS_NAMES.PARAMETERS,
-        call
-      };
-
-      call(
-        PLUGINS.DIALOG.NAME,
-        PLUGINS.DIALOG.CALL.CUSTOM_DIALOG,
-        args,
-        ParameterEditorDialog
-      );
+        Dialog: ParameterEditorDialog,
+      });
     },
-    [data, validateName, updateKeyValue, call, t]
+    [data, validateName, updateKeyValue, t]
   );
 
   /**
@@ -345,20 +350,16 @@ export const Node = (props, ref) => {
    * @param {string} ioConfigName : I/O Config Name
    * @param {string} portName : Port name
    */
-  const handleOpenSelectScopeModal = useCallback(
-    (modalData, ioConfigName, portName) => {
-      call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.SELECT_SCOPE_MODAL, {
-        ...modalData,
-        onSubmit: selectedCallback => {
-          const splitURL = selectedCallback.split("/");
-          const callback = splitURL.length > 1 ? splitURL[2] : selectedCallback;
-          // Set new callback in Node Port
-          updatePortCallback(ioConfigName, portName, callback);
-        }
-      });
+  const handleOpenSelectScopeModal = useCallback((modalData, ioConfigName, portName) => dialog({
+    ...modalData,
+    Dialog: SelectScopeDialog,
+    onSubmit: selectedCallback => {
+      const splitURL = selectedCallback.split("/");
+      const callback = splitURL.length > 1 ? splitURL[2] : selectedCallback;
+      // Set new callback in Node Port
+      updatePortCallback(ioConfigName, portName, callback);
     },
-    [call, updatePortCallback]
-  );
+  }), [updatePortCallback]);
 
   //========================================================================================
   /*                                                                                      *
@@ -374,7 +375,7 @@ export const Node = (props, ref) => {
     ).then(store => {
       setProtectedCallbacks(store.protectedDocs);
     });
-  }, [call]);
+  }, []);
 
   //========================================================================================
   /*                                                                                      *

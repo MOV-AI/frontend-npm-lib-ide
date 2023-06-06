@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, memo } from "react";
+import React, { useState, useEffect, useMemo, memo } from "react";
 import PropTypes from "prop-types";
 import Backdrop from "@material-ui/core/Backdrop";
 import { PLUGINS, SCOPES } from "../../../../utils/Constants";
@@ -8,20 +8,18 @@ import Loader from "../../../_shared/Loader/Loader";
 import Warnings from "../Components/Warnings/Warnings";
 import DependencyInfo from "../Components/Debugging/DependencyInfo";
 import useMainInterface from "./hooks/useMainInterface";
+import { useRemix, call, subscribe, useUpdate } from "./../../../../utils/noremix";
 
 import { baseFlowStyles } from "./styles";
 
 const BaseFlow = props => {
   const {
-    call,
     instance,
     id,
     name,
     type,
     model,
     dataFromDB,
-    off,
-    on,
     warnings,
     warningsVisibility,
     onReady,
@@ -31,6 +29,8 @@ const BaseFlow = props => {
     loading
   } = props;
   const readOnly = false;
+  const update = useUpdate();
+  useRemix(props);
 
   // Other hooks
   const classes = baseFlowStyles();
@@ -52,19 +52,14 @@ const BaseFlow = props => {
     model,
     readOnly,
     call
-  });
-
-  const getMainInterface = useCallback(
-    () => mainInterface.current,
-    [mainInterface]
-  );
+  }, [dataFromDB, graphClass]);
 
   // Enter in add node/sub-flow mode
   useEffect(() => {
-    on(PLUGINS.FLOW_EXPLORER.NAME, PLUGINS.FLOW_EXPLORER.ON.ADD_NODE, node => {
+    const unsub = subscribe(PLUGINS.FLOW_EXPLORER.NAME, PLUGINS.FLOW_EXPLORER.ON.ADD_NODE, node => {
       // event emitter is latching thus we need to skip
       // it while flow is loading
-      const currMode = getMainInterface()?.mode.current.id ?? EVT_NAMES.LOADING;
+      const currMode = mainInterface.mode.current.id ?? EVT_NAMES.LOADING;
       if (currMode === EVT_NAMES.LOADING) return;
 
       const scopes = {
@@ -77,23 +72,15 @@ const BaseFlow = props => {
       //  it's considered a forbidden operation
       if (dataFromDB.Label === templateId && isSubFlow) return;
       // Add interface mode to add node/sub-flow
-      getMainInterface()?.setMode(scopes[node.scope], { templateId }, true);
+      mainInterface.setMode(scopes[node.scope], { templateId }, true);
+      update();
     });
 
-    return () =>
-      off(PLUGINS.FLOW_EXPLORER.NAME, PLUGINS.FLOW_EXPLORER.ON.ADD_NODE);
-  }, [getMainInterface, off, on, dataFromDB]);
+    return unsub;
+  }, [dataFromDB]);
 
-  useEffect(() => {
-    const mInt = getMainInterface();
-    if (!mInt) return;
-
-    // Dispatch on ready event
-    onReady(mInt);
-    return () => {
-      getMainInterface().graph.destroy();
-    };
-  }, [graphClass, dataFromDB, onReady, getMainInterface]);
+  // because this sets mainInterface stuff, if we put it in dependencies, we cause infinite re-render.
+  useEffect(() => { onReady(mainInterface); }, [onReady]);
 
   return (
     <div id={`${viewMode}-${id}`} className={classes.flowContainer}>

@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { PLUGINS } from "../../../../utils/Constants";
+import { call } from "../../../../utils/noremix";
 import { ERROR_MESSAGES } from "../../../../utils/Messages";
 import { withTheme } from "../../../../decorators/withTheme";
 import { DialogTitle } from "../../../../plugins/Dialog/components/AppDialog/AppDialog";
@@ -33,7 +34,7 @@ const useStyles = makeStyles(_theme => ({
 
 const EditMessageDialog = props => {
   // Props
-  const { call, scope, selectedMessage, onClose, onSubmit } = props;
+  const { open, scope, selectedMessage, onClose, onSubmit } = props;
   // State hooks
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState();
@@ -124,7 +125,7 @@ const EditMessageDialog = props => {
         setLoading(false);
       });
     });
-  }, [call, scope, _updateMessages]);
+  }, [scope, _updateMessages]);
 
   //========================================================================================
   /*                                                                                      *
@@ -156,7 +157,7 @@ const EditMessageDialog = props => {
   return (
     <Dialog
       data-testid="section_edit-message"
-      open={true}
+      open={open}
       onClose={onClose}
       classes={{ paper: classes.paper }}
     >
