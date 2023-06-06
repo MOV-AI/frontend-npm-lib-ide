@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useMemo } from "react";
+import hotkeys from "hotkeys-js";
 import { Style } from "@mov-ai/mov-fe-lib-react";
 import { Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import DocManager from "../plugins/DocManager/DocManager";
-import Dialog from "../plugins/Dialog/Dialog";
+import { OtherDialog, OtherDialogHost } from "../plugins/Dialog/Dialog";
 import Alerts from "../plugins/Alerts/Alerts";
 import BottomBar from "../plugins/hosts/BottomBar/BottomBar";
 import CentralPanel from "../plugins/hosts/CentralPanel/CentralPanel";
@@ -18,10 +19,13 @@ import MainMenu from "../plugins/views/MainMenu/MainMenu";
 import Tabs from "../plugins/views/Tabs/Tabs";
 import PluginManagerIDE from "../engine/PluginManagerIDE/PluginManagerIDE";
 import Placeholder from "../plugins/views/Placeholder/Placeholder";
-import { PLUGINS, HOSTS } from "../utils/Constants";
+import { PLUGINS, HOSTS, KEYBIND_SCOPES } from "../utils/Constants";
 import { MainContext } from "../main-context";
 import { addEditor } from "../plugins/DocManager/factory";
 import { addTool } from "../tools";
+import { addKeyBind, defaultFunction } from "../utils/Utils";
+import * as genFunctions from "../utils/generalFunctions";
+import { KEYBINDINGS } from "../utils/shortcuts";
 import {
   setLogo,
   setName,
@@ -81,6 +85,17 @@ function BaseApp(props) {
     [theme, handleLogOut, onToggleTheme]
   );
 
+  const addAppKeybinds = () => {
+    Object.values(KEYBINDINGS.GENERAL.KEYBINDS).forEach(shortcut => {
+      const callback =
+        genFunctions[shortcut.DEFAULT_CALLBACK] ?? defaultFunction;
+      addKeyBind(shortcut.SHORTCUTS, () => {
+        const call = PluginManagerIDE.getInstance().manager.call;
+        callback(call);
+      });
+    });
+  };
+
   //========================================================================================
   /*                                                                                      *
    *                                       Handlers                                       *
@@ -98,8 +113,10 @@ function BaseApp(props) {
   useEffect(() => {
     installAppPlugins();
     installViewPlugins(dependencies);
+    addAppKeybinds();
     // Write log in consle
     writeMovaiLogo();
+    hotkeys.setScope(KEYBIND_SCOPES.APP);
   }, []);
 
   // Set app settings
@@ -180,10 +197,6 @@ function installAppPlugins() {
       factory: profile => new DocManager(profile)
     },
     {
-      profile: { name: PLUGINS.DIALOG.NAME },
-      factory: profile => new Dialog(profile)
-    },
-    {
       profile: { name: PLUGINS.ALERT.NAME },
       factory: profile => new Alerts(profile)
     }
@@ -225,6 +238,10 @@ function installViewPlugins(dependencies) {
     {
       profile: { name: PLUGINS.SYSTEM_BAR.NAME, location: HOSTS.TOP_BAR.NAME },
       factory: profile => new SystemBar(profile, cProps)
+    },
+    {
+      profile: { name: PLUGINS.DIALOG_2.NAME, location: HOSTS.DIALOG_2_HOST.NAME },
+      factory: profile => new OtherDialog(profile, cProps)
     }
   ];
   plugins.forEach(pluginDescription => {
@@ -269,6 +286,7 @@ function getHostedPlugins(classes) {
         ></BottomBar>
       </Grid>
       <AlertPanel hostName="alertPanel" />
+      <OtherDialogHost hostName={HOSTS.DIALOG_2_HOST.NAME} />
     </Grid>
   );
 }

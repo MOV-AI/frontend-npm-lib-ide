@@ -25,6 +25,7 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import Workspace from "../../../../../utils/Workspace";
+import { call, emit } from "../../../../../utils/noremix";
 import {
   SCOPES,
   PLUGINS,
@@ -64,7 +65,6 @@ const ButtonTopBar = forwardRef((props, ref) => {
 const FlowTopBar = props => {
   // Props
   const {
-    call,
     alert,
     scope,
     loading,
@@ -127,7 +127,7 @@ const FlowTopBar = props => {
       helperRef.current = store.helper;
       return store.helper;
     });
-  }, [call, scope]);
+  }, [scope]);
 
   /**
    * @private Get store helper to use cloud functions
@@ -140,7 +140,7 @@ const FlowTopBar = props => {
       flowInstanceRef.current = document;
       return document;
     });
-  }, [call, scope, name]);
+  }, [scope, name]);
 
   /**
    * @private Init selected robot
@@ -431,7 +431,7 @@ const FlowTopBar = props => {
     } else {
       handleStartFlow();
     }
-  }, [call, handleStartFlow, name, scope]);
+  }, [handleStartFlow, name, scope]);
 
   /**
    * Handle view mode change : default view to tree view
@@ -440,9 +440,7 @@ const FlowTopBar = props => {
    * @returns
    */
   const handleViewModeChange = useCallback(
-    (_event, newViewMode) => {
-      onViewModeChange(newViewMode);
-    },
+    (_event, newViewMode) => onViewModeChange(newViewMode),
     [onViewModeChange]
   );
 
@@ -580,7 +578,6 @@ const FlowTopBar = props => {
 FlowTopBar.propTypes = {
   id: PropTypes.string,
   nodeStatusUpdated: PropTypes.func,
-  onViewModeChange: PropTypes.func,
   onStartStopFlow: PropTypes.func,
   onRobotChange: PropTypes.func,
   openFlow: PropTypes.func,
@@ -599,7 +596,6 @@ FlowTopBar.propTypes = {
 FlowTopBar.defaultProps = {
   openFlow: () => defaultFunction("openFlow"),
   onRobotChange: () => defaultFunction("onRobotChange"),
-  onViewModeChange: () => defaultFunction("onViewModeChange"),
   onStartStopFlow: () => defaultFunction("onStartStopFlow"),
   nodeStatusUpdated: () => defaultFunction("nodeStatusUpdated"),
   workspace: CONSTANTS.GLOBAL_WORKSPACE,

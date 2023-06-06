@@ -14,10 +14,12 @@ import {
   DOCK_MODES,
   PLUGINS
 } from "../../../../utils/Constants";
+import { dialog } from "../../../../utils/noremix";
 import { getIconByScope } from "../../../../utils/Utils";
 import PluginManagerIDE from "../../../../engine/PluginManagerIDE/PluginManagerIDE";
 import Workspace from "../../../../utils/Workspace";
 import { getToolTabData } from "../../../../tools";
+import i18n from "../../../../i18n/i18n";
 import useTabStack from "./useTabStack";
 
 const useTabLayout = (props, dockRef) => {
@@ -297,26 +299,35 @@ const useTabLayout = (props, dockRef) => {
    * @param {string} name : Document name
    * @param {string} scope : Document scope
    */
-  const _closeDirtyTab = useCallback(
-    document => {
-      const { name, scope } = document;
+  const _closeDirtyTab = useCallback(document => {
+    const { name, scope } = document;
 
-      call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CLOSE_DIRTY_DOC, {
-        name,
-        scope,
-        onSubmit: action => {
-          const triggerAction = {
-            // Save changes and close document
-            save: () => _saveDoc(document),
-            // Discard changes and close document
-            dontSave: () => _discardChanges(document)
-          };
-          return action in triggerAction ? triggerAction[action]() : false;
+    return dialog({
+      name,
+      scope,
+      title: i18n.t("SaveChangesConfirmationTitle"),
+      message: i18n.t("SaveChangesConfirmationMessage", { scope, name }),
+      actions: {
+        dontSave: {
+          label: "DontSave",
+        },
+        cancel: {
+          label: "Cancel",
+        },
+        save: {
+          label: "Save",
+        },
+      },
+      showAlertIcon: true,
+      onSubmit: (_e, key) => {
+        switch (key) {
+          case "save": return _saveDoc(document);
+          case "dontSave": return _discardChanges(document);
+          default: return false;
         }
-      });
-    },
-    [call, _saveDoc, _discardChanges]
-  );
+      }
+    });
+  }, [_saveDoc, _discardChanges]);
 
   /**
    * On dock layout remove tab
