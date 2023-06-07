@@ -29,6 +29,7 @@ const COMPONENTS = {
 const KeyValueEditorDialog = props => {
   // Props
   const {
+    open,
     onClose,
     onSubmit,
     nameValidation,
@@ -180,7 +181,7 @@ const KeyValueEditorDialog = props => {
   //========================================================================================
 
   return (
-    <Dialog open={true} onClose={onClose} classes={{ paper: classes.paper }}>
+    <Dialog open={open} onClose={onClose} classes={{ paper: classes.paper }}>
       <div data-testid="section_key-value-editor-dialog">
         <DialogTitle onClose={onClose} hasCloseButton={true}>
           {title}

@@ -1,10 +1,11 @@
-import i18n from "../../../../i18n/i18n";
-import AppSettings from "../../../../App/AppSettings";
-import { PLUGINS } from "../../../../utils/Constants";
-import movaiIconWhite from "../../../../Branding/movai-logo-white.png";
-import { getHomeTab } from "../../../../tools/HomeTab/HomeTab";
-import { getShortcutsTab } from "../../../../tools/AppShortcuts/AppShortcuts";
-import { getToolTabData } from "../../../../tools";
+import i18n from "../i18n/i18n";
+import AppSettings from "../App/AppSettings";
+import { PLUGINS } from "../utils/Constants";
+import { dialog } from "../utils/noremix";
+import movaiIconWhite from "../Branding/movai-logo-white.png";
+import { getHomeTab } from "../tools/HomeTab/HomeTab";
+import { getShortcutsTab } from "../tools/AppShortcuts/AppShortcuts";
+import { getToolTabData } from "../tools";
 
 //========================================================================================
 /*                                                                                      *
@@ -50,8 +51,8 @@ export function saveAllDocument(call) {
   call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.SAVE_DIRTIES);
 }
 
-export function aboutPopup(call, classes) {
-  call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.ALERT, {
+export function aboutPopup(classes) {
+  dialog({
     title: (
       <>
         <img
@@ -67,16 +68,12 @@ export function aboutPopup(call, classes) {
   });
 }
 
-export function openLink(link) {
-  window.open(link, "_blank");
-}
-
 /**
  * Open Tool tab
  * @param {function} call : Plugin call method
  * @param {string} toolName : Tool Unique Name
  */
-export function openTool(call, toolName, props = {}) {
+export function openTool(call, toolName = getHomeTab().id, props = {}) {
   const tabData = getToolTabData({ id: toolName }, props);
   call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN, tabData);
 }
@@ -85,8 +82,7 @@ export function openTool(call, toolName, props = {}) {
  * Open Welcome tab
  */
 export function openWelcomeTab(call) {
-  const homeTab = getHomeTab();
-  call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN, homeTab);
+  openTool(call);
 }
 
 /**
@@ -94,5 +90,5 @@ export function openWelcomeTab(call) {
  */
 export function openShortcutsTab(call) {
   const shortcutsTab = getShortcutsTab();
-  call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN, shortcutsTab);
+  openTool(call, shortcutsTab.id);
 }

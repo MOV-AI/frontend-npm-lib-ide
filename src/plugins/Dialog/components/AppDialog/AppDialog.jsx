@@ -6,7 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
 import PropTypes from "prop-types";
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { withTheme } from "../../../../decorators/withTheme";
 import { defaultFunction } from "../../../../utils/Utils";
@@ -55,75 +55,57 @@ export const DialogTitle = props => {
 const AppDialog = props => {
   const { t } = useTranslation();
   const {
+    open,
     allowSubmit = true,
     actions,
-    onSubmit,
-    onClose,
-    closeOnBackdrop = true,
+    onSubmit = () => {},
+    onClose = () => {},
     title = t("DefaultDialogTitle"),
     submitText = t("Submit"),
     testId = "section_app-dialog"
   } = props;
-  const [open, setOpen] = useState(true);
   const classes = appDialogStyles();
-
-  /**
-   * Handle Dialog close
-   */
-  const handleClose = useCallback(
-    (_, reason) => {
-      if (!closeOnBackdrop && reason === "backdropClick") return;
-      setOpen(false);
-      onClose();
-    },
-    [setOpen, onClose]
-  );
 
   /**
    * Handle Dialog Submit and close
    */
   const handleSubmit = () => {
-    if (!allowSubmit) return;
-
-    onSubmit && onSubmit();
-    handleClose();
-  };
-
-  const handleKeyUp = event => {
-    if (event.key === "Enter") {
-      handleSubmit();
+    if (allowSubmit) {
+      onSubmit();
+      onClose();
     }
   };
 
-  const getDefaultActions = () => {
-    return (
-      <DialogActions data-testid="section_dialog-actions">
-        <Button data-testid="input_close" onClick={handleClose} color="default">
-          {onSubmit ? t("Cancel") : t("Ok")}
-        </Button>
-        {onSubmit && (
-          <Button
-            data-testid="input_confirm"
-            onClick={handleSubmit}
-            color="primary"
-          >
-            {submitText}
-          </Button>
-        )}
-      </DialogActions>
-    );
+  const handleKeyUp = event => {
+    if (event.key === "Enter")
+      handleSubmit();
   };
 
+  const actionsEl = actions ? (
+    <DialogActions data-testid="section_dialog-actions">
+      <Button data-testid="input_close" onClick={onClose} color="default">
+        {onSubmit ? t("Cancel") : t("Ok")}
+      </Button>
+      {onSubmit && (
+        <Button
+          data-testid="input_confirm"
+          onClick={handleSubmit}
+          color="primary"
+        >
+          {submitText}
+        </Button>
+      )}
+    </DialogActions>
+  ) : null;
+
   return (
-    <Dialog open={open} onClose={handleClose} onKeyUp={handleKeyUp}>
+    <Dialog open={open} onClose={onClose} onKeyUp={handleKeyUp}>
       <div data-testid={testId}>
-        <DialogTitle onClose={handleClose} {...props}>
-          {title}
-        </DialogTitle>
+        <DialogTitle onClose={onClose}>{title}</DialogTitle>
         <DialogContent dividers className={classes.dialogContent}>
           {props.children}
         </DialogContent>
-        {actions ?? getDefaultActions()}
+        { actionsEl }
       </div>
     </Dialog>
   );

@@ -1,6 +1,5 @@
 # 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
-- [FP-2438 - No longer saving NodeInstance's Parameter types](https://movai.atlassian.net/browse/FP-2438)
 - [FP-2406 - Make menu be able to persist on IDE](https://movai.atlassian.net/browse/FP-2406)
 - [FP-2409 - Added a validation to activateEditor based on the activeTab](https://movai.atlassian.net/browse/FP-2409)
 - [FP-2414 - Fixed an issue where we were always removing the bookmarks, even when not needed](https://movai.atlassian.net/browse/FP-2414)
@@ -26,6 +25,10 @@
 - [FP-2186 - Main Menu tools are not showing up](https://movai.atlassian.net/browse/FP-2186)
 - [FP-2221 - Disable the Language server](https://movai.atlassian.net/browse/FP-2221)
 - [FP-2238 - Logout behavior is different in IDE](https://movai.atlassian.net/browse/FP-2238)
+- [FP-2359 - Added a way for the BaseApp keybinds to work](https://movai.atlassian.net/browse/FP-2359)
 - [FP-2411 - Only save flow nodeInstance parameters when necessary](https://movai.atlassian.net/browse/FP-2411)
+- [FP-2438 - No longer saving NodeInstance's Parameter types](https://movai.atlassian.net/browse/FP-2438)
 - [FP-2364 - Flows without links to start node should only show "Save"](https://movai.atlassian.net/browse/FP-2364)
 - [FP-2427 - Update node instances when port messages change](https://movai.atlassian.net/browse/FP-2427)
+- [FP-2474 - Search node tool fails for big flows](https://movai.atlassian.net/browse/FP-2474)
+- [FP-2466 - Persistent "add node" window](https://movai.atlassian.net/browse/FP-2466)

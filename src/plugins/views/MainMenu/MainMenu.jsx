@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import {
@@ -11,16 +11,16 @@ import TextSnippetIcon from "@material-ui/icons/Description";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { Tooltip } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
-import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
+import { withViewPlugin } from "./../../../engine/ReactPlugin/ViewReactPlugin";
 import { MainContext } from "../../../main-context";
 import AppSettings from "../../../App/AppSettings";
-import { PLUGINS, HOSTS } from "../../../utils/Constants";
 import { getMainMenuTools } from "../../../tools";
+import { PLUGINS, HOSTS } from "../../../utils/Constants";
 import { getIconByScope, getIconFn } from "../../../utils/Utils";
+import { openTool } from "../../../utils/generalFunctions";
 import movaiIcon from "../../../Branding/movai-logo-transparent.png";
 
 import { mainMenuStyles } from "./styles";
-import { openTool } from "../SystemBar/builder/buildFunctions";
 
 const MainMenu = props => {
   const { call } = props;
@@ -80,6 +80,18 @@ const MainMenu = props => {
       }
     );
   }, [call]);
+
+  const profileMenu = useMemo(() => (
+    <ProfileMenu
+      key={"profileMenu"}
+      version={AppSettings.APP_INFORMATION.VERSION}
+      isDarkTheme={isDarkTheme}
+      handleLogout={handleLogOut}
+      handleToggleTheme={
+        AppSettings.APP_PROPS.SHOW_TOGGLE_THEME ? handleToggleTheme : null
+      }
+    />
+  ), []);
 
   //========================================================================================
   /*                                                                                      *
@@ -145,17 +157,7 @@ const MainMenu = props => {
           </Tooltip>
         ))}
         lowerElement={[
-          <ProfileMenu
-            key={"profileMenu"}
-            version={AppSettings.APP_INFORMATION.VERSION}
-            isDarkTheme={isDarkTheme}
-            handleLogout={handleLogOut}
-            handleToggleTheme={
-              AppSettings.APP_PROPS.SHOW_TOGGLE_THEME ? handleToggleTheme : null
-            }
-            isMenuOpen={isMenuOpen}
-            onClose={onCloseMenu}
-          />,
+          profileMenu,
           <img
             key={"movaiIcon"}
             src={movaiIcon}

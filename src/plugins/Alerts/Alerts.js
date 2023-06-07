@@ -1,5 +1,6 @@
 import { snackbar } from "@mov-ai/mov-fe-lib-react";
-import { ALERT_SEVERITIES, PLUGINS } from "../../utils/Constants";
+import { ALERT_SEVERITIES } from "../../utils/Constants";
+import { dialog } from "../../utils/noremix";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
 
 class Alerts extends IDEPlugin {
@@ -23,11 +24,7 @@ class Alerts extends IDEPlugin {
   }) {
     const alertByLocation = {
       snackbar: () => snackbar({ message, severity }),
-      modal: () =>
-        this.call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.ALERT, {
-          title,
-          message
-        })
+      modal: () => dialog({ title, message }),
     };
     // Show Alert
     alertByLocation[location]();

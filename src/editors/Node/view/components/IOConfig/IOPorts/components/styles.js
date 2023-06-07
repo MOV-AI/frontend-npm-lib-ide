@@ -31,9 +31,9 @@ export const callbackStyles = makeStyles(theme => ({
     paddingRight: "5px"
   },
   icon: {
-    color: theme.icon.color,
+    color: theme.icon?.color,
     "&:hover": {
-      color: theme.icon.hoverColor
+      color: theme.icon?.hoverColor
     }
   }
 }));

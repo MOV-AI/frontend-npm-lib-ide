@@ -5,6 +5,8 @@ import {
   ALERT_SEVERITIES,
   SAVE_OUTDATED_DOC_ACTIONS
 } from "../../utils/Constants";
+import { register, dialog } from "../../utils/noremix";
+import { invalidDocName } from "./../../utils/Utils";
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "../../utils/Messages";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
 import docsFactory from "./factory";
@@ -30,6 +32,7 @@ class DocManager extends IDEPlugin {
     // Subscriber
     this.docSubscriptions = new Map();
     this.saveStack = new Map();
+    register(this, PLUGINS.DOC_MANAGER.NAME);
   }
 
   getName() {
@@ -208,46 +211,64 @@ class DocManager extends IDEPlugin {
     if (this.saveStack.has(`${name}_${scope}`)) return;
     this.saveStack.set(`${name}_${scope}`, { name, scope });
 
-    if (isOutdated) {
-      return this.call(
-        PLUGINS.DIALOG.NAME,
-        PLUGINS.DIALOG.CALL.SAVE_OUTDATED_DOC,
-        {
-          name,
-          scope,
-          onSubmit: async action => {
-            switch (action) {
-              case SAVE_OUTDATED_DOC_ACTIONS.UPDATE_DOC:
-                this.discardDocChanges(modelKey);
-                const updatedDoc = await this.read(modelKey);
+    if (isOutdated) return dialog({
+      title: i18n.t("SaveOutdatedDocTitle", {
+        docName: data.name
+      }),
+      message: i18n.t("SaveOutdatedDocMessage", {
+        docType: data.scope,
+        docName: data.name
+      }),
+      actions: {
+        [SAVE_OUTDATED_DOC_ACTIONS.UPDATE_DOC]: {
+          label: i18n.t("UpdateDoc"),
+          color: "primary",
+        },
+        [SAVE_OUTDATED_DOC_ACTIONS.OVERWRITE_DOC]: {
+          label: i18n.t("OverwriteDoc"),
+          color: "primary",
+        },
+        [SAVE_OUTDATED_DOC_ACTIONS.CANCEL]: {
+          label: i18n.t("Cancel"),
+        },
+      },
+      name,
+      scope,
+      onValidation: async json => ({ name: await invalidDocName(scope, json) }),
+      onSubmit: async action => {
+        switch (action) {
+          case SAVE_OUTDATED_DOC_ACTIONS.UPDATE_DOC:
+            this.discardDocChanges(modelKey);
+            const updatedDoc = await this.read(modelKey);
 
-                if (this.docSubscriptions.has(thisDoc.id)) {
-                  this.docSubscriptions.get(thisDoc.id)(
-                    updatedDoc.serializeToDB()
-                  );
-                }
-
-                this.saveStack.delete(`${name}_${scope}`);
-                break;
-              case SAVE_OUTDATED_DOC_ACTIONS.OVERWRITE_DOC:
-                this.doSave(modelKey, callback, undefined, opts);
-                break;
-              case SAVE_OUTDATED_DOC_ACTIONS.CANCEL:
-              default:
-                return;
+            if (this.docSubscriptions.has(thisDoc.id)) {
+              this.docSubscriptions.get(thisDoc.id)(
+                updatedDoc.serializeToDB()
+              );
             }
-          },
-          onClose: () => this.saveStack.delete(`${name}_${scope}`)
+
+            this.saveStack.delete(`${name}_${scope}`);
+            break;
+          case SAVE_OUTDATED_DOC_ACTIONS.OVERWRITE_DOC:
+            this.doSave(modelKey, callback, undefined, opts);
+            break;
+          case SAVE_OUTDATED_DOC_ACTIONS.CANCEL:
+          default:
+            return;
         }
-      );
-    }
+      },
+      onClose: () => this.saveStack.delete(`${name}_${scope}`)
+    });
 
     if (opts?.ignoreNew) return;
 
-    return this.call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.NEW_DOC, {
+    return dialog({
+      title: i18n.t("NewDocTitle", { scope }),
       scope,
       placeholder: name,
-      onSubmit: newName => this.doSave(modelKey, callback, newName, opts),
+      submitText: i18n.t("Create"),
+      onValidation: async json => ({ name: await invalidDocName(scope, json) }),
+      onSubmit: ({ name }) => this.doSave(modelKey, callback, name, opts),
       onClose: () => this.saveStack.delete(`${name}_${scope}`)
     });
   }

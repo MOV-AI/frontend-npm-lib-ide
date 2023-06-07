@@ -66,6 +66,9 @@ export const HOSTS = {
   },
   BOTTOM_BAR: {
     NAME: "bottomBar"
+  },
+  DIALOG_2_HOST: {
+    NAME: "dialog2Host"
   }
 };
 
@@ -137,20 +140,9 @@ export const PLUGINS = {
       CHANGE_BOOKMARK: "changeBookmark"
     }
   },
-  DIALOG: {
-    NAME: "dialog",
-    CALL: {
-      NEW_DOC: "newDocument",
-      SAVE_OUTDATED_DOC: "saveOutdatedDocument",
-      CONFIRMATION: "confirmation",
-      COPY_DOC: "copyDocument",
-      FORM_DIALOG: "formDialog",
-      SELECT_SCOPE_MODAL: "selectScopeModal",
-      CLOSE_DIRTY_DOC: "closeDirtyDocument",
-      CUSTOM: "custom",
-      CUSTOM_DIALOG: "customDialog",
-      ALERT: "alert"
-    }
+  DIALOG_2: {
+    NAME: "dialog2",
+    CALL: { OPEN: "open" }
   },
   ALERT: {
     NAME: "alert",

@@ -424,6 +424,7 @@ export default class MainInterface {
   };
 
   destroy = () => {
-    // Nothing to do
+    this.canvas.destroy();
+    this.graph.destroy();
   };
 }

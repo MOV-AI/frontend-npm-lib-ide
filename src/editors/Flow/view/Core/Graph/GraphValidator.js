@@ -274,32 +274,21 @@ export default class GraphValidator {
    * @returns {object} {result <bool>, error <string>}
    */
   validateNodeName = (newName, instType) => {
-    try {
-      const re = ROS_VALID_NAMES;
-      if (!newName)
-        throw new Error(
-          i18n.t(MESSAGES.ERROR_MESSAGES.INSTANCE_NAME_IS_MANDATORY, {
-            instance: instType
-          })
-        );
-      if (!re.test(newName))
-        throw new Error(
-          i18n.t(MESSAGES.ERROR_MESSAGES.INVALID_INSTANCE_NAME, {
-            instance: instType
-          })
-        );
-      if (this.graph.nodes.has(newName))
-        throw new Error(
-          i18n.t(MESSAGES.ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME)
-        );
+    const re = ROS_VALID_NAMES;
+    if (!newName)
+      return [i18n.t(MESSAGES.ERROR_MESSAGES.INSTANCE_NAME_IS_MANDATORY, {
+        instance: instType
+      })];
+    if (!re.test(newName))
+      return [i18n.t(MESSAGES.ERROR_MESSAGES.INVALID_INSTANCE_NAME, {
+        instance: instType
+      })];
+    if (this.graph.nodes.has(newName))
+      return [i18n.t(MESSAGES.ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME, {
+        instance: instType
+      })];
 
-      return { result: true, error: "" };
-    } catch (err) {
-      return {
-        result: false,
-        error: err.message
-      };
-    }
+    return [];
   };
 
   /**
