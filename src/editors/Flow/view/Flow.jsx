@@ -64,6 +64,7 @@ export const Flow = (props, ref) => {
     addKeyBind,
     removeKeyBind,
     activateEditor,
+    activateKeyBind,
     deactivateEditor,
     confirmationAlert,
     contextOptions,
@@ -284,7 +285,7 @@ export const Flow = (props, ref) => {
 
       instance.graph.clearInvalidLinks().validateFlow();
 
-      callback && callback();
+      callback?.();
     },
     [instance]
   );
@@ -1118,6 +1119,7 @@ export const Flow = (props, ref) => {
     e => {
       workspaceManager.setFlowIsDebugging(e.target.checked);
       setFlowDebugging(e.target.checked);
+      activateKeyBind();
     },
     [workspaceManager]
   );
@@ -1312,8 +1314,7 @@ export const Flow = (props, ref) => {
   const getContextOptions = useCallback(
     (mode, data, args) => {
       const baseContextOptions = getBaseContextOptions(mode, data, args);
-      const contextOpts =
-        contextOptions && contextOptions(baseContextOptions)?.[mode]?.(data);
+      const contextOpts = contextOptions?.(baseContextOptions)?.[mode]?.(data);
 
       return contextOpts ?? baseContextOptions;
     },
