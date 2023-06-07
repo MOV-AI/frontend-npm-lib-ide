@@ -63,8 +63,8 @@ function emit(name, ...args) {
 }
 
 export
-function dialog(arg) {
-  return call(PLUGINS.DIALOG_2.NAME, PLUGINS.DIALOG_2.CALL.OPEN, arg);
+async function dialog(arg) {
+  return await call(PLUGINS.DIALOG_2.NAME, PLUGINS.DIALOG_2.CALL.OPEN, arg);
 }
 
 export
