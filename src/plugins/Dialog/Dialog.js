@@ -34,7 +34,6 @@ function OtherDialogBase(props, ref) {
     form,
     children,
     Dialog,
-    resolve,
     ...rest
   } = dialog;
 
@@ -43,32 +42,20 @@ function OtherDialogBase(props, ref) {
     : (form ?? { name: { label: "Name", placeholder: "Name" } });
 
   useRemix(props);
+  useEffect(() => subscribe(PLUGINS.DIALOG_2.NAME, PLUGINS.DIALOG_2.CALL.OPEN, setDialog), [setDialog]);
 
-  const dialogOpen = useCallback(newDialog => new Promise(resolve => {
-    const newState = { ...newDialog, resolve, open: true };
+  const dialogOpen = useCallback(dialog => setDialog({
+    ...dialog,
+    open: true,
+  }), [setDialog]);
 
-    if (dialog.open)
-      return setDialog({
-        ...dialog,
-        next: (dialog.next ?? []).concat(newState),
-      });
-
-    setDialog(newState);
-  }), [setDialog, dialog]);
-
-  useEffect(() => subscribe(PLUGINS.DIALOG_2.NAME, PLUGINS.DIALOG_2.CALL.OPEN, dialogOpen), [dialogOpen]);
-
-  useEffect(() => { ref.current = { open: dialogOpen }; }, [open, dialogOpen]);
+  useEffect(() => { ref.current = { open: dialogOpen }; }, [open]);
 
   const handleClose = useCallback((_, reason) => {
     if (!closeOnBackdrop && reason === "backdropClick") return;
-    setDialog(dialog => dialog.next
-      ? ({ ...dialog.next[0], next: dialog.next.slice(1) })
-      : ({ ...dialog, open: false }));
+    setDialog(dialog => ({ ...dialog, open: false }));
     onClose();
-    if (_)
-      resolve([null, null]);
-  }, [closeOnBackdrop, setDialog, onClose, resolve]);
+  }, [closeOnBackdrop, setDialog, onClose]);
 
   const submit = useCallback(async (json, key) => {
     const errors = await onValidation(json);
@@ -84,9 +71,8 @@ function OtherDialogBase(props, ref) {
         }), {}),
       }));
     onSubmit(json, key);
-    resolve([json, key]);
     handleClose();
-  }, [handleClose, onSubmit, setDialog, reform, resolve]);
+  }, [handleClose, onSubmit, setDialog, reform]);
 
   const handleSubmit = useCallback((e, key) => {
     e.preventDefault();
@@ -130,7 +116,7 @@ function OtherDialogBase(props, ref) {
 
     { Object.entries(reform).map(([key, { label = "Value", placeholder = "", multiline, maxLength, errors = [], defaultValue, ...rest }]) => (
       <TextField
-        autoFocus={rest.autoFocus} key={key + "-" + defaultValue} name={key} error={errors.length !== 0}
+        autoFocus={rest.autoFocus} key={key} name={key} error={errors.length !== 0}
         helperText={errors}
         label={label}
         InputLabelProps={{ shrink: true }}
