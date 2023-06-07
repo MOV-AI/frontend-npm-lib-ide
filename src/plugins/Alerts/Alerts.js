@@ -1,6 +1,6 @@
 import { snackbar } from "@mov-ai/mov-fe-lib-react";
 import { ALERT_SEVERITIES } from "../../utils/Constants";
-import { dialog } from "../../utils/noremix";
+import { dialog } from "../../plugins/Dialog/Dialog";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
 
 class Alerts extends IDEPlugin {

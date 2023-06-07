@@ -11,7 +11,7 @@ import {
   DIALOG_TITLE,
   DEFAULT_VALUE
 } from "../../../../../utils/Constants";
-import { dialog } from "../../../../../utils/noremix";
+import { dialog } from "../../../../../plugins/Dialog/Dialog";
 import ParameterEditorDialog from "../../../../_shared/KeyValueTable/ParametersEditorDialog";
 import KeyValuesSection from "./sub-components/collapsibleSections/KeyValuesSection";
 import MenuDetails from "./sub-components/MenuDetails";
@@ -64,18 +64,24 @@ const ContainerMenu = props => {
    * @param {Object} formData : Data to Save
    */
   const handleSubmitParameter = useCallback(
-    async formData => {
-      const varName = formData.varName;
+    async (formData, _key, initialData) => {
+      const combinedData = {
+        name: initialData.name,
+        description: initialData.description,
+        type: initialData.type,
+        ...formData,
+      };
+      const varName = initialData.varName;
       const containerInstance = await getFlowData();
 
-      if (containerInstance.getKeyValue(varName, formData.name)) {
+      if (containerInstance.getKeyValue(varName, combinedData.name)) {
         if (formData.value === DEFAULT_VALUE) {
-          containerInstance.deleteKeyValue(varName, formData.name);
+          containerInstance.deleteKeyValue(varName, combinedData.name);
         } else {
-          containerInstance.updateKeyValueItem(varName, formData);
+          containerInstance.updateKeyValueItem(varName, combinedData);
         }
       } else {
-        containerInstance.addKeyValue(varName, formData);
+        containerInstance.addKeyValue(varName, combinedData);
       }
       setFlowDataInst(containerInstance);
     },
@@ -121,13 +127,11 @@ const ContainerMenu = props => {
     return dialog({
       onSubmit: handleSubmitParameter,
       title: t("EditParamType", { paramType }),
-      data: {
-        ...keyValueData,
-        varName: varName,
-        type: keyValueData.type ?? DATA_TYPES.ANY,
-        name: keyValueData.key,
-        paramType
-      },
+      ...keyValueData,
+      type: keyValueData.type ?? DATA_TYPES.ANY,
+      name: keyValueData.key,
+      varName,
+      paramType,
       showDefault: !viewOnly,
       showValueOptions: true,
       showDescription: !viewOnly,

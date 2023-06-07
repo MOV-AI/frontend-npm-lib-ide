@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useMemo, useCallback } from "react";
 import i18n from "../../i18n/i18n";
 import { IconButton, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
@@ -9,14 +9,49 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import CloseIcon from "@material-ui/icons/Close";
 import WarningIcon from "@material-ui/icons/Warning";
-import { PLUGINS } from "../../utils/Constants";
-import { withViewPlugin } from "./../../engine/ReactPlugin/ViewReactPlugin";
-import { withHostReactPlugin } from "./../../engine/ReactPlugin/HostReactPlugin";
-import { subscribe, useRemix } from "./../../utils/noremix";
+import { easySub, useSub } from "./../../utils/noremix";
 import formJson from "./../../utils/form";
 
-function OtherDialogBase(props, ref) {
-  const [ dialog, setDialog ] = useState({});
+const dialogSub = easySub({});
+
+export
+const dialogSet = dialogSub.easyEmit();
+
+export
+const dialogOpen = function (newDialog) {
+  const oldState = dialogSub.data.value;
+  const newState = { ...newDialog, open: true };
+
+  dialogSub.update(oldState.open ? {
+      ...oldState,
+      next: (oldState.next ?? []).concat(newState),
+  } : newState);
+};
+
+export
+const dialogClose = function () {
+  const current = dialogSub.data.value;
+
+  dialogSub.update(current.next?.length ? {
+    ...current.next[0],
+    open: true,
+    next: current.next.splice(1),
+  } : {
+    ...current,
+    open: false,
+  });
+};
+
+export function dialog(newDialog) {
+  return new Promise(resolve => dialogOpen({
+    ...newDialog,
+    resolve,
+  }));
+}
+
+export
+function Dialog() {
+  const data = useSub(dialogSub);
   const {
     onSubmit = () => {},
     onClose = () => {},
@@ -30,49 +65,49 @@ function OtherDialogBase(props, ref) {
     message,
     Component = null,
     title = "",
+    key = "",
     showForm = true,
     form,
     children,
     Dialog,
+    resolve,
     ...rest
-  } = dialog;
+  } = data;
 
-  const reform = message
-    ? (form ?? {})
-    : (form ?? { name: { label: "Name", placeholder: "Name" } });
-
-  useRemix(props);
-  useEffect(() => subscribe(PLUGINS.DIALOG_2.NAME, PLUGINS.DIALOG_2.CALL.OPEN, setDialog), [setDialog]);
-
-  const dialogOpen = useCallback(dialog => setDialog({
-    ...dialog,
-    open: true,
-  }), [setDialog]);
-
-  useEffect(() => { ref.current = { open: dialogOpen }; }, [open]);
+  const reform = useMemo(
+    () => message ? (form ?? {}) : (form ?? { name: { label: "Name", placeholder: "Name" } }),
+    [message, form]
+  );
 
   const handleClose = useCallback((_, reason) => {
     if (!closeOnBackdrop && reason === "backdropClick") return;
-    setDialog(dialog => ({ ...dialog, open: false }));
+    dialogClose();
     onClose();
-  }, [closeOnBackdrop, setDialog, onClose]);
+    if (_)
+      resolve([null, null]);
+  }, [closeOnBackdrop, onClose, resolve]);
 
   const submit = useCallback(async (json, key) => {
     const errors = await onValidation(json);
-    const errorCount = Object.values(errors).reduce((a, b) => a.concat(b), []).length;
-    if (errorCount)
-      return setDialog(dialog => ({
-        ...dialog,
+    const current = dialogSub.data.value;
+
+    if (Object.values(errors ?? {}).reduce((a, b) => a.concat(b), []).length) {
+      dialogSet({
+        ...current,
         form: Object.entries(reform).reduce((a, [key, value]) => Object.assign(a, {
           [key]: {
             ...value,
-            errors: errors[key],
+            errors: errors[key] ?? [],
           },
         }), {}),
-      }));
-    onSubmit(json, key);
+      });
+      return;
+    }
+
+    onSubmit(json, key, rest);
+    resolve([json, key]);
     handleClose();
-  }, [handleClose, onSubmit, setDialog, reform]);
+  }, [handleClose, onSubmit, reform, resolve, rest]);
 
   const handleSubmit = useCallback((e, key) => {
     e.preventDefault();
@@ -81,13 +116,17 @@ function OtherDialogBase(props, ref) {
     submit(json, key);
   }, [allowSubmit, submit]);
 
-  if (Dialog)
-    return (<Dialog
-      onClose={handleClose}
-      { ...dialog }
-    />);
+  const onKeyDown = useCallback(e => {
+    if (e.key === "Escape")
+      handleClose();
+  }, [handleClose]);
 
-  const actionsEl = actions ? Object.entries(actions).map(([key, action]) => (
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onKeyDown]);
+
+  const actionsEl = useMemo(() => actions ? Object.entries(actions).map(([key, action]) => (
     <Button data-testid={"action_" + key} onClick={e => handleSubmit(e, key)} color={ action.color ?? "default" }>
       { i18n.t(action.label ?? key) }
     </Button>
@@ -101,26 +140,27 @@ function OtherDialogBase(props, ref) {
         type="submit"
         color="primary"
       >
-        { submitText }
+      { submitText }
       </Button>
     ) }
-  </>);
+  </>), [actions, handleSubmit, handleClose, onSubmit, submitText]);
 
-  const childrenEl = Component ? <Component { ...dialog } /> : (<>
+  const childrenEl = useMemo(() => Component ? <Component { ...data } /> : (<>
     { message && (
       <Typography className="styles-horizontal">
+        <input autoFocus type="checkbox" name="dummy" style={{ position: "absolute", opacity: 0 }}></input>
         { showAlertIcon && <WarningIcon fontSize={"large"} /> }
         { message }
       </Typography>
     ) }
 
-    { Object.entries(reform).map(([key, { label = "Value", placeholder = "", multiline, maxLength, errors = [], defaultValue, ...rest }]) => (
+    { Object.entries(reform).map(([key, { label = "Value", placeholder = "", multiline, maxLength, errors = [], defaultValue = data[key] ?? "", ...rest }], index) => (
       <TextField
-        autoFocus={rest.autoFocus} key={key} name={key} error={errors.length !== 0}
+        autoFocus={index === 0} key={key + "-" + defaultValue} name={key} error={errors.length !== 0}
         helperText={errors}
         label={label}
         InputLabelProps={{ shrink: true }}
-        defaultValue={defaultValue ?? dialog[key] ?? ""}
+        defaultValue={defaultValue ?? data[key]}
         placeholder={placeholder}
         multiline={multiline}
         inputProps={{
@@ -130,13 +170,24 @@ function OtherDialogBase(props, ref) {
         { ...rest }
       />
     )) }
-  </>);
+  </>), [Component, showAlertIcon, message, reform, data]);
 
-  return (<BaseDialog open={open} onClose={handleClose}>
-    <form onSubmit={handleSubmit}>
+  if (Dialog)
+    return (<Dialog
+      onClose={handleClose}
+      handleSubmit={handleSubmit}
+      form={reform}
+      actionsEl={actionsEl}
+      { ...data }
+    >
+      { childrenEl }
+    </Dialog>);
+
+  return (<BaseDialog key={key} open={open} onClose={handleClose}>
+    <form onSubmit={handleSubmit} style={{ position: "relative" }}>
       <DialogTitle disableTypography>
         <Typography variant="h6">{ title }</Typography>
-        { dialog.hasCloseButton ? (
+        { data.hasCloseButton ? (
           <IconButton
             data-testid="input_close"
             aria-label="close"
@@ -155,13 +206,3 @@ function OtherDialogBase(props, ref) {
     </form>
   </BaseDialog>);
 }
-
-export
-const OtherDialog = withViewPlugin(OtherDialogBase, Object.values(PLUGINS.DIALOG_2.CALL));
-
-export
-const OtherDialogHost = withHostReactPlugin(function (props) {
-  const { hostName, viewPlugins } = props;
-
-  return <div id={hostName}>{ viewPlugins }</div>;
-});

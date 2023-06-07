@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import _debounce from "lodash/debounce";
 import { makeStyles } from "@material-ui/core/styles";
@@ -9,14 +9,13 @@ import {
   DialogActions
 } from "@material-ui/core";
 import { PLUGINS } from "../../../../utils/Constants";
-import { call } from "../../../../utils/noremix";
+import { call, easySub, useSub } from "../../../../utils/noremix";
 import { withTheme } from "../../../../decorators/withTheme";
 import { DialogTitle } from "../../../../plugins/Dialog/components/AppDialog/AppDialog";
 import Loader from "../../../_shared/Loader/Loader";
 import MaterialTree from "../../../_shared/MaterialTree/MaterialTree";
 import Search from "../../../_shared/Search/Search";
 import { EXCLUDED_PATHS, searchImports } from "./utils";
-import { ERROR_MESSAGES } from "../../../../utils/Messages";
 
 const useStyles = makeStyles(_theme => ({
   paper: {
@@ -24,13 +23,31 @@ const useStyles = makeStyles(_theme => ({
   }
 }));
 
+const libsSub = easySub({});
+const libsEmit = libsSub.easyEmit((scope, libs) => ({
+  ...libsSub.data.value,
+  [scope]: libs
+}));
+
+async function getLibs(scope) {
+  const ret = libsSub.data.value[scope];
+  if (ret)
+    return ret;
+
+  return await call(
+    PLUGINS.DOC_MANAGER.NAME,
+    PLUGINS.DOC_MANAGER.CALL.GET_STORE,
+    scope
+  ).then(store => store.helper.getAllLibraries())
+    .then(libs => libsEmit(scope, libs));
+}
+
 const AddImportDialog = props => {
   // Props
   const { open, scope, onClose, onSubmit } = props;
   // State hooks
-  const [loading, setLoading] = useState(false);
-  const [pyLibs, setPyLibs] = useState();
-  const [filteredLibs, setFilteredLibs] = useState();
+  const libs = useSub(libsSub)?.[scope];
+  const [filteredLibs, setFilteredLibs] = useState(libs);
   const [selectedLibs, setSelectedLibs] = useState();
   // Style hook
   const classes = useStyles();
@@ -43,22 +60,8 @@ const AddImportDialog = props => {
    *                                                                                      */
   //========================================================================================
 
-  useEffect(() => {
-    setLoading(true);
-    call(
-      PLUGINS.DOC_MANAGER.NAME,
-      PLUGINS.DOC_MANAGER.CALL.GET_STORE,
-      scope
-    ).then(store => {
-      store.helper.getAllLibraries().then(libs => {
-        if (libs) {
-          setPyLibs(libs);
-          setFilteredLibs(libs);
-        }
-        setLoading(false);
-      });
-    });
-  }, [scope]);
+  useEffect(() => { getLibs(scope) }, [scope]);
+  useEffect(() => { setFilteredLibs(libs) }, [libs]);
 
   //========================================================================================
   /*                                                                                      *
@@ -91,7 +94,7 @@ const AddImportDialog = props => {
    * @param {*} value
    */
   const onSearch = _debounce(value => {
-    const result = searchImports(value, pyLibs);
+    const result = searchImports(value, libs);
     setFilteredLibs(result);
   }, 500);
 
@@ -105,23 +108,16 @@ const AddImportDialog = props => {
    * Render Material Tree to select python lib
    * @returns {ReactElement}
    */
-  const renderTree = () => {
+  const treeEl = useMemo(() => {
     // Return loader if data is not ready
-    if (loading) return <Loader />;
+    if (!libs) return <Loader />;
     // Return when data is ready or error message if not
-    return pyLibs ? (
-      <MaterialTree
-        data={filteredLibs}
-        onNodeSelect={onSelectLib}
-        multiSelect={true}
-      ></MaterialTree>
-    ) : (
-      <>
-        <h2>{t(ERROR_MESSAGES.SOMETHING_WENT_WRONG)}</h2>
-        <h3>{t("FailedToLoadLibraries")}</h3>
-      </>
-    );
-  };
+    return <MaterialTree
+      data={filteredLibs}
+      onNodeSelect={onSelectLib}
+      multiSelect={true}
+    />;
+  }, [libs, filteredLibs]);
 
   return (
     <Dialog
@@ -135,7 +131,7 @@ const AddImportDialog = props => {
       </DialogTitle>
       <DialogContent>
         <Search onSearch={onSearch} />
-        {renderTree()}
+        { treeEl }
       </DialogContent>
       <DialogActions>
         <Button data-testid="input_cancel" onClick={onClose}>
@@ -144,9 +140,9 @@ const AddImportDialog = props => {
         <Button
           data-testid="input_confirm"
           color="primary"
-          onClick={() => {
+          onClick={e => {
             onSubmit(selectedLibs);
-            onClose();
+            onClose(e);
           }}
           disabled={!selectedLibs}
         >

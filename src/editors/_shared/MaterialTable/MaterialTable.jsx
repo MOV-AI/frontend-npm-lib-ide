@@ -114,7 +114,7 @@ const MaterialTable = forwardRef((props, ref) => {
           searchFieldAlignment: "left",
           actionsCellStyle: {
             textAlign: "right",
-            color: theme.palette.primary.main
+            color: theme.palette?.primary?.main
           },
           actionsColumnIndex: -1,
           draggable: false,

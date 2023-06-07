@@ -22,7 +22,7 @@ import useDataSubscriber from "../../../plugins/DocManager/useDataSubscriber";
 import DetailsMenu from "../../_shared/DetailsMenu/DetailsMenu";
 import AddImportDialog from "./dialogs/AddImport";
 import EditMessageDialog from "./dialogs/EditMessage";
-import { dialog } from "./../../../utils/noremix";
+import { dialog } from "./../../../plugins/Dialog/Dialog";
 
 import { menuStyles } from "./styles";
 

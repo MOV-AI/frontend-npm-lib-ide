@@ -12,7 +12,8 @@ import ListItemsTreeWithSearch, {
   toggleExpandRow
 } from "./components/ListItemTree/ListItemsTreeWithSearch";
 import { explorerStyles } from "./styles";
-import { useRemix, call, dialog, subscribeAll } from "./../../../utils/noremix";
+import { useRemix, call, subscribeAll } from "./../../../utils/noremix";
+import { dialog } from "./../../../plugins/Dialog/Dialog";
 
 const Explorer = props => {
   const { alert } = props;
@@ -124,13 +125,13 @@ const Explorer = props => {
    * Expand tree or open document depending on have children or not
    * @param {{id: String, deepness: String, url: String, name: String, scope: String}} node : Clicked node
    */
-  const requestScopeVersions = useCallback(node => {
+  const requestScopeVersions = useCallback(async node => {
     if (node.children?.length) {
       setData(toggleExpandRow(node, data));
-      return Promise.reject();
+      return;
     }
 
-    return call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
+    return await call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
       id: node.url,
       name: node.name,
       scope: node.scope

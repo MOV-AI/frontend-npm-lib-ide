@@ -16,10 +16,11 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import Add from "@material-ui/icons/Add";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import Model from "../../../model/Flow";
+import i18n from "./../../../../../i18n/i18n";
 import useDataSubscriber from "../../../../../plugins/DocManager/useDataSubscriber";
 
 import { ERROR_MESSAGES } from "../../../../../utils/Messages";
-import { dialog } from "../../../../../utils/noremix";
+import { dialog } from "../../../../../plugins/Dialog/Dialog";
 import {
   DEFAULT_KEY_VALUE_DATA,
   DATA_TYPES,
@@ -93,27 +94,21 @@ const Menu = ({ name, model, details: detailsProp, editable }) => {
    * @param {Object} newData : New data
    * @returns {Promise} {result: <boolean>, [error: <string> OR data: <object>]}
    **/
-  const validateParamName = useCallback(
-    (oldName, newData) => {
-      const { name: newName } = newData;
+  const validateParamName = useCallback((oldName, newData) => {
+    const { name: newName } = newData;
 
-      try {
-        if (!newName) throw new Error(ERROR_MESSAGES.NAME_IS_MANDATORY);
-        else if (!Utils.validateEntityName(newName, []))
-          throw new Error(ERROR_MESSAGES.INVALID_NAME);
-
-        // Validate against repeated names
-        if (oldName !== newName && model.current.getParameter(newName)) {
-          throw new Error(ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME);
-        }
-      } catch (error) {
-        return Promise.resolve({ result: false, error: error.message });
-      }
-
-      return Promise.resolve({ result: true, data: { oldName, newData } });
-    },
-    [model]
-  );
+    // why don't we export these already translated?
+    // We don't have to translate multiple times..
+    if (!newName)
+      return [i18n.t(ERROR_MESSAGES.NAME_IS_MANDATORY)];
+    else if (!Utils.validateEntityName(newName, []))
+      return [i18n.t(ERROR_MESSAGES.INVALID_NAME)];
+    // Validate against repeated names
+    else if (oldName !== newName && model.current.getParameter(newName))
+      return [i18n.t(ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME)];
+    else
+      return [];
+  }, [model]);
 
   //========================================================================================
   /*                                                                                      *
@@ -148,9 +143,10 @@ const Menu = ({ name, model, details: detailsProp, editable }) => {
 
     return dialog({
       onSubmit: formData => handleSubmitParameter(obj.name, formData),
-      nameValidation: newData => validateParamName(obj.name, newData),
+      onValidation: newData => ({ name: validateParamName(obj.name, newData) }),
       title: t("EditParamType", { paramType: t(DIALOG_TITLE.PARAMETERS) }),
-      data: obj,
+      key: "EditParamType" + obj.name,
+      ...obj,
       Dialog: ParametersEditorDialog
     });
   }, [model, validateParamName, handleSubmitParameter, t]);

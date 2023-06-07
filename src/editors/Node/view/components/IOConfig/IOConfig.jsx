@@ -23,6 +23,7 @@ const IOConfig = props => {
   const {
     ioConfig,
     scope,
+    alert,
     protectedCallbacks,
     onIOConfigRowSet,
     onIOConfigRowDelete,
@@ -176,9 +177,17 @@ const IOConfig = props => {
         newData = setPortDataOut(newData);
         // Call method to set row
         onIOConfigRowSet(newData, resolve, reject);
+      }).catch(e => {
+        if (e.message)
+          return alert({ message: e.message, severity: ALERT_SEVERITIES.ERROR });
+
+        return alert({
+          message: e[0],
+          severity: ALERT_SEVERITIES.ERROR
+        });
       });
     },
-    [onIOConfigRowSet, setPortDataIn, setPortDataOut]
+    [onIOConfigRowSet, setPortDataIn, setPortDataOut, alert]
   );
 
   /**

@@ -42,7 +42,7 @@ const StyledTreeItem = withStyles(theme => ({
   group: {
     marginLeft: 12,
     paddingLeft: 12,
-    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`
+    borderLeft: `1px dashed ${alpha(theme.palette?.text?.primary ?? "white", 0.4)}`
   }
 }))(props => <TreeItem {...props} />);
 

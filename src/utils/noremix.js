@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { PLUGINS } from "./Constants";
+
+function identity(a) {
+  return a;
+}
 
 export
 function easySub(defaultData) {
@@ -21,8 +24,8 @@ function easySub(defaultData) {
     };
   }
 
-  function easyEmit(cb) {
-    return async (...args) => update(await cb(...args));
+  function easyEmit(cb = identity) {
+    return async (...args) => update(await cb(...args, valueMap.value));
   }
 
   return { update, subscribe, data: valueMap, easyEmit };
@@ -60,11 +63,6 @@ function emit(name, ...args) {
   return new Promise(
     resolve => setTimeout(() => resolve(remixSub.data.value.emit[name](...args)), 0)
   );
-}
-
-export
-function dialog(arg) {
-  return call(PLUGINS.DIALOG_2.NAME, PLUGINS.DIALOG_2.CALL.OPEN, arg);
 }
 
 export

@@ -67,9 +67,6 @@ export const HOSTS = {
   BOTTOM_BAR: {
     NAME: "bottomBar"
   },
-  DIALOG_2_HOST: {
-    NAME: "dialog2Host"
-  }
 };
 
 export const PLUGINS = {
@@ -139,10 +136,6 @@ export const PLUGINS = {
     ON: {
       CHANGE_BOOKMARK: "changeBookmark"
     }
-  },
-  DIALOG_2: {
-    NAME: "dialog2",
-    CALL: { OPEN: "open" }
   },
   ALERT: {
     NAME: "alert",

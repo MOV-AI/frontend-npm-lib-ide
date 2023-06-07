@@ -25,7 +25,7 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import Workspace from "../../../../../utils/Workspace";
-import { call, emit } from "../../../../../utils/noremix";
+import { useSub, call } from "../../../../../utils/noremix";
 import {
   SCOPES,
   PLUGINS,
@@ -35,6 +35,7 @@ import {
 import { ERROR_MESSAGES } from "../../../../../utils/Messages";
 import { defaultFunction } from "../../../../../utils/Utils";
 import { FLOW_VIEW_MODE } from "../../Constants/constants";
+import { flowSub } from "../interface/MainInterface";
 import useNodeStatusUpdate from "./hooks/useNodeStatusUpdate";
 
 import { buttonStyles, flowTopBarStyles } from "./styles";
@@ -68,17 +69,16 @@ const FlowTopBar = props => {
     alert,
     scope,
     loading,
-    mainInterface,
     id,
     name,
     onRobotChange,
-    onViewModeChange,
-    viewMode,
     searchProps,
     confirmationAlert,
     canRun,
   } = props;
   // State hooks
+  const mainInterface = useSub(flowSub)[name];
+  const viewMode = mainInterface?.viewMode ?? "default";
   const [actionLoading, setActionLoading] = useState(false);
   const [robotSelected, setRobotSelected] = useState("");
   const [robotList, setRobotList] = useState({});
@@ -276,12 +276,12 @@ const FlowTopBar = props => {
    */
   const canRunFlow = useCallback(
     action => {
-      const graph = mainInterface.current?.graph;
+      const graph = mainInterface?.graph;
       // let's validate flow before continuing
       graph?.validateFlow();
 
-      const warnings = graph.warnings || [];
-      const warningsVisibility = graph.warningsVisibility;
+      const warnings = graph?.warnings || [];
+      const warningsVisibility = graph?.warningsVisibility;
       const runtimeWarnings = warnings.filter(wn => wn.isRuntime);
       runtimeWarnings.forEach(warning => {
         graph.setPermanentWarnings(warning);
@@ -440,8 +440,8 @@ const FlowTopBar = props => {
    * @returns
    */
   const handleViewModeChange = useCallback(
-    (_event, newViewMode) => onViewModeChange(newViewMode),
-    [onViewModeChange]
+    (_event, newViewMode) => mainInterface?.setViewMode(newViewMode),
+    [mainInterface]
   );
 
   //========================================================================================
@@ -553,7 +553,7 @@ const FlowTopBar = props => {
             <ToggleButton
               data-testid="input_default-flow"
               value={FLOW_VIEW_MODE.default}
-              disabled={loading}
+              disabled={loading || viewMode === "default"}
             >
               <Tooltip title={t("DefaultFlowView")}>
                 <GrainIcon fontSize="small" />
@@ -562,7 +562,7 @@ const FlowTopBar = props => {
             <ToggleButton
               data-testid="input_tree-view-flow"
               value={FLOW_VIEW_MODE.treeView}
-              disabled={loading}
+              disabled={loading || viewMode === "treeView"}
             >
               <Tooltip title={t("TreeView")}>
                 <i className={`icon-tree ${classes.treeIcon}`}></i>
