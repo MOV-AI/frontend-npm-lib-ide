@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useMemo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Typography,
@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { PLUGINS } from "../../../../utils/Constants";
-import { call } from "../../../../utils/noremix";
+import { call, easySub, useSub } from "../../../../utils/noremix";
 import { ERROR_MESSAGES } from "../../../../utils/Messages";
 import { withTheme } from "../../../../decorators/withTheme";
 import { DialogTitle } from "../../../../plugins/Dialog/components/AppDialog/AppDialog";
@@ -32,49 +32,46 @@ const useStyles = makeStyles(_theme => ({
   }
 }));
 
+const messagesSub = easySub({});
+const messagesEmit = messagesSub.easyEmit((scope, messages) => ({
+  ...messagesSub.data.value,
+  [scope]: messages
+}));
+
+async function getMessages(scope) {
+  const ret = messagesSub.data.value[scope];
+  if (ret)
+    return ret;
+
+  return await call(
+    PLUGINS.DOC_MANAGER.NAME,
+    PLUGINS.DOC_MANAGER.CALL.GET_STORE,
+    scope
+  ).then(store => store.helper.getAllMessages())
+    .then(messages => messagesEmit(scope, messages));
+}
+
 const EditMessageDialog = props => {
   // Props
   const { open, scope, selectedMessage, onClose, onSubmit } = props;
   // State hooks
   const [loading, setLoading] = useState(false);
-  const [messages, setMessages] = useState();
-  const [filteredMsg, setFilteredMsg] = useState();
+  const realMessages = useSub(messagesSub)?.[scope];
+  const messages = useMemo(() => Object.keys(realMessages ?? {}).sort().map((pack, idx1) => ({
+    id: (idx1 + 1) * 100,
+    text: pack,
+    children: realMessages[pack].sort().map((message, idx2) => ({
+      id: (idx1 + 1) * 100 + idx2 + 1,
+      text: message,
+      isLeaf: true
+    })),
+  })), [realMessages]);
+  const [filteredMsg, setFilteredMsg] = useState(messages);
   const [selectedMsg, setSelectedMsg] = useState(selectedMessage);
   // Style hook
   const classes = useStyles();
   // Translation hook
   const { t } = useTranslation();
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                  Private Methods                                     *
-   *                                                                                      */
-  //========================================================================================
-
-  /**
-   * Format message list to tree structure
-   */
-  const _updateMessages = useCallback(list => {
-    let messagesStruct = [];
-    Object.keys(list)
-      .sort()
-      .forEach((pack, idx1) => {
-        messagesStruct.push({
-          id: (idx1 + 1) * 100,
-          text: pack,
-          children: list[pack].sort().map((message, idx2) => {
-            return {
-              id: (idx1 + 1) * 100 + idx2 + 1,
-              text: message,
-              isLeaf: true
-            };
-          })
-        });
-      });
-    // TODO : If create a CB from NodeEditor append the corresponding Message
-    setMessages(messagesStruct);
-    setFilteredMsg(messagesStruct);
-  }, []);
 
   //========================================================================================
   /*                                                                                      *
@@ -97,10 +94,7 @@ const EditMessageDialog = props => {
    * On search tree
    */
   const onSearch = useCallback(
-    value => {
-      const result = searchMessages(value, messages);
-      setFilteredMsg(result);
-    },
+    value => setFilteredMsg(searchMessages(value, messages)),
     [messages]
   );
 
@@ -115,17 +109,10 @@ const EditMessageDialog = props => {
    */
   useEffect(() => {
     setLoading(true);
-    call(
-      PLUGINS.DOC_MANAGER.NAME,
-      PLUGINS.DOC_MANAGER.CALL.GET_STORE,
-      scope
-    ).then(store => {
-      store.helper.getAllMessages().then(msgs => {
-        if (msgs) _updateMessages(msgs);
-        setLoading(false);
-      });
-    });
-  }, [scope, _updateMessages]);
+    getMessages(scope).then(() => setLoading(false));
+  }, [scope]);
+
+  useEffect(() => setFilteredMsg(messages), [messages]);
 
   //========================================================================================
   /*                                                                                      *
