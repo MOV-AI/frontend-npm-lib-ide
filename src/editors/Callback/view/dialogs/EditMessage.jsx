@@ -57,7 +57,7 @@ const EditMessageDialog = props => {
   // State hooks
   const [loading, setLoading] = useState(false);
   const realMessages = useSub(messagesSub)?.[scope];
-  const messages = useMemo(() => Object.keys(realMessages ?? {}).sort().map((pack, idx1) => ({
+  const messages = useMemo(() => Object.keys(realMessages ?? {}).sort((a, b) => (b - a)).map((pack, idx1) => ({
     id: (idx1 + 1) * 100,
     text: pack,
     children: realMessages[pack].sort().map((message, idx2) => ({
@@ -107,9 +107,10 @@ const EditMessageDialog = props => {
   /**
    * Component mounted
    */
-  useEffect(() => {
+  useEffect(async () => {
     setLoading(true);
-    getMessages(scope).then(() => setLoading(false));
+    await getMessages(scope);
+    setLoading(false);
   }, [scope]);
 
   useEffect(() => setFilteredMsg(messages), [messages]);

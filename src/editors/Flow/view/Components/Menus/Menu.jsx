@@ -93,27 +93,19 @@ const Menu = ({ name, model, details: detailsProp, editable }) => {
    * @param {Object} newData : New data
    * @returns {Promise} {result: <boolean>, [error: <string> OR data: <object>]}
    **/
-  const validateParamName = useCallback(
-    (oldName, newData) => {
-      const { name: newName } = newData;
+  const validateParamName = useCallback((oldName, newData) => {
+    const { name: newName } = newData;
 
-      try {
-        if (!newName) throw new Error(ERROR_MESSAGES.NAME_IS_MANDATORY);
-        else if (!Utils.validateEntityName(newName, []))
-          throw new Error(ERROR_MESSAGES.INVALID_NAME);
-
-        // Validate against repeated names
-        if (oldName !== newName && model.current.getParameter(newName)) {
-          throw new Error(ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME);
-        }
-      } catch (error) {
-        return Promise.resolve({ result: false, error: error.message });
-      }
-
-      return Promise.resolve({ result: true, data: { oldName, newData } });
-    },
-    [model]
-  );
+    if (!newName)
+      return [ERROR_MESSAGES.NAME_IS_MANDATORY];
+    else if (!Utils.validateEntityName(newName, []))
+      return [ERROR_MESSAGES.INVALID_NAME];
+    // Validate against repeated names
+    else if (oldName !== newName && model.current.getParameter(newName))
+      return [ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME];
+    else
+      return [];
+  }, [model]);
 
   //========================================================================================
   /*                                                                                      *
@@ -148,7 +140,7 @@ const Menu = ({ name, model, details: detailsProp, editable }) => {
 
     return dialog({
       onSubmit: formData => handleSubmitParameter(obj.name, formData),
-      nameValidation: newData => validateParamName(obj.name, newData),
+      onValidation: newData => validateParamName(obj.name, newData),
       title: t("EditParamType", { paramType: t(DIALOG_TITLE.PARAMETERS) }),
       data: obj,
       Dialog: ParametersEditorDialog

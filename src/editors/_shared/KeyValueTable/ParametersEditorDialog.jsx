@@ -39,8 +39,11 @@ const ParameterEditorDialog = props => {
     customValidation,
     preventRenderType,
     showValueOptions,
-    alert
+    alert,
+    errors = {},
   } = props;
+
+  const errorCount = Object.values(errors).reduce((a, b) => a.concat(b), []).length;
 
   // Hooks
   const [data, setData] = useState({});
@@ -175,55 +178,47 @@ const ParameterEditorDialog = props => {
    * @param {*} formData
    * @returns
    */
-  const onValidate = useCallback(
-    formData => {
-      const dataToValidate = {
-        ...formData,
-        value:
-          showValueOptions && valueOption === VALUE_OPTIONS.DEFAULT
-            ? DEFAULT_VALUE
-            : data.value,
-        type: data.type
-      };
+  const onValidation = useCallback(async formData => {
+    const dataToValidate = {
+      ...formData,
+      value:
+        showValueOptions && valueOption === VALUE_OPTIONS.DEFAULT
+          ? DEFAULT_VALUE
+          : data.value,
+      type: data.type
+    };
 
-      if (customValidation) return customValidation(dataToValidate);
+    if (customValidation) return customValidation(dataToValidate);
 
-      // If value is DEFAULT_VALUE, the parameter should be removed
-      //  Therefore we can by-pass the validation in that case
-      if (dataToValidate.value === DEFAULT_VALUE)
-        return Promise.resolve({ success: true, data: dataToValidate });
+    // If value is DEFAULT_VALUE, the parameter should be removed
+    //  Therefore we can by-pass the validation in that case
+    if (dataToValidate.value === DEFAULT_VALUE)
+      return { value: [] };
 
-      // Validate data
-      return validate(dataToValidate, getValidationOptions())
-        .then(res => {
-          if (!res.success)
-            throw new Error(
-              t(res.error) || t(ERROR_MESSAGES.DATA_VALIDATION_FAILED)
-            );
-          // Prepare data to submit
-          if (res.parsed) data.value = res.parsed.toString();
-          const dataToSubmit = {
-            ...dataToValidate,
-            value: valueToSave(data)
-          };
-          return { ...res, data: dataToSubmit };
-        })
-        .catch(err => {
-          alert({ message: err.message, severity: ALERT_SEVERITIES.ERROR });
-          return err;
-        });
-    },
-    [
-      showValueOptions,
-      valueOption,
-      data,
-      alert,
-      validate,
-      valueToSave,
-      customValidation,
-      t
-    ]
-  );
+    const res = await validate(dataToValidate, getValidationOptions());
+
+    if (!res.success)
+      return [t(res.error ?? ERROR_MESSAGES.DATA_VALIDATION_FAILED)]; 
+
+    // Prepare data to submit
+    if (res.parsed)
+      data.value = res.parsed.toString();
+
+    return [];
+  }, [
+    showValueOptions,
+    valueOption,
+    data,
+    alert,
+    validate,
+    customValidation,
+    t
+  ]);
+
+  useEffect(() => {
+    if (errorCount)
+      alert({ message: errors[0], severity: ALERT_SEVERITIES.ERROR });
+  }, [errorCount, alert, errors]);
 
   //========================================================================================
   /*                                                                                      *
@@ -380,6 +375,7 @@ const ParameterEditorDialog = props => {
       if (!editComponent) return <></>;
       return (
         <>
+          <input type="hidden" name="value" value={data.value} />
           {!options.isDefault && showValueOptions && renderValueOptions()}
           {!options.isDefault && valueOption === VALUE_OPTIONS.DISABLED ? (
             <p className={classes.disabledValue}>
@@ -424,7 +420,7 @@ const ParameterEditorDialog = props => {
   return (
     <KeyValueEditorDialog
       {...props}
-      validate={onValidate}
+      onValidation={onValidation}
       renderValueEditor={renderValueEditor}
       renderCustomContent={renderTypeSelector}
     />

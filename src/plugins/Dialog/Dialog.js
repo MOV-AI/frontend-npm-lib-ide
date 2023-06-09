@@ -107,6 +107,7 @@ function OtherDialogBase(props, ref) {
   if (Dialog)
     return (<Dialog
       onClose={handleClose}
+      handleSubmit={handleSubmit}
       { ...dialog }
     />);
 
