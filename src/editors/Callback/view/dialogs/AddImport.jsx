@@ -144,9 +144,9 @@ const AddImportDialog = props => {
         <Button
           data-testid="input_confirm"
           color="primary"
-          onClick={() => {
+          onClick={e => {
             onSubmit(selectedLibs);
-            onClose();
+            onClose(e);
           }}
           disabled={!selectedLibs}
         >

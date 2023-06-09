@@ -9,7 +9,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import CloseIcon from "@material-ui/icons/Close";
 import WarningIcon from "@material-ui/icons/Warning";
-import { PLUGINS } from "../../utils/Constants";
 import { withViewPlugin } from "./../../engine/ReactPlugin/ViewReactPlugin";
 import { withHostReactPlugin } from "./../../engine/ReactPlugin/HostReactPlugin";
 import { subscribe, call, useRemix } from "./../../utils/noremix";
@@ -62,8 +61,8 @@ function OtherDialogBase(props, ref) {
 
   const handleClose = useCallback((_, reason) => {
     if (!closeOnBackdrop && reason === "backdropClick") return;
-    setDialog(dialog => dialog.next
-      ? ({ ...dialog.next[0], next: dialog.next.slice(1) })
+    setDialog(dialog => dialog.next?.length
+      ? ({ ...dialog.next[0], next: dialog.next.slice(1), open: true })
       : ({ ...dialog, open: false }));
     onClose();
     if (_)
