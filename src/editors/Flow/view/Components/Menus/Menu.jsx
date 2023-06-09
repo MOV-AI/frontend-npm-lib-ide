@@ -19,7 +19,7 @@ import Model from "../../../model/Flow";
 import useDataSubscriber from "../../../../../plugins/DocManager/useDataSubscriber";
 
 import { ERROR_MESSAGES } from "../../../../../utils/Messages";
-import { dialog } from "../../../../../utils/noremix";
+import { dialog } from "../../../../../plugins/Dialog/Dialog";
 import {
   DEFAULT_KEY_VALUE_DATA,
   DATA_TYPES,

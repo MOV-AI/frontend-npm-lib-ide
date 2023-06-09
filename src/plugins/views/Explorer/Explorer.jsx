@@ -12,7 +12,8 @@ import ListItemsTreeWithSearch, {
   toggleExpandRow
 } from "./components/ListItemTree/ListItemsTreeWithSearch";
 import { explorerStyles } from "./styles";
-import { useRemix, call, dialog, subscribeAll } from "./../../../utils/noremix";
+import { useRemix, call, subscribeAll } from "./../../../utils/noremix";
+import { dialog } from "./../../../plugins/Dialog/Dialog";
 
 const Explorer = props => {
   const { alert } = props;

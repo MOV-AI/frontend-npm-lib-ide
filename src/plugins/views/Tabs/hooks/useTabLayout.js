@@ -14,7 +14,7 @@ import {
   DOCK_MODES,
   PLUGINS
 } from "../../../../utils/Constants";
-import { dialog } from "../../../../utils/noremix";
+import { dialog } from "../../../../plugins/Dialog/Dialog";
 import { getIconByScope } from "../../../../utils/Utils";
 import PluginManagerIDE from "../../../../engine/PluginManagerIDE/PluginManagerIDE";
 import Workspace from "../../../../utils/Workspace";

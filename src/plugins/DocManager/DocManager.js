@@ -5,7 +5,8 @@ import {
   ALERT_SEVERITIES,
   SAVE_OUTDATED_DOC_ACTIONS
 } from "../../utils/Constants";
-import { register, dialog } from "../../utils/noremix";
+import { register } from "../../utils/noremix";
+import { dialog } from "../../plugins/Dialog/Dialog";
 import { invalidDocName } from "./../../utils/Utils";
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "../../utils/Messages";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";

@@ -1,7 +1,7 @@
 import React from "react";
 import { getRefComponent } from "../utils/Utils";
 import { PLUGINS } from "../utils/Constants";
-import { dialog } from "../utils/noremix";
+import { dialog } from "../plugins/Dialog/Dialog";
 
 /**
  * Pass snackbar alerts to components

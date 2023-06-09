@@ -12,7 +12,7 @@ import WarningIcon from "@material-ui/icons/Warning";
 import { PLUGINS } from "../../utils/Constants";
 import { withViewPlugin } from "./../../engine/ReactPlugin/ViewReactPlugin";
 import { withHostReactPlugin } from "./../../engine/ReactPlugin/HostReactPlugin";
-import { subscribe, useRemix } from "./../../utils/noremix";
+import { subscribe, call, useRemix } from "./../../utils/noremix";
 import formJson from "./../../utils/form";
 
 function OtherDialogBase(props, ref) {
@@ -56,7 +56,7 @@ function OtherDialogBase(props, ref) {
     setDialog(newState);
   }), [setDialog, dialog]);
 
-  useEffect(() => subscribe(PLUGINS.DIALOG_2.NAME, PLUGINS.DIALOG_2.CALL.OPEN, dialogOpen), [dialogOpen]);
+  useEffect(() => subscribe("dialog", "open", dialogOpen), [dialogOpen]);
 
   useEffect(() => { ref.current = { open: dialogOpen }; }, [open, dialogOpen]);
 
@@ -95,6 +95,16 @@ function OtherDialogBase(props, ref) {
     submit(json, key);
   }, [allowSubmit, submit]);
 
+  const onKeyDown = useCallback(e => {
+    if (e.key === "Escape")
+      handleClose();
+  }, [handleClose]);
+
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onKeyDown]);
+
   if (Dialog)
     return (<Dialog
       onClose={handleClose}
@@ -123,6 +133,7 @@ function OtherDialogBase(props, ref) {
   const childrenEl = Component ? <Component { ...dialog } /> : (<>
     { message && (
       <Typography className="styles-horizontal">
+        <input autoFocus type="checkbox" name="dummy" style={{ position: "absolute", opacity: 0 }}></input>
         { showAlertIcon && <WarningIcon fontSize={"large"} /> }
         { message }
       </Typography>
@@ -147,7 +158,7 @@ function OtherDialogBase(props, ref) {
   </>);
 
   return (<BaseDialog open={open} onClose={handleClose}>
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={{ position: "relative" }}>
       <DialogTitle disableTypography>
         <Typography variant="h6">{ title }</Typography>
         { dialog.hasCloseButton ? (
@@ -170,8 +181,14 @@ function OtherDialogBase(props, ref) {
   </BaseDialog>);
 }
 
+export const dialogProfile = {
+  name: "dialog",
+  location: "dialogHost",
+  call: ["open"],
+};
+
 export
-const OtherDialog = withViewPlugin(OtherDialogBase, Object.values(PLUGINS.DIALOG_2.CALL));
+const OtherDialog = withViewPlugin(OtherDialogBase, dialogProfile.call);
 
 export
 const OtherDialogHost = withHostReactPlugin(function (props) {
@@ -179,3 +196,8 @@ const OtherDialogHost = withHostReactPlugin(function (props) {
 
   return <div id={hostName}>{ viewPlugins }</div>;
 });
+
+export
+async function dialog(arg) {
+  return await call("dialog", "open", arg);
+}

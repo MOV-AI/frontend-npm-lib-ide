@@ -20,7 +20,8 @@ import {
   ALERT_SEVERITIES
 } from "../../../utils/Constants";
 import { ERROR_MESSAGES } from "../../../utils/Messages";
-import { call, dialog } from "./../../../utils/noremix";
+import { call } from "./../../../utils/noremix";
+import { dialog } from "./../../../plugins/Dialog/Dialog";
 import ParameterEditorDialog from "../../_shared/KeyValueTable/ParametersEditorDialog";
 import KeyValueTable from "../../_shared/KeyValueTable/KeyValueTable";
 import useDataSubscriber from "../../../plugins/DocManager/useDataSubscriber";

@@ -1,5 +1,6 @@
 import i18n from "../i18n/i18n";
 import { TYPES } from "../editors/Flow/view/Constants/constants";
+import { dialogProfile } from "../plugins/Dialog/Dialog";
 
 export const APP_DEFAULT_CONFIG = "app-ide-ce";
 export const APP_CUSTOM_CONFIG = "app-custom-ide-ce";
@@ -47,6 +48,27 @@ export const DRAWER = {
   }
 };
 
+function keyTransform(str) {
+  return str.replaceAll(/([A-Z])/g, g => "_" + g).toUpperCase();
+}
+
+function profileHost(profile) {
+  return {
+    [keyTransform(profile.location)]: {
+      NAME: profile.location
+    }
+  };
+}
+
+function profilePlugin(profile) {
+  return {
+    [keyTransform(profile.name)]: {
+      NAME: profile.name,
+      call: profile.call.reduce((a, i) => ({ ...a, [keyTransform(i)]: i }), {}),
+    }
+  };
+}
+
 export const HOSTS = {
   ABSTRACT_HOST: {
     NAME: "abstractHost"
@@ -67,9 +89,7 @@ export const HOSTS = {
   BOTTOM_BAR: {
     NAME: "bottomBar"
   },
-  DIALOG_2_HOST: {
-    NAME: "dialog2Host"
-  }
+  ...profileHost(dialogProfile),
 };
 
 export const PLUGINS = {
@@ -140,10 +160,7 @@ export const PLUGINS = {
       CHANGE_BOOKMARK: "changeBookmark"
     }
   },
-  DIALOG_2: {
-    NAME: "dialog2",
-    CALL: { OPEN: "open" }
-  },
+  ...profilePlugin(dialogProfile),
   ALERT: {
     NAME: "alert",
     CALL: {

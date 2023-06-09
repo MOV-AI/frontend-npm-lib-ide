@@ -1,7 +1,7 @@
 import i18n from "../i18n/i18n";
 import AppSettings from "../App/AppSettings";
 import { PLUGINS } from "../utils/Constants";
-import { dialog } from "../utils/noremix";
+import { dialog } from "../plugins/Dialog/Dialog";
 import movaiIconWhite from "../Branding/movai-logo-white.png";
 import { getHomeTab } from "../tools/HomeTab/HomeTab";
 import { getShortcutsTab } from "../tools/AppShortcuts/AppShortcuts";

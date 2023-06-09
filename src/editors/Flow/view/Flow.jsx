@@ -45,7 +45,8 @@ import { FLOW_VIEW_MODE, TYPES } from "./Constants/constants";
 import GraphBase from "./Core/Graph/GraphBase";
 import GraphTreeView from "./Core/Graph/GraphTreeView";
 import { getBaseContextOptions } from "./contextOptions";
-import { useRemix, call, dialog, subscribe, subscribeAll, useUpdate } from "./../../../utils/noremix";
+import { useRemix, call, subscribe, subscribeAll, useUpdate } from "./../../../utils/noremix";
+import { dialog } from "./../../../plugins/Dialog/Dialog";
 
 import "./Resources/css/Flow.css";
 import { flowStyles } from "./styles";

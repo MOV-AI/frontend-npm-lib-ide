@@ -19,7 +19,8 @@ import {
   SCOPES,
   DEFAULT_VALUE
 } from "../../../../../utils/Constants";
-import { call, dialog } from "../../../../../utils/noremix";
+import { call } from "../../../../../utils/noremix";
+import { dialog } from "../../../../../plugins/Dialog/Dialog";
 import ParameterEditorDialog from "../../../../_shared/KeyValueTable/ParametersEditorDialog";
 import MenuDetails from "./sub-components/MenuDetails";
 import PortsDetails from "./sub-components/PortsDetails";

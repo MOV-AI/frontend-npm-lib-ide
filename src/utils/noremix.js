@@ -63,11 +63,6 @@ function emit(name, ...args) {
 }
 
 export
-async function dialog(arg) {
-  return await call(PLUGINS.DIALOG_2.NAME, PLUGINS.DIALOG_2.CALL.OPEN, arg);
-}
-
-export
 function subscribe(name, event, callback) {
   const p = new Promise(resolve => setTimeout(() => {
     remixSub.data.value.on(name, event, callback);

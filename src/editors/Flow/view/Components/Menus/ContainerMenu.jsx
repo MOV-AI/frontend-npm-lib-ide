@@ -11,7 +11,7 @@ import {
   DIALOG_TITLE,
   DEFAULT_VALUE
 } from "../../../../../utils/Constants";
-import { dialog } from "../../../../../utils/noremix";
+import { dialog } from "../../../../../plugins/Dialog/Dialog";
 import ParameterEditorDialog from "../../../../_shared/KeyValueTable/ParametersEditorDialog";
 import KeyValuesSection from "./sub-components/collapsibleSections/KeyValuesSection";
 import MenuDetails from "./sub-components/MenuDetails";

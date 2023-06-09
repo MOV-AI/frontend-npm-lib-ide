@@ -75,14 +75,14 @@ class Canvas {
    * get mouse position
    */
   get mousePos() {
-    return this._mouse;
+    return this.mouse;
   }
 
   /**
    * Return mouse position in object with x and y
    */
   get mousePosition() {
-    return { x: this._mouse[0], y: this._mouse[1] };
+    return { x: this.mouse[0], y: this.mouse[1] };
   }
 
   /**
@@ -90,7 +90,7 @@ class Canvas {
    * @param {array} value [x,y] position in canvas
    */
   set mousePos(value) {
-    this._mouse = value;
+    this.mouse = value;
   }
 
   set hoveredNode(value) {
