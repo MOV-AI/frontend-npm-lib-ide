@@ -183,5 +183,18 @@ export const KEYBINDINGS = {
         SHORTCUTS: "enter"
       }
     }
+  },
+  MISC: {
+    NAME: "miscellaneous",
+    LABEL: i18n.t("MiscellaneousKeybindLabel"),
+    DESCRIPTION: i18n.t("MiscellaneousKeybindDescription"),
+    KEYBINDS: {
+      SEARCH_INPUT_PREVENT_SEARCH: {
+        NAME: "searchInputPreventSearch",
+        LABEL: i18n.t("SearchInputPreventSearch"),
+        DESCRIPTION: i18n.t("SearchInputPreventSearchKeybindDescription"),
+        SHORTCUTS: "ctrl+f"
+      }
+    }
   }
 };
