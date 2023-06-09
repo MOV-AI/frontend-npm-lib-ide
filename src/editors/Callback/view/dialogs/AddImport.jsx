@@ -9,7 +9,7 @@ import {
   DialogActions
 } from "@material-ui/core";
 import { PLUGINS } from "../../../../utils/Constants";
-import { call } from "../../../../utils/noremix";
+import { call, easySub, useSub } from "../../../../utils/noremix";
 import { withTheme } from "../../../../decorators/withTheme";
 import { DialogTitle } from "../../../../plugins/Dialog/components/AppDialog/AppDialog";
 import Loader from "../../../_shared/Loader/Loader";
@@ -24,13 +24,32 @@ const useStyles = makeStyles(_theme => ({
   }
 }));
 
+const libsSub = easySub({});
+const libsEmit = libsSub.easyEmit((scope, libs) => ({
+  ...libsSub.data.value,
+  [scope]: libs
+}));
+
+async function getLibs(scope) {
+  const ret = libsSub.data.value[scope];
+  if (ret)
+    return ret;
+
+  return await call(
+    PLUGINS.DOC_MANAGER.NAME,
+    PLUGINS.DOC_MANAGER.CALL.GET_STORE,
+    scope
+  ).then(store => store.helper.getAllLibraries())
+    .then(libs => libsEmit(scope, libs));
+}
+
 const AddImportDialog = props => {
   // Props
   const { open, scope, onClose, onSubmit } = props;
   // State hooks
   const [loading, setLoading] = useState(false);
-  const [pyLibs, setPyLibs] = useState();
-  const [filteredLibs, setFilteredLibs] = useState();
+  const libs = useSub(libsSub)?.[scope];
+  const [filteredLibs, setFilteredLibs] = useState(libs);
   const [selectedLibs, setSelectedLibs] = useState();
   // Style hook
   const classes = useStyles();
@@ -45,20 +64,10 @@ const AddImportDialog = props => {
 
   useEffect(() => {
     setLoading(true);
-    call(
-      PLUGINS.DOC_MANAGER.NAME,
-      PLUGINS.DOC_MANAGER.CALL.GET_STORE,
-      scope
-    ).then(store => {
-      store.helper.getAllLibraries().then(libs => {
-        if (libs) {
-          setPyLibs(libs);
-          setFilteredLibs(libs);
-        }
-        setLoading(false);
-      });
-    });
+    getLibs(scope).then(() => setLoading(false));
   }, [scope]);
+
+  useEffect(() => setFilteredLibs(libs), [libs]);
 
   //========================================================================================
   /*                                                                                      *
@@ -91,7 +100,7 @@ const AddImportDialog = props => {
    * @param {*} value
    */
   const onSearch = _debounce(value => {
-    const result = searchImports(value, pyLibs);
+    const result = searchImports(value, libs);
     setFilteredLibs(result);
   }, 500);
 
@@ -109,7 +118,7 @@ const AddImportDialog = props => {
     // Return loader if data is not ready
     if (loading) return <Loader />;
     // Return when data is ready or error message if not
-    return pyLibs ? (
+    return libs ? (
       <MaterialTree
         data={filteredLibs}
         onNodeSelect={onSelectLib}
