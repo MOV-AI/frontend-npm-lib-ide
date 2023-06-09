@@ -121,19 +121,16 @@ const ContainerMenu = props => {
     return dialog({
       onSubmit: handleSubmitParameter,
       title: t("EditParamType", { paramType }),
-      data: {
-        ...keyValueData,
-        varName: varName,
-        type: keyValueData.type ?? DATA_TYPES.ANY,
-        name: keyValueData.key,
-        paramType
-      },
+      ...keyValueData,
+      type: keyValueData.type ?? DATA_TYPES.ANY,
+      name: keyValueData.key,
+      paramType,
       showDefault: !viewOnly,
-      showValueOptions: true,
-      showDescription: !viewOnly,
-      disableName: true,
-      disableType: true,
-      disableDescription: true,
+      showValueOptions: true, // TODO?
+      showDescription: !viewOnly, // TODO?
+      disableName: true, // TODO?
+      disableType: true, // TODO?
+      disableDescription: true, // TODO?
       preventRenderType: varName !== TABLE_KEYS_NAMES.PARAMETERS,
       disabled: viewOnly,
       Dialog: ParameterEditorDialog,

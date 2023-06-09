@@ -142,7 +142,7 @@ const Menu = ({ name, model, details: detailsProp, editable }) => {
       onSubmit: formData => handleSubmitParameter(obj.name, formData),
       onValidation: newData => validateParamName(obj.name, newData),
       title: t("EditParamType", { paramType: t(DIALOG_TITLE.PARAMETERS) }),
-      data: obj,
+      ...obj,
       Dialog: ParametersEditorDialog
     });
   }, [model, validateParamName, handleSubmitParameter, t]);

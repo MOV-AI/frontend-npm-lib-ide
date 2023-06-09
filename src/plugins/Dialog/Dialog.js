@@ -71,14 +71,14 @@ function OtherDialogBase(props, ref) {
 
   const submit = useCallback(async (json, key) => {
     const errors = await onValidation(json);
-    const errorCount = Object.values(errors).reduce((a, b) => a.concat(b), []).length;
+    const errorCount = Object.values(errors ?? {}).reduce((a, b) => a.concat(b), []).length;
     if (errorCount)
       return setDialog(dialog => ({
         ...dialog,
         form: Object.entries(reform).reduce((a, [key, value]) => Object.assign(a, {
           [key]: {
             ...value,
-            errors: errors[key],
+            errors: errors[key] ?? [],
           },
         }), {}),
       }));
@@ -108,6 +108,7 @@ function OtherDialogBase(props, ref) {
     return (<Dialog
       onClose={handleClose}
       handleSubmit={handleSubmit}
+      form={reform}
       { ...dialog }
     />);
 
@@ -139,13 +140,13 @@ function OtherDialogBase(props, ref) {
       </Typography>
     ) }
 
-    { Object.entries(reform).map(([key, { label = "Value", placeholder = "", multiline, maxLength, errors = [], defaultValue, ...rest }]) => (
+    { Object.entries(reform).map(([key, { label = "Value", placeholder = "", multiline, maxLength, errors = [], defaultValue = dialog[key] ?? "", ...rest }]) => (
       <TextField
         autoFocus={rest.autoFocus} key={key + "-" + defaultValue} name={key} error={errors.length !== 0}
         helperText={errors}
         label={label}
         InputLabelProps={{ shrink: true }}
-        defaultValue={defaultValue ?? dialog[key] ?? ""}
+        defaultValue={defaultValue}
         placeholder={placeholder}
         multiline={multiline}
         inputProps={{

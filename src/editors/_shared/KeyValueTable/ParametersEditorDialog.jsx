@@ -40,13 +40,22 @@ const ParameterEditorDialog = props => {
     preventRenderType,
     showValueOptions,
     alert,
-    errors = {},
+    form = {
+      name: { label: t("Name") },
+      value: { label: t("Value") },
+      description: { label: t("Value") },
+    },
+    name,
+    value,
+    type = DATA_TYPES.ANY,
+    description,
   } = props;
 
-  const errorCount = Object.values(errors).reduce((a, b) => a.concat(b), []).length;
+  const errors = Object.values(form).reduce((a, b) => a.concat(b.errors ?? []), []);
+  const errorCount = errors.length;
 
   // Hooks
-  const [data, setData] = useState({});
+  const [data, setData] = useState({ name, value, description, type });
   const [valueOption, setValueOption] = useState(VALUE_OPTIONS.DEFAULT);
   const { t } = useTranslation();
   const classes = parametersDialogStyles();
@@ -65,13 +74,13 @@ const ParameterEditorDialog = props => {
    */
   const renderValue = useCallback(
     value => {
-      if (props.data.type === DATA_TYPES.STRING) {
+      if (data.type === DATA_TYPES.STRING) {
         return `"${value}"`;
       }
 
       return value;
     },
-    [props.data.type]
+    [data.type]
   );
 
   /**
@@ -138,12 +147,9 @@ const ParameterEditorDialog = props => {
       if (
         valueOption !== VALUE_OPTIONS.CUSTOM &&
         renderValue(options.defaultValue) !== value
-      ) {
+      )
         setValueOption(VALUE_OPTIONS.CUSTOM);
-      }
-      setData(prevState => {
-        return { ...prevState, value: value };
-      });
+      setData(prevState => ({ ...prevState, value: value }));
     },
     [valueOption]
   );
@@ -181,10 +187,11 @@ const ParameterEditorDialog = props => {
   const onValidation = useCallback(async formData => {
     const dataToValidate = {
       ...formData,
-      value:
+      value: (
         showValueOptions && valueOption === VALUE_OPTIONS.DEFAULT
-          ? DEFAULT_VALUE
-          : data.value,
+        ? DEFAULT_VALUE
+        : data.value
+      ) ?? form.value.defaultValue,
       type: data.type
     };
 
@@ -200,15 +207,12 @@ const ParameterEditorDialog = props => {
     if (!res.success)
       return [t(res.error ?? ERROR_MESSAGES.DATA_VALIDATION_FAILED)]; 
 
-    // Prepare data to submit
-    if (res.parsed)
-      data.value = res.parsed.toString();
-
     return [];
   }, [
     showValueOptions,
     valueOption,
     data,
+    form,
     alert,
     validate,
     customValidation,
@@ -237,13 +241,11 @@ const ParameterEditorDialog = props => {
       const options = { isPythonValue: true };
 
       getValidValue(type, data.value, options).then(newValue => {
-        setData(prevState => {
-          return {
-            ...prevState,
-            type,
-            value: newValue ?? prevState.value
-          };
-        });
+        setData(prevState => ({
+          ...prevState,
+          type,
+          value: newValue ?? prevState.value
+        }));
       });
     },
     [data, getValidValue]
@@ -257,18 +259,16 @@ const ParameterEditorDialog = props => {
     evt => {
       const opt = evt.target.value;
       setData(prevState => {
-        if (opt === VALUE_OPTIONS.DISABLED) {
+        if (opt === VALUE_OPTIONS.DISABLED)
           return { ...prevState, value: DISABLED_VALUE };
-        }
-        if (opt === VALUE_OPTIONS.DEFAULT || opt === VALUE_OPTIONS.CUSTOM) {
-          return { ...prevState, value: renderValue(props.data.defaultValue) };
-        }
+        if (opt === VALUE_OPTIONS.DEFAULT || opt === VALUE_OPTIONS.CUSTOM)
+          return { ...prevState, value: renderValue(value) };
         return prevState;
       });
 
       setValueOption(opt);
     },
-    [props.data.defaultValue, renderValue]
+    [value, renderValue]
   );
 
   //========================================================================================
@@ -278,10 +278,10 @@ const ParameterEditorDialog = props => {
   //========================================================================================
 
   useEffect(() => {
-    if (showValueOptions) setValueOption(getValueOption(props.data.value));
-
-    setData({ ...props.data, value: valueToRender(props.data) });
-  }, [props.data, showValueOptions, valueToRender, getValueOption]);
+    if (showValueOptions)
+      setValueOption(getValueOption(value));
+    setData(data => ({ ...data, value: valueToRender(props) }));
+  }, [showValueOptions, value, valueToRender, getValueOption, setValueOption, setData]);
 
   //========================================================================================
   /*                                                                                      *
@@ -300,6 +300,7 @@ const ParameterEditorDialog = props => {
         <InputLabel>{`${t("Type")} *`}</InputLabel>
         <Select
           fullWidth
+          name="type"
           value={data.type || DATA_TYPES.ANY}
           onChange={handleTypeChange}
           disabled={disableType || disabled}
@@ -428,7 +429,6 @@ const ParameterEditorDialog = props => {
 };
 
 ParameterEditorDialog.propTypes = {
-  data: PropTypes.object.isRequired,
   isNew: PropTypes.bool,
   disableType: PropTypes.bool,
   disabled: PropTypes.bool,

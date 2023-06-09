@@ -37,7 +37,9 @@ const KeyValueEditorDialog = props => {
     showDescription = true,
     showDefault = false,
     errors = {},
-    obj: { name = "", value = "", description = "" } = {}
+    name = "",
+    value = "",
+    description = "",
   } = props;
   // Other hooks
   const classes = keyValueEditorDialogStyles();

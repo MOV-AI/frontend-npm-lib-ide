@@ -74,36 +74,27 @@ export const Node = (props, ref) => {
    * @param {object} previousData : Previous data row
    * @returns {object} {result: <boolean>, error: <string>}
    **/
-  const validateName = useCallback(
-    (paramName, type, previousData) => {
-      const typeName = DIALOG_TITLE[type.toUpperCase()] ?? type;
-      const newName = paramName.name ?? paramName;
-      const re = type === "ports" ? ROS_VALID_NAMES : ROS_VALID_NAMES_VARIATION;
-      try {
-        if (!paramName)
-          throw new Error(
-            t(ERROR_MESSAGES.TYPE_NAME_IS_MANDATORY, { typeName })
-          );
-        else if (!re.test(newName)) {
-          throw new Error(t(ERROR_MESSAGES.INVALID_TYPE_NAME, { typeName }));
-        }
+  const validateName = useCallback((paramName, type, previousData) => {
+    const typeName = DIALOG_TITLE[type.toUpperCase()] ?? type;
+    const newName = paramName.name ?? paramName;
+    const re = type === "ports" ? ROS_VALID_NAMES : ROS_VALID_NAMES_VARIATION;
 
-        const previousName = previousData?.name ?? previousData;
-        // Validate against repeated names
-        const checkNewName = !previousName && data[type][newName];
-        const checkNameChanged =
-          previousName && previousName !== newName && data[type][newName];
+    if (!paramName)
+      return [t(ERROR_MESSAGES.TYPE_NAME_IS_MANDATORY, { typeName })];
+    else if (!re.test(newName))
+      return [t(ERROR_MESSAGES.INVALID_TYPE_NAME, { typeName })];
 
-        if (checkNameChanged || checkNewName) {
-          throw new Error(t(ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME));
-        }
-      } catch (error) {
-        return { result: false, error: error.message };
-      }
-      return { result: true, error: "" };
-    },
-    [data, t]
-  );
+    const previousName = previousData?.name ?? previousData;
+    // Validate against repeated names
+    const checkNewName = !previousName && data[type][newName];
+    const checkNameChanged =
+      previousName && previousName !== newName && data[type][newName];
+
+    if (checkNameChanged || checkNewName)
+      return [t(ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME)];
+
+    return [];
+  }, [data, t]);
 
   //========================================================================================
   /*                                                                                      *
@@ -130,9 +121,8 @@ export const Node = (props, ref) => {
 
       // Validate port name
       const validation = validateName(value.name, "ports", previousData);
-      if (!validation.result) {
-        throw new Error(validation.error);
-      }
+      if (validation.length)
+        return validation;
 
       // Check for transport/package/message
       if (!value.template)
@@ -192,9 +182,8 @@ export const Node = (props, ref) => {
         const dataToSave = { [keyName]: newData };
         // Validate port name
         const validation = validateName(keyName, varName, oldData.name);
-        if (!validation.result) {
-          throw new Error(validation.error);
-        }
+        if (!validation.length)
+          return validation;
         if (isNew) {
           // update key value
           instance.current?.setKeyValue(varName, dataToSave);
@@ -274,10 +263,9 @@ export const Node = (props, ref) => {
 
       return dialog({
         onSubmit: formData => updateKeyValue(param, formData, obj, isNew),
-        nameValidation: newData =>
-          Promise.resolve(validateName(newData, param, obj.name)),
+        onValidation: newData => ({ name: validateName(newData, param, obj.name) }),
         title: t("EditParamType", { paramType }),
-        data: obj,
+        ...obj,
         preventRenderType: param !== TABLE_KEYS_NAMES.PARAMETERS,
         Dialog: ParameterEditorDialog,
       });

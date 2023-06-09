@@ -221,13 +221,7 @@ const NodeMenu = memo(({ nodeInst, openDoc, editable, flowModel }) => {
     return dialog({
       onSubmit: handleSubmitParameter,
       title: t("EditParamType", { paramType }),
-      data: {
-        ...objData,
-        varName: param,
-        type: objData.type ?? DATA_TYPES.ANY,
-        name: objData.key,
-        paramType
-      },
+      ...objData,
       showDefault: !viewOnly,
       showValueOptions: true,
       showDescription: !viewOnly,
@@ -236,7 +230,6 @@ const NodeMenu = memo(({ nodeInst, openDoc, editable, flowModel }) => {
       disableDescription: true,
       preventRenderType: param !== TABLE_KEYS_NAMES.PARAMETERS,
       disabled: viewOnly,
-      type: "customDialog",
       Dialog: ParameterEditorDialog,
     });
   }, [handleSubmitParameter, t]);
