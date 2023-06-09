@@ -183,5 +183,26 @@ export const KEYBINDINGS = {
         SHORTCUTS: "enter"
       }
     }
+  },
+  MISC: {
+    NAME: "miscellaneous",
+    LABEL: i18n.t("MiscellaneousKeybindLabel"),
+    DESCRIPTION: i18n.t("MiscellaneousKeybindDescription"),
+    KEYBINDS: {
+      SEARCH_INPUT_PREVENT_SEARCH: {
+        NAME: "searchInputPreventSearch",
+        SCOPE: "flowSearchInput",
+        LABEL: i18n.t("SearchInputPreventSearch"),
+        DESCRIPTION: i18n.t("SearchInputPreventSearchKeybindDescription"),
+        SHORTCUTS: "ctrl+f"
+      },
+      SEARCH_INPUT_CLOSE: {
+        NAME: "searchInputClose",
+        SCOPE: "flowSearchInput",
+        LABEL: i18n.t("SearchInputClose"),
+        DESCRIPTION: i18n.t("SearchInputCloseKeybindDescription"),
+        SHORTCUTS: "esc"
+      }
+    }
   }
 };

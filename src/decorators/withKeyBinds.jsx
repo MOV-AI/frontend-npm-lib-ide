@@ -58,7 +58,7 @@ const withKeyBinds = Component => {
      * @param {*} key
      */
     const removeKeyBind = (keys, scope = scopeRef.current) => {
-      utilsRemoveKeyBind(keys, callback, scope);
+      utilsRemoveKeyBind(keys, scope);
     };
 
     /**

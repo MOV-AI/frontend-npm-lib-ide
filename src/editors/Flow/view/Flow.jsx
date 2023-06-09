@@ -22,6 +22,7 @@ import {
 } from "../../../utils/Constants";
 import Workspace from "../../../utils/Workspace";
 import { KEYBINDINGS } from "../../../utils/shortcuts";
+import { activateKeyBind } from "../../../utils/Utils";
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "../../../utils/Messages";
 import CallbackModel from "../../Callback/model/Callback";
 import Clipboard, { KEYS } from "./Utils/Clipboard";
@@ -64,6 +65,7 @@ export const Flow = (props, ref) => {
     addKeyBind,
     removeKeyBind,
     activateEditor,
+    activateKeyBind,
     deactivateEditor,
     confirmationAlert,
     contextOptions,
@@ -1294,20 +1296,22 @@ export const Flow = (props, ref) => {
   );
 
   const handleSearchEnabled = useCallback(
-    _e => {
+    e => {
+      e?.preventDefault();
       if (!searchVisible) setSearchVisible(true);
     },
     [searchVisible]
   );
 
   const handleSearchEnable = useCallback(e => {
-    e.preventDefault();
+    e?.preventDefault();
     setSearchVisible(true);
   }, []);
 
   const handleSearchDisabled = useCallback(() => {
     setSearchVisible(false);
-  }, []);
+    activateKeyBind();
+  }, [activateKeyBind]);
 
   const getContextOptions = useCallback(
     (mode, data, args) => {
@@ -1402,6 +1406,21 @@ export const Flow = (props, ref) => {
   }, [name, scope, viewMode, on, off, call, t]);
 
   useEffect(() => {
+    addKeyBind(
+      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SHORTCUTS,
+      evt => {
+        evt.preventDefault();
+      },
+      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SCOPE
+    );
+    addKeyBind(
+      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SHORTCUTS,
+      evt => {
+        evt.preventDefault();
+        handleSearchDisabled();
+      },
+      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SCOPE
+    );
     addKeyBind(KEYBINDINGS.FLOW.KEYBINDS.COPY_NODE.SHORTCUTS, handleCopyNode);
     addKeyBind(
       KEYBINDINGS.FLOW.KEYBINDS.PASTE_NODE.SHORTCUTS,
@@ -1423,6 +1442,10 @@ export const Flow = (props, ref) => {
     );
     // remove keyBind on unmount
     return () => {
+      removeKeyBind(
+        KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SHORTCUTS
+      );
+      removeKeyBind(KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SHORTCUTS);
       removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.COPY_NODE.SHORTCUTS);
       removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.PASTE_NODE.SHORTCUTS);
       removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.MOVE_NODE.SHORTCUTS);
@@ -1445,10 +1468,12 @@ export const Flow = (props, ref) => {
 
   useEffect(() => {
     if (searchVisible) {
-      return deactivateEditor();
+      return activateKeyBind(
+        KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SCOPE
+      );
     }
-    activateEditor();
-  }, [searchVisible, deactivateEditor, activateEditor]);
+    activateKeyBind();
+  }, [searchVisible, activateKeyBind]);
 
   //========================================================================================
   /*                                                                                      *
