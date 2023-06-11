@@ -62,10 +62,12 @@ const AddImportDialog = props => {
    *                                                                                      */
   //========================================================================================
 
-  useEffect(async () => {
-    setLoading(true);
-    await getLibs(scope);
-    setLoading(false);
+  useEffect(() => {
+    (async function () {
+      setLoading(true);
+      await getLibs(scope);
+      setLoading(false);
+    })();
   }, [scope]);
 
   useEffect(() => setFilteredLibs(libs), [libs]);

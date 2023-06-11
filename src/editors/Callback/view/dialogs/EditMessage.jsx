@@ -107,10 +107,12 @@ const EditMessageDialog = props => {
   /**
    * Component mounted
    */
-  useEffect(async () => {
-    setLoading(true);
-    await getMessages(scope);
-    setLoading(false);
+  useEffect(() => {
+    (async function () {
+      setLoading(true);
+      await getMessages(scope);
+      setLoading(false);
+    })()
   }, [scope]);
 
   useEffect(() => setFilteredMsg(messages), [messages]);

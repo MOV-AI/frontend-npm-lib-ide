@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { PLUGINS } from "./Constants";
 
 export
 function easySub(defaultData) {
