@@ -16,6 +16,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import Add from "@material-ui/icons/Add";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import Model from "../../../model/Flow";
+import i18n from "./../../../../../i18n/i18n";
 import useDataSubscriber from "../../../../../plugins/DocManager/useDataSubscriber";
 
 import { ERROR_MESSAGES } from "../../../../../utils/Messages";
@@ -96,13 +97,15 @@ const Menu = ({ name, model, details: detailsProp, editable }) => {
   const validateParamName = useCallback((oldName, newData) => {
     const { name: newName } = newData;
 
+    // why don't we export these already translated?
+    // We don't have to translate multiple times..
     if (!newName)
-      return [ERROR_MESSAGES.NAME_IS_MANDATORY];
+      return [i18n.t(ERROR_MESSAGES.NAME_IS_MANDATORY)];
     else if (!Utils.validateEntityName(newName, []))
-      return [ERROR_MESSAGES.INVALID_NAME];
+      return [i18n.t(ERROR_MESSAGES.INVALID_NAME)];
     // Validate against repeated names
     else if (oldName !== newName && model.current.getParameter(newName))
-      return [ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME];
+      return [i18n.t(ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME)];
     else
       return [];
   }, [model]);
@@ -140,7 +143,7 @@ const Menu = ({ name, model, details: detailsProp, editable }) => {
 
     return dialog({
       onSubmit: formData => handleSubmitParameter(obj.name, formData),
-      onValidation: newData => validateParamName(obj.name, newData),
+      onValidation: newData => ({ name: validateParamName(obj.name, newData) }),
       title: t("EditParamType", { paramType: t(DIALOG_TITLE.PARAMETERS) }),
       ...obj,
       Dialog: ParametersEditorDialog

@@ -36,7 +36,11 @@ const KeyValueEditorDialog = props => {
     disableDescription = false,
     showDescription = true,
     showDefault = false,
-    errors = {},
+    form = {
+      name: { label: t("Name") },
+      value: { label: t("Value") },
+      description: { label: t("Value") },
+    },
     name = "",
     value = "",
     description = "",
@@ -55,7 +59,8 @@ const KeyValueEditorDialog = props => {
           <Typography component="div" className={classes.container}>
             <TextField
               label={`${t("Name")} *`}
-              helperText={errors.name ?? ""}
+              helperText={form.name.errors ?? ""}
+              error={form.name.errors}
               name="name"
               defaultValue={name}
               autoFocus={isNew}
@@ -84,7 +89,8 @@ const KeyValueEditorDialog = props => {
               {renderValueEditor(value, {
                 isNew,
                 name: "value",
-                helperText: errors.value,
+                helperText: form.value?.errors,
+                error: form.value?.errors,
                 disabled: disabled,
                 defaultValue: value
               })}
@@ -114,7 +120,7 @@ const KeyValueEditorDialog = props => {
           <Button data-testid="input_close" onClick={onClose}>
             {t("Cancel")}
           </Button>
-          <Button type="submit" data-testid="input_confirm" color="primary" disabled={errors.name?.length}>
+          <Button type="submit" data-testid="input_confirm" color="primary" disabled={form.name.errors?.length}>
             {t("Save")}
           </Button>
         </DialogActions>
