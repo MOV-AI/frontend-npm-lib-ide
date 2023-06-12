@@ -140,9 +140,9 @@ function OtherDialogBase(props, ref) {
       </Typography>
     ) }
 
-    { Object.entries(reform).map(([key, { label = "Value", placeholder = "", multiline, maxLength, errors = [], defaultValue = dialog[key] ?? "", ...rest }]) => (
+    { Object.entries(reform).map(([key, { label = "Value", placeholder = "", multiline, maxLength, errors = [], defaultValue = dialog[key] ?? "", ...rest }], index) => (
       <TextField
-        autoFocus={rest.autoFocus} key={key + "-" + defaultValue} name={key} error={errors.length !== 0}
+        autoFocus={index === 0} key={key + "-" + defaultValue} name={key} error={errors.length !== 0}
         helperText={errors}
         label={label}
         InputLabelProps={{ shrink: true }}
