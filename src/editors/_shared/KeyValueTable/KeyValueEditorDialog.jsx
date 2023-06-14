@@ -60,7 +60,7 @@ const KeyValueEditorDialog = props => {
             <TextField
               label={`${t("Name")} *`}
               helperText={form.name.errors ?? ""}
-              error={form.name.errors}
+              error={form.name.errors?.length}
               name="name"
               defaultValue={name}
               autoFocus={isNew}
@@ -90,7 +90,7 @@ const KeyValueEditorDialog = props => {
                 isNew,
                 name: "value",
                 helperText: form.value?.errors,
-                error: form.value?.errors,
+                error: form.value?.errors?.length,
                 disabled: disabled,
                 defaultValue: value
               })}
@@ -120,7 +120,7 @@ const KeyValueEditorDialog = props => {
           <Button data-testid="input_close" onClick={onClose}>
             {t("Cancel")}
           </Button>
-          <Button type="submit" data-testid="input_confirm" color="primary" disabled={form.name.errors?.length}>
+          <Button type="submit" data-testid="input_confirm" color="primary">
             {t("Save")}
           </Button>
         </DialogActions>

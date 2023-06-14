@@ -72,19 +72,20 @@ function OtherDialogBase(props, ref) {
 
   const submit = useCallback(async (json, key) => {
     const errors = await onValidation(json);
-    const errorCount = Object.values(errors ?? {}).reduce((a, b) => a.concat(b), []).length;
-    if (errorCount) {
-      setDialog(dialog => ({
-        ...dialog,
-        form: Object.entries(reform).reduce((a, [key, value]) => Object.assign(a, {
-          [key]: {
-            ...value,
-            errors: errors[key] ?? [],
-          },
-        }), {}),
-      }));
+
+    setDialog(dialog => ({
+      ...dialog,
+      form: Object.entries(reform).reduce((a, [key, value]) => Object.assign(a, {
+        [key]: {
+          ...value,
+          errors: errors[key] ?? [],
+        },
+      }), {}),
+    }));
+
+    if (Object.values(errors ?? {}).reduce((a, b) => a.concat(b), []).length)
       return;
-    }
+
     onSubmit(json, key);
     resolve([json, key]);
     handleClose();
