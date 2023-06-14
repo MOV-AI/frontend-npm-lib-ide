@@ -41,7 +41,7 @@ import InvalidLinksWarning from "./Components/Warnings/InvalidLinksWarning";
 import InvalidParametersWarning from "./Components/Warnings/InvalidParametersWarning";
 import InvalidExposedPortsWarning from "./Components/Warnings/InvalidExposedPortsWarning";
 import { EVT_NAMES, EVT_TYPES } from "./events";
-import { FLOW_VIEW_MODE, TYPES, generateContainerId } from "./Constants/constants";
+import { FLOW_VIEW_MODE, TYPES } from "./Constants/constants";
 import GraphBase from "./Core/Graph/GraphBase";
 import GraphTreeView from "./Core/Graph/GraphTreeView";
 import { getBaseContextOptions } from "./contextOptions";
@@ -202,14 +202,6 @@ export const Flow = (props, ref) => {
    *                                        Helper                                        *
    *                                                                                      */
   //========================================================================================
-
-  /**
-   * Set mode
-   * @param {string} mode : Interface mode
-   */
-  const setMode = useCallback(mode => {
-    mainInterface.setMode(mode);
-  }, [mainInterface]);
 
   /**
    * Get the current node (from context menu) and all other selected nodes

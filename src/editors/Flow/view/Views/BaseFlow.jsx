@@ -36,13 +36,16 @@ const BaseFlow = props => {
   const viewMode = mainInterface?.viewMode ?? "default";
   const containerId = useMemo(() => `Flow-${name}`, [viewMode, name]);
 
+  if (!mainInterface) new MainInterface({
+    classes, modelView: instance, id: name, data: dataFromDB,
+    type, width: "400px", height: "200px", model, readOnly, call
+  });
+
   useEffect(() => {
-    if (!mainInterface)
-      new MainInterface({
-        classes, modelView: instance, id: name, data: dataFromDB,
-        type, width: "400px", height: "200px", model, readOnly, call
-      });
-  }, [mainInterface, classes, instance, name, dataFromDB, type, model, readOnly, call]);
+    if (mainInterface)
+      mainInterface.majorUpdate();
+    // the array is empty on purpose
+  }, []);
 
   // Enter in add node/sub-flow mode
   useEffect(() => {
