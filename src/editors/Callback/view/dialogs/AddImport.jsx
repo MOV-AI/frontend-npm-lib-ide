@@ -47,7 +47,6 @@ const AddImportDialog = props => {
   // Props
   const { open, scope, onClose, onSubmit } = props;
   // State hooks
-  const [loading, setLoading] = useState(false);
   const libs = useSub(libsSub)?.[scope];
   const [filteredLibs, setFilteredLibs] = useState(libs);
   const [selectedLibs, setSelectedLibs] = useState();
@@ -62,14 +61,7 @@ const AddImportDialog = props => {
    *                                                                                      */
   //========================================================================================
 
-  useEffect(() => {
-    (async function () {
-      setLoading(true);
-      await getLibs(scope);
-      setLoading(false);
-    })();
-  }, [scope]);
-
+  useEffect(() => { getLibs(scope) }, [scope]);
   useEffect(() => setFilteredLibs(libs), [libs]);
 
   //========================================================================================
@@ -119,7 +111,7 @@ const AddImportDialog = props => {
    */
   const renderTree = () => {
     // Return loader if data is not ready
-    if (loading) return <Loader />;
+    if (!libs) return <Loader />;
     // Return when data is ready or error message if not
     return libs ? (
       <MaterialTree
