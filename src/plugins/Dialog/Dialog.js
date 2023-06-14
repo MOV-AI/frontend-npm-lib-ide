@@ -29,6 +29,7 @@ function OtherDialogBase(props, ref) {
     message,
     Component = null,
     title = "",
+    key = "",
     showForm = true,
     form,
     children,
@@ -72,8 +73,8 @@ function OtherDialogBase(props, ref) {
   const submit = useCallback(async (json, key) => {
     const errors = await onValidation(json);
     const errorCount = Object.values(errors ?? {}).reduce((a, b) => a.concat(b), []).length;
-    if (errorCount)
-      return setDialog(dialog => ({
+    if (errorCount) {
+      setDialog(dialog => ({
         ...dialog,
         form: Object.entries(reform).reduce((a, [key, value]) => Object.assign(a, {
           [key]: {
@@ -82,6 +83,8 @@ function OtherDialogBase(props, ref) {
           },
         }), {}),
       }));
+      return;
+    }
     onSubmit(json, key);
     resolve([json, key]);
     handleClose();
@@ -158,7 +161,7 @@ function OtherDialogBase(props, ref) {
     )) }
   </>);
 
-  return (<BaseDialog open={open} onClose={handleClose}>
+  return (<BaseDialog key={key} open={open} onClose={handleClose}>
     <form onSubmit={handleSubmit} style={{ position: "relative" }}>
       <DialogTitle disableTypography>
         <Typography variant="h6">{ title }</Typography>

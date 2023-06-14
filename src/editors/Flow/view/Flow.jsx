@@ -45,7 +45,8 @@ import { FLOW_VIEW_MODE, TYPES } from "./Constants/constants";
 import GraphBase from "./Core/Graph/GraphBase";
 import GraphTreeView from "./Core/Graph/GraphTreeView";
 import { getBaseContextOptions } from "./contextOptions";
-import { useRemix, call, subscribe, subscribeAll, useUpdate } from "./../../../utils/noremix";
+import { useSub, useRemix, call, subscribe, subscribeAll, useUpdate } from "./../../../utils/noremix";
+import { flowSub } from "./Components/interface/MainInterface";
 import { dialog } from "./../../../plugins/Dialog/Dialog";
 
 import "./Resources/css/Flow.css";
@@ -70,6 +71,8 @@ export const Flow = (props, ref) => {
     contextOptions,
   } = props;
   const update = useUpdate();
+  const mainInterface = useSub(flowSub)[name];
+  const viewMode = mainInterface?.viewMode ?? "default";
 
   useRemix(props);
 
@@ -92,14 +95,12 @@ export const Flow = (props, ref) => {
   );
 
   // State Hooks
-  const [loading, setLoading] = useState(true);
   const [dataFromDB, setDataFromDB] = useState();
   const [robotSelected, setRobotSelected] = useState("");
   const [runningFlow, setRunningFlow] = useState("");
   const [warnings, setWarnings] = useState([]);
   const [flowDebugging, setFlowDebugging] = useState();
   const [warningsVisibility, setWarningsVisibility] = useState(false);
-  const [viewMode, setViewMode] = useState(FLOW_VIEW_MODE.default);
   const [tooltipConfig, setTooltipConfig] = useState(null);
   const [contextMenuOptions, setContextMenuOptions] = useState(null);
   const [searchVisible, setSearchVisible] = useState(false);
@@ -111,8 +112,6 @@ export const Flow = (props, ref) => {
 
   // Refs
   const contextArgs = useRef(null);
-  const mainInterfaceRef = useRef();
-  const debounceSelection = useRef();
   const selectedNodeRef = useRef();
   const selectedLinkRef = useRef();
   const isEditableComponentRef = useRef(true);
@@ -137,10 +136,12 @@ export const Flow = (props, ref) => {
    * Should update everything related to flowDebugging here
    */
   useEffect(() => {
-    const graph = getMainInterface().graph;
+    if (!mainInterface)
+      return;
+    const graph = mainInterface.graph;
     graph.isFlowDebugging = flowDebugging;
     graph.reStrokeLinks();
-  }, [flowDebugging]);
+  }, [mainInterface, flowDebugging]);
 
   /**
    * Start node
@@ -203,19 +204,12 @@ export const Flow = (props, ref) => {
   //========================================================================================
 
   /**
-   * @private Get main interface instance
-   */
-  const getMainInterface = () => {
-    return mainInterfaceRef.current;
-  };
-
-  /**
    * Set mode
    * @param {string} mode : Interface mode
    */
   const setMode = useCallback(mode => {
-    getMainInterface().setMode(mode);
-  }, []);
+    mainInterface.setMode(mode);
+  }, [mainInterface]);
 
   /**
    * Get the current node (from context menu) and all other selected nodes
@@ -224,17 +218,17 @@ export const Flow = (props, ref) => {
   const getSelectedNodes = useCallback(() => {
     const node = contextArgs.current;
     const selectedNodesSet = new Set(
-      [node].concat(getMainInterface().selectedNodes)
+      [node].concat(mainInterface.selectedNodes)
     );
     return Array.from(selectedNodesSet).filter(el => el);
-  }, []);
+  }, [mainInterface]);
 
   /**
    * Get search options
    */
   const getSearchOptions = useCallback(() => {
-    return getMainInterface()?.graph.getSearchOptions() || [];
-  }, []);
+    return mainInterface?.graph.getSearchOptions() || [];
+  }, [mainInterface]);
 
   /**
    * Open document in new tab
@@ -296,11 +290,11 @@ export const Flow = (props, ref) => {
         }
       });
 
-      getMainInterface()
+      mainInterface
         .graph.clearInvalidExposedPorts(invalidExposedPorts)
         .validateFlow();
     },
-    [instance]
+    [instance, mainInterface]
   );
 
   /**
@@ -354,13 +348,13 @@ export const Flow = (props, ref) => {
     title: t("PasteNodeModel", { nodeModel: nodeToCopy.node.model }),
     onClose: setFlowsToDefault,
     onValidation: ({ name }) => ({
-      name: getMainInterface().graph.validator.validateNodeName(
+      name: mainInterface.graph.validator.validateNodeName(
         name,
         t(nodeToCopy.node.model)
       ),
     }),
-    onSubmit: ({ name }) => getMainInterface().pasteNode(name, nodeToCopy.node, position)
-  }), [setFlowsToDefault, getMainInterface, t]);
+    onSubmit: ({ name }) => mainInterface.pasteNode(name, nodeToCopy.node, position)
+  }), [setFlowsToDefault, mainInterface, t]);
 
   //========================================================================================
   /*                                                                                      *
@@ -492,7 +486,7 @@ export const Flow = (props, ref) => {
         title: t(FLOW_EXPLORER_PROFILE.title),
         view: explorerView.render({
           flowId: id,
-          mainInterface: getMainInterface()
+          mainInterface: mainInterface
         })
       };
     }
@@ -522,6 +516,7 @@ export const Flow = (props, ref) => {
     MENUS,
     id,
     name,
+    mainInterface,
     instance,
     props.data,
     getNodeMenuToAdd,
@@ -565,10 +560,8 @@ export const Flow = (props, ref) => {
   const onViewModeChange = useCallback(newViewMode => {
     if (!newViewMode || viewMode === newViewMode) return;
     isEditableComponentRef.current = newViewMode === FLOW_VIEW_MODE.default;
-    setViewMode(newViewMode);
-    setLoading(true);
-    setMode(EVT_NAMES.LOADING);
-  }, [viewMode, setMode]);
+    mainInterface.setViewMode(newViewMode);
+  }, [mainInterface, viewMode]);
 
   /**
    * Toggle Warnings
@@ -576,10 +569,10 @@ export const Flow = (props, ref) => {
   const onToggleWarnings = useCallback(() => {
     setWarningsVisibility(prevState => {
       const newVisibility = !prevState;
-      getMainInterface()?.onToggleWarnings({ data: newVisibility });
+      mainInterface?.onToggleWarnings({ data: newVisibility });
       return newVisibility;
     });
-  }, []);
+  }, [mainInterface]);
 
   /**
    * Update node active status
@@ -587,15 +580,15 @@ export const Flow = (props, ref) => {
    * @param {{activeFlow: string, isOnline: boolean}} robotStatus : Robot current status
    */
   const onNodeStatusUpdate = useCallback((nodeStatus, robotStatus) => {
-    getMainInterface()?.nodeStatusUpdated(nodeStatus, robotStatus);
-  }, []);
+    mainInterface?.nodeStatusUpdated(nodeStatus, robotStatus);
+  }, [mainInterface]);
 
   /**
    * Resets all node status
    */
   const onNodeCompleteStatusUpdated = useCallback(() => {
-    getMainInterface()?.resetAllNodeStatus();
-  }, []);
+    mainInterface?.resetAllNodeStatus();
+  }, [mainInterface]);
 
   //========================================================================================
   /*                                                                                      *
@@ -633,23 +626,22 @@ export const Flow = (props, ref) => {
    */
   const onNodeSelected = useCallback(
     node => {
-      clearTimeout(debounceSelection.current);
+      if (!mainInterface)
+        return;
       contextArgs.current = node;
-      debounceSelection.current = setTimeout(() => {
-        if (!node) {
-          unselectNode();
-        } else {
-          // We only want 1 selection at the time.
-          // So let's unselect links if any is selected
-          if (selectedLinkRef.current) onLinkSelected(null);
+      if (!node) {
+        unselectNode();
+      } else {
+        // We only want 1 selection at the time.
+        // So let's unselect links if any is selected
+        if (selectedLinkRef.current) onLinkSelected(null);
 
-          selectedNodeRef.current = node;
-          activeBookmark = MENUS.current.NODE.NAME;
-          addNodeMenu(node, true);
-        }
-      }, 300);
+        selectedNodeRef.current = node;
+        activeBookmark = MENUS.current.NODE.NAME;
+        addNodeMenu(node, true);
+      }
     },
-    [MENUS, addNodeMenu, unselectNode]
+    [MENUS, addNodeMenu, unselectNode, mainInterface]
   );
 
   /**
@@ -658,9 +650,11 @@ export const Flow = (props, ref) => {
    */
   const onLinkSelected = useCallback(
     link => {
+      if (!mainInterface)
+        return;
       activateEditor();
       selectedLinkRef.current = link;
-      getMainInterface().selectedLink = link;
+      mainInterface.selectedLink = link;
       if (!link) {
         call(
           PLUGINS.RIGHT_DRAWER.NAME,
@@ -669,7 +663,7 @@ export const Flow = (props, ref) => {
           activeBookmark
         );
       } else {
-        const currentMode = getMainInterface().mode.mode;
+        const currentMode = mainInterface.mode.mode;
         // We only want 1 selection at the time.
         // So let's unselect nodes if any is selected
         if (
@@ -677,9 +671,9 @@ export const Flow = (props, ref) => {
           currentMode.props.shiftKey
         ) {
           // If we're making multiple node selection we need to reset the mode
-          getMainInterface().setMode(EVT_NAMES.DEFAULT);
+          mainInterface.setMode(EVT_NAMES.DEFAULT);
           // Since we resetted the mode, we need to add back the selected link
-          getMainInterface().selectedLink = link;
+          mainInterface.selectedLink = link;
         } else if (selectedNodeRef.current) {
           // If we just selected 1 node, it's ok, let's just unselect it
           selectedNodeRef.current.selected = false;
@@ -692,7 +686,7 @@ export const Flow = (props, ref) => {
         addLinkMenu(link, true);
       }
     },
-    [MENUS, addLinkMenu]
+    [MENUS, addLinkMenu, mainInterface]
   );
 
   /**
@@ -701,8 +695,8 @@ export const Flow = (props, ref) => {
   const handleContextClose = useCallback(() => {
     contextArgs.current = null;
     setContextMenuOptions(null);
-    getMainInterface().setMode(EVT_NAMES.DEFAULT);
-  }, []);
+    mainInterface.setMode(EVT_NAMES.DEFAULT);
+  }, [mainInterface]);
 
   /**
    * Call broadcast method to emit event to all open flows
@@ -726,8 +720,6 @@ export const Flow = (props, ref) => {
    * Subscribe to mainInterface and canvas events
    */
   const onReady = useCallback(mainInterface => {
-    mainInterfaceRef.current = mainInterface;
-
     // Set the warning types to be used in the validations
     mainInterface.graph.validator.setWarningActions(
       WARNING_TYPES.INVALID_EXPOSED_PORTS,
@@ -751,11 +743,6 @@ export const Flow = (props, ref) => {
 
     // Subscribe to on loading exit (finish) event
     mainInterface.mode[EVT_NAMES.LOADING].onExit.subscribe(() => {
-      // Append the document frame to the canvas
-      mainInterface.canvas.appendDocumentFragment();
-      // Reposition all nodes and subflows
-      mainInterface.graph.updateAllPositions();
-      setLoading(false);
       // Set initial warning visibility value
       setWarningsVisibility(true);
     });
@@ -811,14 +798,14 @@ export const Flow = (props, ref) => {
                   : runningFlow && node.status)
               }
             },
-            viewMode
+            viewMode,
           })
         });
       }
     );
 
     mainInterface.mode[EVT_NAMES.ADD_NODE].onClick.subscribe(() => {
-      const mi = getMainInterface();
+      const mi = mainInterface;
       const name = mi.mode.current.props.node.data.name;
 
       return dialog({
@@ -835,7 +822,7 @@ export const Flow = (props, ref) => {
     });
 
     mainInterface.mode[EVT_NAMES.ADD_FLOW].onClick.subscribe(() => {
-      const mi = getMainInterface();
+      const mi = mainInterface;
       const name = mi.mode.current.props.node.data.name;
 
       return dialog({
@@ -846,7 +833,7 @@ export const Flow = (props, ref) => {
           name: mi.graph.validator.validateNodeName(name, t("SubFlow")),
         }),
         onClose: setFlowsToDefault,
-        onSubmit: ({ name }) => getMainInterface().addFlow(name)
+        onSubmit: ({ name }) => mainInterface.addFlow(name)
       });
     });
 
@@ -862,7 +849,7 @@ export const Flow = (props, ref) => {
         anchorPosition,
         options: getContextOptions(FLOW_CONTEXT_MODES.LINK, evtData, {
           handleDeleteLink,
-          viewMode
+          viewMode,
         })
       });
     });
@@ -882,7 +869,7 @@ export const Flow = (props, ref) => {
           evtData.position,
           {
             handlePasteNodes,
-            viewMode
+            viewMode,
           }
         )
       });
@@ -901,7 +888,7 @@ export const Flow = (props, ref) => {
         options: getContextOptions(FLOW_CONTEXT_MODES.PORT, evtData.port, {
           handleToggleExposedPort,
           handleOpenCallback,
-          viewMode
+          viewMode,
         })
       });
     });
@@ -951,7 +938,7 @@ export const Flow = (props, ref) => {
       && event.type === EVT_TYPES.LINK
     ))).subscribe(evtData => console.log("onLinkErrorMouseOver", evtData));
   }, [
-    viewMode,
+    mainInterface,
     runningFlow,
     getContextOptions,
     onNodeSelected,
@@ -961,7 +948,8 @@ export const Flow = (props, ref) => {
     invalidExposedPortsAlert,
     invalidContainersParamAlert,
     openDoc,
-    loading,
+    addKeyBind,
+    mainInterface,
     t
   ]);
 
@@ -1031,7 +1019,7 @@ export const Flow = (props, ref) => {
     async evt => {
       evt?.preventDefault?.();
       const position = (contextArgs.current =
-        getMainInterface().canvas.mousePosition);
+        mainInterface.canvas.mousePosition);
       const nodesToCopy = clipboard.read(KEYS.NODES_TO_COPY);
       if (!nodesToCopy) return;
 
@@ -1061,7 +1049,7 @@ export const Flow = (props, ref) => {
     // Callback to delete all nodes
     const callback = () => {
       selectedNodes.forEach(node => {
-        getMainInterface().deleteNode(node.data);
+        mainInterface.deleteNode(node.data);
       });
       unselectNode();
     };
@@ -1078,8 +1066,8 @@ export const Flow = (props, ref) => {
    */
   const handleDeleteLink = useCallback(() => {
     const link = selectedLinkRef.current ?? contextArgs.current;
-    link.id && getMainInterface().deleteLink(link.id);
-  }, []);
+    link.id && mainInterface.deleteLink(link.id);
+  }, [mainInterface]);
 
   /**
    * Triggers the correct deletion
@@ -1095,8 +1083,8 @@ export const Flow = (props, ref) => {
    */
   const handleToggleExposedPort = useCallback(() => {
     const port = contextArgs.current;
-    getMainInterface().toggleExposedPort(port);
-  }, []);
+    mainInterface.toggleExposedPort(port);
+  }, [mainInterface]);
 
   /**
    * Open Callback
@@ -1126,29 +1114,29 @@ export const Flow = (props, ref) => {
    * Handle zoom reset
    */
   const handleResetZoom = useCallback(_e => {
-    getMainInterface()?.onResetZoom();
-  }, []);
+    mainInterface?.onResetZoom();
+  }, [mainInterface]);
 
   /**
    * Handle Move Node
    */
   const handleMoveNode = useCallback(e => {
-    getMainInterface()?.onMoveNode(e);
-  }, []);
+    mainInterface?.onMoveNode(e);
+  }, [mainInterface]);
 
   /*
    * Handle search nodes
    */
   const handleSearchNode = useCallback(
     node => {
-      const mainInterface = getMainInterface();
+      const mainInterface = mainInterface;
       const nodeInstance = node && mainInterface.searchNode(node);
       if (!nodeInstance) return;
       nodeInstance.handleSelectionChange();
       mainInterface.onFocusNode(nodeInstance);
       deactivateEditor();
     },
-    [deactivateEditor]
+    [deactivateEditor, mainInterface]
   );
 
   const handleSearchEnabled = useCallback(
@@ -1202,10 +1190,10 @@ export const Flow = (props, ref) => {
       evt => {
         // evt ex.: {action: "setMode", value: EVT_NAMES.DEFAULT}
         const { action, value } = evt;
-        getMainInterface()?.[action](value);
+        mainInterface?.[action](value);
       }
     ]]);
-  }, [workspaceManager]);
+  }, [workspaceManager, mainInterface]);
 
   /**
    * Initialize data
@@ -1222,6 +1210,9 @@ export const Flow = (props, ref) => {
     PLUGINS.DOC_MANAGER.NAME,
     PLUGINS.DOC_MANAGER.ON.BEFORE_SAVE_DOC,
     docData => {
+      if (!mainInterface)
+        return;
+
       if (viewMode !== FLOW_VIEW_MODE.treeView || docData.doc.name !== name)
         return;
 
@@ -1231,7 +1222,7 @@ export const Flow = (props, ref) => {
           severity: ALERT_SEVERITIES.SUCCESS
         });
 
-      mainInterfaceRef.current.graph.subFlows.forEach(subFlow => call(
+      mainInterface.graph.subFlows.forEach(subFlow => call(
         PLUGINS.DOC_MANAGER.NAME,
         PLUGINS.DOC_MANAGER.CALL.SAVE,
         {
@@ -1244,7 +1235,7 @@ export const Flow = (props, ref) => {
         { ignoreNew: true, preventAlert: true }
       ));
     }
-  ), [name, scope, viewMode, t]);
+  ), [name, scope, viewMode, t, mainInterface]);
 
   useEffect(() => {
     addKeyBind(KEYBINDINGS.FLOW.KEYBINDS.COPY_NODE.SHORTCUTS, handleCopyNode);
@@ -1311,10 +1302,9 @@ export const Flow = (props, ref) => {
           alert={alert}
           confirmationAlert={confirmationAlert}
           scope={scope}
-          loading={loading}
+          loading={mainInterface ? mainInterface.loading : true}
           viewMode={viewMode}
           version={instance.current?.version}
-          mainInterface={mainInterfaceRef}
           canRun={hasNodesToStart()}
           onRobotChange={setRobotSelected}
           onStartStopFlow={onStartStopFlow}
@@ -1333,7 +1323,7 @@ export const Flow = (props, ref) => {
       <BaseFlow
         {...props}
         graphClass={baseFlowClass}
-        loading={loading}
+        loading={mainInterface ? mainInterface.loading : true}
         viewMode={viewMode}
         dataFromDB={dataFromDB}
         warnings={warnings}

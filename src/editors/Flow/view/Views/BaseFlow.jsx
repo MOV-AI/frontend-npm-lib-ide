@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useMemo, memo } from "react";
+import React, { useEffect, useMemo, memo } from "react";
 import PropTypes from "prop-types";
 import Backdrop from "@material-ui/core/Backdrop";
 import { PLUGINS, SCOPES } from "../../../../utils/Constants";
-import { generateContainerId } from "../Constants/constants";
 import { EVT_NAMES } from "../events";
 import Loader from "../../../_shared/Loader/Loader";
+import { useSub } from "../../../../utils/noremix";
+import MainInterface, { flowSub } from "../Components/interface/MainInterface";
 import Warnings from "../Components/Warnings/Warnings";
 import DependencyInfo from "../Components/Debugging/DependencyInfo";
-import useMainInterface from "./hooks/useMainInterface";
 import { useRemix, call, subscribe, useUpdate } from "./../../../../utils/noremix";
 
 import { baseFlowStyles } from "./styles";
@@ -24,8 +24,6 @@ const BaseFlow = props => {
     warningsVisibility,
     onReady,
     flowDebugging,
-    viewMode,
-    graphClass,
     loading
   } = props;
   const readOnly = false;
@@ -34,25 +32,17 @@ const BaseFlow = props => {
 
   // Other hooks
   const classes = baseFlowStyles();
-  const containerId = useMemo(
-    () => `${viewMode}-${generateContainerId(id)}`,
-    [viewMode, id]
-  );
+  const mainInterface = useSub(flowSub)[name];
+  const viewMode = mainInterface?.viewMode ?? "default";
+  const containerId = useMemo(() => `Flow-${name}`, [viewMode, name]);
 
-  const { mainInterface } = useMainInterface({
-    classes,
-    instance,
-    name,
-    data: dataFromDB,
-    graphCls: graphClass,
-    type,
-    width: "400px",
-    height: "200px",
-    containerId,
-    model,
-    readOnly,
-    call
-  }, [dataFromDB, graphClass]);
+  useEffect(() => {
+    if (!mainInterface)
+      new MainInterface({
+        classes, modelView: instance, id: name, data: dataFromDB,
+        type, width: "400px", height: "200px", model, readOnly, call
+      });
+  }, [mainInterface, classes, instance, name, dataFromDB, type, model, readOnly, call]);
 
   // Enter in add node/sub-flow mode
   useEffect(() => {
@@ -77,10 +67,10 @@ const BaseFlow = props => {
     });
 
     return unsub;
-  }, [dataFromDB]);
+  }, [dataFromDB, mainInterface]);
 
   // because this sets mainInterface stuff, if we put it in dependencies, we cause infinite re-render.
-  useEffect(() => { onReady(mainInterface); }, [onReady]);
+  useEffect(() => { mainInterface && onReady(mainInterface); }, [onReady, mainInterface]);
 
   return (
     <div id={`${viewMode}-${id}`} className={classes.flowContainer}>
