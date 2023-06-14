@@ -927,6 +927,7 @@ export const Flow = (props, ref) => {
     ))).subscribe(evtData => console.log("onLinkErrorMouseOver", evtData));
   }, [
     runningFlow,
+    viewMode,
     getContextOptions,
     onNodeSelected,
     onLinkSelected,
@@ -1150,7 +1151,7 @@ export const Flow = (props, ref) => {
 
       return contextOpts ?? baseContextOptions;
     },
-    [contextOptions]
+    [contextOptions, viewMode]
   );
 
   //========================================================================================
