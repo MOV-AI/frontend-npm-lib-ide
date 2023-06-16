@@ -46,7 +46,7 @@ function SelectScopeDialog(props) {
 }
 
 export const Node = (props, ref) => {
-  const { id, name, alert, instance, editable = true } = props;
+  const { id, name, instance, editable = true } = props;
 
   // Hooks
   const [protectedCallbacks, setProtectedCallbacks] = useState([]);
@@ -74,27 +74,20 @@ export const Node = (props, ref) => {
    * @param {object} previousData : Previous data row
    * @returns {object} {result: <boolean>, error: <string>}
    **/
-  const validateName = useCallback((paramName, type, previousData) => {
+  const validateName = useCallback((paramName, type) => {
     const typeName = DIALOG_TITLE[type.toUpperCase()] ?? type;
     const newName = paramName.name ?? paramName;
+    const previousData = instance.current[typeName].data.get(newName);
     const re = type === "ports" ? ROS_VALID_NAMES : ROS_VALID_NAMES_VARIATION;
 
     if (!paramName)
       return [t(ERROR_MESSAGES.TYPE_NAME_IS_MANDATORY, { typeName })];
-    else if (!re.test(newName))
+
+    if (!re.test(newName))
       return [t(ERROR_MESSAGES.INVALID_TYPE_NAME, { typeName })];
 
-    const previousName = previousData?.name ?? previousData;
-    // Validate against repeated names
-    const checkNewName = !previousName && data[type][newName];
-    const checkNameChanged =
-      previousName && previousName !== newName && data[type][newName];
-
-    if (checkNameChanged || checkNewName)
-      return [t(ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME)];
-
     return [];
-  }, [data, t]);
+  }, [t]);
 
   //========================================================================================
   /*                                                                                      *
@@ -115,39 +108,35 @@ export const Node = (props, ref) => {
   }, []);
 
   const setPort = useCallback((value, resolve, reject, previousData) => {
-    try {
-      // Trim name
-      value.name = value.name.trim();
+    // Trim name
+    value.name = value.name.trim();
 
-      // Validate port name
-      const validation = validateName(value.name, "ports", previousData);
-      if (validation.length)
-        return validation;
+    // Validate port name
+    const validation = validateName(value.name, "ports");
+    if (validation.length)
+      return reject(validation);
 
-      // Check for transport/package/message
-      if (!value.template)
-        throw new Error(t(ERROR_MESSAGES.NO_TRANSPORT_PROTOCOL_CHOSEN));
-      else if (!value.msgPackage)
-        throw new Error(ERROR_MESSAGES.NO_PACKAGE_CHOSEN);
-      else if (!value.message)
-        throw new Error(ERROR_MESSAGES.NO_MESSAGE_CHOSEN);
+    // Check for transport/package/message
+    if (!value.template)
+      return reject([t(ERROR_MESSAGES.NO_TRANSPORT_PROTOCOL_CHOSEN)]);
+    else if (!value.msgPackage)
+      return reject([ERROR_MESSAGES.NO_PACKAGE_CHOSEN]);
+    else if (!value.message)
+      return reject([ERROR_MESSAGES.NO_MESSAGE_CHOSEN]);
 
-      if (instance.current) {
-        if (previousData?.template === value.template) {
-          instance.current.updatePort(previousData.name, value);
-          return resolve();
-        } else instance.current.deletePort(value.id);
+    if (!instance.current)
+      return reject(["NoInstance"]);
 
-        const dataToSave = { [value.name]: value };
-        instance.current.setPort(dataToSave);
-        resolve();
-      }
-    } catch (err) {
-      // Show alert
-      alert({ message: err.message, severity: ALERT_SEVERITIES.ERROR });
-      // Reject promise
-      reject();
+    if (previousData?.template === value.template) {
+      instance.current.updatePort(previousData.name, value);
+      return resolve();
     }
+
+    instance.current.deletePort(value.id);
+
+    const dataToSave = { [value.name]: value };
+    instance.current.setPort(dataToSave);
+    resolve();
   }, []);
 
   const deletePort = useCallback((port, resolve) => {
@@ -188,7 +177,7 @@ export const Node = (props, ref) => {
         instance.current?.updateKeyValueItem(varName, newData, oldData.name);
       }
     },
-    [instance, alert]
+    [instance]
   );
 
   const deleteKeyValue = useCallback(
@@ -256,7 +245,7 @@ export const Node = (props, ref) => {
       return dialog({
         key: "NodeEditParam-" + obj.name,
         onSubmit: formData => updateKeyValue(param, formData, obj, isNew),
-        onValidation: newData => ({ name: validateName(newData, param, obj.name) }),
+        onValidation: newData => ({ name: validateName(newData, param) }),
         title: t("EditParamType", { paramType }),
         ...obj,
         preventRenderType: param !== TABLE_KEYS_NAMES.PARAMETERS,

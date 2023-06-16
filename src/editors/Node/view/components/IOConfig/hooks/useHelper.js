@@ -27,21 +27,19 @@ const useHelper = () => {
    * @returns {string} Formatted message
    */
   const getEffectiveMessage = (configRowData, direction, portName) => {
-    try {
-      const generalMsg = configRowData.message;
-      const generalPkg = configRowData.msgPackage;
-      const [receivedMsg1, receivedMsg2] =
-        configRowData[direction][portName].Message.split("&");
-      // If there is no "&" in the message
-      if (receivedMsg2 === undefined) {
-        return receivedMsg1;
-      } else {
-        return generalPkg + "/" + receivedMsg1 + generalMsg + receivedMsg2;
-      }
-    } catch (err) {
-      console.log(":: ERROR ::\n In replaceAmpersandWithMessage()", err);
-      return undefined;
-    }
+    const generalMsg = configRowData.message;
+    const generalPkg = configRowData.msgPackage;
+
+    if (!configRowData?.[direction]?.[portName]?.Message)
+      return;
+
+    const [receivedMsg1, receivedMsg2] = (configRowData[direction][portName].Message ?? []).split("&");
+
+    // If there is no "&" in the message
+    if (receivedMsg2 === undefined)
+      return receivedMsg1;
+
+    return generalPkg + "/" + receivedMsg1 + generalMsg + receivedMsg2;
   };
 
   return { getAllCallbacksWithMessage, getEffectiveMessage };
