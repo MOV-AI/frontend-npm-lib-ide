@@ -75,7 +75,6 @@ export default class GraphTreeView extends GraphBase {
     // Add root node to canvas
     try {
       // Let's add the start node to the list (so links know where to start)
-      this.addStartNode();
       await this._addRootNode(rootNodeData);
       this.rootNode.addToCanvas();
     } catch (e) {
