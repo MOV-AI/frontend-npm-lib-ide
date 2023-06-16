@@ -77,7 +77,6 @@ export const Node = (props, ref) => {
   const validateName = useCallback((paramName, type) => {
     const typeName = DIALOG_TITLE[type.toUpperCase()] ?? type;
     const newName = paramName.name ?? paramName;
-    const previousData = instance.current[typeName].data.get(newName);
     const re = type === "ports" ? ROS_VALID_NAMES : ROS_VALID_NAMES_VARIATION;
 
     if (!paramName)
