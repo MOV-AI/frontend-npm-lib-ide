@@ -4,7 +4,7 @@ import { Style } from "@mov-ai/mov-fe-lib-react";
 import { Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import DocManager from "../plugins/DocManager/DocManager";
-import { OtherDialog, OtherDialogHost, dialogProfile } from "../plugins/Dialog/Dialog";
+import { Dialog } from "../plugins/Dialog/Dialog";
 import Alerts from "../plugins/Alerts/Alerts";
 import BottomBar from "../plugins/hosts/BottomBar/BottomBar";
 import CentralPanel from "../plugins/hosts/CentralPanel/CentralPanel";
@@ -239,10 +239,6 @@ function installViewPlugins(dependencies) {
       profile: { name: PLUGINS.SYSTEM_BAR.NAME, location: HOSTS.TOP_BAR.NAME },
       factory: profile => new SystemBar(profile, cProps)
     },
-    {
-      profile: dialogProfile,
-      factory: profile => new OtherDialog(profile, cProps)
-    }
   ];
   plugins.forEach(pluginDescription => {
     const plugin = pluginDescription.factory(pluginDescription.profile);
@@ -286,7 +282,7 @@ function getHostedPlugins(classes) {
         ></BottomBar>
       </Grid>
       <AlertPanel hostName="alertPanel" />
-      <OtherDialogHost hostName={dialogProfile.location} />
+      <Dialog />
     </Grid>
   );
 }

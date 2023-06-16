@@ -443,7 +443,6 @@ export default class MainInterface {
 
       items.getItem(nodeName).setPosition(x, y);
     });
-    this.update();
   };
 
   onLinking = data => {

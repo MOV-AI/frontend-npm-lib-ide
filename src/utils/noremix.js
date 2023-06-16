@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 
+function identity(a) {
+  return a;
+}
+
 export
 function easySub(defaultData) {
   const subs = new Map();
@@ -20,8 +24,8 @@ function easySub(defaultData) {
     };
   }
 
-  function easyEmit(cb) {
-    return async (...args) => update(await cb(...args));
+  function easyEmit(cb = identity) {
+    return async (...args) => update(await cb(...args, valueMap.value));
   }
 
   return { update, subscribe, data: valueMap, easyEmit };
