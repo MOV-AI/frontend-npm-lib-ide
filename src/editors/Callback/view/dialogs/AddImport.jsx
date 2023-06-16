@@ -62,7 +62,7 @@ const AddImportDialog = props => {
   //========================================================================================
 
   useEffect(() => { getLibs(scope) }, [scope]);
-  useEffect(() => setFilteredLibs(libs), [libs]);
+  useEffect(() => { setFilteredLibs(libs) }, [libs]);
 
   //========================================================================================
   /*                                                                                      *
@@ -109,23 +109,16 @@ const AddImportDialog = props => {
    * Render Material Tree to select python lib
    * @returns {ReactElement}
    */
-  const renderTree = () => {
+  const treeEl = useMemo(() => {
     // Return loader if data is not ready
     if (!libs) return <Loader />;
     // Return when data is ready or error message if not
-    return libs ? (
-      <MaterialTree
-        data={filteredLibs}
-        onNodeSelect={onSelectLib}
-        multiSelect={true}
-      ></MaterialTree>
-    ) : (
-      <>
-        <h2>{t(ERROR_MESSAGES.SOMETHING_WENT_WRONG)}</h2>
-        <h3>{t("FailedToLoadLibraries")}</h3>
-      </>
-    );
-  };
+    return <MaterialTree
+      data={filteredLibs}
+      onNodeSelect={onSelectLib}
+      multiSelect={true}
+    />;
+  }, [libs, filteredLibs]);
 
   return (
     <Dialog
@@ -139,7 +132,7 @@ const AddImportDialog = props => {
       </DialogTitle>
       <DialogContent>
         <Search onSearch={onSearch} />
-        {renderTree()}
+        { treeEl }
       </DialogContent>
       <DialogActions>
         <Button data-testid="input_cancel" onClick={onClose}>

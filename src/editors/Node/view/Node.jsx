@@ -177,26 +177,18 @@ export const Node = (props, ref) => {
 
   const updateKeyValue = useCallback(
     (varName, newData, oldData, isNew) => {
-      try {
-        const keyName = newData.name;
-        const dataToSave = { [keyName]: newData };
-        // Validate port name
-        const validation = validateName(keyName, varName, oldData.name);
-        if (!validation.length)
-          return validation;
-        if (isNew) {
-          // update key value
-          instance.current?.setKeyValue(varName, dataToSave);
-        } else {
-          // add key value
-          instance.current?.updateKeyValueItem(varName, newData, oldData.name);
-        }
-      } catch (err) {
-        if (err.message)
-          alert({ message: err.message, severity: ALERT_SEVERITIES.ERROR });
+      const keyName = newData.name;
+      const dataToSave = { [keyName]: newData };
+      // Validate port name
+      if (isNew) {
+        // update key value
+        instance.current?.setKeyValue(varName, dataToSave);
+      } else {
+        // add key value
+        instance.current?.updateKeyValueItem(varName, newData, oldData.name);
       }
     },
-    [instance, alert, validateName]
+    [instance, alert]
   );
 
   const deleteKeyValue = useCallback(
@@ -262,6 +254,7 @@ export const Node = (props, ref) => {
       };
 
       return dialog({
+        key: "NodeEditParam-" + obj.name,
         onSubmit: formData => updateKeyValue(param, formData, obj, isNew),
         onValidation: newData => ({ name: validateName(newData, param, obj.name) }),
         title: t("EditParamType", { paramType }),
