@@ -475,8 +475,6 @@ export default class MainInterface {
         ? selectedNodes.push(node)
         : lodash.pull(selectedNodes, node);
     });
-
-    this.update();
   };
 
   onToggleWarnings = event => {
