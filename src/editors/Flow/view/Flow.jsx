@@ -785,41 +785,6 @@ export const Flow = (props, ref) => {
         }
       ),
 
-      mainInterface.mode[EVT_NAMES.ADD_NODE].onClick.subscribe(() => {
-        const mi = mainInterface;
-        const name = mi.mode.current.props.node.data.name;
-        console.log("ADD_NODE.onClick", name);
-
-        dialog({
-          key: "AddNode-" + name,
-          title: t("AddNode"),
-          submitText: t("Add"),
-          name,
-          onValidation: ({ name }) => ({ name: mi.graph.validator.validateNodeName(name, t("Node")) }),
-          onClose: setFlowsToDefault,
-          onSubmit: ({ name }) => {
-            console.log("AddNode onSubmit", name);
-            mi.addNode(name);
-          },
-        });
-      }),
-
-      mainInterface.mode[EVT_NAMES.ADD_FLOW].onClick.subscribe(() => {
-        const mi = mainInterface;
-        const name = mi.mode.current.props.node.data.name;
-
-        return dialog({
-          title: t("AddSubFlow"),
-          submitText: t("Add"),
-          name,
-          onValidation: ({ name }) => ({
-            name: mi.graph.validator.validateNodeName(name, t("SubFlow")),
-          }),
-          onClose: setFlowsToDefault,
-          onSubmit: ({ name }) => mainInterface.addFlow(name)
-        });
-      }),
-
       // Subscribe to link context menu events
       mainInterface.mode[EVT_NAMES.ON_LINK_CTX_MENU].onEnter.subscribe(evtData => {
         const anchorPosition = {

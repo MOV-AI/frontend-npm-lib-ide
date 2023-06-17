@@ -532,12 +532,7 @@ class Canvas {
     if (d3.event.shiftKey && this.mode.current.id === EVT_NAMES.SELECT_NODE)
       return;
 
-    const fn = this.mode.current.onClick ?? {
-      next: () => {
-        this.setMode(EVT_NAMES.DEFAULT, null, true);
-      }
-    };
-    fn.next();
+    this.mInterface.onCanvasClick(this.mode.current.id);
   };
 
   /**

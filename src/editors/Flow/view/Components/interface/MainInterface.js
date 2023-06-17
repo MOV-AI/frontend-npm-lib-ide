@@ -2,6 +2,8 @@ import lodash from "lodash";
 import { BehaviorSubject } from "rxjs";
 import { filter } from "rxjs/operators";
 import { easySub } from "../../../../../utils/noremix";
+import { dialog } from "../../../../../plugins/Dialog/Dialog";
+import i18n from "../../../../../i18n/i18n";
 import { NODE_TYPES, TYPES } from "../../Constants/constants";
 import { getNodeNameFromId } from "../../Core/Graph/Utils";
 import GraphBase from "../../Core/Graph/GraphBase";
@@ -210,6 +212,47 @@ export default class MainInterface {
       this.loading = false;
       this.majorUpdate();
     });
+  }
+
+  onAddNode() {
+    const name = this.mode.current.props.node.data.name;
+
+    return dialog({
+      key: "AddNode-" + name,
+      title: i18n.t("AddNode"),
+      submitText: i18n.t("Add"),
+      name,
+      onValidation: ({ name }) => ({ name: this.graph.validator.validateNodeName(name, i18n.t("Node")) }),
+      onClose: () => this.setMode(EVT_NAMES.DEFAULT),
+      onSubmit: ({ name }) => this.addNode(name),
+    });
+  }
+
+  onAddFlow() {
+    const name = this.mode.current.props.node.data.name;
+
+    return dialog({
+      title: i18n.t("AddSubFlow"),
+      submitText: i18n.t("Add"),
+      name,
+      onValidation: ({ name }) => ({
+        name: this.graph.validator.validateNodeName(name, i18n.t("SubFlow")),
+      }),
+      onClose: () => this.setMode(EVT_NAMES.DEFAULT),
+      onSubmit: ({ name }) => this.addFlow(name)
+    });
+  }
+
+  onCanvasClick(mode) {
+    switch (mode) {
+      case "addNode":
+        return this.onAddNode();
+      case "addFlow":
+        return this.onAddFlow();
+      default:
+        this.setMode(EVT_NAMES.DEFAULT);
+        return;
+    }
   }
 
   //========================================================================================
