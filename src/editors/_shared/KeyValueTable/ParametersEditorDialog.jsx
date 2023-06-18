@@ -372,11 +372,12 @@ const ParameterEditorDialog = props => {
    */
   const renderValueEditor = useCallback(
     (defaultValue, options) => {
+      const name = options.name ?? "value";
       const editComponent = getEditComponent(data.type);
       if (!editComponent) return <></>;
       return (
         <>
-          <input type="hidden" name="value" value={data.value} />
+          <input type="hidden" name={name} value={data.value} />
           {!options.isDefault && showValueOptions && renderValueOptions()}
           {!options.isDefault && valueOption === VALUE_OPTIONS.DISABLED ? (
             <p className={classes.disabledValue}>

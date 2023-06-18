@@ -109,7 +109,8 @@ const KeyValueEditorDialog = props => {
                   {renderValueEditor(value, {
                     isNew,
                     isDefault: true,
-                    disabled: true
+                    disabled: true,
+                    name: "default-value",
                   })}
                 </AccordionDetails>
               </Accordion>

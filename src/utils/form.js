@@ -11,6 +11,7 @@ const typeHandlers = {
     return (hiddenHandlers[el.getAttribute("data-hidden-type")] || (value => value))(value);
   },
   text: value => value,
+  radio: value => value,
   checkbox: value => value !== undefined,
 };
 
@@ -22,8 +23,10 @@ function formJson(form) {
   fd.forEach((value, key) => {
     const el = form.querySelector(`[name=${key}]`);
     console.assert(el);
-    const handler = typeHandlers[el.getAttribute("type") ?? "text"];
-    console.assert(handler);
+    const type = el.getAttribute("type") ?? "text";
+    const handler = typeHandlers[type];
+    if (!handler)
+      throw new Error("No handler for form type: " + type);
     obj[camelCaseKey(key)] = handler(value, el);
   });
 

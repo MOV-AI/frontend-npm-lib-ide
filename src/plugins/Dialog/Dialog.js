@@ -104,10 +104,10 @@ function Dialog() {
       return;
     }
 
-    onSubmit(json, key);
+    onSubmit(json, key, rest);
     resolve([json, key]);
     handleClose();
-  }, [handleClose, onSubmit, reform, resolve]);
+  }, [handleClose, onSubmit, reform, resolve, rest]);
 
   const handleSubmit = useCallback((e, key) => {
     e.preventDefault();
