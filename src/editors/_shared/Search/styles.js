@@ -16,6 +16,6 @@ export const searchStyles = makeStyles(theme => ({
   },
   iconButton: { padding: 10 },
   icon: {
-    color: theme.palette.primary.main
+    color: theme.palette?.primary?.main
   }
 }));

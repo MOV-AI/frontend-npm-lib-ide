@@ -9,7 +9,7 @@ export const dependencyInfoStyles = makeStyles(theme => ({
     border: "2px solid transparent",
     transition: "border-color .5s",
     "&:hover": {
-      borderColor: theme.palette.grey[500]
+      borderColor: theme.palette?.grey[500]
     },
     "& h3": {
       marginTop: "0",
@@ -24,7 +24,7 @@ export const dependencyInfoStyles = makeStyles(theme => ({
     "&.minified": {
       maxHeight: "35px",
       maxWidth: "70px",
-      borderColor: theme.palette.grey[50],
+      borderColor: theme.palette?.grey[50],
       "&:hover": {
         borderColor: "transparent"
       },
