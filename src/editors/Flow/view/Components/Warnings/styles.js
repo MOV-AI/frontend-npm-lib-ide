@@ -56,10 +56,10 @@ export const warningsStyles = makeStyles(theme => ({
     backgroundColor: green[600]
   },
   error: {
-    backgroundColor: theme.palette.error.dark
+    backgroundColor: theme.palette?.error?.dark
   },
   info: {
-    backgroundColor: theme.palette.primary.main
+    backgroundColor: theme.palette?.primary?.main
   },
   warning: {
     backgroundColor: amber[700]

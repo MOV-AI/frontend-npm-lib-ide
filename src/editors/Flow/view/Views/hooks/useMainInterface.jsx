@@ -1,57 +1,18 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 import MainInterface from "../../Components/interface/MainInterface";
 
-const useMainInterface = props => {
-  //========================================================================================
-  /*                                                                                      *
-   *                                         Hooks                                        *
-   *                                                                                      */
-  //========================================================================================
-
-  const mainInterface = useRef();
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                  Component Lifecycle                                 *
-   *                                                                                      */
-  //========================================================================================
+const useMainInterface = (props, deps = []) => {
+  const mi = useMemo(() => new MainInterface({
+    ...props,
+    id: props.name,
+    modelView: props.instance,
+  }), deps);
 
   useEffect(() => {
-    if (!props.data || props.containerId === mainInterface.current?.containerId)
-      return;
+    return () => mi.destroy();
+  }, [mi]);
 
-    const {
-      classes,
-      instance,
-      name,
-      data,
-      type,
-      width,
-      height,
-      containerId,
-      model,
-      readOnly,
-      call,
-      graphCls
-    } = props;
-
-    mainInterface.current = new MainInterface({
-      id: name,
-      modelView: instance,
-      type,
-      width,
-      height,
-      containerId,
-      model,
-      readOnly,
-      data,
-      classes,
-      call,
-      graphCls
-    });
-  }, [props]);
-
-  return { mainInterface };
+  return { mainInterface: mi };
 };
 
 export default useMainInterface;
