@@ -31,3 +31,4 @@
 - [FP-2364 - Flows without links to start node should only show "Save"](https://movai.atlassian.net/browse/FP-2364)
 - [FP-2427 - Update node instances when port messages change](https://movai.atlassian.net/browse/FP-2427)
 - [FP-2474 - Search node tool fails for big flows](https://movai.atlassian.net/browse/FP-2474)
+- [FP-2447 - Info tab closes when adding an import](https://movai.atlassian.net/browse/FP-2447)
