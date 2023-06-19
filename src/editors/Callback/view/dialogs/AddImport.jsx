@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import _debounce from "lodash/debounce";
 import { makeStyles } from "@material-ui/core/styles";
@@ -16,7 +16,6 @@ import Loader from "../../../_shared/Loader/Loader";
 import MaterialTree from "../../../_shared/MaterialTree/MaterialTree";
 import Search from "../../../_shared/Search/Search";
 import { EXCLUDED_PATHS, searchImports } from "./utils";
-import { ERROR_MESSAGES } from "../../../../utils/Messages";
 
 const useStyles = makeStyles(_theme => ({
   paper: {
