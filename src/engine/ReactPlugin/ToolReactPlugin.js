@@ -38,7 +38,7 @@ export function withToolPlugin(ReactComponent, methods = []) {
       return () => {
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
       };
-    }, []);
+    }, [off, on, profile.name]);
 
     return <RefComponent {...props} ref={ref} />;
   });
