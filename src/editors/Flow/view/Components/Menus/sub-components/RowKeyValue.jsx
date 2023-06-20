@@ -77,6 +77,7 @@ const RowKeyValue = ({
         return (
           <Typography
             component="div"
+            data-testid="param_value"
             className={`${classes.valueDefault} ${classes.valueContainer}`}
           >
             {getValue(row.defaultValue, row.type)}
@@ -86,6 +87,7 @@ const RowKeyValue = ({
         return (
           <Typography
             component="div"
+            data-testid="param_value"
             className={`${classes.valueNone} ${classes.valueContainer}`}
           >
             {getValue(row.defaultValue, row.type)}
@@ -93,7 +95,7 @@ const RowKeyValue = ({
         );
       } else {
         return (
-          <Typography component="div" className={classes.valueContainer}>
+          <Typography component="div" data-testid="param_value" className={classes.valueContainer}>
             {getValue(row.value, row.type)}
           </Typography>
         );
@@ -105,6 +107,7 @@ const RowKeyValue = ({
   return (
     <Typography component="div" className={classes.rowContainer}>
       <Typography
+        data-testid="param_key"
         component="div"
         className={`${classes.keyContainer} ${
           item.value === DISABLED_VALUE ? classes.valueNone : ""
