@@ -42,7 +42,7 @@ const MaterialTable = forwardRef((props, ref) => {
   const getRowStyle = (_, rowIndex) => {
     return (
       rowIndex % 2 !== 0 && {
-        backgroundColor: theme.nodeEditor.stripeColor
+        backgroundColor: theme.nodeEditor?.stripeColor
       }
     );
   };

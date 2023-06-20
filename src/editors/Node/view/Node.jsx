@@ -61,7 +61,7 @@ export const Node = (props, ref) => {
    * @returns {object} {result: <boolean>, error: <string>}
    **/
   const validateName = useCallback(
-    (paramName, type, previousData) => {
+    (paramName, type) => {
       const typeName = DIALOG_TITLE[type.toUpperCase()] ?? type;
       const newName = paramName.name ?? paramName;
       const re = type === "ports" ? ROS_VALID_NAMES : ROS_VALID_NAMES_VARIATION;
@@ -72,16 +72,6 @@ export const Node = (props, ref) => {
           );
         else if (!re.test(newName)) {
           throw new Error(t(ERROR_MESSAGES.INVALID_TYPE_NAME, { typeName }));
-        }
-
-        const previousName = previousData?.name ?? previousData;
-        // Validate against repeated names
-        const checkNewName = !previousName && data[type][newName];
-        const checkNameChanged =
-          previousName && previousName !== newName && data[type][newName];
-
-        if (checkNameChanged || checkNewName) {
-          throw new Error(t(ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME));
         }
       } catch (error) {
         return { result: false, error: error.message };
@@ -111,6 +101,9 @@ export const Node = (props, ref) => {
 
   const setPort = useCallback((value, resolve, reject, previousData) => {
     try {
+      if (!instance.current)
+        throw new Error("NoInstance");
+
       // Trim name
       value.name = value.name.trim();
 
@@ -128,16 +121,14 @@ export const Node = (props, ref) => {
       else if (!value.message)
         throw new Error(ERROR_MESSAGES.NO_MESSAGE_CHOSEN);
 
-      if (instance.current) {
-        if (previousData?.template === value.template) {
-          instance.current.updatePort(previousData.name, value);
-          return resolve();
-        } else instance.current.deletePort(value.id);
+      if (previousData?.template === value.template) {
+        instance.current.updatePort(previousData.name, value);
+        return resolve();
+      } else instance.current.deletePort(value.id);
 
-        const dataToSave = { [value.name]: value };
-        instance.current.setPort(dataToSave);
-        resolve();
-      }
+      const dataToSave = { [value.name]: value };
+      instance.current.setPort(dataToSave);
+      resolve();
     } catch (err) {
       // Show alert
       alert({ message: err.message, severity: ALERT_SEVERITIES.ERROR });
