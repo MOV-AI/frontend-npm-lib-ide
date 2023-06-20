@@ -31,12 +31,11 @@ export function withToolPlugin(ReactComponent, methods = []) {
      */
     useEffect(() => {
       PluginManagerIDE.resetBookmarks();
-      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async ({id}) => {
-        if(profile.name === id) PluginManagerIDE.resetBookmarks();
+      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async ({ id }) => {
+        if (profile.name === id) PluginManagerIDE.resetBookmarks();
       });
 
       return () => {
-        console.log(">>> debug toolplugin unsubscribe ACTIVE_TAB_CHANGE")
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
       };
     }, []);
