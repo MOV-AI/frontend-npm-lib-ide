@@ -34,3 +34,5 @@
 - [FP-2447 - Info tab closes when adding an import](https://movai.atlassian.net/browse/FP-2447)
 - [FP-2465 - Data-testids for IDE](https://movai.atlassian.net/browse/FP-2465)
 - [FP-2481 - Can't start a valid flow in tree view - Start link(s) not found](https://movai.atlassian.net/browse/FP-2481)
+- [FP-2473 - IDE Flows appear as running but nodes don't in tree view](https://movai.atlassian.net/browse/FP-2473)
+- [FP-2468 - Study performance decrease in tree view flow editor](https://movai.atlassian.net/browse/FP-2468)

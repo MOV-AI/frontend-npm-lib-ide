@@ -227,7 +227,7 @@ class BaseNode extends BaseNodeStruct {
       .create("svg")
       .attr(
         "id",
-        `${this.canvas.containerId}-${this.data.id || this.data.Template}`
+        `${this.canvas.mInterface.containerId}-${this.data.id || this.data.Template}`
       )
       .style("overflow", "visible")
       .attr("width", this.width + maxPadding)
@@ -246,7 +246,7 @@ class BaseNode extends BaseNodeStruct {
       .attr("width", this.width)
       .attr("height", this.height)
       .attr("class", convertTypeCss(this._template))
-      .attr("filter", `url(#shadow-${this.canvas.containerId})`)
+      .attr("filter", `url(#shadow-${this.canvas.mInterface.containerId})`)
       .attr("stroke", stroke.color.default)
       .attr("stroke-width", stroke.width.default);
 

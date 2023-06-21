@@ -25,8 +25,6 @@ class Monitoring extends Component {
   warnings = createRef();
   tooltip = createRef();
 
-  containerId = `baseTree-${Utils.randomId()}`;
-
   //========================================================================================
   /*                                                                                      *
    *                                    React lifecycle                                   *
@@ -194,7 +192,7 @@ class Monitoring extends Component {
         )}
         <div
           className={classes.flowCanvas}
-          id={this.containerId}
+          id={this.interface.containerId}
           ref={this.container}
         >
           <ReactResizeDetector

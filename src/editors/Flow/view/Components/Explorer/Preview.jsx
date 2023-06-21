@@ -1,16 +1,17 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef, useCallback, useMemo } from "react";
 import * as d3 from "d3";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Factory from "../Nodes/Factory";
-import { generateContainerId } from "../../Constants/constants";
+import { useSub, flowSub } from "./../interface/MainInterface";
 import { previewStyles } from "./styles";
 
 const Preview = props => {
   const { flowId, node, call } = props;
   const classes = previewStyles();
   const { t } = useTranslation();
-  const containerId = useRef(`preview_${generateContainerId(flowId)}`);
+  const mainInterface = useSub(flowSub)[flowId];
+  const containerId = useMemo(() => "preview_" + flowId, [flowId]);
   const svg = useRef(null);
 
   //========================================================================================
@@ -32,7 +33,8 @@ const Preview = props => {
       // Add temp node
       Factory.create(call, factoryOutput[scope], {
         canvas: {
-          containerId: containerId.current,
+          containerId,
+          mInterface: mainInterface,
           setMode: () => {
             /* empty */
           }
@@ -47,7 +49,7 @@ const Preview = props => {
           d3.select(obj.el)
             .append("svg:defs")
             .append("filter")
-            .attr("id", `shadow-${containerId.current}`)
+            .attr("id", `shadow-${containerId}`)
             .append("feDropShadow")
             .attr("dx", "1.5")
             .attr("dy", "1.5")
@@ -56,7 +58,7 @@ const Preview = props => {
         }
       });
     },
-    [call]
+    [call, mainInterface]
   );
 
   //========================================================================================
@@ -75,7 +77,7 @@ const Preview = props => {
   return (
     <div className={classes.previewHolder}>
       {!node.children && node.name ? (
-        <div id={containerId.current} ref={svg}></div>
+        <div id={containerId} ref={svg}></div>
       ) : (
         <p>{t("PreviewHelperText")}</p>
       )}
