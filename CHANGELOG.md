@@ -33,3 +33,4 @@
 - [FP-2474 - Search node tool fails for big flows](https://movai.atlassian.net/browse/FP-2474)
 - [FP-2447 - Info tab closes when adding an import](https://movai.atlassian.net/browse/FP-2447)
 - [FP-2465 - Data-testids for IDE](https://movai.atlassian.net/browse/FP-2465)
+- [FP-2466 - Persistent "add node" window](https://movai.atlassian.net/browse/FP-2466)
