@@ -344,7 +344,7 @@ class Canvas {
       .attr("height", this.maxMovingPixels)
       .attr("stroke", "black")
       .style("pointer-events", "all")
-      .on("click", _ => defaultFunction());
+      .on("click", () => defaultFunction());
     return this;
   };
 
@@ -360,7 +360,7 @@ class Canvas {
       .attr("height", this.maxMovingPixels)
       .attr("stroke", "black")
       .style("pointer-events", "all")
-      .on("click", _ => defaultFunction());
+      .on("click", () => defaultFunction());
 
     return this;
   };
@@ -704,11 +704,10 @@ class Canvas {
       .duration(750)
       .call(
         this.zoomBehavior.transform,
-        (d3.zoomIdentity
+        d3.zoomIdentity
           .translate(width / 2, height / 2)
-          .translate(- SCALE * xCoordinate, - SCALE * yCoordinate)
+          .translate(-SCALE * xCoordinate, -SCALE * yCoordinate)
           .scale(SCALE)
-        )
       );
   };
 }
