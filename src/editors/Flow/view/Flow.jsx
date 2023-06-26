@@ -158,11 +158,11 @@ export const Flow = (props, ref) => {
    */
   const startNode = useCallback(
     node => {
-      commandNode("RUN", node).then(() => {
+      commandNode("RUN", node, robotSelected).then(() => {
         node.statusLoading = true;
       });
     },
-    [commandNode]
+    [robotSelected, commandNode]
   );
 
   /**
@@ -171,11 +171,11 @@ export const Flow = (props, ref) => {
    */
   const stopNode = useCallback(
     node => {
-      commandNode("KILL", node).then(() => {
+      commandNode("KILL", node, robotSelected).then(() => {
         node.statusLoading = true;
       });
     },
-    [commandNode]
+    [robotSelected, commandNode]
   );
 
   /**
@@ -186,7 +186,7 @@ export const Flow = (props, ref) => {
    * @param {Function} callback : Success callback
    */
   const commandNode = useCallback(
-    (action, node) => {
+    (action, node, selectedRobot = robotSelected) => {
       const nodeNamePath = node.getNodePath();
       return Rest.cloudFunction({
         cbName: "backend.FlowTopBar",
@@ -194,7 +194,7 @@ export const Flow = (props, ref) => {
         args: {
           command: action,
           nodeName: nodeNamePath,
-          robotName: robotSelected
+          robotName: selectedRobot
         }
       })
         .then(res => {
