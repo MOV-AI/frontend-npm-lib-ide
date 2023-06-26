@@ -5,7 +5,7 @@ export const authParams = {
       url: "/token-auth/",
       method: "POST",
       status: 200,
-      response: _ => {
+      response: () => {
         // MUST BE A REAL TOKEN FROM MOVAI BE
         return {
           refresh_token: "",
@@ -18,7 +18,7 @@ export const authParams = {
       url: "/token-refresh/",
       method: "POST",
       status: 200,
-      response: _ => {
+      response: () => {
         return {
           access_token: ""
         };
@@ -28,7 +28,7 @@ export const authParams = {
       url: "/token-verify/",
       method: "POST",
       status: 200,
-      response: _ => {
+      response: () => {
         return {
           result: true
         };
@@ -38,7 +38,7 @@ export const authParams = {
       url: "/domains/",
       method: "GET",
       status: 200,
-      response: _ => {
+      response: () => {
         return {
           domains: ["internal"]
         };
