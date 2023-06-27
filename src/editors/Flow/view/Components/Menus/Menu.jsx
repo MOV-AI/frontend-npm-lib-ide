@@ -19,13 +19,14 @@ import Model from "../../../model/Flow";
 import useDataSubscriber from "../../../../../plugins/DocManager/useDataSubscriber";
 
 import { ERROR_MESSAGES } from "../../../../../utils/Messages";
-import { dialog } from "../../../../../utils/noremix";
 import {
   DEFAULT_KEY_VALUE_DATA,
   DATA_TYPES,
+  PLUGINS,
   TABLE_KEYS_NAMES,
   DIALOG_TITLE
 } from "../../../../../utils/Constants";
+import { validateDocumentName } from "../../../../../utils/Utils";
 import ParametersEditorDialog from "../../../../_shared/KeyValueTable/ParametersEditorDialog";
 import DetailsMenu from "../../../../_shared/DetailsMenu/DetailsMenu";
 import TableKeyValue from "./sub-components/TableKeyValue";
@@ -36,7 +37,7 @@ const ACTIVE_ITEM = {
   parameters: 2
 };
 
-const Menu = ({ name, model, details: detailsProp, editable }) => {
+const Menu = ({ name, model, details: detailsProp, editable, call }) => {
   // State hook
   const [activeItem, setActiveItem] = useState(0);
   const { data } = useDataSubscriber({
@@ -143,17 +144,28 @@ const Menu = ({ name, model, details: detailsProp, editable }) => {
    * Open dialog to edit/add new Parameter
    * @param {string} dataId : Unique identifier of item (undefined when not created yet)
    */
-  const handleParameterDialog = useCallback(dataId => {
-    const obj = model.current.getParameter(dataId) || DEFAULT_KEY_VALUE_DATA;
+  const handleParameterDialog = useCallback(
+    dataId => {
+      const obj = model.current.getParameter(dataId) || DEFAULT_KEY_VALUE_DATA;
+      const paramType = t(DIALOG_TITLE.PARAMETERS);
 
-    return dialog({
-      onSubmit: formData => handleSubmitParameter(obj.name, formData),
-      nameValidation: newData => validateParamName(obj.name, newData),
-      title: t("EditParamType", { paramType: t(DIALOG_TITLE.PARAMETERS) }),
-      data: obj,
-      Dialog: ParametersEditorDialog
-    });
-  }, [model, validateParamName, handleSubmitParameter, t]);
+      const args = {
+        onSubmit: formData => handleSubmitParameter(obj.name, formData),
+        nameValidation: newData => validateParamName(obj.name, newData),
+        title: t("EditParamType", { paramType }),
+        data: obj,
+        call
+      };
+
+      call(
+        PLUGINS.DIALOG.NAME,
+        PLUGINS.DIALOG.CALL.CUSTOM_DIALOG,
+        args,
+        ParametersEditorDialog
+      );
+    },
+    [model, validateParamName, handleSubmitParameter, call, t]
+  );
 
   //========================================================================================
   /*                                                                                      *
@@ -178,17 +190,18 @@ const Menu = ({ name, model, details: detailsProp, editable }) => {
   /**
    * Open dialog to edit flow description
    */
-  const handleEditDescriptionClick = useCallback(() => dialog({
-    title: t("EditDescription"),
-    form: {
-      value: {
-        label: "Description",
-        multiline: true,
-        defaultValue: model.current.getDescription(),
-      },
-    },
-    onSubmit: ({ value }) => model.current.setDescription(value),
-  }), [model, t]);
+  const handleEditDescriptionClick = useCallback(() => {
+    const args = {
+      size: "md",
+      multiline: true,
+      title: t("EditDescription"),
+      inputLabel: t("Description"),
+      value: model.current.getDescription(),
+      onSubmit: description => model.current.setDescription(description)
+    };
+
+    call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
+  }, [model, call, t]);
 
   /**
    * Handle Add new Parameter
@@ -213,15 +226,21 @@ const Menu = ({ name, model, details: detailsProp, editable }) => {
    * @param {string} key : parameter id to delete
    * @param {string} value : parameter value, to construct the confirm phrase
    */
-  const handleParamDelete = useCallback(({ key, value }) => dialog({
-    submitText: t("Delete"),
-    title: t("ConfirmDeleteParam", { paramName: key }),
-    onSubmit: () => model.current.deleteParameter(key),
-    message: t("ParameterDeleteConfirmationMessage", {
-      paramName: key,
-      value
-    })
-  }), [model, t]);
+  const handleParamDelete = useCallback(
+    ({ key, value }) => {
+      const args = {
+        submitText: t("Delete"),
+        title: t("ConfirmDeleteParam", { paramName: key }),
+        onSubmit: () => model.current.deleteParameter(key),
+        message: t("ParameterDeleteConfirmationMessage", {
+          paramName: key,
+          value
+        })
+      };
+      call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, args);
+    },
+    [model, call, t]
+  );
 
   /**
    * Handle Description Edit
@@ -355,6 +374,7 @@ Menu.propTypes = {
   name: PropTypes.string.isRequired,
   model: PropTypes.object.isRequired,
   details: PropTypes.object.isRequired,
+  call: PropTypes.func.isRequired,
   editable: PropTypes.bool
 };
 

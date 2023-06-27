@@ -17,12 +17,12 @@ import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Model from "../model/Callback";
+import { PLUGINS } from "../../../utils/Constants";
 import { withDataHandler } from "../../../plugins/DocManager/DataHandler";
 import useDataSubscriber from "../../../plugins/DocManager/useDataSubscriber";
 import DetailsMenu from "../../_shared/DetailsMenu/DetailsMenu";
 import AddImportDialog from "./dialogs/AddImport";
 import EditMessageDialog from "./dialogs/EditMessage";
-import { dialog } from "./../../../utils/noremix";
 
 import { menuStyles } from "./styles";
 
@@ -33,7 +33,7 @@ const ACTIVE_ITEM = {
 
 const Menu = props => {
   // Props
-  const { scope, name, instance, editable = true } = props;
+  const { call, scope, name, instance, editable = true } = props;
   // State hook
   const [activeItem, setActiveItem] = useState(0);
   // Other hooks
@@ -55,27 +55,36 @@ const Menu = props => {
    * Delete import from model
    * @param {*} pyLib
    */
-  const deleteImport = useCallback(pyLib => {
-    if (instance.current) instance.current.getPyLibs().deleteItem(pyLib.key);
-  }, [instance]);
+  const deleteImport = useCallback(
+    pyLib => {
+      if (instance.current) instance.current.getPyLibs().deleteItem(pyLib.key);
+    },
+    [instance]
+  );
 
   /**
    * Add Imports
    * @param {*} pyLibs
    */
-  const addImports = useCallback(value => {
-    if (instance.current) instance.current.getPyLibs().setData(value);
-    setActiveItem(ACTIVE_ITEM.IMPORTS);
-  }, [instance]);
+  const addImports = useCallback(
+    pyLibs => {
+      if (instance.current) instance.current.getPyLibs().setData(pyLibs);
+      setActiveItem(ACTIVE_ITEM.IMPORTS);
+    },
+    [instance]
+  );
 
   /**
    * Set message
    * @param {string} msg
    */
-  const setMessage = useCallback(value => {
-    if (instance.current) instance.current.setMessage(value);
-    setActiveItem(ACTIVE_ITEM.MESSAGE);
-  }, [instance]);
+  const setMessage = useCallback(
+    msg => {
+      if (instance.current) instance.current.setMessage(msg);
+      setActiveItem(ACTIVE_ITEM.MESSAGE);
+    },
+    [instance]
+  );
 
   //========================================================================================
   /*                                                                                      *
@@ -86,29 +95,45 @@ const Menu = props => {
   /**
    * Open dialog to set callback message
    */
-  const handleEditMessageClick = useCallback(evt => {
-    evt.stopPropagation();
+  const handleEditMessageClick = useCallback(
+    evt => {
+      evt.stopPropagation();
 
-    return dialog({
-      onSubmit: setMessage,
-      selectedMessage: data.message,
-      scope: scope,
-      Dialog: EditMessageDialog,
-    });
-  }, [scope, data.message, setMessage]);
+      call(
+        PLUGINS.DIALOG.NAME,
+        PLUGINS.DIALOG.CALL.CUSTOM_DIALOG,
+        {
+          onSubmit: setMessage,
+          selectedMessage: data.message,
+          scope: scope,
+          call: call
+        },
+        EditMessageDialog
+      );
+    },
+    [scope, data.message, call, setMessage]
+  );
 
   /**
    * Open dialog to add imports
    */
-  const handleAddImportsClick = useCallback(evt => {
-    evt.stopPropagation();
+  const handleAddImportsClick = useCallback(
+    evt => {
+      evt.stopPropagation();
 
-    return dialog({
-      onSubmit: addImports,
-      scope: scope,
-      Dialog: AddImportDialog,
-    });
-  }, [scope, addImports]);
+      call(
+        PLUGINS.DIALOG.NAME,
+        PLUGINS.DIALOG.CALL.CUSTOM_DIALOG,
+        {
+          onSubmit: addImports,
+          scope: scope,
+          call: call
+        },
+        AddImportDialog
+      );
+    },
+    [scope, addImports, call]
+  );
 
   /**
    * Handle expand/collapse action

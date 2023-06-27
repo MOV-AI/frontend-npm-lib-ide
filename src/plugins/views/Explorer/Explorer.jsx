@@ -5,20 +5,17 @@ import { Typography } from "@material-ui/core";
 import { withAlerts } from "../../../decorators";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { SUCCESS_MESSAGES } from "../../../utils/Messages";
-import { invalidDocName } from "../../../utils/Utils";
 import { PLUGINS, ALERT_SEVERITIES } from "../../../utils/Constants";
 import AppSettings from "../../../App/AppSettings";
 import ListItemsTreeWithSearch, {
   toggleExpandRow
 } from "./components/ListItemTree/ListItemsTreeWithSearch";
 import { explorerStyles } from "./styles";
-import { useRemix, call, dialog, subscribeAll } from "./../../../utils/noremix";
 
 const Explorer = props => {
-  const { alert } = props;
+  const { call, on, off, alert } = props;
   const classes = explorerStyles();
   const [data, setData] = useState([]);
-  useRemix(props);
 
   // to debug data
   window.ExplorerData = data;
@@ -124,77 +121,88 @@ const Explorer = props => {
    * Expand tree or open document depending on have children or not
    * @param {{id: String, deepness: String, url: String, name: String, scope: String}} node : Clicked node
    */
-  const requestScopeVersions = useCallback(node => {
-    if (node.children?.length) {
-      setData(toggleExpandRow(node, data));
-      return Promise.reject();
-    }
-
-    return call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
-      id: node.url,
-      name: node.name,
-      scope: node.scope
-    });
-  }, [data]);
+  const requestScopeVersions = useCallback(
+    node => {
+      if (node.children?.length) {
+        setData(toggleExpandRow(node, data));
+      } else {
+        call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
+          id: node.url,
+          name: node.name,
+          scope: node.scope
+        });
+      }
+    },
+    [data, call]
+  );
 
   /**
    * Handle click to copy document
    * @param {{name: string, scope: string}} node : Clicked document node
    */
-  const handleCopy = useCallback(node => dialog({
-    ...node,
-    form: {
-      name: {
-        label: "Name",
-        placeholder: "Name",
-        defaultValue: `${node.name}_copy`,
-      }
+  const handleCopy = useCallback(
+    node => {
+      const { name, scope } = node;
+      call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.COPY_DOC, {
+        scope,
+        name,
+        onSubmit: newName =>
+          new Promise(resolve => {
+            call(
+              PLUGINS.DOC_MANAGER.NAME,
+              PLUGINS.DOC_MANAGER.CALL.COPY,
+              { name, scope },
+              newName
+            ).then(copiedDoc => {
+              resolve();
+              // Open copied document
+              requestScopeVersions({
+                scope,
+                deepness: 1,
+                name: copiedDoc.getName(),
+                url: copiedDoc.getUrl()
+              });
+            });
+          })
+      });
     },
-    onValidation: async json => ({ name: await invalidDocName(node.scope, json) }),
-    title: t("CopyDocTo", { docName: node.name }),
-    submitText: t("Copy"),
-    onSubmit: ({ name }) => call(
-      PLUGINS.DOC_MANAGER.NAME,
-      PLUGINS.DOC_MANAGER.CALL.COPY,
-      node,
-      name
-    ).then(copiedDoc => requestScopeVersions({
-      scope: node.scope,
-      deepness: 1,
-      name: copiedDoc.getName(),
-      url: copiedDoc.getUrl()
-    })),
-    onSubmit: ({ name }) => call(
-      PLUGINS.DOC_MANAGER.NAME,
-      PLUGINS.DOC_MANAGER.CALL.COPY,
-      node,
-      name
-    ).then(copiedDoc => requestScopeVersions({
-      scope: node.scope,
-      deepness: 1,
-      name: copiedDoc.getName(),
-      url: copiedDoc.getUrl()
-    })),
-  }), [requestScopeVersions, t]);
+    [call, requestScopeVersions]
+  );
 
   /**
    * Handle click to delete document
    * @param {{name: string, scope: string}} node : Clicked document node
    */
-  const handleDelete = useCallback(node => dialog({
-    submitText: t("Delete"),
-    title: t("DeleteDocConfirmationTitle"),
-    onSubmit: () => call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.DELETE, node).then(res => {
-      console.warn("Debug document deleted", res);
-      alert({
-        message: t(SUCCESS_MESSAGES.DOC_DELETE_SUCCESSFULLY, { docName: node.name }),
-        severity: ALERT_SEVERITIES.SUCCESS
+  const handleDelete = useCallback(
+    node => {
+      const { name, scope } = node;
+      call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, {
+        submitText: t("Delete"),
+        title: t("DeleteDocConfirmationTitle"),
+        onSubmit: () =>
+          call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.DELETE, {
+            name,
+            scope
+          })
+            .then(res => {
+              console.warn("Debug document deleted", res);
+              alert({
+                message: t(SUCCESS_MESSAGES.DOC_DELETE_SUCCESSFULLY, {
+                  docName: name
+                }),
+                severity: ALERT_SEVERITIES.SUCCESS
+              });
+            })
+            .catch(error =>
+              console.warn(
+                `Could not delete ${name} \n ${error.statusText ?? error}`
+              )
+            ),
+        message: t("DeleteDocConfirmationMessage", { docName: name })
       });
-    }).catch(error => console.warn(
-      `Could not delete ${node.name} \n ${error.statusText ?? error}`
-    )),
-    message: t("DeleteDocConfirmationMessage", { docName: node.name })
-  }), [t]);
+    },
+    [call, t]
+  );
 
   //========================================================================================
   /*                                                                                      *
@@ -252,19 +260,30 @@ const Explorer = props => {
    *                                                                                      */
   //========================================================================================
 
-  useEffect(() => subscribeAll([[
-    PLUGINS.DOC_MANAGER.NAME,
-    PLUGINS.DOC_MANAGER.ON.LOAD_DOCS,
-    loadDocs
-  ], [
-    PLUGINS.DOC_MANAGER.NAME,
-    PLUGINS.DOC_MANAGER.ON.UPDATE_DOCS,
-    updateDocs
-  ], [
-    PLUGINS.DOC_MANAGER.NAME,
-    PLUGINS.DOC_MANAGER.ON.DELETE_DOC,
-    data => deleteDocument({ documentName: data.name, documentType: data.scope })
-  ]]), [loadDocs, updateDocs]);
+  useEffect(() => {
+    // Ugly but needed to compensate for what we believe to be a bug on the
+    // Remixproject library. The on function is being called on mount with
+    // Previously used data.
+    let mounting = true;
+    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.LOAD_DOCS, loadDocs);
+    on(
+      PLUGINS.DOC_MANAGER.NAME,
+      PLUGINS.DOC_MANAGER.ON.UPDATE_DOCS,
+      updateDocs
+    );
+    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.DELETE_DOC, data => {
+      if (mounting) return;
+      deleteDocument({ documentName: data.name, documentType: data.scope });
+    });
+
+    mounting = false;
+
+    return () => {
+      off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.LOAD_DOCS);
+      off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.UPDATE_DOCS);
+      off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.DELETE_DOC);
+    };
+  }, [on, loadDocs, updateDocs]);
 
   //========================================================================================
   /*                                                                                      *
@@ -299,6 +318,5 @@ export default withViewPlugin(withAlerts(Explorer));
 
 Explorer.propTypes = {
   call: PropTypes.func.isRequired,
-  on: PropTypes.func.isRequired,
-  off: PropTypes.func.isRequired
+  on: PropTypes.func.isRequired
 };

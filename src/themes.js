@@ -81,7 +81,7 @@ const overrideTheme = {
       interfaceColor: "#afafaf"
     },
     layoutEditor: {
-      background: Themes.light?.palette?.background?.primary,
+      background: Themes.light.palette.background.primary,
       gridItemDev: "lightgrey",
       gridItemPreview: commonColors.white,
       itemBoxColor: "#3e3e3e",

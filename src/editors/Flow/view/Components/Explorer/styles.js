@@ -21,6 +21,6 @@ export const previewStyles = makeStyles(theme => ({
   previewHolder: {
     padding: "20px",
     height: "60px",
-    borderBottom: `1px dashed ${theme.icon?.color ?? "black"}`
+    borderBottom: `1px dashed ${theme?.icon?.color ?? "black"}`
   }
 }));

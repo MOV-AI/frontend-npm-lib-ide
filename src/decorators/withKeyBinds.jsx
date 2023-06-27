@@ -1,13 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import hotkeys from "hotkeys-js";
 import { KEYBINDINGS } from "../utils/shortcuts";
-import {
-  getRefComponent,
-  addKeyBind as utilsAddKeyBind,
-  removeKeyBind as utilsRemoveKeyBind,
-  activateKeyBind,
-  deactivateKeyBind
-} from "../utils/Utils";
+import { KEYBIND_SCOPES } from "../utils/Constants";
+import { getRefComponent, parseKeybinds } from "../utils/Utils";
 
 /**
  * By default hotkeys are not enabled for INPUT SELECT TEXTAREA elements.
@@ -36,12 +31,19 @@ const withKeyBinds = Component => {
     const scopeRef = useRef();
 
     /**
-     * Activate Editor's Keybinds
-     * @param {*} keys
-     * @param {*} callback
+     * Activate scope shortcuts.
+     * This will automatically deactivate all other scopes
      */
-    const activateEditorKeybind = (scope = scopeRef.current) => {
-      activateKeyBind(scope);
+    const activateKeyBind = (scope = scopeRef.current) => {
+      hotkeys.setScope(scope);
+    };
+
+    /**
+     * Set scope to global
+     *  This will deactivate the current scope
+     */
+    const deactivateKeyBind = () => {
+      hotkeys.setScope(KEYBIND_SCOPES.APP);
     };
 
     /**
@@ -50,7 +52,10 @@ const withKeyBinds = Component => {
      * @param {*} callback
      */
     const addKeyBind = (keys, callback, scope = scopeRef.current) => {
-      utilsAddKeyBind(keys, callback, scope);
+      if (!scope) return;
+      const keysToBind = parseKeybinds(keys);
+      activateKeyBind(scope);
+      hotkeys(keysToBind, scope, callback);
     };
 
     /**
@@ -58,7 +63,8 @@ const withKeyBinds = Component => {
      * @param {*} key
      */
     const removeKeyBind = (keys, scope = scopeRef.current) => {
-      utilsRemoveKeyBind(keys, scope);
+      const keysToUnbind = parseKeybinds(keys);
+      hotkeys.unbind(keysToUnbind, scope);
     };
 
     /**
@@ -78,7 +84,7 @@ const withKeyBinds = Component => {
         ref={ref}
         addKeyBind={addKeyBind}
         removeKeyBind={removeKeyBind}
-        activateKeyBind={activateEditorKeybind}
+        activateKeyBind={activateKeyBind}
         deactivateKeyBind={deactivateKeyBind}
       />
     );
