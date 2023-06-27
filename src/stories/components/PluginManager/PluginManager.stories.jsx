@@ -3,10 +3,15 @@ import PluginManagerIDE from "../../../engine/PluginManagerIDE/PluginManagerIDE"
 import { Button, withNotification } from "@mov-ai/mov-fe-lib-react";
 import { ALERT_SEVERITIES, PLUGINS } from "../../../utils/Constants";
 import Alerts from "../../../plugins/Alerts/Alerts";
+import Dialog from "../../../plugins/Dialog/Dialog";
 
 const TestPluginManager = props => {
   useEffect(() => {
     const plugins = [
+      {
+        profile: { name: PLUGINS.DIALOG.NAME },
+        factory: profile => new Dialog(profile)
+      },
       {
         profile: { name: PLUGINS.ALERT.NAME },
         factory: profile => new Alerts(profile)
@@ -27,15 +32,18 @@ const TestPluginManager = props => {
 
   const showDialog = () => {
     const Component = () => <h2>Hello World</h2>;
-
-    dialog({
-      Component,
-      title: "Dialog Title",
-      message: "My dialog long text description:",
-      onSubmit: () => {
-        alert("Hello world!")
-      }
-    });
+    PluginManagerIDE.call(
+      PLUGINS.DIALOG.NAME,
+      PLUGINS.DIALOG.CALL.CUSTOM,
+      {
+        title: "Dialog Title",
+        message: "My dialog long text description:",
+        onSubmit: () => {
+          alert("Hello world!")
+        }
+      },
+      Component
+    );
   };
 
   return (

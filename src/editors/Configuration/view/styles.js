@@ -17,9 +17,9 @@ export const configurationStyles = makeStyles(theme => ({
   },
   appBar: {
     background: theme.palette.background.default,
-    color: theme.palette?.text?.primary,
+    color: theme.palette.text.primary,
     "& button span": {
-      color: theme.palette?.text?.primary
+      color: theme.palette.text.primary
     }
   }
 }));

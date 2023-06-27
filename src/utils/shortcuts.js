@@ -10,22 +10,19 @@ export const KEYBINDINGS = {
         NAME: "openWelcomeTab",
         LABEL: i18n.t("HomeTabTitle"),
         DESCRIPTION: i18n.t("HomeTabKeybindDescription"),
-        SHORTCUTS: "ctrl+alt+home",
-        DEFAULT_CALLBACK: "openWelcomeTab"
+        SHORTCUTS: "ctrl+alt+home"
       },
       OPEN_SHORTCUTS_TAB: {
         NAME: "openShortcutsTab",
         LABEL: i18n.t("ShortcutsTabTitle"),
         DESCRIPTION: i18n.t("ShortcutsTabKeybindDescription"),
-        SHORTCUTS: "ctrl+alt+k",
-        DEFAULT_CALLBACK: "openShortcutsTab"
+        SHORTCUTS: "ctrl+alt+k"
       },
       SAVE_ALL: {
         NAME: "saveAll",
         LABEL: i18n.t("SaveAllDocs"),
         DESCRIPTION: i18n.t("SaveAllDocsKeybindDescription"),
-        SHORTCUTS: "ctrl+alt+s",
-        DEFAULT_CALLBACK: "saveAllDocument"
+        SHORTCUTS: "ctrl+alt+s"
       }
     }
   },

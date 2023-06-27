@@ -6,9 +6,8 @@ import DescriptionIcon from "@material-ui/icons/Description";
 import DeviceHubIcon from "@material-ui/icons/DeviceHub";
 import KeyboardIcon from "@material-ui/icons/Keyboard";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
-import { PLUGINS, KEYBIND_SCOPES } from "../utils/Constants";
-import { call } from "../utils/noremix";
 import movaiIcon from "../Branding/movai-logo-white.png";
+import { ERROR_MESSAGES } from "./Messages";
 
 /**
  * Export a non implemented empty function
@@ -82,6 +81,19 @@ export const getIconByScope = (scope, style) => {
 
   return icon[scope];
 };
+
+/**
+ * Validate document name and throw error if validation doesn't pass
+ * @param {string} name : Document name
+ * @returns {boolean}
+ */
+export function validateDocumentName(name) {
+  if (!Utils.validateEntityName(name)) {
+    throw new Error(ERROR_MESSAGES.INVALID_NAME);
+  } else {
+    return true;
+  }
+}
 
 const boolToPythonOptions = {
   true: "True",
@@ -161,7 +173,7 @@ export function runBeforeUnload(callback) {
   const onAppUnload = window.onbeforeunload;
   // Set new beforeunload method with given callback
   window.onbeforeunload = event => {
-    callback?.(event);
+    callback && callback(event);
     return onAppUnload(event);
   };
 }
@@ -201,59 +213,5 @@ export function insertIf(condition, ...elements) {
  * @returns
  */
 export function convertToValidString(text) {
-  return text?.toString().replaceAll(" ", "_").toLowerCase();
-}
-
-export function openLink(link) {
-  window.open(link, "_blank");
-}
-
-/**
- * Activate scope shortcuts.
- * This will automatically deactivate all other scopes
- */
-export const activateKeyBind = (scope = KEYBIND_SCOPES.APP) => {
-  hotkeys.setScope(scope);
-};
-
-/**
- * Set scope to global
- *  This will deactivate the current scope
- */
-export const deactivateKeyBind = () => {
-  hotkeys.setScope(KEYBIND_SCOPES.APP);
-};
-
-/**
- * Add Key bind to its scope
- * @param {*} keys
- * @param {*} callback
- */
-export const addKeyBind = (keys, callback, scope = KEYBIND_SCOPES.APP) => {
-  const keysToBind = parseKeybinds(keys);
-  activateKeyBind(scope);
-  hotkeys(keysToBind, scope, callback);
-};
-
-/**
- * Remove key bind from scope
- * @param {*} key
- */
-export const removeKeyBind = (keys, scope = KEYBIND_SCOPES.APP) => {
-  const keysToUnbind = parseKeybinds(keys);
-  hotkeys.unbind(keysToUnbind, scope);
-};
-
-export async function invalidDocName(scope, { name }) {
-  if (!Utils.validateEntityName(name))
-    return ["invalid name"];
-
-  if (await call(
-    PLUGINS.DOC_MANAGER.NAME,
-    PLUGINS.DOC_MANAGER.CALL.CHECK_DOCUMENT_EXISTS,
-    { scope: scope, name }
-  ))
-    return ["Document already exists"];
-
-  return [];
+  return text && text.toString().replaceAll(" ", "_").toLowerCase();
 }

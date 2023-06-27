@@ -1,7 +1,6 @@
 import React from "react";
 import { getRefComponent } from "../utils/Utils";
 import { PLUGINS } from "../utils/Constants";
-import { dialog } from "../utils/noremix";
 
 /**
  * Pass snackbar alerts to components
@@ -23,12 +22,32 @@ const withAlerts = Component => {
       call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, options);
     };
 
+    /**
+     * Show Confirmation before action
+     * @param {{title: string, message: string, submitText: string, onSubmit: function}} confirmationData
+     */
+    const confirmationAlert = ({
+      title,
+      message,
+      onSubmit,
+      onClose,
+      submitText
+    }) => {
+      call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, {
+        title,
+        message,
+        onSubmit,
+        onClose,
+        submitText
+      });
+    };
+
     return (
       <RefComponent
         {...props}
         ref={ref}
         alert={alert}
-        confirmationAlert={dialog}
+        confirmationAlert={confirmationAlert}
       />
     );
   };

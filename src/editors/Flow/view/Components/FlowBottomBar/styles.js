@@ -9,12 +9,12 @@ const styles = theme => ({
     flexGrow: 1
   },
   active: {
-    background: theme.palette?.primary?.light,
+    background: theme.palette?.primary.light,
     color: "black"
   },
   default: {
     color: "white",
-    background: theme.palette?.background?.primary,
+    background: theme.palette?.background.primary,
     borderTop: "solid 1px black"
   },
   tooltip: {
@@ -25,7 +25,7 @@ const styles = theme => ({
     width: "fit-content",
     display: "inline-block",
     padding: "0 15px",
-    borderRight: `solid 1px ${theme.palette?.background?.secondary}`,
+    borderRight: `solid 1px ${theme.palette?.background.secondary}`,
     "& i": { marginRight: 10, fontSize: "14px" },
     "&:hover": {
       filter: `drop-shadow(2px 4px 6px white)`
@@ -38,7 +38,7 @@ const styles = theme => ({
     display: "flex",
     alignItems: "center",
     height: "100%",
-    borderLeft: `solid 1px ${theme.palette?.background?.secondary}`
+    borderLeft: `solid 1px ${theme.palette?.background.secondary}`
   },
   debugToggle: {
     "&>label": {

@@ -44,18 +44,16 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import i18n, { Translations } from "./src/i18n/i18n";
 import * as CONSTANTS from "./src/utils/Constants";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "./src/utils/Messages";
-export { dialog, call, register, subscribe, subscribeAll } from "./src/utils/noremix";
 import Workspace from "./src/utils/Workspace";
 import { KEYBINDINGS } from "./src/utils/shortcuts";
 import * as Utils from "./src/utils/Utils";
-export { invalidDocName } from "./src/utils/Utils";
 import LocalStorage from "./src/utils/LocalStorage";
 // Hooks
 import useDataTypes from "./src/editors/_shared/hooks/useDataTypes";
 import useDataSubscriber from "./src/plugins/DocManager/useDataSubscriber";
 import PluginManagerIDE from "./src/engine/PluginManagerIDE/PluginManagerIDE";
 import { usePluginMethods } from "./src/engine/ReactPlugin/ViewReactPlugin";
-import { openTool } from "./src/utils/generalFunctions";
+import { openTool } from "./src/plugins/views/SystemBar/builder/buildFunctions";
 
 // Exports
 export { BaseApp, installEditor, installTool };

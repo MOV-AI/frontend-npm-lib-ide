@@ -86,7 +86,7 @@ export const Callback = (props, ref) => {
       <MonacoCodeEditor
         value={data?.code}
         language={"python"}
-        theme={theme.codeEditor?.theme ?? "dark"}
+        theme={theme?.codeEditor?.theme ?? "dark"}
         options={{ readOnly: !editable }}
         onChange={updateCallbackCode}
         onSave={saveDocument}
