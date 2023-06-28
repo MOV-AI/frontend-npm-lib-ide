@@ -100,7 +100,7 @@ const ItemRow = props => {
 
   return (
     <div
-      data-testid="input_node"
+      data-testid={"explorer_" + (node.name === node.scope ? "" : node.scope + "_") + node.title}
       style={style}
       onMouseEnter={handleNodeMouseEnter}
       onMouseLeave={handleNodeMouseLeave}

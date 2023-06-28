@@ -24,21 +24,21 @@ export function withToolPlugin(ReactComponent, methods = []) {
   const RefComponent = forwardRef((props, ref) => ReactComponent(props, ref));
 
   const ToolComponent = forwardRef((props, ref) => {
-    const { on, off } = props;
+    const { on, off, profile } = props;
 
     /**
      * Component did mount
      */
     useEffect(() => {
       PluginManagerIDE.resetBookmarks();
-      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async () => {
-        PluginManagerIDE.resetBookmarks();
+      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async ({ id }) => {
+        if (profile.name === id) PluginManagerIDE.resetBookmarks();
       });
 
       return () => {
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
       };
-    }, []);
+    }, [off, on, profile.name]);
 
     return <RefComponent {...props} ref={ref} />;
   });

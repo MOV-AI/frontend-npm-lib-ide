@@ -101,7 +101,7 @@ export function withViewPlugin(ReactComponent, methods = []) {
 export const usePluginMethods = (ref, methods) => {
   React.useImperativeHandle(ref, () => ({
     ...methods
-  }));
+  }), [methods]);
 };
 
 /**

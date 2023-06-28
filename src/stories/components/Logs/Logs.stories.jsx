@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
-import withMock from "storybook-addon-mock";
 import { installTool } from "../../../App/BaseApp";
 import AppCE from "../../AppCE";
-import { authParams } from "../../_mockLogin";
 import { getLogsToolTab, LOGS_PROFILE } from "./Logs";
 import LogsIcon from "@material-ui/icons/Money";
 
@@ -27,13 +25,10 @@ const LogsStory = props => {
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: "Logs",
-  component: LogsStory,
-  decorators: [withMock]
+  component: LogsStory
 };
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template = args => <LogsStory {...args} />;
 
 export const Logs = Template.bind({});
-
-Logs.parameters = authParams;

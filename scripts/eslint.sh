@@ -1,0 +1,1 @@
+eslint --format compact --ext .js,.jsx,.ts,.tsx src

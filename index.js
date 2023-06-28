@@ -53,7 +53,7 @@ import useDataTypes from "./src/editors/_shared/hooks/useDataTypes";
 import useDataSubscriber from "./src/plugins/DocManager/useDataSubscriber";
 import PluginManagerIDE from "./src/engine/PluginManagerIDE/PluginManagerIDE";
 import { usePluginMethods } from "./src/engine/ReactPlugin/ViewReactPlugin";
-import { openTool } from "./src/plugins/views/SystemBar/builder/buildFunctions";
+import { openTool } from "./src/utils/generalFunctions";
 
 // Exports
 export { BaseApp, installEditor, installTool };

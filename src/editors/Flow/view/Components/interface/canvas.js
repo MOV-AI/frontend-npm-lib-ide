@@ -344,7 +344,7 @@ class Canvas {
       .attr("height", this.maxMovingPixels)
       .attr("stroke", "black")
       .style("pointer-events", "all")
-      .on("click", _ => defaultFunction());
+      .on("click", () => defaultFunction());
     return this;
   };
 
@@ -360,7 +360,7 @@ class Canvas {
       .attr("height", this.maxMovingPixels)
       .attr("stroke", "black")
       .style("pointer-events", "all")
-      .on("click", _ => defaultFunction());
+      .on("click", () => defaultFunction());
 
     return this;
   };
@@ -699,17 +699,15 @@ class Canvas {
   zoomToCoordinates = (xCoordinate, yCoordinate) => {
     const SCALE = 3;
     const { width, height } = this.el.getBoundingClientRect();
-    const x = SCALE * xCoordinate - width * 0.5;
-    const y = SCALE * yCoordinate - height * 0.5;
-    const [xInCanvas, yInCanvas] = this.getPositionInBoundaries(x, y).map(
-      el => el * -1
-    );
     this.getSvg()
       .transition()
       .duration(750)
       .call(
         this.zoomBehavior.transform,
-        d3.zoomIdentity.translate(xInCanvas, yInCanvas).scale(SCALE)
+        d3.zoomIdentity
+          .translate(width / 2, height / 2)
+          .translate(-SCALE * xCoordinate, -SCALE * yCoordinate)
+          .scale(SCALE)
       );
   };
 }

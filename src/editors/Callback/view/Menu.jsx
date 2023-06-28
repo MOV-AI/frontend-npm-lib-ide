@@ -310,7 +310,7 @@ const Menu = props => {
         >
           <ListItemText primary={t("Imports")} />
           <IconButton
-            data-testid="input_add-import"
+            data-testid="add-import"
             disabled={!editable}
             onClick={handleAddImportsClick}
           >

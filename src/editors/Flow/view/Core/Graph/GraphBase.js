@@ -277,7 +277,10 @@ export default class GraphBase {
     // Get nodes to remove on update
     const flowNodes = { ...data.NodeInst, ...data.Container };
     [...this.nodes.keys()].forEach(nodeId => {
-      if (!flowNodes.hasOwnProperty(nodeId) && nodeId !== "start") {
+      if (
+        !Object.prototype.hasOwnProperty.call(flowNodes, nodeId) &&
+        nodeId !== "start"
+      ) {
         this.deleteNode(nodeId);
       }
     });
@@ -429,7 +432,7 @@ export default class GraphBase {
   updateLinks = links => {
     // Remove deleted links
     const linksToRemove = [...this.links.keys()].filter(
-      link => !links.hasOwnProperty(link)
+      link => !Object.prototype.hasOwnProperty.call(links, link)
     );
     this.deleteLinks(linksToRemove);
     // Add missing links
