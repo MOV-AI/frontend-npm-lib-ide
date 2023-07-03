@@ -27,6 +27,7 @@ import CallbackModel from "../../Callback/model/Callback";
 import Clipboard, { KEYS } from "./Utils/Clipboard";
 import Vec2 from "./Utils/Vec2";
 import BaseFlow from "./Views/BaseFlow";
+import { baseFlowStyles } from "./Views/styles";
 import { WARNING_TYPES } from "./Core/Graph/GraphValidator";
 import Menu from "./Components/Menus/Menu";
 import NodeMenu from "./Components/Menus/NodeMenu";
@@ -45,7 +46,7 @@ import { FLOW_VIEW_MODE, TYPES } from "./Constants/constants";
 import GraphBase from "./Core/Graph/GraphBase";
 import GraphTreeView from "./Core/Graph/GraphTreeView";
 import { getBaseContextOptions } from "./contextOptions";
-import { useSub, flowSub } from "./Components/interface/MainInterface";
+import MainInterface, { useSub, flowSub } from "./Components/interface/MainInterface";
 
 import "./Resources/css/Flow.css";
 import { flowStyles } from "./styles";
@@ -68,10 +69,22 @@ export const Flow = (props, ref) => {
     deactivateEditor,
     confirmationAlert,
     contextOptions,
+    type,
+    model,
     on,
     off
   } = props;
+  const baseFlowClasses = baseFlowStyles();
   const mainInterface = useSub(flowSub)[name];
+
+  useEffect(() => {
+    if (!mainInterface)
+      new MainInterface({
+        classes: baseFlowClasses, modelView: instance, id: name, data: dataFromDB,
+        type, width: "400px", height: "200px", model, readOnly: false, call, on
+      });
+  }, []);
+
   // Global consts
   const MENUS = useRef(
     Object.freeze({

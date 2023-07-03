@@ -7,6 +7,7 @@ import { getNodeNameFromId } from "../../Core/Graph/Utils";
 import GraphBase from "../../Core/Graph/GraphBase";
 import GraphTreeView from "../../Core/Graph/GraphTreeView";
 import { EVT_NAMES } from "../../events";
+import { PLUGINS } from "../../../../../utils/Constants";
 import StartNode from "../Nodes/StartNode";
 import InterfaceModes from "./InterfaceModes";
 import Events from "./Events";
@@ -142,6 +143,7 @@ export default class MainInterface {
     data,
     classes,
     call,
+    on,
   }) {
     //========================================================================================
     /*                                                                                      *
@@ -168,6 +170,12 @@ export default class MainInterface {
     this.update = () => flowSub.update({
       ...flowSub.data.value,
       [id]: this,
+    });
+
+    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.DISCARD_DOC, evt => {
+      // evt ex.: {action: "setMode", value: EVT_NAMES.DEFAULT}
+      if (evt.scope === "Flow" && evt.name === this.id)
+        this.destroy();
     });
 
     this.initialize();
@@ -620,6 +628,10 @@ export default class MainInterface {
   }
 
   destroy = () => {
+    flowSub.update({
+      ...flowSub.data.value,
+      [this.id]: null,
+    });
     // Nothing to do
   };
 }

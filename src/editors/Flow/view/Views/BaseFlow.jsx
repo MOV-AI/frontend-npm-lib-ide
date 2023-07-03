@@ -4,7 +4,7 @@ import Backdrop from "@material-ui/core/Backdrop";
 import { PLUGINS, SCOPES } from "../../../../utils/Constants";
 import { EVT_NAMES } from "../events";
 import Loader from "../../../_shared/Loader/Loader";
-import MainInterface, { useSub, flowSub } from "../Components/interface/MainInterface";
+import { useSub, flowSub } from "../Components/interface/MainInterface";
 import Warnings from "../Components/Warnings/Warnings";
 import DependencyInfo from "../Components/Debugging/DependencyInfo";
 
@@ -12,12 +12,8 @@ import { baseFlowStyles } from "./styles";
 
 const BaseFlow = props => {
   const {
-    call,
-    instance,
     id,
     name,
-    type,
-    model,
     dataFromDB,
     off,
     on,
@@ -28,22 +24,10 @@ const BaseFlow = props => {
     graphClass,
     loading
   } = props;
-  const readOnly = false;
 
   // Other hooks
   const classes = baseFlowStyles();
   const mainInterface = useSub(flowSub)[name];
-
-  if (!mainInterface) new MainInterface({
-    classes, modelView: instance, id: name, data: dataFromDB,
-    type, width: "400px", height: "200px", model, readOnly, call
-  });
-
-  useEffect(() => {
-    if (mainInterface)
-      mainInterface.majorUpdate();
-    // the array is empty on purpose
-  }, []);
 
   // Enter in add node/sub-flow mode
   useEffect(() => {
@@ -88,7 +72,7 @@ const BaseFlow = props => {
           <Loader />
         </Backdrop>
       )}
-      <div className={classes.flowCanvas} id={mainInterface?.containerId} tagindex="0">
+      <div className={classes.flowCanvas} id={"Flow-" + name} tagindex="0">
         {warnings.length > 0 && (
           <Warnings warnings={warnings} isVisible={mainInterface?.canvas.warningsVisibility} />
         )}
@@ -99,12 +83,8 @@ const BaseFlow = props => {
 };
 
 BaseFlow.propTypes = {
-  call: PropTypes.func.isRequired,
-  instance: PropTypes.object,
   id: PropTypes.string,
   name: PropTypes.string,
-  type: PropTypes.string,
-  model: PropTypes.string,
   dataFromDB: PropTypes.object
 };
 
