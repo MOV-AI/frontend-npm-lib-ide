@@ -109,6 +109,7 @@ export const Flow = (props, ref) => {
   const clipboard = useMemo(() => new Clipboard(), []);
 
   // Refs
+  const interfaceSubscriptionsList = useRef([]);
   const contextArgs = useRef(null);
   const mainInterfaceRef = useRef();
   const debounceSelection = useRef();
@@ -157,21 +158,27 @@ export const Flow = (props, ref) => {
    * Start node
    * @param {Object} target : Node to be started
    */
-  const startNode = node => {
-    commandNode("RUN", node).then(() => {
-      node.statusLoading = true;
-    });
-  };
+  const startNode = useCallback(
+    node => {
+      commandNode("RUN", node, robotSelected).then(() => {
+        node.statusLoading = true;
+      });
+    },
+    [robotSelected, commandNode]
+  );
 
   /**
    * Stop node
    * @param {Object} target : Node to be stopped
    */
-  const stopNode = node => {
-    commandNode("KILL", node).then(() => {
-      node.statusLoading = true;
-    });
-  };
+  const stopNode = useCallback(
+    node => {
+      commandNode("KILL", node, robotSelected).then(() => {
+        node.statusLoading = true;
+      });
+    },
+    [robotSelected, commandNode]
+  );
 
   /**
    * Execute command action to node to start or stop
@@ -180,41 +187,44 @@ export const Flow = (props, ref) => {
    * @param {TreeNode} node : Node to be started/stopped
    * @param {Function} callback : Success callback
    */
-  const commandNode = (action, node) => {
-    const nodeNamePath = node.getNodePath();
-    return Rest.cloudFunction({
-      cbName: "backend.FlowTopBar",
-      func: "commandNode",
-      args: {
-        command: action,
-        nodeName: nodeNamePath,
-        robotName: robotSelected
-      }
-    })
-      .then(res => {
-        if (!res.success) {
-          console.warn(res.error);
+  const commandNode = useCallback(
+    (action, node, selectedRobot = robotSelected) => {
+      const nodeNamePath = node.getNodePath();
+      return Rest.cloudFunction({
+        cbName: "backend.FlowTopBar",
+        func: "commandNode",
+        args: {
+          command: action,
+          nodeName: nodeNamePath,
+          robotName: selectedRobot
+        }
+      })
+        .then(res => {
+          if (!res.success) {
+            console.warn(res.error);
+            call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
+              message: t(ERROR_MESSAGES.SOMETHING_WENT_WRONG),
+              severity: ALERT_SEVERITIES.ERROR
+            });
+          } else {
+            call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
+              message: t(SUCCESS_MESSAGES.NODE_IS_ACTION, {
+                action: t(`ACTION_${action}`)
+              }),
+              severity: ALERT_SEVERITIES.INFO
+            });
+          }
+        })
+        .catch(err => {
+          console.warn(err.toString());
           call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
             message: t(ERROR_MESSAGES.SOMETHING_WENT_WRONG),
             severity: ALERT_SEVERITIES.ERROR
           });
-        } else {
-          call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
-            message: t(SUCCESS_MESSAGES.NODE_IS_ACTION, {
-              action: t(`ACTION_${action}`)
-            }),
-            severity: ALERT_SEVERITIES.INFO
-          });
-        }
-      })
-      .catch(err => {
-        console.warn(err.toString());
-        call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
-          message: t(ERROR_MESSAGES.SOMETHING_WENT_WRONG),
-          severity: ALERT_SEVERITIES.ERROR
         });
-      });
-  };
+    },
+    [call, robotSelected, t]
+  );
 
   //========================================================================================
   /*                                                                                      *
@@ -286,9 +296,9 @@ export const Flow = (props, ref) => {
 
       instance.graph.clearInvalidLinks().validateFlow();
 
-      callback && callback();
+      callback?.();
     },
-    [instance]
+    []
   );
 
   /**
@@ -433,7 +443,7 @@ export const Flow = (props, ref) => {
         call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
       });
     },
-    [call, t]
+    [call, setFlowsToDefault, t]
   );
 
   //========================================================================================
@@ -749,7 +759,7 @@ export const Flow = (props, ref) => {
         }
       }, 300);
     },
-    [MENUS, addNodeMenu, unselectNode]
+    [MENUS, addNodeMenu, unselectNode, onLinkSelected]
   );
 
   /**
@@ -792,7 +802,7 @@ export const Flow = (props, ref) => {
         addLinkMenu(link, true);
       }
     },
-    [MENUS, call, addLinkMenu]
+    [activateEditor, call, unselectNode, addLinkMenu]
   );
 
   /**
@@ -820,7 +830,7 @@ export const Flow = (props, ref) => {
       PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR,
       { action: "setMode", value: EVT_NAMES.DEFAULT }
     );
-  }, [call, onLinkSelected, onNodeSelected]);
+  }, [call, activateEditor, onLinkSelected, onNodeSelected]);
 
   /**
    * Subscribe to mainInterface and canvas events
@@ -828,6 +838,13 @@ export const Flow = (props, ref) => {
   const onReady = useCallback(
     mainInterface => {
       mainInterfaceRef.current = mainInterface;
+
+      // If we are running this function again,
+      // we should do some cleanup before continue
+      interfaceSubscriptionsList.current.forEach(sub => {
+        sub.unsubscribe();
+      });
+      interfaceSubscriptionsList.current = [];
 
       // Set the warning types to be used in the validations
       mainInterface.graph.validator.setWarningActions(
@@ -844,265 +861,316 @@ export const Flow = (props, ref) => {
       );
 
       // Subscribe to flow validations
-      mainInterface.graph.onFlowValidated.subscribe(evtData => {
-        const persistentWarns = evtData.warnings.filter(el => el.isPersistent);
+      interfaceSubscriptionsList.current.push(
+        mainInterface.graph.onFlowValidated.subscribe(evtData => {
+          const persistentWarns = evtData.warnings.filter(
+            el => el.isPersistent
+          );
 
-        onFlowValidated({ warnings: persistentWarns });
-      });
+          onFlowValidated({ warnings: persistentWarns });
+        })
+      );
 
       // Subscribe to on loading exit (finish) event
-      mainInterface.mode[EVT_NAMES.LOADING].onExit.subscribe(() => {
-        // Append the document frame to the canvas
-        mainInterface.canvas.appendDocumentFragment();
-        // Reposition all nodes and subflows
-        mainInterface.graph.updateAllPositions();
-        setLoading(false);
-        // Set initial warning visibility value
-        setWarningsVisibility(true);
-      });
+      interfaceSubscriptionsList.current.push(
+        mainInterface.mode[EVT_NAMES.LOADING].onExit.subscribe(() => {
+          // Append the document frame to the canvas
+          mainInterface.canvas.appendDocumentFragment();
+          // Reposition all nodes and subflows
+          mainInterface.graph.updateAllPositions();
+          setLoading(false);
+          // Set initial warning visibility value
+          setWarningsVisibility(true);
+        })
+      );
 
       // subscribe to on enter default mode
       // When enter default mode remove other node/sub-flow bookmarks
-      mainInterface.mode[EVT_NAMES.DEFAULT].onEnter.subscribe(() => {
-        setFlowsToDefault();
-      });
-
-      // Subscribe to on node select event
-      mainInterface.mode[EVT_NAMES.SELECT_NODE].onEnter.subscribe(() => {
-        const selectedNodes = mainInterface.selectedNodes;
-        const node = selectedNodes.length !== 1 ? null : selectedNodes[0];
-        onNodeSelected(node);
-      });
-
-      // Subscribe to double click event in a node
-      mainInterface.mode[EVT_NAMES.ON_DBL_CLICK].onEnter.subscribe(evtData => {
-        const node = evtData.node;
-        openDoc({
-          name: node.templateName,
-          scope: node.data.model
-        });
-      });
-
-      // Subscribe to node instance/sub flow context menu events
-      mainInterface.mode[EVT_NAMES.ON_NODE_CTX_MENU].onEnter.subscribe(
-        evtData => {
-          const node = evtData.node;
-          const anchorPosition = {
-            left: evtData.event.clientX,
-            top: evtData.event.clientY
-          };
-
-          contextArgs.current = node;
-          setContextMenuOptions({
-            anchorPosition,
-            options: getContextOptions(node?.data?.type, node, {
-              handleCopyNode,
-              handleDeleteNode,
-              nodeDebug: {
-                startNode: {
-                  func: startNode,
-                  disabled: !(node.data.type === TYPES.CONTAINER
-                    ? false
-                    : runningFlow && !node.status)
-                },
-                stopNode: {
-                  func: stopNode,
-                  disabled: !(node.data.type === TYPES.CONTAINER
-                    ? false
-                    : runningFlow && node.status)
-                }
-              },
-              viewMode
-            })
-          });
-        }
+      interfaceSubscriptionsList.current.push(
+        mainInterface.mode[EVT_NAMES.DEFAULT].onEnter.subscribe(() => {
+          setFlowsToDefault();
+        })
       );
 
-      mainInterface.mode[EVT_NAMES.ADD_NODE].onClick.subscribe(() => {
-        const nodeName = getMainInterface().mode.current.props.node.data.name;
-        const args = {
-          title: t("AddNode"),
-          submitText: t("Add"),
-          value: nodeName,
-          onValidation: newName =>
-            getMainInterface().graph.validator.validateNodeName(
-              newName,
-              t("Node")
-            ),
-          onClose: setFlowsToDefault,
-          onSubmit: newName => getMainInterface().addNode(newName)
-        };
-        // Open form dialog
-        call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
-      });
+      // Subscribe to on node select event
+      interfaceSubscriptionsList.current.push(
+        mainInterface.mode[EVT_NAMES.SELECT_NODE].onEnter.subscribe(() => {
+          const selectedNodes = mainInterface.selectedNodes;
+          const node = selectedNodes.length !== 1 ? null : selectedNodes[0];
+          onNodeSelected(node);
+        })
+      );
 
-      mainInterface.mode[EVT_NAMES.ADD_FLOW].onClick.subscribe(() => {
-        const flowName = getMainInterface().mode.current.props.node.data.name;
-        const args = {
-          title: t("AddSubFlow"),
-          submitText: t("Add"),
-          value: flowName,
-          onValidation: newName =>
-            getMainInterface().graph.validator.validateNodeName(
-              newName,
-              t("SubFlow")
-            ),
-          onClose: setFlowsToDefault,
-          onSubmit: newName => getMainInterface().addFlow(newName)
-        };
-        // Open form dialog
-        call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
-      });
+      // Subscribe to double click event in a node
+      interfaceSubscriptionsList.current.push(
+        mainInterface.mode[EVT_NAMES.ON_DBL_CLICK].onEnter.subscribe(
+          evtData => {
+            const node = evtData.node;
+            openDoc({
+              name: node.templateName,
+              scope: node.data.model
+            });
+          }
+        )
+      );
+
+      // Subscribe to node instance/sub flow context menu events
+      interfaceSubscriptionsList.current.push(
+        mainInterface.mode[EVT_NAMES.ON_NODE_CTX_MENU].onEnter.subscribe(
+          evtData => {
+            const node = evtData.node;
+            const anchorPosition = {
+              left: evtData.event.clientX,
+              top: evtData.event.clientY
+            };
+
+            contextArgs.current = node;
+            setContextMenuOptions({
+              anchorPosition,
+              options: getContextOptions(node?.data?.type, node, {
+                handleCopyNode,
+                handleDeleteNode,
+                nodeDebug: {
+                  startNode: {
+                    func: startNode,
+                    disabled: !(node.data.type === TYPES.CONTAINER
+                      ? false
+                      : runningFlow && !node.status)
+                  },
+                  stopNode: {
+                    func: stopNode,
+                    disabled: !(node.data.type === TYPES.CONTAINER
+                      ? false
+                      : runningFlow && node.status)
+                  }
+                },
+                viewMode
+              })
+            });
+          }
+        )
+      );
+
+      interfaceSubscriptionsList.current.push(
+        mainInterface.mode[EVT_NAMES.ADD_NODE].onClick.subscribe(() => {
+          const nodeName = getMainInterface().mode.current.props.node.data.name;
+          const args = {
+            title: t("AddNode"),
+            submitText: t("Add"),
+            value: nodeName,
+            onValidation: newName =>
+              getMainInterface().graph.validator.validateNodeName(
+                newName,
+                t("Node")
+              ),
+            onClose: setFlowsToDefault,
+            onSubmit: newName => getMainInterface().addNode(newName)
+          };
+          // Open form dialog
+          call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
+        })
+      );
+
+      interfaceSubscriptionsList.current.push(
+        mainInterface.mode[EVT_NAMES.ADD_FLOW].onClick.subscribe(() => {
+          const flowName = getMainInterface().mode.current.props.node.data.name;
+          const args = {
+            title: t("AddSubFlow"),
+            submitText: t("Add"),
+            value: flowName,
+            onValidation: newName =>
+              getMainInterface().graph.validator.validateNodeName(
+                newName,
+                t("SubFlow")
+              ),
+            onClose: setFlowsToDefault,
+            onSubmit: newName => getMainInterface().addFlow(newName)
+          };
+          // Open form dialog
+          call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
+        })
+      );
 
       // Subscribe to link context menu events
-      mainInterface.mode[EVT_NAMES.ON_LINK_CTX_MENU].onEnter.subscribe(
-        evtData => {
-          const anchorPosition = {
-            left: evtData.event.clientX,
-            top: evtData.event.clientY
-          };
+      interfaceSubscriptionsList.current.push(
+        mainInterface.mode[EVT_NAMES.ON_LINK_CTX_MENU].onEnter.subscribe(
+          evtData => {
+            const anchorPosition = {
+              left: evtData.event.clientX,
+              top: evtData.event.clientY
+            };
 
-          contextArgs.current = evtData;
-          setContextMenuOptions({
-            anchorPosition,
-            options: getContextOptions(FLOW_CONTEXT_MODES.LINK, evtData, {
-              handleDeleteLink,
-              viewMode
-            })
-          });
-        }
+            contextArgs.current = evtData;
+            setContextMenuOptions({
+              anchorPosition,
+              options: getContextOptions(FLOW_CONTEXT_MODES.LINK, evtData, {
+                handleDeleteLink,
+                viewMode
+              })
+            });
+          }
+        )
       );
 
       // Subscribe to canvas context menu
-      mainInterface.mode[EVT_NAMES.ON_CANVAS_CTX_MENU].onEnter.subscribe(
-        evtData => {
-          const anchorPosition = {
-            left: evtData.event.clientX,
-            top: evtData.event.clientY
-          };
+      interfaceSubscriptionsList.current.push(
+        mainInterface.mode[EVT_NAMES.ON_CANVAS_CTX_MENU].onEnter.subscribe(
+          evtData => {
+            const anchorPosition = {
+              left: evtData.event.clientX,
+              top: evtData.event.clientY
+            };
 
-          contextArgs.current = evtData.position;
-          setContextMenuOptions({
-            anchorPosition,
-            options: getContextOptions(
-              FLOW_CONTEXT_MODES.CANVAS,
-              evtData.position,
-              {
-                handlePasteNodes,
-                viewMode
-              }
-            )
-          });
-        }
+            contextArgs.current = evtData.position;
+            setContextMenuOptions({
+              anchorPosition,
+              options: getContextOptions(
+                FLOW_CONTEXT_MODES.CANVAS,
+                evtData.position,
+                {
+                  handlePasteNodes,
+                  viewMode
+                }
+              )
+            });
+          }
+        )
       );
 
       // subscribe to port context menu event
-      mainInterface.mode[EVT_NAMES.ON_PORT_CTX_MENU].onEnter.subscribe(
-        evtData => {
-          const anchorPosition = {
-            left: evtData.event.clientX,
-            top: evtData.event.clientY
-          };
+      interfaceSubscriptionsList.current.push(
+        mainInterface.mode[EVT_NAMES.ON_PORT_CTX_MENU].onEnter.subscribe(
+          evtData => {
+            const anchorPosition = {
+              left: evtData.event.clientX,
+              top: evtData.event.clientY
+            };
 
-          contextArgs.current = evtData.port;
-          setContextMenuOptions({
-            anchorPosition,
-            options: getContextOptions(FLOW_CONTEXT_MODES.PORT, evtData.port, {
-              handleToggleExposedPort,
-              handleOpenCallback,
-              viewMode
-            })
-          });
-        }
+            contextArgs.current = evtData.port;
+            setContextMenuOptions({
+              anchorPosition,
+              options: getContextOptions(
+                FLOW_CONTEXT_MODES.PORT,
+                evtData.port,
+                {
+                  handleToggleExposedPort,
+                  handleOpenCallback,
+                  viewMode
+                }
+              )
+            });
+          }
+        )
       );
 
-      mainInterface.canvas.events
-        .pipe(
-          filter(
-            event =>
-              event.name === EVT_NAMES.ON_MOUSE_OVER &&
-              event.type === EVT_TYPES.LINK
+      interfaceSubscriptionsList.current.push(
+        mainInterface.canvas.events
+          .pipe(
+            filter(
+              event =>
+                event.name === EVT_NAMES.ON_MOUSE_OVER &&
+                event.type === EVT_TYPES.LINK
+            )
           )
-        )
-        .subscribe(evtData => mainInterface.graph.onMouseOverLink(evtData));
+          .subscribe(evtData => mainInterface.graph.onMouseOverLink(evtData))
+      );
 
-      mainInterface.canvas.events
-        .pipe(
-          filter(
-            event =>
-              event.name === EVT_NAMES.ON_MOUSE_OUT &&
-              event.type === EVT_TYPES.LINK
+      interfaceSubscriptionsList.current.push(
+        mainInterface.canvas.events
+          .pipe(
+            filter(
+              event =>
+                event.name === EVT_NAMES.ON_MOUSE_OUT &&
+                event.type === EVT_TYPES.LINK
+            )
           )
-        )
-        .subscribe(evtData => mainInterface.graph.onMouseOutLink(evtData));
+          .subscribe(evtData => mainInterface.graph.onMouseOutLink(evtData))
+      );
 
       // Select Link event
-      mainInterface.canvas.events
-        .pipe(
-          filter(
-            event =>
-              event.name === EVT_NAMES.ON_CLICK && event.type === EVT_TYPES.LINK
+      interfaceSubscriptionsList.current.push(
+        mainInterface.canvas.events
+          .pipe(
+            filter(
+              event =>
+                event.name === EVT_NAMES.ON_CLICK &&
+                event.type === EVT_TYPES.LINK
+            )
           )
-        )
-        .subscribe(event => onLinkSelected(event.data));
+          .subscribe(event => onLinkSelected(event.data))
+      );
 
       // subscribe to port mouseOver event
-      mainInterface.canvas.events
-        .pipe(
-          filter(
-            event =>
-              event.name === EVT_NAMES.ON_MOUSE_OVER &&
-              event.type === EVT_TYPES.PORT
+      interfaceSubscriptionsList.current.push(
+        mainInterface.canvas.events
+          .pipe(
+            filter(
+              event =>
+                event.name === EVT_NAMES.ON_MOUSE_OVER &&
+                event.type === EVT_TYPES.PORT
+            )
           )
-        )
-        .subscribe(evtData => {
-          const { port, event } = evtData;
-          const anchorPosition = {
-            left: event.layerX + 8,
-            top: event.layerY
-          };
-          setTooltipConfig({
-            port,
-            anchorPosition
-          });
-        });
+          .subscribe(evtData => {
+            const { port, event } = evtData;
+            const anchorPosition = {
+              left: event.layerX + 8,
+              top: event.layerY
+            };
+            setTooltipConfig({
+              port,
+              anchorPosition
+            });
+          })
+      );
 
       // subscribe to port mouseOut event
-      mainInterface.canvas.events
-        .pipe(
-          filter(
-            event =>
-              event.name === EVT_NAMES.ON_MOUSE_OUT &&
-              event.type === EVT_TYPES.PORT
+      interfaceSubscriptionsList.current.push(
+        mainInterface.canvas.events
+          .pipe(
+            filter(
+              event =>
+                event.name === EVT_NAMES.ON_MOUSE_OUT &&
+                event.type === EVT_TYPES.PORT
+            )
           )
-        )
-        .subscribe(() => {
-          setTooltipConfig(null);
-        });
+          .subscribe(() => {
+            setTooltipConfig(null);
+          })
+      );
 
-      mainInterface.canvas.events
-        .pipe(
-          filter(
-            event =>
-              event.name === EVT_NAMES.ON_CHG_MOUSE_OVER &&
-              event.type === EVT_TYPES.LINK
+      interfaceSubscriptionsList.current.push(
+        mainInterface.canvas.events
+          .pipe(
+            filter(
+              event =>
+                event.name === EVT_NAMES.ON_CHG_MOUSE_OVER &&
+                event.type === EVT_TYPES.LINK
+            )
           )
-        )
-        .subscribe(evtData => console.log("onLinkErrorMouseOver", evtData));
+          .subscribe(evtData => console.log("onLinkErrorMouseOver", evtData))
+      );
     },
     [
-      viewMode,
       runningFlow,
-      getContextOptions,
-      onNodeSelected,
-      onLinkSelected,
-      setFlowsToDefault,
-      invalidLinksAlert,
-      invalidExposedPortsAlert,
-      invalidContainersParamAlert,
-      openDoc,
+      viewMode,
       call,
-      t
+      invalidExposedPortsAlert,
+      invalidLinksAlert,
+      invalidContainersParamAlert,
+      setFlowsToDefault,
+      onNodeSelected,
+      openDoc,
+      getContextOptions,
+      handleCopyNode,
+      handleDeleteNode,
+      startNode,
+      stopNode,
+      t,
+      handleDeleteLink,
+      handlePasteNodes,
+      handleToggleExposedPort,
+      handleOpenCallback,
+      onLinkSelected
     ]
   );
 
@@ -1138,7 +1206,7 @@ export const Flow = (props, ref) => {
         message
       });
     },
-    [t, call]
+    [confirmationAlert, t, setFlowsToDefault]
   );
 
   /**
@@ -1229,10 +1297,10 @@ export const Flow = (props, ref) => {
    * Triggers the correct deletion
    * (if a link is selected delete link, else delete nodes)
    */
-  const handleShortcutDelete = () => {
+  const handleShortcutDelete = useCallback(() => {
     if (selectedLinkRef.current) handleDeleteLink();
     else handleDeleteNode();
-  };
+  }, [handleDeleteLink, handleDeleteNode]);
 
   /**
    * Toggle exposed port
@@ -1269,7 +1337,7 @@ export const Flow = (props, ref) => {
   /**
    * Handle zoom reset
    */
-  const handleResetZoom = useCallback(_e => {
+  const handleResetZoom = useCallback(() => {
     getMainInterface()?.onResetZoom();
   }, []);
 
@@ -1316,8 +1384,7 @@ export const Flow = (props, ref) => {
   const getContextOptions = useCallback(
     (mode, data, args) => {
       const baseContextOptions = getBaseContextOptions(mode, data, args);
-      const contextOpts =
-        contextOptions && contextOptions(baseContextOptions)?.[mode]?.(data);
+      const contextOpts = contextOptions?.(baseContextOptions)?.[mode]?.(data);
 
       return contextOpts ?? baseContextOptions;
     },
@@ -1463,7 +1530,8 @@ export const Flow = (props, ref) => {
     handleDeleteNode,
     handleMoveNode,
     handleSearchEnable,
-    handleResetZoom
+    handleResetZoom,
+    handleShortcutDelete
   ]);
 
   useEffect(() => {

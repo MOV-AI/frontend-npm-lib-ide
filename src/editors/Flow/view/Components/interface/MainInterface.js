@@ -387,7 +387,7 @@ export default class MainInterface {
    * Resets all Node status (Turns of the center)
    */
   resetAllNodeStatus = () => {
-    this.graph.resetStatus && this.graph.resetStatus();
+    this.graph.resetStatus?.();
   };
 
   onResetZoom = () => {
