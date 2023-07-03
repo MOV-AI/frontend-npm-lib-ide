@@ -1,14 +1,22 @@
+import { useState, useEffect } from "react";
 import lodash from "lodash";
 import { BehaviorSubject } from "rxjs";
 import { filter } from "rxjs/operators";
 import { NODE_TYPES, TYPES } from "../../Constants/constants";
 import { getNodeNameFromId } from "../../Core/Graph/Utils";
-import Graph from "../../Core/Graph/GraphBase";
+import GraphBase from "../../Core/Graph/GraphBase";
+import GraphTreeView from "../../Core/Graph/GraphTreeView";
 import { EVT_NAMES } from "../../events";
 import StartNode from "../Nodes/StartNode";
 import InterfaceModes from "./InterfaceModes";
 import Events from "./Events";
 import Canvas from "./canvas";
+
+export
+let _cachedNodeStatus = {};
+
+export
+let cachedNodeStatus = {};
 
 const NODE_PROPS = {
   Node: {
@@ -25,17 +33,115 @@ const NODE_PROPS = {
   }
 };
 
+function identity(a) {
+  return a;
+}
+
+export
+function easySub(defaultData) {
+  const subs = new Map();
+  const valueMap = { value: defaultData };
+
+  function update(obj) {
+    valueMap.value = obj;
+    let allPromises = [];
+    for (const [sub] of subs)
+      allPromises.push(sub(obj));
+    return Promise.all(allPromises);
+  }
+
+  function subscribe(sub) {
+    subs.set(sub, true);
+    return () => {
+      subs.delete(sub);
+    };
+  }
+
+  function easyEmit(cb = identity) {
+    return async (...args) => update(await cb(...args, valueMap.value));
+  }
+
+  return { update, subscribe, data: valueMap, easyEmit };
+}
+
+export // currently unused
+function useSub(sub, defaultData) {
+  const [data, setData] = useState(sub.data.value ?? defaultData);
+  useEffect(() => sub.subscribe(setData), []);
+  return data;
+}
+
+export
+const flowSub = easySub({});
+
+export
+const flowEmit = flowSub.easyEmit(({ id, ...rest }) => {
+  const old = flowSub.data.value;
+
+  if (old[id])
+    old[id].destroy();
+
+  return {
+    ...old,
+    [id]: new MainInterface({
+      ...rest,
+      id,
+    }),
+  };
+});
+
+function _set(obj, splits = [], value) {
+  if (splits.length === 0) {
+    throw new Error("Invalid splits array");
+  }
+
+  let currentObj = obj;
+
+  for (let i = 0; i < splits.length - 1; i++) {
+    const split = splits[i];
+    currentObj = currentObj[split] = currentObj[split] || {};
+  }
+
+  currentObj[splits[splits.length - 1]] = value;
+}
+
+function _marks(obj) {
+  const result = {};
+  const stack = [{ obj: obj, prefix: '' }];
+
+  while (stack.length > 0) {
+    const { obj, prefix } = stack.pop();
+
+    for (const key in obj) {
+      const value = obj[key];
+      const newPrefix = prefix + key;
+
+      result[newPrefix] = value ? 1 : 0;
+
+      if (typeof value === 'object' && value !== null)
+        stack.push({ obj: value, prefix: newPrefix + '__' });
+    }
+  }
+
+  return result;
+}
+
+function ensureParents(json) {
+  for (const [key, value] of Object.entries(json))
+    _set(_cachedNodeStatus, key.split("__"), value)
+
+  return _marks(_cachedNodeStatus);
+}
+
 export default class MainInterface {
   constructor({
     id,
-    containerId,
     modelView,
     width,
     height,
     data,
     classes,
     call,
-    graphCls
   }) {
     //========================================================================================
     /*                                                                                      *
@@ -43,12 +149,10 @@ export default class MainInterface {
      *                                                                                      */
     //========================================================================================
     this.id = id;
-    this.containerId = containerId;
     this.width = width;
     this.height = height;
     this.modelView = modelView;
     this.data = data;
-    this.graphCls = graphCls ?? Graph;
     this.classes = classes;
     this.docManager = call;
     this.stateSub = new BehaviorSubject(0);
@@ -58,6 +162,13 @@ export default class MainInterface {
     this.canvas = null;
     this.graph = null;
     this.shortcuts = null;
+    this.viewMode = "default";
+    this.cache = {};
+    this.loading = true;
+    this.update = () => flowSub.update({
+      ...flowSub.data.value,
+      [id]: this,
+    });
 
     this.initialize();
   }
@@ -69,21 +180,24 @@ export default class MainInterface {
   //========================================================================================
 
   initialize = () => {
-    const { classes, containerId, docManager, height, id, width } = this;
+    const { classes, docManager, height, id, width } = this;
 
     // Set initial mode as loading
     this.setMode(EVT_NAMES.LOADING);
+    this.loading = true;
+    this.update();
 
     this.canvas = new Canvas({
       mInterface: this,
-      containerId,
       width,
       height,
       classes,
       docManager
     });
 
-    this.graph = new this.graphCls({
+    const graphCls = this.viewMode === "treeView" ? GraphTreeView : GraphBase;
+
+    this.graph = new graphCls({
       id,
       mInterface: this,
       canvas: this.canvas,
@@ -91,13 +205,16 @@ export default class MainInterface {
     });
 
     // Load document and add subscribers
-    this.addSubscribers()
-      .loadDoc()
-      .then(() => {
-        this.canvas.el.focus();
-        this.setMode(EVT_NAMES.DEFAULT);
-      });
+    this.addSubscribers();
+    this.regraph();
   };
+
+  majorUpdate() {
+    this.canvas.appendDocumentFragment();
+    this.graph.updateAllPositions();
+    this.nodeStatusUpdated({});
+    this.update();
+  }
 
   /**
    * @private
@@ -106,7 +223,63 @@ export default class MainInterface {
    */
   loadDoc = async () => {
     await this.graph.loadData(this.modelView.current.serializeToDB());
+    this.setMode(EVT_NAMES.DEFAULT);
+    this.loading = false;
+    this.canvas.el.focus();
+    this.onToggleWarnings({ data: true });
+    this.majorUpdate();
   };
+
+  regraph() {
+    const cached = this.cache[this.viewMode];
+
+    if (cached) {
+      this.canvas = cached.canvas;
+      this.graph = cached.graph;
+      this.majorUpdate();
+      return Promise.resolve();
+    }
+
+    this.setMode(EVT_NAMES.LOADING);
+    this.loading = true;
+
+    const graphCls = this.viewMode === "treeView" ? GraphTreeView : GraphBase;
+
+    if (this.graph) {
+      // this.canvas.destroy();
+      this.graph.destroy();
+    }
+
+    this.canvas = new Canvas({
+      mInterface: this,
+      width: this.width,
+      height: this.height,
+      classes: this.classes,
+      docManager: this.docManager,
+    });
+
+    this.graph = new graphCls({
+      id: this.id,
+      mInterface: this,
+      canvas: this.canvas,
+      docManager: this.docManager
+    });
+
+    this.cache[this.viewMode] = {
+      canvas: this.canvas,
+      graph: this.graph,
+    };
+
+    // Canvas events (not modes)
+    // toggle warnings
+    this.canvas.events
+      .pipe(filter(event => event.name === EVT_NAMES.ON_TOGGLE_WARNINGS))
+      .subscribe(this.onToggleWarnings);
+
+    this.update();
+
+    return this.loadDoc();
+  }
 
   //========================================================================================
   /*                                                                                      *
@@ -141,7 +314,21 @@ export default class MainInterface {
   };
 
   nodeStatusUpdated = (nodeStatus, robotStatus) => {
-    this.graph.nodeStatusUpdated(nodeStatus, robotStatus);
+    const input = cachedNodeStatus;
+    const update = ensureParents(nodeStatus);
+    let res = { ...update };
+
+    for (const [updateKey, updateVal] of Object.entries(update)) {
+      if (updateVal)
+        continue;
+
+      for (const inputKey of Object.keys(input))
+        if (inputKey.substring(0, updateKey.length) === updateKey)
+          res[inputKey] = 0;
+    }
+
+    cachedNodeStatus = res;
+    this.graph.nodeStatusUpdated(robotStatus);
   };
 
   addLink = () => {
@@ -422,6 +609,15 @@ export default class MainInterface {
     }
     this.canvas.zoomToCoordinates(xCenter, yCenter);
   };
+
+  setViewMode(viewMode) {
+    this.viewMode = viewMode;
+    this.regraph();
+  }
+
+  get containerId() {
+    return "Flow-" + this.id;
+  }
 
   destroy = () => {
     // Nothing to do

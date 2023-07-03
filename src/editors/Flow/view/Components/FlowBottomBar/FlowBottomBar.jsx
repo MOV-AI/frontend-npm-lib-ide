@@ -26,7 +26,7 @@ const FlowBottomBar = props => {
 
   // Prop(s)
   const {
-    onToggleWarnings,
+    mainInterface,
     robotSelected,
     runningFlow,
     warnings,
@@ -36,6 +36,16 @@ const FlowBottomBar = props => {
   } = props;
 
   // Hook(s)
+
+  /**
+   * Toggle Warnings
+   */
+  const onToggleWarnings = useCallback(() => {
+    const newVisibility = !mainInterface?.canvas.warningsVisibility;
+    mainInterface?.onToggleWarnings({ data: newVisibility });
+    return newVisibility;
+  }, [mainInterface]);
+
   const classes = useStyles();
 
   //========================================================================================
@@ -180,7 +190,8 @@ FlowBottomBar.propTypes = {
   toggleFlowDebug: PropTypes.func,
   robotSelected: PropTypes.string,
   runningFlow: PropTypes.string,
-  flowDebugging: PropTypes.bool
+  flowDebugging: PropTypes.bool,
+  mainInterface: PropTypes.object,
 };
 
 FlowBottomBar.defaultProps = {

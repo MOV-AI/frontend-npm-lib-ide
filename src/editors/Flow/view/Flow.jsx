@@ -45,6 +45,7 @@ import { FLOW_VIEW_MODE, TYPES } from "./Constants/constants";
 import GraphBase from "./Core/Graph/GraphBase";
 import GraphTreeView from "./Core/Graph/GraphTreeView";
 import { getBaseContextOptions } from "./contextOptions";
+import { useSub, flowSub } from "./Components/interface/MainInterface";
 
 import "./Resources/css/Flow.css";
 import { flowStyles } from "./styles";
@@ -70,6 +71,7 @@ export const Flow = (props, ref) => {
     on,
     off
   } = props;
+  const mainInterface = useSub(flowSub)[name];
   // Global consts
   const MENUS = useRef(
     Object.freeze({
@@ -89,14 +91,12 @@ export const Flow = (props, ref) => {
   );
 
   // State Hooks
-  const [loading, setLoading] = useState(true);
   const [dataFromDB, setDataFromDB] = useState();
   const [robotSelected, setRobotSelected] = useState("");
   const [runningFlow, setRunningFlow] = useState("");
   const [warnings, setWarnings] = useState([]);
   const [flowDebugging, setFlowDebugging] = useState();
-  const [warningsVisibility, setWarningsVisibility] = useState(false);
-  const [viewMode, setViewMode] = useState(FLOW_VIEW_MODE.default);
+  const viewMode = mainInterface?.viewMode ?? "default";
   const [tooltipConfig, setTooltipConfig] = useState(null);
   const [contextMenuOptions, setContextMenuOptions] = useState(null);
   const [searchVisible, setSearchVisible] = useState(false);
@@ -109,7 +109,6 @@ export const Flow = (props, ref) => {
   // Refs
   const interfaceSubscriptionsList = useRef([]);
   const contextArgs = useRef(null);
-  const mainInterfaceRef = useRef();
   const debounceSelection = useRef();
   const selectedNodeRef = useRef();
   const selectedLinkRef = useRef();
@@ -139,11 +138,11 @@ export const Flow = (props, ref) => {
    * And then re strokes the links (to add or remove the debug colors)
    */
   const updateLinkStroke = useCallback(() => {
-    if (getMainInterface()) {
-      getMainInterface().graph.isFlowDebugging = flowDebugging;
-      getMainInterface().graph.reStrokeLinks();
+    if (mainInterface) {
+      mainInterface.graph.isFlowDebugging = flowDebugging;
+      mainInterface.graph.reStrokeLinks();
     }
-  }, [flowDebugging]);
+  }, [flowDebugging, mainInterface]);
 
   /**
    * Should update everything related to flowDebugging here
@@ -156,27 +155,21 @@ export const Flow = (props, ref) => {
    * Start node
    * @param {Object} target : Node to be started
    */
-  const startNode = useCallback(
-    node => {
-      commandNode("RUN", node, robotSelected).then(() => {
-        node.statusLoading = true;
-      });
-    },
-    [robotSelected, commandNode]
-  );
+  const startNode = node => {
+    commandNode("RUN", node).then(() => {
+      node.statusLoading = true;
+    });
+  };
 
   /**
    * Stop node
    * @param {Object} target : Node to be stopped
    */
-  const stopNode = useCallback(
-    node => {
-      commandNode("KILL", node, robotSelected).then(() => {
-        node.statusLoading = true;
-      });
-    },
-    [robotSelected, commandNode]
-  );
+  const stopNode = node => {
+    commandNode("KILL", node).then(() => {
+      node.statusLoading = true;
+    });
+  };
 
   /**
    * Execute command action to node to start or stop
@@ -185,44 +178,41 @@ export const Flow = (props, ref) => {
    * @param {TreeNode} node : Node to be started/stopped
    * @param {Function} callback : Success callback
    */
-  const commandNode = useCallback(
-    (action, node, selectedRobot = robotSelected) => {
-      const nodeNamePath = node.getNodePath();
-      return Rest.cloudFunction({
-        cbName: "backend.FlowTopBar",
-        func: "commandNode",
-        args: {
-          command: action,
-          nodeName: nodeNamePath,
-          robotName: selectedRobot
-        }
-      })
-        .then(res => {
-          if (!res.success) {
-            console.warn(res.error);
-            call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
-              message: t(ERROR_MESSAGES.SOMETHING_WENT_WRONG),
-              severity: ALERT_SEVERITIES.ERROR
-            });
-          } else {
-            call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
-              message: t(SUCCESS_MESSAGES.NODE_IS_ACTION, {
-                action: t(`ACTION_${action}`)
-              }),
-              severity: ALERT_SEVERITIES.INFO
-            });
-          }
-        })
-        .catch(err => {
-          console.warn(err.toString());
+  const commandNode = (action, node) => {
+    const nodeNamePath = node.getNodePath();
+    return Rest.cloudFunction({
+      cbName: "backend.FlowTopBar",
+      func: "commandNode",
+      args: {
+        command: action,
+        nodeName: nodeNamePath,
+        robotName: robotSelected
+      }
+    })
+      .then(res => {
+        if (!res.success) {
+          console.warn(res.error);
           call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
             message: t(ERROR_MESSAGES.SOMETHING_WENT_WRONG),
             severity: ALERT_SEVERITIES.ERROR
           });
+        } else {
+          call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
+            message: t(SUCCESS_MESSAGES.NODE_IS_ACTION, {
+              action: t(`ACTION_${action}`)
+            }),
+            severity: ALERT_SEVERITIES.INFO
+          });
+        }
+      })
+      .catch(err => {
+        console.warn(err.toString());
+        call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
+          message: t(ERROR_MESSAGES.SOMETHING_WENT_WRONG),
+          severity: ALERT_SEVERITIES.ERROR
         });
-    },
-    [call, robotSelected, t]
-  );
+      });
+  };
 
   //========================================================================================
   /*                                                                                      *
@@ -231,38 +221,23 @@ export const Flow = (props, ref) => {
   //========================================================================================
 
   /**
-   * @private Get main interface instance
-   */
-  const getMainInterface = () => {
-    return mainInterfaceRef.current;
-  };
-
-  /**
-   * Set mode
-   * @param {string} mode : Interface mode
-   */
-  const setMode = useCallback(mode => {
-    getMainInterface().setMode(mode);
-  }, []);
-
-  /**
    * Get the current node (from context menu) and all other selected nodes
    * @returns {array} Selected nodes
    */
   const getSelectedNodes = useCallback(() => {
     const node = contextArgs.current;
     const selectedNodesSet = new Set(
-      [node].concat(getMainInterface().selectedNodes)
+      [node].concat(mainInterface.selectedNodes)
     );
     return Array.from(selectedNodesSet).filter(el => el);
-  }, []);
+  }, [mainInterface]);
 
   /**
    * Get search options
    */
   const getSearchOptions = useCallback(() => {
-    return getMainInterface()?.graph.getSearchOptions() || [];
-  }, []);
+    return mainInterface?.graph.getSearchOptions() || [];
+  }, [mainInterface]);
 
   /**
    * Open document in new tab
@@ -296,7 +271,7 @@ export const Flow = (props, ref) => {
 
       callback?.();
     },
-    []
+    [instance]
   );
 
   /**
@@ -328,11 +303,11 @@ export const Flow = (props, ref) => {
         }
       });
 
-      getMainInterface()
+      mainInterface
         .graph.clearInvalidExposedPorts(invalidExposedPorts)
         .validateFlow();
     },
-    [instance]
+    [instance, mainInterface]
   );
 
   /**
@@ -430,18 +405,18 @@ export const Flow = (props, ref) => {
             resolve();
           },
           onValidation: newName =>
-            getMainInterface().graph.validator.validateNodeName(
+            mainInterface.graph.validator.validateNodeName(
               newName,
               t(node.model)
             ),
           onSubmit: newName =>
-            getMainInterface().pasteNode(newName, node, position)
+            mainInterface.pasteNode(newName, node, position)
         };
         // Open Dialog
         call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
       });
     },
-    [call, setFlowsToDefault, t]
+    [call, t, mainInterface]
   );
 
   //========================================================================================
@@ -581,7 +556,7 @@ export const Flow = (props, ref) => {
         title: t(FLOW_EXPLORER_PROFILE.title),
         view: explorerView.render({
           flowId: id,
-          mainInterface: getMainInterface()
+          mainInterface: mainInterface
         })
       };
     }
@@ -616,6 +591,7 @@ export const Flow = (props, ref) => {
     call,
     getNodeMenuToAdd,
     getLinkMenuToAdd,
+    mainInterface,
     t
   ]);
 
@@ -645,18 +621,6 @@ export const Flow = (props, ref) => {
   }
 
   /**
-   * On change running flow
-   * @param {*} flow
-   */
-  const onStartStopFlow = useCallback(flow => {
-    // Update state variable
-    setRunningFlow(prevState => {
-      if (prevState === flow) return prevState;
-      return flow;
-    });
-  }, []);
-
-  /**
    * On view mode change
    * @param {string} newViewMode : One of the following "default" or "treeView"
    */
@@ -664,46 +628,10 @@ export const Flow = (props, ref) => {
     newViewMode => {
       if (!newViewMode || viewMode === newViewMode) return;
       isEditableComponentRef.current = newViewMode === FLOW_VIEW_MODE.default;
-
-      setLoading(true);
-
-      // Set mode loading after changing view mode
-      setMode(EVT_NAMES.LOADING);
-
-      // Temporary fix to show loading (even though UI still freezes)
-      setTimeout(() => {
-        setViewMode(newViewMode);
-      }, 100);
+      mainInterface.setViewMode(newViewMode);
     },
-    [viewMode, setMode]
+    [viewMode, mainInterface]
   );
-
-  /**
-   * Toggle Warnings
-   */
-  const onToggleWarnings = useCallback(() => {
-    setWarningsVisibility(prevState => {
-      const newVisibility = !prevState;
-      getMainInterface()?.onToggleWarnings({ data: newVisibility });
-      return newVisibility;
-    });
-  }, []);
-
-  /**
-   * Update node active status
-   * @param {object} nodeStatus : Nodes to update status
-   * @param {{activeFlow: string, isOnline: boolean}} robotStatus : Robot current status
-   */
-  const onNodeStatusUpdate = useCallback((nodeStatus, robotStatus) => {
-    getMainInterface()?.nodeStatusUpdated(nodeStatus, robotStatus);
-  }, []);
-
-  /**
-   * Resets all node status
-   */
-  const onNodeCompleteStatusUpdated = useCallback(() => {
-    getMainInterface()?.resetAllNodeStatus();
-  }, []);
 
   //========================================================================================
   /*                                                                                      *
@@ -757,7 +685,7 @@ export const Flow = (props, ref) => {
         }
       }, 300);
     },
-    [MENUS, addNodeMenu, unselectNode, onLinkSelected]
+    [MENUS, addNodeMenu, unselectNode]
   );
 
   /**
@@ -768,7 +696,8 @@ export const Flow = (props, ref) => {
     link => {
       activateEditor();
       selectedLinkRef.current = link;
-      getMainInterface().selectedLink = link;
+      if (mainInterface)
+        mainInterface.selectedLink = link;
       if (!link) {
         call(
           PLUGINS.RIGHT_DRAWER.NAME,
@@ -777,7 +706,7 @@ export const Flow = (props, ref) => {
           activeBookmark
         );
       } else {
-        const currentMode = getMainInterface().mode.mode;
+        const currentMode = mainInterface.mode.mode;
         // We only want 1 selection at the time.
         // So let's unselect nodes if any is selected
         if (
@@ -785,9 +714,9 @@ export const Flow = (props, ref) => {
           currentMode.props.shiftKey
         ) {
           // If we're making multiple node selection we need to reset the mode
-          getMainInterface().setMode(EVT_NAMES.DEFAULT);
+          mainInterface.setMode(EVT_NAMES.DEFAULT);
           // Since we resetted the mode, we need to add back the selected link
-          getMainInterface().selectedLink = link;
+          mainInterface.selectedLink = link;
         } else if (selectedNodeRef.current) {
           // If we just selected 1 node, it's ok, let's just unselect it
           selectedNodeRef.current.selected = false;
@@ -800,7 +729,7 @@ export const Flow = (props, ref) => {
         addLinkMenu(link, true);
       }
     },
-    [activateEditor, call, unselectNode, addLinkMenu]
+    [MENUS, call, addLinkMenu, mainInterface]
   );
 
   /**
@@ -809,8 +738,8 @@ export const Flow = (props, ref) => {
   const handleContextClose = useCallback(() => {
     contextArgs.current = null;
     setContextMenuOptions(null);
-    getMainInterface().setMode(EVT_NAMES.DEFAULT);
-  }, []);
+    mainInterface.setMode(EVT_NAMES.DEFAULT);
+  }, [mainInterface]);
 
   /**
    * Call broadcast method to emit event to all open flows
@@ -828,14 +757,13 @@ export const Flow = (props, ref) => {
       PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR,
       { action: "setMode", value: EVT_NAMES.DEFAULT }
     );
-  }, [call, activateEditor, onLinkSelected, onNodeSelected]);
+  }, [call, onLinkSelected, onNodeSelected]);
 
   /**
    * Subscribe to mainInterface and canvas events
    */
   const onReady = useCallback(
     mainInterface => {
-      mainInterfaceRef.current = mainInterface;
 
       // If we are running this function again,
       // we should do some cleanup before continue
@@ -866,19 +794,6 @@ export const Flow = (props, ref) => {
           );
 
           onFlowValidated({ warnings: persistentWarns });
-        })
-      );
-
-      // Subscribe to on loading exit (finish) event
-      interfaceSubscriptionsList.current.push(
-        mainInterface.mode[EVT_NAMES.LOADING].onExit.subscribe(() => {
-          // Append the document frame to the canvas
-          mainInterface.canvas.appendDocumentFragment();
-          // Reposition all nodes and subflows
-          mainInterface.graph.updateAllPositions();
-          setLoading(false);
-          // Set initial warning visibility value
-          setWarningsVisibility(true);
         })
       );
 
@@ -1238,7 +1153,7 @@ export const Flow = (props, ref) => {
     async evt => {
       evt?.preventDefault?.();
       const position = (contextArgs.current =
-        getMainInterface().canvas.mousePosition);
+        mainInterface.canvas.mousePosition);
       const nodesToCopy = clipboard.read(KEYS.NODES_TO_COPY);
       if (!nodesToCopy) return;
 
@@ -1256,7 +1171,7 @@ export const Flow = (props, ref) => {
         });
       }
     },
-    [clipboard, pasteNodeDialog]
+    [clipboard, pasteNodeDialog, mainInterface]
   );
 
   /**
@@ -1268,7 +1183,7 @@ export const Flow = (props, ref) => {
     // Callback to delete all nodes
     const callback = () => {
       selectedNodes.forEach(node => {
-        getMainInterface().deleteNode(node.data);
+        mainInterface.deleteNode(node.data);
       });
       unselectNode();
     };
@@ -1281,32 +1196,32 @@ export const Flow = (props, ref) => {
     });
     // Show confirmation before delete
     handleDelete({ message, callback });
-  }, [handleDelete, unselectNode, getSelectedNodes, t]);
+  }, [handleDelete, unselectNode, getSelectedNodes, t, mainInterface]);
 
   /**
    * Handle delete link
    */
   const handleDeleteLink = useCallback(() => {
     const link = selectedLinkRef.current ?? contextArgs.current;
-    link.id && getMainInterface().deleteLink(link.id);
-  }, []);
+    link.id && mainInterface.deleteLink(link.id);
+  }, [mainInterface]);
 
   /**
    * Triggers the correct deletion
    * (if a link is selected delete link, else delete nodes)
    */
-  const handleShortcutDelete = useCallback(() => {
+  const handleShortcutDelete = () => {
     if (selectedLinkRef.current) handleDeleteLink();
     else handleDeleteNode();
-  }, [handleDeleteLink, handleDeleteNode]);
+  };
 
   /**
    * Toggle exposed port
    */
   const handleToggleExposedPort = useCallback(() => {
     const port = contextArgs.current;
-    getMainInterface().toggleExposedPort(port);
-  }, []);
+    mainInterface.toggleExposedPort(port);
+  }, [mainInterface]);
 
   /**
    * Open Callback
@@ -1335,30 +1250,30 @@ export const Flow = (props, ref) => {
   /**
    * Handle zoom reset
    */
-  const handleResetZoom = useCallback(() => {
-    getMainInterface()?.onResetZoom();
-  }, []);
+  const handleResetZoom = useCallback(_e => {
+    mainInterface?.onResetZoom();
+  }, [mainInterface]);
 
   /**
    * Handle Move Node
    */
   const handleMoveNode = useCallback(e => {
-    getMainInterface()?.onMoveNode(e);
-  }, []);
+    mainInterface?.onMoveNode(e);
+  }, [mainInterface]);
 
   /*
    * Handle search nodes
    */
   const handleSearchNode = useCallback(
     node => {
-      const mainInterface = getMainInterface();
+      const mainInterface = mainInterface;
       const nodeInstance = node && mainInterface.searchNode(node);
       if (!nodeInstance) return;
       nodeInstance.handleSelectionChange();
       mainInterface.onFocusNode(nodeInstance);
       deactivateEditor();
     },
-    [deactivateEditor]
+    [deactivateEditor, mainInterface]
   );
 
   const handleSearchEnabled = useCallback(() => {
@@ -1406,7 +1321,7 @@ export const Flow = (props, ref) => {
     on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR, evt => {
       // evt ex.: {action: "setMode", value: EVT_NAMES.DEFAULT}
       const { action, value } = evt;
-      getMainInterface()?.[action](value);
+      mainInterface?.[action](value);
     });
 
     setFlowDebugging(workspaceManager.getFlowIsDebugging());
@@ -1415,7 +1330,7 @@ export const Flow = (props, ref) => {
       off(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.ON.CHANGE_BOOKMARK);
       off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR);
     };
-  }, [on, off, workspaceManager]);
+  }, [on, off, workspaceManager, mainInterface]);
 
   /**
    * Initialize data
@@ -1434,7 +1349,7 @@ export const Flow = (props, ref) => {
       PLUGINS.DOC_MANAGER.ON.BEFORE_SAVE_DOC,
       async docData => {
         if (viewMode === FLOW_VIEW_MODE.treeView && docData.doc.name === name) {
-          const subFlows = mainInterfaceRef.current.graph.subFlows;
+          const subFlows = mainInterface.graph.subFlows;
 
           if (!docData.thisDoc.isDirty) {
             call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
@@ -1531,15 +1446,12 @@ export const Flow = (props, ref) => {
           alert={alert}
           confirmationAlert={confirmationAlert}
           scope={scope}
-          loading={loading}
           viewMode={viewMode}
           version={instance.current?.version}
-          mainInterface={mainInterfaceRef}
+          mainInterface={mainInterface}
           onRobotChange={onRobotChange}
           canRun={hasNodesToStart()}
-          onStartStopFlow={onStartStopFlow}
-          nodeStatusUpdated={onNodeStatusUpdate}
-          nodeCompleteStatusUpdated={onNodeCompleteStatusUpdated}
+          onStartStopFlow={setRunningFlow}
           onViewModeChange={onViewModeChange}
           searchProps={{
             visible: searchVisible,
@@ -1553,18 +1465,17 @@ export const Flow = (props, ref) => {
       <BaseFlow
         {...props}
         graphClass={getBaseFlowClass()}
-        loading={loading}
+        loading={mainInterface?.loading}
         viewMode={viewMode}
         dataFromDB={dataFromDB}
         warnings={warnings}
-        warningsVisibility={warningsVisibility}
         flowDebugging={flowDebugging}
         onReady={onReady}
       />
       <FlowBottomBar
         openFlow={openDoc}
-        onToggleWarnings={onToggleWarnings}
-        warningVisibility={warningsVisibility}
+        mainInterface={mainInterface}
+        warningVisibility={mainInterface?.canvas.warningsVisibility}
         robotSelected={robotSelected}
         runningFlow={runningFlow}
         warnings={warnings}

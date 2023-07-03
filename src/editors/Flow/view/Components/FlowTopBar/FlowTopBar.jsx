@@ -67,7 +67,6 @@ const FlowTopBar = props => {
     call,
     alert,
     scope,
-    loading,
     mainInterface,
     id,
     name,
@@ -276,7 +275,7 @@ const FlowTopBar = props => {
    */
   const canRunFlow = useCallback(
     action => {
-      const graph = mainInterface.current?.graph;
+      const graph = mainInterface?.graph;
       // let's validate flow before continuing
       graph?.validateFlow();
 
@@ -555,7 +554,7 @@ const FlowTopBar = props => {
             <ToggleButton
               data-testid="input_default-flow"
               value={FLOW_VIEW_MODE.default}
-              disabled={loading}
+              disabled={mainInterface?.loading}
             >
               <Tooltip title={t("DefaultFlowView")}>
                 <GrainIcon fontSize="small" />
@@ -564,7 +563,7 @@ const FlowTopBar = props => {
             <ToggleButton
               data-testid="input_tree-view-flow"
               value={FLOW_VIEW_MODE.treeView}
-              disabled={loading}
+              disabled={mainInterface?.loading}
             >
               <Tooltip title={t("TreeView")}>
                 <i className={`icon-tree ${classes.treeIcon}`}></i>
