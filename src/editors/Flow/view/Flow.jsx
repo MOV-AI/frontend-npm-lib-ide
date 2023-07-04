@@ -22,7 +22,6 @@ import {
 } from "../../../utils/Constants";
 import Workspace from "../../../utils/Workspace";
 import { KEYBINDINGS } from "../../../utils/shortcuts";
-import { activateKeyBind } from "../../../utils/Utils";
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "../../../utils/Messages";
 import CallbackModel from "../../Callback/model/Callback";
 import Clipboard, { KEYS } from "./Utils/Clipboard";
