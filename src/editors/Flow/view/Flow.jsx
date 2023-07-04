@@ -51,8 +51,6 @@ import MainInterface, { useSub, flowSub } from "./Components/interface/MainInter
 import "./Resources/css/Flow.css";
 import { flowStyles } from "./styles";
 
-let activeBookmark = null;
-
 export const Flow = (props, ref) => {
   // Props
   const {
@@ -83,6 +81,8 @@ export const Flow = (props, ref) => {
         classes: baseFlowClasses, modelView: instance, id: name, data: dataFromDB,
         type, width: "400px", height: "200px", model, readOnly: false, call, on
       });
+    else
+      mainInterface.majorUpdate();
   }, []);
 
   // Global consts
@@ -122,8 +122,6 @@ export const Flow = (props, ref) => {
   // Refs
   const interfaceSubscriptionsList = useRef([]);
   const contextArgs = useRef(null);
-  const debounceSelection = useRef();
-  const selectedNodeRef = useRef();
   const selectedLinkRef = useRef();
   const isEditableComponentRef = useRef(true);
   const workspaceManager = useMemo(() => new Workspace(), []);
@@ -238,11 +236,9 @@ export const Flow = (props, ref) => {
    * @returns {array} Selected nodes
    */
   const getSelectedNodes = useCallback(() => {
-    const node = contextArgs.current;
-    const selectedNodesSet = new Set(
-      [node].concat(mainInterface.selectedNodes)
-    );
-    return Array.from(selectedNodesSet).filter(el => el);
+    return Array.from(new Set(
+      mainInterface.selectedNodes
+    )).filter(el => el);
   }, [mainInterface]);
 
   /**
@@ -488,7 +484,7 @@ export const Flow = (props, ref) => {
         PLUGINS.RIGHT_DRAWER.NAME,
         PLUGINS.RIGHT_DRAWER.CALL.ADD_BOOKMARK,
         getNodeMenuToAdd(node),
-        activeBookmark,
+        MENUS.current.NODE.NAME,
         nodeSelection,
         true
       );
@@ -532,7 +528,7 @@ export const Flow = (props, ref) => {
         PLUGINS.RIGHT_DRAWER.NAME,
         PLUGINS.RIGHT_DRAWER.CALL.ADD_BOOKMARK,
         getLinkMenuToAdd(link),
-        activeBookmark,
+        MENUS.current.LINK.NAME,
         linkSelection,
         true
       );
@@ -575,9 +571,9 @@ export const Flow = (props, ref) => {
     }
 
     // Add node menu if any is selected
-    if (selectedNodeRef.current) {
+    if (mainInterface.selectedNodes[0]) {
       bookmarks[MENUS.current.NODE.NAME] = getNodeMenuToAdd(
-        selectedNodeRef.current
+        mainInterface.selectedNodes[0]
       );
     }
 
@@ -593,7 +589,7 @@ export const Flow = (props, ref) => {
       PLUGINS.RIGHT_DRAWER.NAME,
       PLUGINS.RIGHT_DRAWER.CALL.SET_BOOKMARK,
       bookmarks,
-      activeBookmark
+      MENUS.current.DETAIL.NAME
     );
   }, [
     MENUS,
@@ -667,14 +663,14 @@ export const Flow = (props, ref) => {
    * Remove Node Bookmark and set selectedNode to null
    */
   const unselectNode = useCallback(() => {
+    mainInterface.selectedNodes = [];
     call(
       PLUGINS.RIGHT_DRAWER.NAME,
       PLUGINS.RIGHT_DRAWER.CALL.REMOVE_BOOKMARK,
       MENUS.current.NODE.NAME,
       MENUS.current.DETAIL.NAME
     );
-    selectedNodeRef.current = null;
-  }, [MENUS, call, selectedNodeRef]);
+  }, [MENUS, call]);
 
   /**
    * On Node Selected
@@ -682,21 +678,16 @@ export const Flow = (props, ref) => {
    */
   const onNodeSelected = useCallback(
     node => {
-      clearTimeout(debounceSelection.current);
       contextArgs.current = node;
-      debounceSelection.current = setTimeout(() => {
-        if (!node) {
-          unselectNode();
-        } else {
-          // We only want 1 selection at the time.
-          // So let's unselect links if any is selected
-          if (selectedLinkRef.current) onLinkSelected(null);
+      if (!node) {
+        unselectNode();
+      } else {
+        // We only want 1 selection at the time.
+        // So let's unselect links if any is selected
+        if (selectedLinkRef.current) onLinkSelected(null);
 
-          selectedNodeRef.current = node;
-          activeBookmark = MENUS.current.NODE.NAME;
-          addNodeMenu(node, true);
-        }
-      }, 300);
+        addNodeMenu(node, true);
+      }
     },
     [MENUS, addNodeMenu, unselectNode]
   );
@@ -716,7 +707,7 @@ export const Flow = (props, ref) => {
           PLUGINS.RIGHT_DRAWER.NAME,
           PLUGINS.RIGHT_DRAWER.CALL.REMOVE_BOOKMARK,
           MENUS.current.LINK.NAME,
-          activeBookmark
+          MENUS.current.LINK.NAME
         );
       } else {
         const currentMode = mainInterface.mode.mode;
@@ -730,15 +721,11 @@ export const Flow = (props, ref) => {
           mainInterface.setMode(EVT_NAMES.DEFAULT);
           // Since we resetted the mode, we need to add back the selected link
           mainInterface.selectedLink = link;
-        } else if (selectedNodeRef.current) {
-          // If we just selected 1 node, it's ok, let's just unselect it
-          selectedNodeRef.current.selected = false;
         }
 
         // Remove node menu
         unselectNode();
 
-        activeBookmark = MENUS.current.LINK.NAME;
         addLinkMenu(link, true);
       }
     },
@@ -818,14 +805,11 @@ export const Flow = (props, ref) => {
         })
       );
 
-      // Subscribe to on node select event
-      interfaceSubscriptionsList.current.push(
-        mainInterface.mode[EVT_NAMES.SELECT_NODE].onEnter.subscribe(() => {
-          const selectedNodes = mainInterface.selectedNodes;
-          const node = selectedNodes.length !== 1 ? null : selectedNodes[0];
+      mainInterface.onNodeSelected = () => {
+        const selectedNodes = mainInterface.selectedNodes;
+        for (const node of selectedNodes)
           onNodeSelected(node);
-        })
-      );
+      };
 
       // Subscribe to double click event in a node
       interfaceSubscriptionsList.current.push(
@@ -1322,14 +1306,6 @@ export const Flow = (props, ref) => {
    * Component did mount
    */
   useEffect(() => {
-    on(
-      PLUGINS.RIGHT_DRAWER.NAME,
-      PLUGINS.RIGHT_DRAWER.ON.CHANGE_BOOKMARK,
-      bookmark => {
-        activeBookmark = bookmark.name;
-      }
-    );
-
     // Subscribe to docManager broadcast for flowEditor (global events)
     on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR, evt => {
       // evt ex.: {action: "setMode", value: EVT_NAMES.DEFAULT}
@@ -1340,7 +1316,6 @@ export const Flow = (props, ref) => {
     setFlowDebugging(workspaceManager.getFlowIsDebugging());
 
     return () => {
-      off(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.ON.CHANGE_BOOKMARK);
       off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR);
     };
   }, [on, off, workspaceManager, mainInterface]);

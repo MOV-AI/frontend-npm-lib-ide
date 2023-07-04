@@ -167,6 +167,8 @@ export default class MainInterface {
     this.viewMode = "default";
     this.cache = {};
     this.loading = true;
+    this._selectedNodes = [];
+    this.onNodeSelected = () => {};
     this.update = () => flowSub.update({
       ...flowSub.data.value,
       [id]: this,
@@ -178,44 +180,14 @@ export default class MainInterface {
         this.destroy();
     });
 
-    this.initialize();
-  }
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                    Initialization                                    *
-   *                                                                                      */
-  //========================================================================================
-
-  initialize = () => {
-    const { classes, docManager, height, id, width } = this;
-
     // Set initial mode as loading
     this.setMode(EVT_NAMES.LOADING);
     this.loading = true;
     this.update();
 
-    this.canvas = new Canvas({
-      mInterface: this,
-      width,
-      height,
-      classes,
-      docManager
-    });
-
-    const graphCls = this.viewMode === "treeView" ? GraphTreeView : GraphBase;
-
-    this.graph = new graphCls({
-      id,
-      mInterface: this,
-      canvas: this.canvas,
-      docManager
-    });
-
     // Load document and add subscribers
-    this.addSubscribers();
     this.regraph();
-  };
+  }
 
   majorUpdate() {
     this.canvas.appendDocumentFragment();
@@ -244,7 +216,9 @@ export default class MainInterface {
     if (cached) {
       this.canvas = cached.canvas;
       this.graph = cached.graph;
-      this.majorUpdate();
+      // this.majorUpdate();
+      // this.canvas.el.focus();
+      // this.update();
       return Promise.resolve();
     }
 
@@ -278,12 +252,6 @@ export default class MainInterface {
       graph: this.graph,
     };
 
-    // Canvas events (not modes)
-    // toggle warnings
-    this.canvas.events
-      .pipe(filter(event => event.name === EVT_NAMES.ON_TOGGLE_WARNINGS))
-      .subscribe(this.onToggleWarnings);
-
     this.update();
 
     return this.loadDoc();
@@ -294,15 +262,6 @@ export default class MainInterface {
    *                                  Setters and Getters                                 *
    *                                                                                      */
   //========================================================================================
-
-  get selectedNodes() {
-    return this.graph.selectedNodes;
-  }
-
-  set selectedNodes(nodes) {
-    this.graph.selectedNodes = nodes;
-    if (this.selectedLink) this.selectedLink.onSelected(false);
-  }
 
   get selectedLink() {
     return this.graph.selectedLink;
@@ -471,9 +430,6 @@ export default class MainInterface {
     // drag mode -> onExit event
     this.mode.drag.onExit.subscribe(this.onDragEnd);
 
-    // Node click and double click events
-    this.mode.selectNode.onEnter.subscribe(this.onSelectNode);
-
     this.mode.onDblClick.onEnter.subscribe(() => {
       this.setMode(EVT_NAMES.DEFAULT);
     });
@@ -518,11 +474,12 @@ export default class MainInterface {
   //========================================================================================
 
   onDefault = () => {
-    this.selectedNodes.length = 0;
+    console.log("onDefault");
+    this.selectedNodes = [];
   };
 
   onDragEnd = draggedNode => {
-    const selectedNodesSet = new Set([draggedNode].concat(this.selectedNodes));
+    const selectedNodesSet = new Set([draggedNode].concat(this._selectedNodes));
     const nodes = Array.from(selectedNodesSet).filter(obj => obj);
 
     nodes.forEach(node => {
@@ -555,41 +512,47 @@ export default class MainInterface {
 
   onSelectNode = data => {
     const { nodes, shiftKey } = data;
-    const { selectedNodes } = this;
-    const filterNodes = nodes.filter(n => n.data.model !== StartNode.model);
+    // const filterNodes = nodes.filter(n => n.data.model !== StartNode.model);
 
     this.selectedLink = null;
-
-    if (!shiftKey) selectedNodes.length = 0;
-
-    filterNodes.forEach(node => {
-      node.selected
-        ? selectedNodes.push(node)
-        : lodash.pull(selectedNodes, node);
-    });
+    this.selectedNodes = shiftKey ? this._selectedNodes.concat(nodes) : nodes;
+    // this.onNodeSelected(data);
   };
 
-  onToggleWarnings = event => {
+  get selectedNodes() {
+    return this._selectedNodes;
+  }
+
+  set selectedNodes(nodes) {
+    const prevSelectedNodes = this._selectedNodes;
+    this._selectedNodes = nodes;
+    for (const node of prevSelectedNodes)
+      node.onSelected();
+    for (const node of nodes)
+      node.onSelected();
+  }
+
+  onToggleWarnings(event) {
     // show/hide warnings
     this.graph.updateWarningsVisibility(event.data);
-  };
+  }
 
-  onStateChange = fn => {
+  onStateChange(fn) {
     return this.stateSub.subscribe(fn);
-  };
+  }
 
   /**
    * Resets all Node status (Turns of the center)
    */
-  resetAllNodeStatus = () => {
+  resetAllNodeStatus() {
     this.graph.resetStatus?.();
   };
 
-  onResetZoom = () => {
+  onResetZoom() {
     this.canvas.onResetZoom();
-  };
+  }
 
-  onMoveNode = event => {
+  onMoveNode(event) {
     const currentZoom = this.canvas.currentZoom?.k ?? 1;
     const step = 2 / currentZoom + 1;
     const delta = {
@@ -602,21 +565,17 @@ export default class MainInterface {
     const [x, y] = [50, 50]; // skip boundaries validation used when dragging a node
     this.graph.onNodeDrag(null, { x, y, dx, dy });
     this.onDragEnd();
-  };
+  }
 
-  onFocusNode = node => {
+  onFocusNode(node) {
     const { xCenter, yCenter } = node.getCenter();
     this.setMode(EVT_NAMES.DEFAULT, null, true);
     node.selected = true;
     if (node.data.id !== "start") {
-      this.setMode(
-        EVT_NAMES.SELECT_NODE,
-        { nodes: [node], shiftKey: false },
-        true
-      );
+      this.onSelectNode({ nodes: [node], shiftKey: false });
     }
     this.canvas.zoomToCoordinates(xCenter, yCenter);
-  };
+  }
 
   setViewMode(viewMode) {
     this.viewMode = viewMode;

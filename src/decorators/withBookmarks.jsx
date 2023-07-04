@@ -194,7 +194,7 @@ const withBookmarks = Component => {
               {Object.values(bookmarks).map(bookmark => (
                 <BookmarkTab
                   data-testid="section_bookmark-tab"
-                  key={bookmark.name}
+                  key={bookmark?.name}
                   classes={classes}
                   bookmark={bookmark}
                   active={active}
