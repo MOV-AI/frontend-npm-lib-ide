@@ -128,6 +128,8 @@ export default class MainInterface {
     this.graph = null;
     this.shortcuts = null;
     this.onLoad = () => {};
+    this._selectedNodes = [];
+    this.onNodeSelected = () => {};
 
     // Set initial mode as loading
     this.setMode(EVT_NAMES.LOADING);
@@ -173,15 +175,6 @@ export default class MainInterface {
    *                                  Setters and Getters                                 *
    *                                                                                      */
   //========================================================================================
-
-  get selectedNodes() {
-    return this.graph.selectedNodes;
-  }
-
-  set selectedNodes(nodes) {
-    this.graph.selectedNodes = nodes;
-    if (this.selectedLink) this.selectedLink.onSelected(false);
-  }
 
   get selectedLink() {
     return this.graph.selectedLink;
@@ -337,9 +330,6 @@ export default class MainInterface {
     // drag mode -> onExit event
     this.mode.drag.onExit.subscribe(this.onDragEnd);
 
-    // Node click and double click events
-    this.mode.selectNode.onEnter.subscribe(this.onSelectNode);
-
     this.mode.onDblClick.onEnter.subscribe(() => {
       this.setMode(EVT_NAMES.DEFAULT);
     });
@@ -384,11 +374,11 @@ export default class MainInterface {
   //========================================================================================
 
   onDefault = () => {
-    this.selectedNodes.length = 0;
+    this.selectedNodes = [];
   };
 
   onDragEnd = draggedNode => {
-    const selectedNodesSet = new Set([draggedNode].concat(this.selectedNodes));
+    const selectedNodesSet = new Set([draggedNode].concat(this._selectedNodes));
     const nodes = Array.from(selectedNodesSet).filter(obj => obj);
 
     nodes.forEach(node => {
@@ -421,19 +411,25 @@ export default class MainInterface {
 
   onSelectNode = data => {
     const { nodes, shiftKey } = data;
-    const { selectedNodes } = this;
-    const filterNodes = nodes.filter(n => n.data.model !== StartNode.model);
+    // const filterNodes = nodes.filter(n => n.data.model !== StartNode.model);
 
     this.selectedLink = null;
-
-    if (!shiftKey) selectedNodes.length = 0;
-
-    filterNodes.forEach(node => {
-      node.selected
-        ? selectedNodes.push(node)
-        : lodash.pull(selectedNodes, node);
-    });
+    this.selectedNodes = shiftKey ? this._selectedNodes.concat(nodes) : nodes;
+    // this.onNodeSelected(data);
   };
+
+  get selectedNodes() {
+    return this._selectedNodes;
+  }
+
+  set selectedNodes(nodes) {
+    const prevSelectedNodes = this._selectedNodes;
+    this._selectedNodes = nodes;
+    for (const node of prevSelectedNodes)
+      node.onSelected();
+    for (const node of nodes)
+      node.onSelected();
+  }
 
   onToggleWarnings = event => {
     // show/hide warnings
@@ -470,16 +466,11 @@ export default class MainInterface {
     this.onDragEnd();
   };
 
-  onFocusNode = node => {
+  onFocusNode = (node) => {
     const { xCenter, yCenter } = node.getCenter();
     this.setMode(EVT_NAMES.DEFAULT, null, true);
-    node.selected = true;
     if (node.data.id !== "start") {
-      this.setMode(
-        EVT_NAMES.SELECT_NODE,
-        { nodes: [node], shiftKey: false },
-        true
-      );
+      this.onSelectNode({ nodes: [node], shiftKey: false });
     }
     this.canvas.zoomToCoordinates(xCenter, yCenter);
   };
