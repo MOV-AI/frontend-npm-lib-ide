@@ -109,8 +109,6 @@ export const Flow = (props, ref) => {
   const interfaceSubscriptionsList = useRef([]);
   const contextArgs = useRef(null);
   const mainInterfaceRef = useRef();
-  const debounceSelection = useRef();
-  const selectedNodeRef = useRef();
   const selectedLinkRef = useRef();
   const isEditableComponentRef = useRef(true);
   const workspaceManager = useMemo(() => new Workspace(), []);
@@ -251,11 +249,9 @@ export const Flow = (props, ref) => {
    * @returns {array} Selected nodes
    */
   const getSelectedNodes = useCallback(() => {
-    const node = contextArgs.current;
-    const selectedNodesSet = new Set(
-      [node].concat(getMainInterface().selectedNodes)
-    );
-    return Array.from(selectedNodesSet).filter(el => el);
+    return Array.from(new Set(
+      mainInterfaceRef.current.selectedNodes
+    )).filter(el => el);
   }, []);
 
   /**
@@ -501,7 +497,7 @@ export const Flow = (props, ref) => {
         PLUGINS.RIGHT_DRAWER.NAME,
         PLUGINS.RIGHT_DRAWER.CALL.ADD_BOOKMARK,
         getNodeMenuToAdd(node),
-        activeBookmark,
+        MENUS.current.NODE.NAME,
         nodeSelection,
         true
       );
@@ -545,7 +541,7 @@ export const Flow = (props, ref) => {
         PLUGINS.RIGHT_DRAWER.NAME,
         PLUGINS.RIGHT_DRAWER.CALL.ADD_BOOKMARK,
         getLinkMenuToAdd(link),
-        activeBookmark,
+        MENUS.current.LINK.NAME,
         linkSelection,
         true
       );
@@ -588,9 +584,9 @@ export const Flow = (props, ref) => {
     }
 
     // Add node menu if any is selected
-    if (selectedNodeRef.current) {
+    if (mainInterfaceRef.current.selectedNodes[0]) {
       bookmarks[MENUS.current.NODE.NAME] = getNodeMenuToAdd(
-        selectedNodeRef.current
+        mainInterfaceRef.current.selectedNodes[0]
       );
     }
 
@@ -699,14 +695,14 @@ export const Flow = (props, ref) => {
    * Remove Node Bookmark and set selectedNode to null
    */
   const unselectNode = useCallback(() => {
+    mainInterfaceRef.current.selectedNodes = [];
     call(
       PLUGINS.RIGHT_DRAWER.NAME,
       PLUGINS.RIGHT_DRAWER.CALL.REMOVE_BOOKMARK,
       MENUS.current.NODE.NAME,
       MENUS.current.DETAIL.NAME
     );
-    selectedNodeRef.current = null;
-  }, [MENUS, call, selectedNodeRef]);
+  }, [MENUS, call]);
 
   /**
    * On Node Selected
@@ -714,21 +710,16 @@ export const Flow = (props, ref) => {
    */
   const onNodeSelected = useCallback(
     node => {
-      clearTimeout(debounceSelection.current);
       contextArgs.current = node;
-      debounceSelection.current = setTimeout(() => {
-        if (!node) {
-          unselectNode();
-        } else {
-          // We only want 1 selection at the time.
-          // So let's unselect links if any is selected
-          if (selectedLinkRef.current) onLinkSelected(null);
+      if (!node) {
+        unselectNode();
+      } else {
+        // We only want 1 selection at the time.
+        // So let's unselect links if any is selected
+        if (selectedLinkRef.current) onLinkSelected(null);
 
-          selectedNodeRef.current = node;
-          activeBookmark = MENUS.current.NODE.NAME;
-          addNodeMenu(node, true);
-        }
-      }, 300);
+        addNodeMenu(node, true);
+      }
     },
     [MENUS, addNodeMenu, unselectNode, onLinkSelected]
   );
@@ -852,14 +843,11 @@ export const Flow = (props, ref) => {
         })
       );
 
-      // Subscribe to on node select event
-      interfaceSubscriptionsList.current.push(
-        mainInterface.mode[EVT_NAMES.SELECT_NODE].onEnter.subscribe(() => {
-          const selectedNodes = mainInterface.selectedNodes;
-          const node = selectedNodes.length !== 1 ? null : selectedNodes[0];
+      mainInterface.onNodeSelected = () => {
+        const selectedNodes = mainInterface.selectedNodes;
+        for (const node of selectedNodes)
           onNodeSelected(node);
-        })
-      );
+      };
 
       // Subscribe to double click event in a node
       interfaceSubscriptionsList.current.push(

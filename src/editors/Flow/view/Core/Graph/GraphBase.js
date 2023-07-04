@@ -43,7 +43,6 @@ export default class GraphBase {
     this.links = new Map(); // linkId : <link instance>
     this.allNodesLoaded = false; // If we need to do some actions AFTER we are sure all nodes have loaded
     this.exposedPorts = {};
-    this.selectedNodes = [];
     this.selectedLink = null;
     this.tempNode = null;
     this.warnings = [];
@@ -236,7 +235,7 @@ export default class GraphBase {
   onNodeDrag = (draggedNode, d) => {
     const allNodes = this.nodes;
     const allLinks = this.links;
-    let nodes = [...this.selectedNodes];
+    let nodes = [...this.mInterface.selectedNodes];
 
     if (draggedNode) {
       const gnode = this.nodes.get(draggedNode.data.id);
@@ -244,7 +243,7 @@ export default class GraphBase {
     }
 
     if (this.canvas.inBoundaries(d.x, d.y)) {
-      this.selectedNodes.forEach(node => {
+      this.mInterface.selectedNodes.forEach(node => {
         node.setPositionDelta(d.dx, d.dy);
       });
     }
@@ -633,9 +632,7 @@ export default class GraphBase {
 
   reset() {
     // Reset all selected nodes
-    this.nodes.forEach(node => {
-      node.obj.selected = false;
-    });
+    this.mInterface.selectedNodes = [];
     // Reset selected link
     if (this.selectedLink) {
       this.selectedLink.onSelected(false);

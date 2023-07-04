@@ -259,22 +259,14 @@ class Canvas {
         (xValue, i) => xValue < maxCorner[i]
       );
       if (greaterThanMinCorner && lessThanMaxCorner) {
-        node.obj.selected = true;
         nodesInsideQuad.push(node.obj);
       }
     });
-    const selectedSet = new Set(
-      [...this.mInterface.selectedNodes].concat(nodesInsideQuad)
-    );
-    if (selectedSet.size > 0) {
-      this.setMode(
-        EVT_NAMES.SELECT_NODE,
-        {
-          nodes: Array.from(selectedSet),
-          shiftKey: true
-        },
-        true
-      );
+    if (nodesInsideQuad.length > 0) {
+      this.mInterface.onSelectNode({
+        nodes: nodesInsideQuad,
+        shiftKey: true
+      });
     }
   }
 

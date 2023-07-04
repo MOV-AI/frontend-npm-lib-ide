@@ -216,7 +216,6 @@ export default class GraphTreeView extends GraphBase {
    */
   reset(node = this.rootNode) {
     if (!node) return;
-    node.selected = false;
     node.children.forEach(child => {
       this.reset(child);
     });
