@@ -646,18 +646,6 @@ export const Flow = (props, ref) => {
   }
 
   /**
-   * On change running flow
-   * @param {*} flow
-   */
-  const onStartStopFlow = useCallback(flow => {
-    // Update state variable
-    setRunningFlow(prevState => {
-      if (prevState === flow) return prevState;
-      return flow;
-    });
-  }, []);
-
-  /**
    * On view mode change
    * @param {string} newViewMode : One of the following "default" or "treeView"
    */
@@ -688,22 +676,6 @@ export const Flow = (props, ref) => {
       getMainInterface()?.onToggleWarnings({ data: newVisibility });
       return newVisibility;
     });
-  }, []);
-
-  /**
-   * Update node active status
-   * @param {object} nodeStatus : Nodes to update status
-   * @param {{activeFlow: string, isOnline: boolean}} robotStatus : Robot current status
-   */
-  const onNodeStatusUpdate = useCallback((nodeStatus, robotStatus) => {
-    getMainInterface()?.nodeStatusUpdated(nodeStatus, robotStatus);
-  }, []);
-
-  /**
-   * Resets all node status
-   */
-  const onNodeCompleteStatusUpdated = useCallback(() => {
-    getMainInterface()?.resetAllNodeStatus();
   }, []);
 
   //========================================================================================
@@ -870,18 +842,7 @@ export const Flow = (props, ref) => {
         })
       );
 
-      // Subscribe to on loading exit (finish) event
-      interfaceSubscriptionsList.current.push(
-        mainInterface.mode[EVT_NAMES.LOADING].onExit.subscribe(() => {
-          // Append the document frame to the canvas
-          mainInterface.canvas.appendDocumentFragment();
-          // Reposition all nodes and subflows
-          mainInterface.graph.updateAllPositions();
-          setLoading(false);
-          // Set initial warning visibility value
-          setWarningsVisibility(true);
-        })
-      );
+      mainInterface.onLoad = () => setLoading(false);
 
       // subscribe to on enter default mode
       // When enter default mode remove other node/sub-flow bookmarks
@@ -1539,9 +1500,7 @@ export const Flow = (props, ref) => {
           mainInterface={mainInterfaceRef}
           onRobotChange={onRobotChange}
           canRun={hasNodesToStart()}
-          onStartStopFlow={onStartStopFlow}
-          nodeStatusUpdated={onNodeStatusUpdate}
-          nodeCompleteStatusUpdated={onNodeCompleteStatusUpdated}
+          onStartStopFlow={setRunningFlow}
           onViewModeChange={onViewModeChange}
           searchProps={{
             visible: searchVisible,

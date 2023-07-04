@@ -10,6 +10,12 @@ import InterfaceModes from "./InterfaceModes";
 import Events from "./Events";
 import Canvas from "./canvas";
 
+export
+let _cachedNodeStatus = {};
+
+export
+let cachedNodeStatus = {};
+
 const NODE_PROPS = {
   Node: {
     LABEL: "NodeLabel",
@@ -24,6 +30,50 @@ const NODE_PROPS = {
     TYPE: NODE_TYPES.CONTAINER
   }
 };
+
+function _set(obj, value, splits = []) {
+  if (splits.length === 0) {
+    throw new Error("Invalid splits array");
+  }
+
+  let currentObj = obj;
+
+  for (let i = 0; i < splits.length - 1; i++) {
+    const split = splits[i];
+    currentObj = currentObj[split] = currentObj[split] || {};
+  }
+
+  currentObj[splits[splits.length - 1]] = value;
+}
+
+function _marks(obj) {
+  const result = {};
+  const stack = [{ obj: obj, prefix: '' }];
+
+  while (stack.length > 0) {
+    const { obj, prefix } = stack.pop();
+
+    for (const key in obj) {
+      const value = obj[key];
+      const newPrefix = prefix + key;
+
+      result[newPrefix] = value ? 1 : 0;
+
+      if (typeof value === 'object' && value !== null)
+        stack.push({ obj: value, prefix: newPrefix + '__' });
+    }
+  }
+
+  return result;
+}
+
+function ensureParents(json) {
+  // TODO the contents of the _set function should be inlined for optimization
+  for (const [key, value] of Object.entries(json))
+    _set(_cachedNodeStatus, value, key.split("__"))
+
+  return _marks(_cachedNodeStatus);
+}
 
 export default class MainInterface {
   constructor({
@@ -58,6 +108,7 @@ export default class MainInterface {
     this.canvas = null;
     this.graph = null;
     this.shortcuts = null;
+    this.onLoad = () => {};
 
     this.initialize();
   }
@@ -91,12 +142,8 @@ export default class MainInterface {
     });
 
     // Load document and add subscribers
-    this.addSubscribers()
-      .loadDoc()
-      .then(() => {
-        this.canvas.el.focus();
-        this.setMode(EVT_NAMES.DEFAULT);
-      });
+    this.addSubscribers();
+    return this.loadDoc();
   };
 
   /**
@@ -106,6 +153,13 @@ export default class MainInterface {
    */
   loadDoc = async () => {
     await this.graph.loadData(this.modelView.current.serializeToDB());
+    this.nodeStatusUpdated({});
+    this.canvas.el.focus();
+    this.onToggleWarnings({ data: true });
+    this.setMode(EVT_NAMES.DEFAULT);
+    this.canvas.appendDocumentFragment();
+    this.graph.updateAllPositions();
+    this.onLoad();
   };
 
   //========================================================================================
@@ -141,7 +195,21 @@ export default class MainInterface {
   };
 
   nodeStatusUpdated = (nodeStatus, robotStatus) => {
-    this.graph.nodeStatusUpdated(nodeStatus, robotStatus);
+    const input = cachedNodeStatus;
+    const update = ensureParents(nodeStatus);
+    let res = { ...update };
+
+    for (const [updateKey, updateVal] of Object.entries(update)) {
+      if (updateVal)
+        continue;
+
+      for (const inputKey of Object.keys(input))
+        if (inputKey.startsWith(updateKey))
+          res[inputKey] = 0;
+    }
+
+    cachedNodeStatus = res;
+    this.graph.nodeStatusUpdated(robotStatus);
   };
 
   addLink = () => {

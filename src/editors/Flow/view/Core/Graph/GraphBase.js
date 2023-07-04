@@ -8,9 +8,9 @@ import { InvalidLink } from "../../Components/Links/Errors";
 import { FLOW_VIEW_MODE, NODE_TYPES } from "../../Constants/constants";
 import Factory from "../../Components/Nodes/Factory";
 import { shouldUpdateExposedPorts } from "./Utils";
+import { cachedNodeStatus } from "../../Components/interface/MainInterface";
 import GraphValidator from "./GraphValidator";
 
-const NODE_LOAD_CHECK_TIMEOUT = 500;
 const NODE_DATA = {
   NODE: {
     LABEL: "NodeLabel",
@@ -286,6 +286,7 @@ export default class GraphBase {
     });
     // Update links
     this.updateLinks(data.Links || {});
+    this.nodesLoaded();
     // Update exposed ports
     this.loadExposedPorts(data.ExposedPorts || {}, true);
     // Let's re-validate the flow
@@ -341,9 +342,10 @@ export default class GraphBase {
 
     this.allNodesLoaded = true;
 
-    this.loadLinks(flow.Links)
-      .loadExposedPorts(flow.ExposedPorts || {})
-      .update();
+    this.loadLinks(flow.Links);
+    this.loadExposedPorts(flow.ExposedPorts || {});
+    this.nodesLoaded();
+    this.update();
   }
 
   /**
@@ -583,21 +585,27 @@ export default class GraphBase {
    * @param {Object} nodes
    * @param {*} robotStatus
    */
-  nodeStatusUpdated(nodes) {
-    // Let's wait untill allNodes are loaded to recall this function again
-    // What would happen sometimes is it was called before all nodes were loaded
-    // Causing some nodes to not light up when they should.
-    if (!this.allNodesLoaded)
-      return setTimeout(
-        () => this.nodeStatusUpdated(nodes),
-        NODE_LOAD_CHECK_TIMEOUT
-      );
+  nodeStatusUpdated() {
+    this.nodesLoaded();
+  }
 
-    Object.keys(nodes).forEach(nodeName => {
-      const status = nodes[nodeName];
-      this.updateNodeStatus(nodeName, status);
+  nodesLoaded() {
+    this.allNodesLoaded = true;
+    Object.keys(cachedNodeStatus).forEach(nodeName => {
+      const status = cachedNodeStatus[nodeName];
+      const nodeKey = nodeName.substring(nodeName.indexOf("__") + 2);
+      this.updateNodeStatus(nodeKey, status, this.rootNode);
     });
   }
+
+  getNodeParent(nodePath, i, _) {
+    return this.nodes.get(nodePath.slice(0, i + 1).join("__"));
+  }
+
+  setNodeStatus(node, status) {
+    node.obj.status = [1, true, "true"].includes(status);
+  }
+
 
   /**
    * @private function
@@ -607,18 +615,18 @@ export default class GraphBase {
    * @param {Boolean} status : True -> Running / False -> Not Running
    * @param {TreeContainerNode} parent : Flow to look for the node
    */
-  updateNodeStatus = (nodeName, status) => {
+  updateNodeStatus = (nodeName, status, parent) => {
     // is this a subflow node?
-    if (nodeName.indexOf("__") >= 0) {
-      const nodePath = nodeName.split("__");
-      const nodeParent = this.nodes.get(nodePath[0]);
+    const nodePath = nodeName.split("__");
 
-      if (nodeParent)
-        nodeParent.obj.status = [1, true, "true"].includes(status);
+    for (let i = 0; i < nodePath.length; i++) {
+      const nodeParent = this.getNodeParent(nodePath, i, parent);
+
+      if (nodeParent) {
+        this.setNodeStatus(nodeParent, status);
+        parent = nodeParent;
+      }
     }
-
-    const node = this.nodes.get(nodeName);
-    if (node) node.obj.status = [1, true, "true"].includes(status);
   };
 
   reset() {
