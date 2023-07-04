@@ -4,11 +4,14 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { LINK_DEPENDENCY } from "../../../../../utils/Constants";
+import { convertToValidString } from "../../../../../utils/Utils";
 
 import { dependencyInfoStyles } from "./styles";
 
-const DependencyInfo = () => {
+const DependencyInfo = props => {
   const [minified, setMinified] = useState(false);
+
+  const { activateKeyBind } = props;
 
   // Translation hook
   const { t } = useTranslation();
@@ -17,6 +20,7 @@ const DependencyInfo = () => {
 
   const toggleMinify = useCallback(() => {
     setMinified(prevState => !prevState);
+    activateKeyBind();
   }, []);
 
   return (
@@ -31,9 +35,12 @@ const DependencyInfo = () => {
             : t("DependencyInfoTitle")}
           <ArrowDropDownIcon />
         </h3>
-        {Object.values(LINK_DEPENDENCY).map((dep, i) => {
+        {Object.values(LINK_DEPENDENCY).map(dep => {
           return (
-            <div key={`${dep.LABEL}_${i}`} className={classes.infoContainer}>
+            <div
+              key={convertToValidString(dep.LABEL)}
+              className={classes.infoContainer}
+            >
               <p>{t(dep.LABEL)}</p>
               <div
                 className={classes.colorChip}
