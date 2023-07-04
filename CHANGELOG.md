@@ -1,6 +1,5 @@
 # 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
-- [FP-2277 - Give back focus to Flow Editor after losing focus on some cases](https://movai.atlassian.net/browse/FP-2277)
 - [FP-2359 - Added a way for the BaseApp keybinds to work](https://movai.atlassian.net/browse/FP-2359)
 - [FP-2438 - No longer saving NodeInstance's Parameter types](https://movai.atlassian.net/browse/FP-2438)
 - [FP-2406 - Make menu be able to persist on IDE](https://movai.atlassian.net/browse/FP-2406)
@@ -37,3 +36,4 @@
 - [FP-2481 - Can't start a valid flow in tree view - Start link(s) not found](https://movai.atlassian.net/browse/FP-2481)
 - [FP-2466 - Prevent multiple subscribes in Flow onReady function](https://movai.atlassian.net/browse/FP-2466)
 - [FP-2467 - We are now correctly deleting exposed ports on node deletion](https://movai.atlassian.net/browse/FP-2467)
+- [FP-2277 - Give back focus to Flow Editor after losing focus on some cases](https://movai.atlassian.net/browse/FP-2277)
