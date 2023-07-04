@@ -36,3 +36,4 @@
 - [FP-2481 - Can't start a valid flow in tree view - Start link(s) not found](https://movai.atlassian.net/browse/FP-2481)
 - [FP-2466 - Prevent multiple subscribes in Flow onReady function](https://movai.atlassian.net/browse/FP-2466)
 - [FP-2467 - We are now correctly deleting exposed ports on node deletion](https://movai.atlassian.net/browse/FP-2467)
+- [FP-2473 - IDE Flows appear as running but nodes don't in tree view](https://movai.atlassian.net/browse/FP-2473)

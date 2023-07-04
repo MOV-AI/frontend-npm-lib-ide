@@ -2,11 +2,9 @@ import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import _isEqual from "lodash/isEqual";
 import { RobotManager } from "@mov-ai/mov-fe-lib-core";
 import i18n from "../../../../../../i18n/i18n";
-import { FLOW_VIEW_MODE } from "../../../Constants/constants";
 import { compareDocumentPaths } from "../../../Utils/utils";
 
 const DEBOUNCE_TIME = 600; // ms
-const DEBOUNCE_NODE_STATUS_TIME = 1000; // ms
 const ROBOT_OFFLINE_TIME = 8; // sec
 
 const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
@@ -15,9 +13,8 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
     id,
     version,
     alert,
-    nodeStatusUpdated,
-    nodeCompleteStatusUpdated,
-    onStartStopFlow
+    onStartStopFlow,
+    mainInterface,
   } = props;
   // State hooks
   const [robotStatus, setRobotStatus] = useState({
@@ -29,7 +26,6 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
   // Refs
   const selectedRobotRef = useRef(robotSelected);
   const debounceDeltaRef = useRef(Date.now());
-  const nodeStatusViewModeRef = useRef(FLOW_VIEW_MODE.default);
   const nodeStatusRef = useRef({});
   const allNodeStatusRef = useRef({});
   const lastMessage = useRef("");
@@ -132,9 +128,8 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
     nodeStatusRef.current = emptyNodeStatus;
     allNodeStatusRef.current = emptyAllNodeStatus;
     // Send updates to canvas
-    nodeStatusUpdated(emptyNodeStatus);
-    nodeCompleteStatusUpdated(emptyAllNodeStatus);
-  }, [nodeCompleteStatusUpdated, nodeStatusUpdated]);
+    mainInterface.current?.resetAllNodeStatus();
+  }, [mainInterface]);
 
   /**
    * Format flow path
@@ -169,6 +164,7 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
   const updateNodeStatus = useCallback(
     (key, targetValue, data, forceUpdate) => {
       if (
+        !mainInterface ||
         Date.now() - debounceDeltaRef.current <= DEBOUNCE_TIME &&
         !forceUpdate
       )
@@ -186,29 +182,18 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
 
         const running = isOnline && isFlowRunning(robotStatusData.active_flow);
         const runningNodes = running ? getNodesRunning(robotStatusData) : [];
-        const nodeStatus = getNodesToUpdate(
-          nodeStatusRef.current,
-          runningNodes
-        );
         const allNodesStatus = getNodesToUpdate(
           allNodeStatusRef.current,
           runningNodes,
           false
         );
 
-        if (
-          (!_isEqual(allNodeStatusRef.current, allNodesStatus) &&
-            isFlowRunning(activeFlow)) ||
-          nodeStatusViewModeRef.current !== viewMode
-        ) {
-          nodeStatusRef.current = nodeStatus;
-          allNodeStatusRef.current = allNodesStatus;
-          nodeStatusViewModeRef.current = viewMode;
-          nodeStatusUpdated(allNodesStatus, { isOnline, activeFlow });
-        }
-
         activeFlow = isOnline ? robotStatusData.active_flow : "";
         onStartStopFlow(activeFlow);
+        mainInterface.current?.nodeStatusUpdated(running ? Object.entries(allNodesStatus).reduce(
+          (a, [key, val]) => ({ ...a, [mainInterface.id + "__" + key]: val }),
+          {}
+        ) : { [mainInterface.current?.id]: 0 }, { isOnline, activeFlow });
       }
       // Robot doesn't have "Status" key in Redis
       else {
@@ -230,9 +215,9 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
       getNodesToUpdate,
       isFlowRunning,
       isRobotOnline,
-      nodeStatusUpdated,
       onStartStopFlow,
       onlineAlert,
+      mainInterface,
       viewMode
     ]
   );
