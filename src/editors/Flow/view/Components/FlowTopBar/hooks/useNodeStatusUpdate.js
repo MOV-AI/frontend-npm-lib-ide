@@ -182,16 +182,11 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
 
         const running = isOnline && isFlowRunning(robotStatusData.active_flow);
         const runningNodes = running ? getNodesRunning(robotStatusData) : [];
-        const allNodesStatus = getNodesToUpdate(
-          allNodeStatusRef.current,
-          runningNodes,
-          false
-        );
 
         activeFlow = isOnline ? robotStatusData.active_flow : "";
         onStartStopFlow(activeFlow);
-        mainInterface.current?.nodeStatusUpdated(running ? Object.entries(allNodesStatus).reduce(
-          (a, [key, val]) => ({ ...a, [mainInterface.current?.id + "__" + key]: val }),
+        mainInterface.current?.nodeStatusUpdated(running ? runningNodes.reduce(
+          (a, key) => ({ ...a, [mainInterface.current?.id + "__" + key]: 1 }),
           {}
         ) : { [mainInterface.current?.id]: 0 }, { isOnline, activeFlow });
       }
