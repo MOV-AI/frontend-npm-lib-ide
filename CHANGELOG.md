@@ -38,3 +38,4 @@
 - [FP-2467 - We are now correctly deleting exposed ports on node deletion](https://movai.atlassian.net/browse/FP-2467)
 - [FP-2277 - Give back focus to Flow Editor after losing focus on some cases](https://movai.atlassian.net/browse/FP-2277)
 - [FP-2473 - IDE Flows appear as running but nodes don't in tree view](https://movai.atlassian.net/browse/FP-2473)
+- [FP-2519 - nodes on tree view show as alive when they are not](https://movai.atlassian.net/browse/FP-2519)

@@ -195,20 +195,7 @@ export default class MainInterface {
   };
 
   nodeStatusUpdated = (nodeStatus, robotStatus) => {
-    const input = cachedNodeStatus;
-    const update = ensureParents(nodeStatus);
-    let res = { ...update };
-
-    for (const [updateKey, updateVal] of Object.entries(update)) {
-      if (updateVal)
-        continue;
-
-      for (const inputKey of Object.keys(input))
-        if (inputKey.startsWith(updateKey))
-          res[inputKey] = 0;
-    }
-
-    cachedNodeStatus = res;
+    cachedNodeStatus = ensureParents(nodeStatus);
     this.graph.nodeStatusUpdated(robotStatus);
   };
 
