@@ -59,37 +59,6 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
   }, []);
 
   /**
-   * @private Get nodes to update
-   * @param {*} prevNodesStatus
-   * @param {*} runningNodes
-   * @param {*} splitContainer
-   * @returns Nodes to update
-   */
-  const getNodesToUpdate = useCallback(
-    (prevNodesStatus, runningNodes, splitContainer = true) => {
-      // {<node name> :< status>, ...} where status can be 1 (running) or 0 (stopped and to be removed in the next ui update)
-      const nextNodesStatus = {};
-
-      // remove nodes with status = 0 and set status to 0 of the remaining ones (previously 1)
-      Object.entries(prevNodesStatus)
-        .filter(obj => obj[1] === 1) // remove already stopped nodes
-        .forEach(obj => (nextNodesStatus[obj[0]] = 0)); // set all nodes to stopped
-
-      runningNodes
-        .map(el => {
-          // nodes running in subFlows are named as <subFlow inst name>__<node name>
-          // ex.: node running as ctest__test => subFlow is ctest and the node name is test
-          const [node] = el.split(/__/);
-          return splitContainer ? node : el;
-        })
-        .forEach(node => (nextNodesStatus[node] = 1)); // set node state to running
-
-      return nextNodesStatus;
-    },
-    []
-  );
-
-  /**
    * @private Show online Alert
    * @param {*} isOnline
    */
@@ -207,7 +176,6 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
     [
       alert,
       getNodesRunning,
-      getNodesToUpdate,
       isFlowRunning,
       isRobotOnline,
       onStartStopFlow,

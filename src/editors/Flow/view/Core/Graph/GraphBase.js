@@ -586,16 +586,15 @@ export default class GraphBase {
    * @param {*} robotStatus
    */
   nodeStatusUpdated() {
-    this.nodesLoaded();
+    for (const [nodeName, status] of Object.entries(cachedNodeStatus)) {
+      const nodeKey = nodeName.substring(nodeName.indexOf("__") + 2);
+      this.updateNodeStatus(nodeKey, status, this.rootNode);
+    }
   }
 
   nodesLoaded() {
     this.allNodesLoaded = true;
-    Object.keys(cachedNodeStatus).forEach(nodeName => {
-      const status = cachedNodeStatus[nodeName];
-      const nodeKey = nodeName.substring(nodeName.indexOf("__") + 2);
-      this.updateNodeStatus(nodeKey, status, this.rootNode);
-    });
+    this.nodeStatusUpdated();
   }
 
   getNodeParent(nodePath, i, _) {

@@ -31,6 +31,8 @@ const NODE_PROPS = {
   }
 };
 
+// thanks, ChatGPT
+// sets the object's value, given the path described by the splits
 function _set(obj, value, splits = []) {
   if (splits.length === 0) {
     throw new Error("Invalid splits array");
@@ -46,6 +48,8 @@ function _set(obj, value, splits = []) {
   currentObj[splits[splits.length - 1]] = value;
 }
 
+// thanks, ChatGPT
+// ensure parents of lit nodes are lit
 function _marks(obj) {
   const result = {};
   const stack = [{ obj: obj, prefix: '' }];
@@ -67,12 +71,24 @@ function _marks(obj) {
   return result;
 }
 
+// ensure parents of lit nodes are lit, and children of unlit flows are unlit
 function ensureParents(json) {
+  const initial = { ...cachedNodeStatus };
+
   // TODO the contents of the _set function should be inlined for optimization
   for (const [key, value] of Object.entries(json))
     _set(_cachedNodeStatus, value, key.split("__"))
 
-  return _marks(_cachedNodeStatus);
+  const marks = _marks(_cachedNodeStatus);
+  const ret = { ...marks };
+
+  // turn off child nodes if parent is turned off
+  for (const key of Object.keys(initial))
+    for (const key2 of Object.keys(marks))
+      if (key.startsWith(key2) && !marks[key2])
+        ret[key] = 0;
+
+  return ret;
 }
 
 export default class MainInterface {
@@ -110,18 +126,6 @@ export default class MainInterface {
     this.shortcuts = null;
     this.onLoad = () => {};
 
-    this.initialize();
-  }
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                    Initialization                                    *
-   *                                                                                      */
-  //========================================================================================
-
-  initialize = () => {
-    const { classes, containerId, docManager, height, id, width } = this;
-
     // Set initial mode as loading
     this.setMode(EVT_NAMES.LOADING);
 
@@ -131,20 +135,20 @@ export default class MainInterface {
       width,
       height,
       classes,
-      docManager
+      docManager: call
     });
 
     this.graph = new this.graphCls({
       id,
       mInterface: this,
       canvas: this.canvas,
-      docManager
+      docManager: call
     });
 
     // Load document and add subscribers
     this.addSubscribers();
-    return this.loadDoc();
-  };
+    this.loadDoc();
+  }
 
   /**
    * @private
