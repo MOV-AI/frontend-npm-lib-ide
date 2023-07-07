@@ -25,6 +25,7 @@ const BaseFlow = props => {
     warnings,
     warningsVisibility,
     onReady,
+    activateKeyBind,
     flowDebugging,
     viewMode,
     graphClass,
@@ -107,7 +108,7 @@ const BaseFlow = props => {
           <Warnings warnings={warnings} isVisible={warningsVisibility} />
         )}
       </div>
-      {flowDebugging && <DependencyInfo />}
+      {flowDebugging && <DependencyInfo activateKeyBind={activateKeyBind} />}
     </div>
   );
 };

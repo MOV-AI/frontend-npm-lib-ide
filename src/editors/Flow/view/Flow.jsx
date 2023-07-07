@@ -1186,8 +1186,9 @@ export const Flow = (props, ref) => {
     e => {
       workspaceManager.setFlowIsDebugging(e.target.checked);
       setFlowDebugging(e.target.checked);
+      activateKeyBind();
     },
-    [workspaceManager]
+    [activateKeyBind, workspaceManager]
   );
 
   /**
