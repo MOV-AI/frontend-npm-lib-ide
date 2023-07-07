@@ -61,22 +61,13 @@ export default class GraphTreeView extends GraphBase {
    * @param {Object} flow
    */
   async loadData(flow) {
-    // Add root container node
-    const rootNodeData = {
-      id: flow.Label,
-      ContainerLabel: flow.Label,
-      ContainerFlow: flow.url ?? flow.Label,
-      NodeInst: flow.NodeInst,
-      State: flow.state,
-      Container: flow.Container
-    };
     // Move belong lines behind nodes in flow
     this.canvas.canvas.raise();
     // Add root node to canvas
     try {
       // Let's add the start node to the list (so links know where to start)
       this.addStartNode();
-      await this._addRootNode(rootNodeData);
+      await this._addRootNode(flow);
       this.rootNode.addToCanvas();
     } catch (e) {
       console.warn("Error trying to add root node", e);
@@ -84,7 +75,6 @@ export default class GraphTreeView extends GraphBase {
 
     try {
       await this.loadNodes(flow);
-      this.allNodesLoaded = true;
     } catch (e) {
       console.warn("Error trying to load all nodes", e);
     }
@@ -92,7 +82,7 @@ export default class GraphTreeView extends GraphBase {
     try {
       this.loadLinks(flow.Links, this.rootNode);
       this.onFlowValidated.next({ warnings: [] });
-      this.nodesLoaded();
+      this.nodeStatusUpdated();
       this.update(this.rootNode);
     } catch (error) {
       console.warn("Error has ocurred loading links", flow, error);
@@ -302,11 +292,8 @@ export default class GraphTreeView extends GraphBase {
   //========================================================================================
 
   getNodeParent(nodePath, i, parent = this.rootNode) {
-    return parent.children.find(n => n.data.name === nodePath[i]);
-  }
-
-  setNodeStatus(node, status) {
-    node.status = [1, true, "true"].includes(status);
+    return (parent.children ?? this.rootNode.children)
+      .find(n => n.data.name === nodePath[i]);
   }
 
   /**
@@ -405,7 +392,16 @@ export default class GraphTreeView extends GraphBase {
    *
    * @param {Object} node : data about root node
    */
-  async _addRootNode(node) {
+  async _addRootNode(flow) {
+    const node = {
+      id: flow.Label,
+      ContainerLabel: flow.Label,
+      ContainerFlow: flow.url ?? flow.Label,
+      NodeInst: flow.NodeInst,
+      State: flow.state,
+      Container: flow.Container
+    };
+
     try {
       const inst = await Factory.create(
         this.docManager,

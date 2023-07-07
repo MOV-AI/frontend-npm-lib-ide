@@ -11,9 +11,6 @@ import Events from "./Events";
 import Canvas from "./canvas";
 
 export
-let _cachedNodeStatus = {};
-
-export
 let cachedNodeStatus = {};
 
 const NODE_PROPS = {
@@ -74,19 +71,25 @@ function _marks(obj) {
 // ensure parents of lit nodes are lit, and children of unlit flows are unlit
 function ensureParents(json) {
   const initial = { ...cachedNodeStatus };
+  const newStatus = {};
 
-  // TODO the contents of the _set function should be inlined for optimization
   for (const [key, value] of Object.entries(json))
-    _set(_cachedNodeStatus, value, key.split("__"))
+    _set(newStatus, value, key.split("__"))
 
-  const marks = _marks(_cachedNodeStatus);
+  const marks = _marks(newStatus);
   const ret = { ...marks };
 
   // turn off child nodes if parent is turned off
-  for (const key of Object.keys(initial))
-    for (const key2 of Object.keys(marks))
-      if (key.startsWith(key2) && !marks[key2])
-        ret[key] = 0;
+  for (const key of Object.keys(initial)) {
+    if (!ret[key])
+      ret[key] = 0;
+    else
+      for (const key2 of Object.keys(marks))
+        if (key.startsWith(key2) && !marks[key2]) {
+          ret[key] = 0;
+          break;
+        }
+  }
 
   return ret;
 }
@@ -157,7 +160,6 @@ export default class MainInterface {
    */
   loadDoc = async () => {
     await this.graph.loadData(this.modelView.current.serializeToDB());
-    this.nodeStatusUpdated({});
     this.canvas.el.focus();
     this.onToggleWarnings({ data: true });
     this.setMode(EVT_NAMES.DEFAULT);
