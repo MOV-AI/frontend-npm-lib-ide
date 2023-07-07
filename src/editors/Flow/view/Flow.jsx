@@ -65,7 +65,6 @@ export const Flow = (props, ref) => {
     removeKeyBind,
     activateEditor,
     activateKeyBind,
-    deactivateEditor,
     confirmationAlert,
     contextOptions,
     on,
@@ -1350,17 +1349,13 @@ export const Flow = (props, ref) => {
   /*
    * Handle search nodes
    */
-  const handleSearchNode = useCallback(
-    node => {
-      const mainInterface = getMainInterface();
-      const nodeInstance = node && mainInterface.searchNode(node);
-      if (!nodeInstance) return;
-      nodeInstance.handleSelectionChange();
-      mainInterface.onFocusNode(nodeInstance);
-      deactivateEditor();
-    },
-    [deactivateEditor]
-  );
+  const handleSearchNode = useCallback(node => {
+    const mainInterface = getMainInterface();
+    const nodeInstance = node && mainInterface.searchNode(node);
+    if (!nodeInstance) return;
+    nodeInstance.handleSelectionChange();
+    mainInterface.onFocusNode(nodeInstance);
+  }, []);
 
   const handleSearchEnabled = useCallback(
     e => {
@@ -1530,7 +1525,8 @@ export const Flow = (props, ref) => {
     handleMoveNode,
     handleSearchEnable,
     handleResetZoom,
-    handleShortcutDelete
+    handleShortcutDelete,
+    handleSearchDisabled
   ]);
 
   useEffect(() => {
