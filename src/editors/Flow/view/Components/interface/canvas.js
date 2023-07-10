@@ -3,6 +3,7 @@ import { Subject } from "rxjs";
 import FlowModel from "../../../model/Flow";
 import { defaultFunction } from "../../../../../utils/Utils";
 import Factory from "../../Components/Nodes/Factory";
+import { PLUGINS } from "../../../../../utils/Constants";
 import {
   FLOW_VIEW_MODE,
   CANVAS_LIMITS,
@@ -12,9 +13,8 @@ import { EVT_NAMES } from "../../events";
 import TemporaryLink from "../Links/TemporaryLink";
 
 class Canvas {
-  constructor({ classes, containerId, docManager, height, mInterface, width }) {
+  constructor({ classes, docManager, height, mInterface, width }) {
     this.classes = classes;
-    this.containerId = containerId;
     this.docManager = docManager;
     this.height = height;
     this.maxMovingPixels = MAX_MOVING_PIXELS;
@@ -151,8 +151,8 @@ class Canvas {
   };
 
   appendDocumentFragment = () => {
-    const el_container = document.getElementById(this.containerId);
-    d3.select(`#${this.containerId} svg`).remove();
+    const el_container = document.getElementById(this.mInterface.containerId);
+    d3.select(`#${this.mInterface.containerId} svg`).remove();
     el_container.appendChild(this.svg);
   };
 
@@ -165,7 +165,7 @@ class Canvas {
       .append("svg")
       .attr("width", "99.8%")
       .attr("height", "99.8%")
-      .attr("id", `interface-${this.containerId}`)
+      .attr("id", `interface-${this.mInterface.containerId}`)
       .attr("focusable", true)
       .attr("tabindex", "-1")
       .style("outline", "none")
@@ -259,22 +259,14 @@ class Canvas {
         (xValue, i) => xValue < maxCorner[i]
       );
       if (greaterThanMinCorner && lessThanMaxCorner) {
-        node.obj.selected = true;
         nodesInsideQuad.push(node.obj);
       }
     });
-    const selectedSet = new Set(
-      [...this.mInterface.selectedNodes].concat(nodesInsideQuad)
-    );
-    if (selectedSet.size > 0) {
-      this.setMode(
-        EVT_NAMES.SELECT_NODE,
-        {
-          nodes: Array.from(selectedSet),
-          shiftKey: true
-        },
-        true
-      );
+    if (nodesInsideQuad.length > 0) {
+      this.mInterface.onSelectNode({
+        nodes: nodesInsideQuad,
+        shiftKey: true
+      });
     }
   }
 
@@ -296,7 +288,6 @@ class Canvas {
    */
   addDefs = () => {
     const defs = this.getSvg().append("svg:defs");
-    const { containerId } = this;
     defs
       .selectAll("marker")
       .data([
@@ -305,9 +296,7 @@ class Canvas {
       ])
       .enter()
       .append("svg:marker")
-      .attr("id", function (d) {
-        return `${containerId}-marker${d.type}`;
-      })
+      .attr("id", d => `${this.mInterface.containerId}-marker${d.type}`)
       .attr("markerHeight", 5)
       .attr("markerWidth", 5)
       .attr("markerUnits", "strokeWidth")
@@ -323,7 +312,7 @@ class Canvas {
 
     defs
       .append("filter")
-      .attr("id", `shadow-${containerId}`)
+      .attr("id", `shadow-${this.mInterface.containerId}`)
       .append("feDropShadow")
       .attr("dx", "1.5")
       .attr("dy", "1.5")
@@ -339,7 +328,7 @@ class Canvas {
     this.canvas = d3
       .select(this.svg)
       .append("g")
-      .attr("id", `canvasContainer-${this.containerId}`)
+      .attr("id", `canvasContainer-${this.mInterface.containerId}`)
       .attr("width", this.maxMovingPixels)
       .attr("height", this.maxMovingPixels)
       .attr("stroke", "black")
@@ -355,7 +344,7 @@ class Canvas {
     this.links = d3
       .select(this.svg)
       .append("g")
-      .attr("id", `linksContainer-${this.containerId}`)
+      .attr("id", `linksContainer-${this.mInterface.containerId}`)
       .attr("width", this.maxMovingPixels)
       .attr("height", this.maxMovingPixels)
       .attr("stroke", "black")
@@ -531,12 +520,17 @@ class Canvas {
     if (d3.event.shiftKey && this.mode.current.id === EVT_NAMES.SELECT_NODE)
       return;
 
-    const fn = this.mode.current.onClick ?? {
-      next: () => {
-        this.setMode(EVT_NAMES.DEFAULT, null, true);
-      }
-    };
-    fn.next();
+    if (this.mode.current.onClick)
+      this.mode.current.onClick.next();
+    else {
+      this.mInterface.selectedNodes = [];
+      this.mInterface.docManager(
+        PLUGINS.RIGHT_DRAWER.NAME,
+        PLUGINS.RIGHT_DRAWER.CALL.REMOVE_BOOKMARK,
+        "node-menu",
+        "detail-menu"
+      );
+    }
   };
 
   /**
@@ -704,10 +698,11 @@ class Canvas {
       .duration(750)
       .call(
         this.zoomBehavior.transform,
-        d3.zoomIdentity
+        (d3.zoomIdentity
           .translate(width / 2, height / 2)
-          .translate(-SCALE * xCoordinate, -SCALE * yCoordinate)
+          .translate(- SCALE * xCoordinate, - SCALE * yCoordinate)
           .scale(SCALE)
+        )
       );
   };
 }

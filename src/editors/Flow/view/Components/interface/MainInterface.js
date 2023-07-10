@@ -1,11 +1,11 @@
-import lodash from "lodash";
+import { useState, useEffect } from "react";
 import { BehaviorSubject } from "rxjs";
-import { filter } from "rxjs/operators";
 import { NODE_TYPES, TYPES } from "../../Constants/constants";
 import { getNodeNameFromId } from "../../Core/Graph/Utils";
-import Graph from "../../Core/Graph/GraphBase";
+import GraphBase from "../../Core/Graph/GraphBase";
+import GraphTreeView from "../../Core/Graph/GraphTreeView";
 import { EVT_NAMES } from "../../events";
-import StartNode from "../Nodes/StartNode";
+import { PLUGINS } from "../../../../../utils/Constants";
 import InterfaceModes from "./InterfaceModes";
 import Events from "./Events";
 import Canvas from "./canvas";
@@ -27,6 +27,60 @@ const NODE_PROPS = {
     TYPE: NODE_TYPES.CONTAINER
   }
 };
+
+function identity(a) {
+  return a;
+}
+
+export function easySub(defaultData) {
+  const subs = new Map();
+  const valueMap = { value: defaultData };
+
+  function update(obj) {
+    valueMap.value = obj;
+    let allPromises = [];
+    for (const [sub] of subs)
+      allPromises.push(sub(obj));
+    return Promise.all(allPromises);
+  }
+
+  function subscribe(sub) {
+    subs.set(sub, true);
+    return () => {
+      subs.delete(sub);
+    };
+  }
+
+  function easyEmit(cb = identity) {
+    return async (...args) => update(await cb(...args, valueMap.value));
+  }
+
+  return { update, subscribe, data: valueMap, easyEmit };
+}
+
+export function useSub(sub, defaultData) {
+  const [data, setData] = useState(sub.data.value ?? defaultData);
+  useEffect(() => sub.subscribe(setData), []);
+  return data;
+}
+
+export const flowSub = easySub({});
+
+export
+const flowEmit = flowSub.easyEmit(({ id, ...rest }) => {
+  const old = flowSub.data.value;
+
+  if (old[id])
+    old[id].destroy();
+
+  return {
+    ...old,
+    [id]: new MainInterface({
+      ...rest,
+      id,
+    }),
+  };
+});
 
 // thanks, ChatGPT
 // sets the object's value, given the path described by the splits
@@ -97,14 +151,13 @@ function ensureParents(json) {
 export default class MainInterface {
   constructor({
     id,
-    containerId,
     modelView,
     width,
     height,
     data,
     classes,
     call,
-    graphCls
+    on,
   }) {
     //========================================================================================
     /*                                                                                      *
@@ -112,12 +165,10 @@ export default class MainInterface {
      *                                                                                      */
     //========================================================================================
     this.id = id;
-    this.containerId = containerId;
     this.width = width;
     this.height = height;
     this.modelView = modelView;
     this.data = data;
-    this.graphCls = graphCls ?? Graph;
     this.classes = classes;
     this.docManager = call;
     this.stateSub = new BehaviorSubject(0);
@@ -127,30 +178,30 @@ export default class MainInterface {
     this.canvas = null;
     this.graph = null;
     this.shortcuts = null;
-    this.onLoad = () => {};
-
-    // Set initial mode as loading
-    this.setMode(EVT_NAMES.LOADING);
-
-    this.canvas = new Canvas({
-      mInterface: this,
-      containerId,
-      width,
-      height,
-      classes,
-      docManager: call
+    this._selectedNodes = [];
+    this.onNodeSelected = () => {};
+    this.viewMode = "default";
+    this.cache = {};
+    this.loading = true;
+    this.update = () => flowSub.update({
+      ...flowSub.data.value,
+      [id]: this,
     });
-
-    this.graph = new this.graphCls({
-      id,
-      mInterface: this,
-      canvas: this.canvas,
-      docManager: call
+    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.DISCARD_DOC, evt => {
+      // evt ex.: {action: "setMode", value: EVT_NAMES.DEFAULT}
+      if (evt.scope === "Flow" && evt.name === this.id)
+        this.destroy();
     });
-
-    // Load document and add subscribers
     this.addSubscribers();
-    this.loadDoc();
+    this.regraph();
+  }
+
+  majorUpdate(config = {}) {
+    this.canvas.appendDocumentFragment();
+    if (config.updatePos)
+      this.graph.updateAllPositions();
+    this.canvas.el.focus();
+    this.update();
   }
 
   /**
@@ -160,28 +211,64 @@ export default class MainInterface {
    */
   loadDoc = async () => {
     await this.graph.loadData(this.modelView.current.serializeToDB());
-    this.canvas.el.focus();
+    this.loading = false;
     this.onToggleWarnings({ data: true });
     this.setMode(EVT_NAMES.DEFAULT);
-    this.canvas.appendDocumentFragment();
-    this.graph.updateAllPositions();
-    this.onLoad();
+    this.majorUpdate({ updatePos: true });
   };
+
+  regraph(force) {
+    if (!force) {
+      const cached = this.cache[this.viewMode];
+
+      if (cached) {
+        this.canvas = cached.canvas;
+        this.graph = cached.graph;
+        this.majorUpdate();
+        return Promise.resolve();
+      }
+    }
+
+    this.setMode(EVT_NAMES.LOADING);
+    this.loading = true;
+    this.update();
+
+    const graphCls = this.viewMode === "treeView" ? GraphTreeView : GraphBase;
+
+    if (this.graph)
+      this.graph.destroy();
+
+    this.canvas = new Canvas({
+      mInterface: this,
+      containerId: this.containerId,
+      width: this.width,
+      height: this.height,
+      classes: this.classes,
+      docManager: this.docManager,
+    });
+
+    this.graph = new graphCls({
+      id: this.id,
+      mInterface: this,
+      canvas: this.canvas,
+      docManager: this.docManager
+    });
+
+    this.cache[this.viewMode] = {
+      canvas: this.canvas,
+      graph: this.graph,
+    };
+
+    this.update();
+
+    return this.loadDoc();
+  }
 
   //========================================================================================
   /*                                                                                      *
    *                                  Setters and Getters                                 *
    *                                                                                      */
   //========================================================================================
-
-  get selectedNodes() {
-    return this.graph.selectedNodes;
-  }
-
-  set selectedNodes(nodes) {
-    this.graph.selectedNodes = nodes;
-    if (this.selectedLink) this.selectedLink.onSelected(false);
-  }
 
   get selectedLink() {
     return this.graph.selectedLink;
@@ -332,13 +419,8 @@ export default class MainInterface {
    * @returns {MainInterface} : The instance
    */
   addSubscribers = () => {
-    this.mode.default.onEnter.subscribe(this.onDefault);
-
     // drag mode -> onExit event
     this.mode.drag.onExit.subscribe(this.onDragEnd);
-
-    // Node click and double click events
-    this.mode.selectNode.onEnter.subscribe(this.onSelectNode);
 
     this.mode.onDblClick.onEnter.subscribe(() => {
       this.setMode(EVT_NAMES.DEFAULT);
@@ -347,12 +429,6 @@ export default class MainInterface {
     // Linking mode events
     this.mode.linking.onEnter.subscribe(this.onLinkingEnter);
     this.mode.linking.onExit.subscribe(this.onLinkingExit);
-
-    // Canvas events (not modes)
-    // toggle warnings
-    this.canvas.events
-      .pipe(filter(event => event.name === EVT_NAMES.ON_TOGGLE_WARNINGS))
-      .subscribe(this.onToggleWarnings);
 
     return this;
   };
@@ -383,12 +459,8 @@ export default class MainInterface {
    *                                                                                      */
   //========================================================================================
 
-  onDefault = () => {
-    this.selectedNodes.length = 0;
-  };
-
   onDragEnd = draggedNode => {
-    const selectedNodesSet = new Set([draggedNode].concat(this.selectedNodes));
+    const selectedNodesSet = new Set([draggedNode].concat(this._selectedNodes));
     const nodes = Array.from(selectedNodesSet).filter(obj => obj);
 
     nodes.forEach(node => {
@@ -421,19 +493,23 @@ export default class MainInterface {
 
   onSelectNode = data => {
     const { nodes, shiftKey } = data;
-    const { selectedNodes } = this;
-    const filterNodes = nodes.filter(n => n.data.model !== StartNode.model);
 
     this.selectedLink = null;
-
-    if (!shiftKey) selectedNodes.length = 0;
-
-    filterNodes.forEach(node => {
-      node.selected
-        ? selectedNodes.push(node)
-        : lodash.pull(selectedNodes, node);
-    });
+    this.selectedNodes = shiftKey ? this._selectedNodes.concat(nodes) : nodes;
   };
+
+  get selectedNodes() {
+    return this._selectedNodes;
+  }
+
+  set selectedNodes(nodes) {
+    const prevSelectedNodes = this._selectedNodes;
+    this._selectedNodes = nodes;
+    for (const node of prevSelectedNodes)
+      node.onSelected();
+    for (const node of nodes)
+      node.onSelected();
+  }
 
   onToggleWarnings = event => {
     // show/hide warnings
@@ -473,18 +549,26 @@ export default class MainInterface {
   onFocusNode = node => {
     const { xCenter, yCenter } = node.getCenter();
     this.setMode(EVT_NAMES.DEFAULT, null, true);
-    node.selected = true;
     if (node.data.id !== "start") {
-      this.setMode(
-        EVT_NAMES.SELECT_NODE,
-        { nodes: [node], shiftKey: false },
-        true
-      );
+      this.onSelectNode({ nodes: [node], shiftKey: false });
     }
     this.canvas.zoomToCoordinates(xCenter, yCenter);
   };
 
+  setViewMode(viewMode) {
+    this.viewMode = viewMode;
+    this.regraph();
+  }
+
+  get containerId() {
+    return `Flow-${this.id}`;
+  }
+
   destroy = () => {
-    // Nothing to do
+    flowSub.update({
+      ...flowSub.data.value,
+      [this.id]: null,
+    });
+    this.graph?.destroy();
   };
 }

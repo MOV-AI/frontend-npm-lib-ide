@@ -141,7 +141,15 @@ class DocManager extends IDEPlugin {
    */
   discardDocChanges(modelKey) {
     const { name, scope } = modelKey;
-    return this.getStore(scope)?.discardDocChanges(name);
+
+    const ret = this.getStore(scope)?.discardDocChanges(name)
+
+    this.emit(PLUGINS.DOC_MANAGER.ON.DISCARD_DOC, {
+      name,
+      scope,
+    });
+
+    return ret;
   }
 
   /**

@@ -53,7 +53,6 @@ class BaseNode extends BaseNodeStruct {
     this.object = null;
     this._drag = { handler: null, debounce: null, delta: { x: 0, y: 0 } };
     this._header = null;
-    this._selected = false;
     this._status = false; // true -> running: flase -> stopped
   }
 
@@ -127,17 +126,7 @@ class BaseNode extends BaseNodeStruct {
    * @returns {boolean} true if the node is selected, false otherwise
    */
   get selected() {
-    return this._selected;
-  }
-
-  /**
-   * selected - set node to selected
-   *
-   * @param {boolean} value true if the node is selected, false otherwise
-   */
-  set selected(value) {
-    this._selected = Boolean(value);
-    this.onSelected();
+    return this.canvas.mInterface.selectedNodes.filter(node => node === this).length;
   }
 
   /**
@@ -227,7 +216,7 @@ class BaseNode extends BaseNodeStruct {
       .create("svg")
       .attr(
         "id",
-        `${this.canvas.containerId}-${this.data.id || this.data.Template}`
+        `${this.canvas.mInterface.containerId}-${this.data.id || this.data.Template}`
       )
       .style("overflow", "visible")
       .attr("width", this.width + maxPadding)
@@ -246,7 +235,7 @@ class BaseNode extends BaseNodeStruct {
       .attr("width", this.width)
       .attr("height", this.height)
       .attr("class", convertTypeCss(this._template))
-      .attr("filter", `url(#shadow-${this.canvas.containerId})`)
+      .attr("filter", `url(#shadow-${this.canvas.mInterface.containerId})`)
       .attr("stroke", stroke.color.default)
       .attr("stroke-width", stroke.width.default);
 
@@ -623,9 +612,7 @@ class BaseNode extends BaseNodeStruct {
     this.object.style("cursor", "default");
 
     if (this.canvas.mode.current.id === EVT_NAMES.DRAG) {
-      this.canvas.mode.previous.id === EVT_NAMES.SELECT_NODE
-        ? this.canvas.setPreviousMode()
-        : this.canvas.setMode(EVT_NAMES.DEFAULT);
+      this.canvas.setMode(EVT_NAMES.DEFAULT);
     }
   };
 
@@ -656,24 +643,10 @@ class BaseNode extends BaseNodeStruct {
   };
 
   handleSelectionChange(shiftKey) {
-    clearTimeout(this.dbClickTimeout);
-    this.dbClickTimeout = setTimeout(() => {
-      // toggle node selection
-      const selection = !this.selected;
-
-      // shift key not pressed, set mode to default
-      if (!shiftKey) this.canvas.setMode(EVT_NAMES.DEFAULT, null);
-
-      // set the node selection
-      this.selected = selection;
-
-      // node selected mode
-      this.canvas.setMode(
-        EVT_NAMES.SELECT_NODE,
-        { nodes: [this], shiftKey },
-        true
-      );
-    }, 100);
+    // shift key not pressed, set mode to default
+    if (!shiftKey) this.canvas.setMode(EVT_NAMES.DEFAULT, null);
+    this.canvas.mInterface.onSelectNode({ nodes: [this], shiftKey });
+    this.canvas.mInterface.onNodeSelected(this);
   }
 
   /**
