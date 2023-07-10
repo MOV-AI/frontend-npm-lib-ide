@@ -623,8 +623,8 @@ export default class GraphBase {
       return;
 
     if (parent.obj)
-      parent.obj.status = status === 1;
-    parent.status = status === 1;
+      parent.obj.status = status == 1;
+    parent.status = status == 1;
   };
 
   reset() {
