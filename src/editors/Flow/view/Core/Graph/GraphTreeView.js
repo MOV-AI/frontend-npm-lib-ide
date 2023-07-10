@@ -61,22 +61,13 @@ export default class GraphTreeView extends GraphBase {
    * @param {Object} flow
    */
   async loadData(flow) {
-    // Add root container node
-    const rootNodeData = {
-      id: flow.Label,
-      ContainerLabel: flow.Label,
-      ContainerFlow: flow.url ?? flow.Label,
-      NodeInst: flow.NodeInst,
-      State: flow.state,
-      Container: flow.Container
-    };
     // Move belong lines behind nodes in flow
     this.canvas.canvas.raise();
     // Add root node to canvas
     try {
       // Let's add the start node to the list (so links know where to start)
       this.addStartNode();
-      await this._addRootNode(rootNodeData);
+      await this._addRootNode(flow);
       this.rootNode.addToCanvas();
     } catch (e) {
       console.warn("Error trying to add root node", e);
@@ -89,8 +80,10 @@ export default class GraphTreeView extends GraphBase {
     }
 
     try {
-      this._loadLinks(flow.Links, this.rootNode);
+      this.loadLinks(flow.Links, this.rootNode);
       this.onFlowValidated.next({ warnings: [] });
+      this.nodeStatusUpdated();
+      this.update(this.rootNode);
     } catch (error) {
       console.warn("Error has ocurred loading links", flow, error);
     }
@@ -232,24 +225,6 @@ export default class GraphTreeView extends GraphBase {
   }
 
   /**
-   * @override nodeStatusUpdated: Update node running status
-   * We need to override the GraphBase nodeStatusUpdated function because
-   * if we don't we get an infinite loop of calls to BASEFLOW's nodeStatusUpdated -_-'
-   * This happens because we need to have a timeout on Base Flow, but if we swap to
-   * Tree View it will use the default value (false) for the allNodesLoaded variable and
-   * cause the Base flow to spam nodeStatusUpdated calls
-   *
-   * @param {Object} nodes
-   * @param {*} robotStatus
-   */
-  nodeStatusUpdated(nodes, _) {
-    Object.keys(nodes).forEach(nodeName => {
-      const status = nodes[nodeName];
-      this.updateNodeStatus(nodeName, status);
-    });
-  }
-
-  /**
    * @override addLink from GraphBase class
    * @param {Object} link : Link info
    * @param {String} nodeId : Parent node ID
@@ -316,34 +291,10 @@ export default class GraphTreeView extends GraphBase {
    *                                                                                      */
   //========================================================================================
 
-  /**
-   * @private function
-   * @override updateNodeStatus: Iterate through the nodes in tree to update its running status
-   *
-   * @param {String} nodeName : Node instance name
-   * @param {Boolean} status : True -> Running / False -> Not Running
-   * @param {TreeContainerNode} parent : Flow to look for the node
-   */
-  updateNodeStatus = (nodeName, status, parent = this.rootNode) => {
-    if (!parent) return;
-
-    // is this a subflow node?
-    if (nodeName.indexOf("__") >= 0) {
-      const nodePath = nodeName.split("__");
-      const nodeParent = parent.children.find(n => n.data.name === nodePath[0]);
-      const newNodeName = nodePath.splice(1).join("__");
-
-      // Let's also set the Container status to true, given that we are animating is child as well
-      if (nodeParent) nodeParent.status = [1, true, "true"].includes(status);
-
-      // let's call this function again with the newNodeName (child) and the parent is the node
-      return this.updateNodeStatus(newNodeName, status, nodeParent);
-    }
-
-    const node = parent.children.find(n => n.data.name === nodeName);
-
-    if (node) node.status = [1, true, "true"].includes(status);
-  };
+  getNodeParent(nodePath, i, parent = this.rootNode) {
+    return (parent.children ?? this.rootNode.children)
+      .find(n => n.data.name === nodePath[i]);
+  }
 
   /**
    * @override _loadLinks : parse each link and add it to port
@@ -353,7 +304,7 @@ export default class GraphTreeView extends GraphBase {
    *
    * @returns {GraphTreeView} instance
    */
-  _loadLinks(links, parent) {
+  loadLinks(links, parent) {
     const _links = links || {};
     Object.keys(_links).forEach(linkId => {
       const linksData = { id: linkId, name: linkId, ..._links[linkId] };
@@ -441,7 +392,16 @@ export default class GraphTreeView extends GraphBase {
    *
    * @param {Object} node : data about root node
    */
-  async _addRootNode(node) {
+  async _addRootNode(flow) {
+    const node = {
+      id: flow.Label,
+      ContainerLabel: flow.Label,
+      ContainerFlow: flow.url ?? flow.Label,
+      NodeInst: flow.NodeInst,
+      State: flow.state,
+      Container: flow.Container
+    };
+
     try {
       const inst = await Factory.create(
         this.docManager,

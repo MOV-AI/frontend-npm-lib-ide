@@ -10,6 +10,9 @@ import InterfaceModes from "./InterfaceModes";
 import Events from "./Events";
 import Canvas from "./canvas";
 
+export
+let cachedNodeStatus = {};
+
 const NODE_PROPS = {
   Node: {
     LABEL: "NodeLabel",
@@ -24,6 +27,72 @@ const NODE_PROPS = {
     TYPE: NODE_TYPES.CONTAINER
   }
 };
+
+// thanks, ChatGPT
+// sets the object's value, given the path described by the splits
+function _set(obj, value, splits = []) {
+  if (splits.length === 0) {
+    throw new Error("Invalid splits array");
+  }
+
+  let currentObj = obj;
+
+  for (let i = 0; i < splits.length - 1; i++) {
+    const split = splits[i];
+    currentObj = currentObj[split] = currentObj[split] || {};
+  }
+
+  currentObj[splits[splits.length - 1]] = value;
+}
+
+// thanks, ChatGPT
+// ensure parents of lit nodes are lit
+function _marks(obj) {
+  const result = {};
+  const stack = [{ obj: obj, prefix: '' }];
+
+  while (stack.length > 0) {
+    const { obj, prefix } = stack.pop();
+
+    for (const key in obj) {
+      const value = obj[key];
+      const newPrefix = prefix + key;
+
+      result[newPrefix] = value ? 1 : 0;
+
+      if (typeof value === 'object' && value !== null)
+        stack.push({ obj: value, prefix: newPrefix + '__' });
+    }
+  }
+
+  return result;
+}
+
+// ensure parents of lit nodes are lit, and children of unlit flows are unlit
+function ensureParents(json) {
+  const initial = { ...cachedNodeStatus };
+  const newStatus = {};
+
+  for (const [key, value] of Object.entries(json))
+    _set(newStatus, value, key.split("__"))
+
+  const marks = _marks(newStatus);
+  const ret = { ...marks };
+
+  // turn off child nodes if parent is turned off
+  for (const key of Object.keys(initial)) {
+    if (!ret[key])
+      ret[key] = 0;
+    else
+      for (const key2 of Object.keys(marks))
+        if (key.startsWith(key2) && !marks[key2]) {
+          ret[key] = 0;
+          break;
+        }
+  }
+
+  return ret;
+}
 
 export default class MainInterface {
   constructor({
@@ -58,18 +127,7 @@ export default class MainInterface {
     this.canvas = null;
     this.graph = null;
     this.shortcuts = null;
-
-    this.initialize();
-  }
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                    Initialization                                    *
-   *                                                                                      */
-  //========================================================================================
-
-  initialize = () => {
-    const { classes, containerId, docManager, height, id, width } = this;
+    this.onLoad = () => {};
 
     // Set initial mode as loading
     this.setMode(EVT_NAMES.LOADING);
@@ -80,24 +138,20 @@ export default class MainInterface {
       width,
       height,
       classes,
-      docManager
+      docManager: call
     });
 
     this.graph = new this.graphCls({
       id,
       mInterface: this,
       canvas: this.canvas,
-      docManager
+      docManager: call
     });
 
     // Load document and add subscribers
-    this.addSubscribers()
-      .loadDoc()
-      .then(() => {
-        this.canvas.el.focus();
-        this.setMode(EVT_NAMES.DEFAULT);
-      });
-  };
+    this.addSubscribers();
+    this.loadDoc();
+  }
 
   /**
    * @private
@@ -106,6 +160,12 @@ export default class MainInterface {
    */
   loadDoc = async () => {
     await this.graph.loadData(this.modelView.current.serializeToDB());
+    this.canvas.el.focus();
+    this.onToggleWarnings({ data: true });
+    this.setMode(EVT_NAMES.DEFAULT);
+    this.canvas.appendDocumentFragment();
+    this.graph.updateAllPositions();
+    this.onLoad();
   };
 
   //========================================================================================
@@ -141,7 +201,8 @@ export default class MainInterface {
   };
 
   nodeStatusUpdated = (nodeStatus, robotStatus) => {
-    this.graph.nodeStatusUpdated(nodeStatus, robotStatus);
+    cachedNodeStatus = ensureParents(nodeStatus);
+    this.graph.nodeStatusUpdated(robotStatus);
   };
 
   addLink = () => {
