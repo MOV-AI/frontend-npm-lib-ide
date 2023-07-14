@@ -275,9 +275,9 @@ class Flow extends Model {
    * @returns {boolean} : True on success, false otherwise
    */
   deleteSubFlow(subFlowId) {
-    const nodeTemplate = this.getNodeInstances().getItem(nodeId).template;
+    const subflowTemplate = this.getSubFlows().getItem(subFlowId).template;
     this.deleteNodeLinks(subFlowId);
-    this.deleteNodeExposedPorts(subFlowId, nodeTemplate);
+    this.deleteNodeExposedPorts(subFlowId, subflowTemplate);
     return this.getSubFlows().deleteItem(subFlowId);
   }
 
