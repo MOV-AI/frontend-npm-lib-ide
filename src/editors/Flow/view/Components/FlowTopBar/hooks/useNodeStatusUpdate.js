@@ -2,11 +2,9 @@ import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import _isEqual from "lodash/isEqual";
 import { RobotManager } from "@mov-ai/mov-fe-lib-core";
 import i18n from "../../../../../../i18n/i18n";
-import { FLOW_VIEW_MODE } from "../../../Constants/constants";
 import { compareDocumentPaths } from "../../../Utils/utils";
 
 const DEBOUNCE_TIME = 600; // ms
-const DEBOUNCE_NODE_STATUS_TIME = 1000; // ms
 const ROBOT_OFFLINE_TIME = 8; // sec
 
 const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
@@ -15,9 +13,8 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
     id,
     version,
     alert,
-    nodeStatusUpdated,
-    nodeCompleteStatusUpdated,
-    onStartStopFlow
+    onStartStopFlow,
+    mainInterface,
   } = props;
   // State hooks
   const [robotStatus, setRobotStatus] = useState({
@@ -29,7 +26,6 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
   // Refs
   const selectedRobotRef = useRef(robotSelected);
   const debounceDeltaRef = useRef(Date.now());
-  const nodeStatusViewModeRef = useRef(FLOW_VIEW_MODE.default);
   const nodeStatusRef = useRef({});
   const allNodeStatusRef = useRef({});
   const lastMessage = useRef("");
@@ -61,37 +57,6 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
       : [];
     return nodesLchd.concat(nodesPersistent);
   }, []);
-
-  /**
-   * @private Get nodes to update
-   * @param {*} prevNodesStatus
-   * @param {*} runningNodes
-   * @param {*} splitContainer
-   * @returns Nodes to update
-   */
-  const getNodesToUpdate = useCallback(
-    (prevNodesStatus, runningNodes, splitContainer = true) => {
-      // {<node name> :< status>, ...} where status can be 1 (running) or 0 (stopped and to be removed in the next ui update)
-      const nextNodesStatus = {};
-
-      // remove nodes with status = 0 and set status to 0 of the remaining ones (previously 1)
-      Object.entries(prevNodesStatus)
-        .filter(obj => obj[1] === 1) // remove already stopped nodes
-        .forEach(obj => (nextNodesStatus[obj[0]] = 0)); // set all nodes to stopped
-
-      runningNodes
-        .map(el => {
-          // nodes running in subFlows are named as <subFlow inst name>__<node name>
-          // ex.: node running as ctest__test => subFlow is ctest and the node name is test
-          const [node] = el.split(/__/);
-          return splitContainer ? node : el;
-        })
-        .forEach(node => (nextNodesStatus[node] = 1)); // set node state to running
-
-      return nextNodesStatus;
-    },
-    []
-  );
 
   /**
    * @private Show online Alert
@@ -132,9 +97,8 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
     nodeStatusRef.current = emptyNodeStatus;
     allNodeStatusRef.current = emptyAllNodeStatus;
     // Send updates to canvas
-    nodeStatusUpdated(emptyNodeStatus);
-    nodeCompleteStatusUpdated(emptyAllNodeStatus);
-  }, [nodeCompleteStatusUpdated, nodeStatusUpdated]);
+    mainInterface.current?.resetAllNodeStatus();
+  }, [mainInterface]);
 
   /**
    * Format flow path
@@ -169,6 +133,7 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
   const updateNodeStatus = useCallback(
     (key, targetValue, data, forceUpdate) => {
       if (
+        !mainInterface ||
         Date.now() - debounceDeltaRef.current <= DEBOUNCE_TIME &&
         !forceUpdate
       )
@@ -186,29 +151,13 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
 
         const running = isOnline && isFlowRunning(robotStatusData.active_flow);
         const runningNodes = running ? getNodesRunning(robotStatusData) : [];
-        const nodeStatus = getNodesToUpdate(
-          nodeStatusRef.current,
-          runningNodes
-        );
-        const allNodesStatus = getNodesToUpdate(
-          allNodeStatusRef.current,
-          runningNodes,
-          false
-        );
-
-        if (
-          (!_isEqual(allNodeStatusRef.current, allNodesStatus) &&
-            isFlowRunning(activeFlow)) ||
-          nodeStatusViewModeRef.current !== viewMode
-        ) {
-          nodeStatusRef.current = nodeStatus;
-          allNodeStatusRef.current = allNodesStatus;
-          nodeStatusViewModeRef.current = viewMode;
-          nodeStatusUpdated(allNodesStatus, { isOnline, activeFlow });
-        }
 
         activeFlow = isOnline ? robotStatusData.active_flow : "";
         onStartStopFlow(activeFlow);
+        mainInterface.current?.nodeStatusUpdated(running ? runningNodes.reduce(
+          (a, key) => ({ ...a, [mainInterface.current?.id + "__" + key]: 1 }),
+          {}
+        ) : { [mainInterface.current?.id]: 0 }, { isOnline, activeFlow });
       }
       // Robot doesn't have "Status" key in Redis
       else {
@@ -227,12 +176,11 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
     [
       alert,
       getNodesRunning,
-      getNodesToUpdate,
       isFlowRunning,
       isRobotOnline,
-      nodeStatusUpdated,
       onStartStopFlow,
       onlineAlert,
+      mainInterface,
       viewMode
     ]
   );

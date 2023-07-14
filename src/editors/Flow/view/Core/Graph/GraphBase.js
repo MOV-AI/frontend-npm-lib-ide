@@ -8,9 +8,9 @@ import { InvalidLink } from "../../Components/Links/Errors";
 import { FLOW_VIEW_MODE, NODE_TYPES } from "../../Constants/constants";
 import Factory from "../../Components/Nodes/Factory";
 import { shouldUpdateExposedPorts } from "./Utils";
+import { cachedNodeStatus } from "../../Components/interface/MainInterface";
 import GraphValidator from "./GraphValidator";
 
-const NODE_LOAD_CHECK_TIMEOUT = 500;
 const NODE_DATA = {
   NODE: {
     LABEL: "NodeLabel",
@@ -39,7 +39,6 @@ export default class GraphBase {
 
     this.nodes = new Map(); // <node name> : {obj: <node instance>, links: []}
     this.links = new Map(); // linkId : <link instance>
-    this.allNodesLoaded = false; // If we need to do some actions AFTER we are sure all nodes have loaded
     this.exposedPorts = {};
     this.selectedNodes = [];
     this.selectedLink = null;
@@ -286,6 +285,7 @@ export default class GraphBase {
     });
     // Update links
     this.updateLinks(data.Links || {});
+    this.nodeStatusUpdated();
     // Update exposed ports
     this.loadExposedPorts(data.ExposedPorts || {}, true);
     // Let's re-validate the flow
@@ -339,11 +339,10 @@ export default class GraphBase {
     await this.loadNodes(flow.NodeInst);
     await this.loadNodes(flow.Container, NODE_TYPES.CONTAINER, false);
 
-    this.allNodesLoaded = true;
-
-    this.loadLinks(flow.Links)
-      .loadExposedPorts(flow.ExposedPorts || {})
-      .update();
+    this.loadLinks(flow.Links);
+    this.loadExposedPorts(flow.ExposedPorts || {});
+    this.nodeStatusUpdated();
+    this.update();
   }
 
   /**
@@ -454,7 +453,7 @@ export default class GraphBase {
    * @param {object} node : Object describing the node
    * @param {string} nodeType : One of the types in NODE_TYPES
    */
-  async addNode(node, nodeType = NODE_TYPES.NODE) {
+  async addNode(node, nodeType = NODE_TYPES.NODE, parent = this.rootNode) {
     const events = { onDrag: this.onNodeDrag };
 
     try {
@@ -465,6 +464,8 @@ export default class GraphBase {
       );
       this.nodes.set(node.id, { obj: inst, links: [] });
 
+      if (parent?.addChild)
+        parent.addChild(inst);
       return inst;
     } catch (error) {
       console.warn("Error creating node", error);
@@ -583,20 +584,13 @@ export default class GraphBase {
    * @param {Object} nodes
    * @param {*} robotStatus
    */
-  nodeStatusUpdated(nodes) {
-    // Let's wait untill allNodes are loaded to recall this function again
-    // What would happen sometimes is it was called before all nodes were loaded
-    // Causing some nodes to not light up when they should.
-    if (!this.allNodesLoaded)
-      return setTimeout(
-        () => this.nodeStatusUpdated(nodes),
-        NODE_LOAD_CHECK_TIMEOUT
-      );
-
-    Object.keys(nodes).forEach(nodeName => {
-      const status = nodes[nodeName];
+  nodeStatusUpdated() {
+    for (const [nodeName, status] of Object.entries(cachedNodeStatus))
       this.updateNodeStatus(nodeName, status);
-    });
+  }
+
+  getNodeParent(nodePath, i) {
+    return this.nodes.get(nodePath.slice(0, i + 1).join("__"));
   }
 
   /**
@@ -608,17 +602,29 @@ export default class GraphBase {
    * @param {TreeContainerNode} parent : Flow to look for the node
    */
   updateNodeStatus = (nodeName, status) => {
+    let parent = this.rootNode;
+
     // is this a subflow node?
-    if (nodeName.indexOf("__") >= 0) {
-      const nodePath = nodeName.split("__");
-      const nodeParent = this.nodes.get(nodePath[0]);
+    const [first, ...rest] = nodeName.split("__");
 
-      if (nodeParent)
-        nodeParent.obj.status = [1, true, "true"].includes(status);
-    }
+    if (first !== this.mInterface.id)
+      throw new Error("GraphBase.updateNodeStatus: update for other flow? " + first);
 
-    const node = this.nodes.get(nodeName);
-    if (node) node.obj.status = [1, true, "true"].includes(status);
+    if (rest.length)
+      for (let i = 0; i < rest.length; i++) {
+        const nodeParent = this.getNodeParent(rest, i, parent);
+        if (nodeParent)
+          parent = nodeParent;
+        else
+          return;
+      }
+
+    if (!parent)
+      return;
+
+    if (parent.obj)
+      parent.obj.status = status == 1;
+    parent.status = status == 1;
   };
 
   reset() {
@@ -653,4 +659,5 @@ export default class GraphBase {
       }))
       .filter(el => el.id !== StartNode.model);
   };
+
 }

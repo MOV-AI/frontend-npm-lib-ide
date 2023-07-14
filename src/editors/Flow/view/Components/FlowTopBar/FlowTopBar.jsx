@@ -76,7 +76,7 @@ const FlowTopBar = props => {
     viewMode,
     searchProps,
     confirmationAlert,
-    canRun,
+    canRun
   } = props;
   // State hooks
   const [actionLoading, setActionLoading] = useState(false);
@@ -500,7 +500,7 @@ const FlowTopBar = props => {
               startAdornment={<i className="icon-Happy"></i>}
               onChange={handleChangeRobot}
             >
-              {Object.keys(robotList).map((robotId, robotIndex) => {
+              {Object.keys(robotList).map(robotId => {
                 const isDefaultRobot = robotList[robotId].isDefault;
                 return (
                   <MenuItem

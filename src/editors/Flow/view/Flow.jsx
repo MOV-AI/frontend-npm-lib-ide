@@ -64,7 +64,7 @@ export const Flow = (props, ref) => {
     addKeyBind,
     removeKeyBind,
     activateEditor,
-    deactivateEditor,
+    activateKeyBind,
     confirmationAlert,
     contextOptions,
     on,
@@ -645,18 +645,6 @@ export const Flow = (props, ref) => {
   }
 
   /**
-   * On change running flow
-   * @param {*} flow
-   */
-  const onStartStopFlow = useCallback(flow => {
-    // Update state variable
-    setRunningFlow(prevState => {
-      if (prevState === flow) return prevState;
-      return flow;
-    });
-  }, []);
-
-  /**
    * On view mode change
    * @param {string} newViewMode : One of the following "default" or "treeView"
    */
@@ -687,22 +675,6 @@ export const Flow = (props, ref) => {
       getMainInterface()?.onToggleWarnings({ data: newVisibility });
       return newVisibility;
     });
-  }, []);
-
-  /**
-   * Update node active status
-   * @param {object} nodeStatus : Nodes to update status
-   * @param {{activeFlow: string, isOnline: boolean}} robotStatus : Robot current status
-   */
-  const onNodeStatusUpdate = useCallback((nodeStatus, robotStatus) => {
-    getMainInterface()?.nodeStatusUpdated(nodeStatus, robotStatus);
-  }, []);
-
-  /**
-   * Resets all node status
-   */
-  const onNodeCompleteStatusUpdated = useCallback(() => {
-    getMainInterface()?.resetAllNodeStatus();
   }, []);
 
   //========================================================================================
@@ -869,18 +841,7 @@ export const Flow = (props, ref) => {
         })
       );
 
-      // Subscribe to on loading exit (finish) event
-      interfaceSubscriptionsList.current.push(
-        mainInterface.mode[EVT_NAMES.LOADING].onExit.subscribe(() => {
-          // Append the document frame to the canvas
-          mainInterface.canvas.appendDocumentFragment();
-          // Reposition all nodes and subflows
-          mainInterface.graph.updateAllPositions();
-          setLoading(false);
-          // Set initial warning visibility value
-          setWarningsVisibility(true);
-        })
-      );
+      mainInterface.onLoad = () => setLoading(false);
 
       // subscribe to on enter default mode
       // When enter default mode remove other node/sub-flow bookmarks
@@ -1186,8 +1147,9 @@ export const Flow = (props, ref) => {
     e => {
       workspaceManager.setFlowIsDebugging(e.target.checked);
       setFlowDebugging(e.target.checked);
+      activateKeyBind();
     },
-    [workspaceManager]
+    [activateKeyBind, workspaceManager]
   );
 
   /**
@@ -1349,30 +1311,31 @@ export const Flow = (props, ref) => {
   /*
    * Handle search nodes
    */
-  const handleSearchNode = useCallback(
-    node => {
-      const mainInterface = getMainInterface();
-      const nodeInstance = node && mainInterface.searchNode(node);
-      if (!nodeInstance) return;
-      nodeInstance.handleSelectionChange();
-      mainInterface.onFocusNode(nodeInstance);
-      deactivateEditor();
+  const handleSearchNode = useCallback(node => {
+    const mainInterface = getMainInterface();
+    const nodeInstance = node && mainInterface.searchNode(node);
+    if (!nodeInstance) return;
+    nodeInstance.handleSelectionChange();
+    mainInterface.onFocusNode(nodeInstance);
+  }, []);
+
+  const handleSearchEnabled = useCallback(
+    e => {
+      e?.preventDefault();
+      if (!searchVisible) setSearchVisible(true);
     },
-    [deactivateEditor]
+    [searchVisible]
   );
 
-  const handleSearchEnabled = useCallback(() => {
-    if (!searchVisible) setSearchVisible(true);
-  }, [searchVisible]);
-
   const handleSearchEnable = useCallback(e => {
-    e.preventDefault();
+    e?.preventDefault();
     setSearchVisible(true);
   }, []);
 
   const handleSearchDisabled = useCallback(() => {
     setSearchVisible(false);
-  }, []);
+    activateKeyBind();
+  }, [activateKeyBind]);
 
   const getContextOptions = useCallback(
     (mode, data, args) => {
@@ -1466,6 +1429,21 @@ export const Flow = (props, ref) => {
   }, [name, scope, viewMode, on, off, call, t]);
 
   useEffect(() => {
+    addKeyBind(
+      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SHORTCUTS,
+      evt => {
+        evt.preventDefault();
+      },
+      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SCOPE
+    );
+    addKeyBind(
+      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SHORTCUTS,
+      evt => {
+        evt.preventDefault();
+        handleSearchDisabled();
+      },
+      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SCOPE
+    );
     addKeyBind(KEYBINDINGS.FLOW.KEYBINDS.COPY_NODE.SHORTCUTS, handleCopyNode);
     addKeyBind(
       KEYBINDINGS.FLOW.KEYBINDS.PASTE_NODE.SHORTCUTS,
@@ -1487,6 +1465,10 @@ export const Flow = (props, ref) => {
     );
     // remove keyBind on unmount
     return () => {
+      removeKeyBind(
+        KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SHORTCUTS
+      );
+      removeKeyBind(KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SHORTCUTS);
       removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.COPY_NODE.SHORTCUTS);
       removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.PASTE_NODE.SHORTCUTS);
       removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.MOVE_NODE.SHORTCUTS);
@@ -1505,15 +1487,18 @@ export const Flow = (props, ref) => {
     handleMoveNode,
     handleSearchEnable,
     handleResetZoom,
-    handleShortcutDelete
+    handleShortcutDelete,
+    handleSearchDisabled
   ]);
 
   useEffect(() => {
     if (searchVisible) {
-      return deactivateEditor();
+      return activateKeyBind(
+        KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SCOPE
+      );
     }
-    activateEditor();
-  }, [searchVisible, deactivateEditor, activateEditor]);
+    activateKeyBind();
+  }, [searchVisible, activateKeyBind]);
 
   //========================================================================================
   /*                                                                                      *
@@ -1537,9 +1522,7 @@ export const Flow = (props, ref) => {
           mainInterface={mainInterfaceRef}
           onRobotChange={onRobotChange}
           canRun={hasNodesToStart()}
-          onStartStopFlow={onStartStopFlow}
-          nodeStatusUpdated={onNodeStatusUpdate}
-          nodeCompleteStatusUpdated={onNodeCompleteStatusUpdated}
+          onStartStopFlow={setRunningFlow}
           onViewModeChange={onViewModeChange}
           searchProps={{
             visible: searchVisible,

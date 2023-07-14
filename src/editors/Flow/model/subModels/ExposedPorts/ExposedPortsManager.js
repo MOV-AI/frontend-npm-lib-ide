@@ -49,6 +49,19 @@ class ExposedPortsManager extends Manager {
   }
 
   /**
+   * Deletes a sub item
+   * @param {object} param0 : An object with the name of the parent and the item to delete
+   * @returns : True on success, false otherwise
+   */
+  deleteSubItem(parent, name) {
+    delete this.getItem(parent)[name];
+
+    this.emit(EVENTS.DELETE);
+
+    return true;
+  }
+
+  /**
    * Creates one or more items
    * @param {object} json : An object with the items to create
    * @returns : The instance
