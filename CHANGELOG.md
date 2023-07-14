@@ -1,6 +1,5 @@
 # 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
-- [FP-2535 - Fixed issue with deleting subflows from flow](https://movai.atlassian.net/browse/FP-2535)
 - [FP-2359 - Added a way for the BaseApp keybinds to work](https://movai.atlassian.net/browse/FP-2359)
 - [FP-2438 - No longer saving NodeInstance's Parameter types](https://movai.atlassian.net/browse/FP-2438)
 - [FP-2480 - Added misc shortcuts to help with search node](https://movai.atlassian.net/browse/FP-2480)
@@ -41,3 +40,4 @@
 - [FP-2277 - Give back focus to Flow Editor after losing focus on some cases](https://movai.atlassian.net/browse/FP-2277)
 - [FP-2473 - IDE Flows appear as running but nodes don't in tree view](https://movai.atlassian.net/browse/FP-2473)
 - [FP-2519 - nodes on tree view show as alive when they are not](https://movai.atlassian.net/browse/FP-2519)
+- [FP-2535 - Fixed issue with deleting subflows from flow](https://movai.atlassian.net/browse/FP-2535)
