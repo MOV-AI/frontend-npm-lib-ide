@@ -1,7 +1,7 @@
 import Model from "../../Model/Model";
 import schema from "./schema";
 
-class Parameter extends Model {
+class ParameterWithType extends Model {
   constructor() {
     // inject imported schema and forward constructor arguments
     super({ schema, ...arguments[0] });
@@ -17,7 +17,7 @@ class Parameter extends Model {
     this.description = "";
 
     // Define observable properties
-    this.observables = Object.values(Parameter.OBSERVABLE_KEYS);
+    this.observables = Object.values(ParameterWithType.OBSERVABLE_KEYS);
   }
 
   //========================================================================================
@@ -37,7 +37,7 @@ class Parameter extends Model {
   /**
    * Sets the new value of the property
    * @param {string} value : The new value
-   * @returns {Parameter} : The instance
+   * @returns {ParameterWithType} : The instance
    */
   setValue(value) {
     this.value = value;
@@ -49,16 +49,13 @@ class Parameter extends Model {
    * @returns {string}
    */
   getType() {
-    // If we later want to go back to saving the type
-    // Ticket where this changed: https://movai.atlassian.net/browse/FP-2438
-    // return this.type;
-    return undefined;
+    return this.type;
   }
 
   /**
    * Sets the new value of the property
    * @param {string} value : The new value
-   * @returns {Parameter} : The instance
+   * @returns {ParameterWithType} : The instance
    */
   setType(value) {
     this.type = value;
@@ -76,7 +73,7 @@ class Parameter extends Model {
   /**
    * Sets the new value of the property
    * @param {string} value : The new value
-   * @returns {Parameter} : The instance
+   * @returns {ParameterWithType} : The instance
    */
   setDescription(value) {
     this.description = value;
@@ -131,7 +128,7 @@ class Parameter extends Model {
   static serializeOfDB(json) {
     const name = Object.keys(json)[0];
     const content = Object.values(json)[0];
-    const type = content.Type ?? Parameter.defaults.type;
+    const type = content.Type ?? ParameterWithType.defaults.type;
     const { Value: value, Description: description } = content;
 
     return { name, value, type, description };
@@ -155,4 +152,4 @@ class Parameter extends Model {
   };
 }
 
-export default Parameter;
+export default ParameterWithType;
