@@ -1,5 +1,11 @@
 import { Model, Manager } from "../../../models";
-import { Command, EnvVar, ContainerConf, Parameter, Port } from "../../../models/subModels";
+import {
+  Command,
+  EnvVar,
+  ContainerConf,
+  ParameterWithType,
+  Port
+} from "../../../models/subModels";
 import schema from "./schema";
 
 class Node extends Model {
@@ -29,10 +35,14 @@ class Node extends Model {
     this.launch = true;
     this.remappable = true;
     this.packageDep = "";
-    this.parameters = new Manager("parameters", Parameter, this.events);
+    this.parameters = new Manager("parameters", ParameterWithType, this.events);
     this.envVars = new Manager("envVars", EnvVar, this.events);
     this.commands = new Manager("commands", Command, this.events);
-    this.containerConf = new Manager("containerConf", ContainerConf, this.events);
+    this.containerConf = new Manager(
+      "containerConf",
+      ContainerConf,
+      this.events
+    );
     this.ports = new Manager("ports", Port, this.events);
 
     // Define observable properties
@@ -343,8 +353,8 @@ class Node extends Model {
    */
   setPortParameter(portId, direction, portName, parameterName, value) {
     this.getPorts()
-      .getItem(portId)
-      [direction].getItem(portName)
+      .getItem(portId)[direction]
+      .getItem(portName)
       .setParameter(parameterName, value);
 
     return this;
@@ -541,7 +551,7 @@ class Node extends Model {
       launch,
       remappable,
       packageDep,
-      parameters: Manager.serializeOfDB(parameters, Parameter),
+      parameters: Manager.serializeOfDB(parameters, ParameterWithType),
       envVars: Manager.serializeOfDB(envVars, EnvVar),
       commands: Manager.serializeOfDB(commands, Command),
       containerConf: Manager.serializeOfDB(containerConf, ContainerConf),

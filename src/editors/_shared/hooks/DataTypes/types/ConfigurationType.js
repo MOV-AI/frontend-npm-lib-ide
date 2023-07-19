@@ -1,3 +1,4 @@
+import React from "react";
 import { Rest } from "@mov-ai/mov-fe-lib-core";
 import { DATA_TYPES, SCOPES } from "../../../../../utils/Constants";
 import ConfigurationSelector from "../../../ConfigurationSelector/ConfigurationSelector";
