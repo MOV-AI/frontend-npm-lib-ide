@@ -1,5 +1,6 @@
 # 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
+- [FP-2530 - Added ParameterWithType for instances that need to save the type](https://movai.atlassian.net/browse/FP-2530)
 - [FP-2359 - Added a way for the BaseApp keybinds to work](https://movai.atlassian.net/browse/FP-2359)
 - [FP-2438 - No longer saving NodeInstance's Parameter types](https://movai.atlassian.net/browse/FP-2438)
 - [FP-2480 - Added misc shortcuts to help with search node](https://movai.atlassian.net/browse/FP-2480)
