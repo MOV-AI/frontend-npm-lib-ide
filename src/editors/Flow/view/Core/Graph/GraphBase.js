@@ -608,7 +608,7 @@ export default class GraphBase {
     const [first, ...rest] = nodeName.split("__");
 
     if (first !== this.mInterface.id)
-      throw new Error("GraphBase.updateNodeStatus: update for other flow? " + first);
+      return;
 
     if (rest.length)
       for (let i = 0; i < rest.length; i++) {
