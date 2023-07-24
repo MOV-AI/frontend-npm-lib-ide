@@ -158,11 +158,11 @@ export const Flow = (props, ref) => {
    */
   const startNode = useCallback(
     node => {
-      commandNode("RUN", node, robotSelected).then(() => {
+      commandNode("RUN", node).then(() => {
         node.statusLoading = true;
       });
     },
-    [robotSelected, commandNode]
+    [commandNode]
   );
 
   /**
@@ -171,11 +171,11 @@ export const Flow = (props, ref) => {
    */
   const stopNode = useCallback(
     node => {
-      commandNode("KILL", node, robotSelected).then(() => {
+      commandNode("KILL", node).then(() => {
         node.statusLoading = true;
       });
     },
-    [robotSelected, commandNode]
+    [commandNode]
   );
 
   /**
@@ -486,7 +486,7 @@ export const Flow = (props, ref) => {
         )
       };
     },
-    [MENUS, call, id, instance, openDoc, getMenuComponent, t]
+    [call, id, instance, openDoc, getMenuComponent, t]
   );
 
   /**
@@ -530,7 +530,7 @@ export const Flow = (props, ref) => {
         )
       };
     },
-    [MENUS, call, id, instance, t]
+    [call, id, instance, t]
   );
 
   /**
@@ -608,7 +608,6 @@ export const Flow = (props, ref) => {
       activeBookmark
     );
   }, [
-    MENUS,
     id,
     name,
     instance,
@@ -705,7 +704,7 @@ export const Flow = (props, ref) => {
       MENUS.current.DETAIL.NAME
     );
     selectedNodeRef.current = null;
-  }, [MENUS, call, selectedNodeRef]);
+  }, [call, selectedNodeRef]);
 
   /**
    * On Node Selected
@@ -729,7 +728,7 @@ export const Flow = (props, ref) => {
         }
       }, 300);
     },
-    [MENUS, addNodeMenu, unselectNode, onLinkSelected]
+    [addNodeMenu, unselectNode, onLinkSelected]
   );
 
   /**
@@ -831,15 +830,13 @@ export const Flow = (props, ref) => {
       );
 
       // Subscribe to flow validations
-      interfaceSubscriptionsList.current.push(
-        mainInterface.graph.onFlowValidated.subscribe(evtData => {
-          const persistentWarns = evtData.warnings.filter(
-            el => el.isPersistent
-          );
+      mainInterface.graph.onFlowValidated.subscribe(evtData => {
+        const persistentWarns = evtData.warnings.filter(
+          el => el.isPersistent
+        );
 
-          onFlowValidated({ warnings: persistentWarns });
-        })
-      );
+        onFlowValidated({ warnings: persistentWarns });
+      })
 
       mainInterface.onLoad = () => setLoading(false);
 
