@@ -29,7 +29,7 @@ const FlowBottomBar = props => {
     onToggleWarnings,
     robotSelected,
     runningFlow,
-    warnings,
+    mainInterface,
     warningVisibility,
     flowDebugging = false,
     toggleFlowDebug
@@ -76,10 +76,10 @@ const FlowBottomBar = props => {
    * Toggle warnings visibility in canvas
    */
   const toggleVisibility = useCallback(() => {
-    if (!warnings.length) return;
+    if (!mainInterface?.graph.warnings.length) return;
     // Toggle warnings if there's any
     onToggleWarnings(!warningVisibility);
-  }, [warnings, onToggleWarnings, warningVisibility]);
+  }, [mainInterface?.graph.warnings, onToggleWarnings, warningVisibility]);
 
   //========================================================================================
   /*                                                                                      *
@@ -167,7 +167,7 @@ const FlowBottomBar = props => {
             }`}
             onClick={toggleVisibility}
           >
-            <WarningIcon fontSize="small" /> {warnings.length}
+            <WarningIcon fontSize="small" /> {mainInterface?.graph.warnings.length}
           </Typography>
         </Tooltip>
       </Typography>
@@ -180,7 +180,8 @@ FlowBottomBar.propTypes = {
   toggleFlowDebug: PropTypes.func,
   robotSelected: PropTypes.string,
   runningFlow: PropTypes.string,
-  flowDebugging: PropTypes.bool
+  flowDebugging: PropTypes.bool,
+  mainInterface: PropTypes.any,
 };
 
 FlowBottomBar.defaultProps = {

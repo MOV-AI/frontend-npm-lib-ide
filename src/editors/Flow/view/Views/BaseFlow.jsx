@@ -22,7 +22,6 @@ const BaseFlow = props => {
     dataFromDB,
     off,
     on,
-    warnings,
     warningsVisibility,
     onReady,
     activateKeyBind,
@@ -92,7 +91,7 @@ const BaseFlow = props => {
     // Dispatch on ready event
     onReady(mInt);
     return () => {
-      getMainInterface().graph.destroy();
+      getMainInterface().graph?.destroy();
     };
   }, [graphClass, dataFromDB, onReady, getMainInterface]);
 
@@ -104,8 +103,8 @@ const BaseFlow = props => {
         </Backdrop>
       )}
       <div className={classes.flowCanvas} id={containerId} tagindex="0">
-        {warnings.length > 0 && (
-          <Warnings warnings={warnings} isVisible={warningsVisibility} />
+        {(getMainInterface()?.graph?.warnings?.length ?? 0) > 0 && (
+          <Warnings warnings={getMainInterface()?.graph?.warnings} isVisible={warningsVisibility} />
         )}
       </div>
       {flowDebugging && <DependencyInfo activateKeyBind={activateKeyBind} />}

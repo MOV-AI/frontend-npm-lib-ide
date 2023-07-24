@@ -93,9 +93,8 @@ export const Flow = (props, ref) => {
   const [dataFromDB, setDataFromDB] = useState();
   const [robotSelected, setRobotSelected] = useState("");
   const [runningFlow, setRunningFlow] = useState("");
-  const [warnings, setWarnings] = useState([]);
   const [flowDebugging, setFlowDebugging] = useState();
-  const [warningsVisibility, setWarningsVisibility] = useState(false);
+  const [warningsVisibility, setWarningsVisibility] = useState(true);
   const [viewMode, setViewMode] = useState(FLOW_VIEW_MODE.default);
   const [tooltipConfig, setTooltipConfig] = useState(null);
   const [contextMenuOptions, setContextMenuOptions] = useState(null);
@@ -684,17 +683,6 @@ export const Flow = (props, ref) => {
   //========================================================================================
 
   /**
-   * On flow validation
-   * @param {*} validationWarnings
-   */
-  const onFlowValidated = validationWarnings => {
-    const persistentWarns = validationWarnings.warnings.filter(
-      el => el.isPersistent
-    );
-    setWarnings(persistentWarns);
-  };
-
-  /**
    * Remove Node Bookmark and set selectedNode to null
    */
   const unselectNode = useCallback(() => {
@@ -828,17 +816,6 @@ export const Flow = (props, ref) => {
       mainInterface.graph.validator.setWarningActions(
         WARNING_TYPES.INVALID_PARAMETERS,
         invalidContainersParamAlert
-      );
-
-      // Subscribe to flow validations
-      interfaceSubscriptionsList.current.push(
-        mainInterface.graph.onFlowValidated.subscribe(evtData => {
-          const persistentWarns = evtData.warnings.filter(
-            el => el.isPersistent
-          );
-
-          onFlowValidated({ warnings: persistentWarns });
-        })
       );
 
       mainInterface.onLoad = () => setLoading(false);
@@ -1539,7 +1516,6 @@ export const Flow = (props, ref) => {
         loading={loading}
         viewMode={viewMode}
         dataFromDB={dataFromDB}
-        warnings={warnings}
         warningsVisibility={warningsVisibility}
         flowDebugging={flowDebugging}
         onReady={onReady}
@@ -1550,7 +1526,6 @@ export const Flow = (props, ref) => {
         warningVisibility={warningsVisibility}
         robotSelected={robotSelected}
         runningFlow={runningFlow}
-        warnings={warnings}
         toggleFlowDebug={handleFlowDebugChange}
         flowDebugging={flowDebugging}
       />
