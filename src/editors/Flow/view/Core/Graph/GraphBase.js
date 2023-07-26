@@ -46,7 +46,6 @@ export default class GraphBase {
     this.warnings = [];
     this.warningsVisibility = true;
     this.validator = new GraphValidator(this);
-    this.onFlowValidated = new Subject();
     this.onLinksValidated = new Subject();
     this.invalidLinks = [];
     this.flowDebugging = new Workspace().getFlowIsDebugging();
@@ -350,8 +349,8 @@ export default class GraphBase {
    */
   validateFlow = () => {
     const { warnings } = this.validator.validateFlow();
+    console.log("validateFlow", warnings);
 
-    this.onFlowValidated.next({ warnings: warnings });
     this.warnings = warnings;
   };
 
@@ -561,7 +560,6 @@ export default class GraphBase {
    */
   setPermanentWarnings = () => {
     this.warnings = this.warnings.map(wn => ({ ...wn, isPersistent: true }));
-    this.onFlowValidated.next({ warnings: this.warnings });
   };
 
   /**
@@ -608,7 +606,7 @@ export default class GraphBase {
     const [first, ...rest] = nodeName.split("__");
 
     if (first !== this.mInterface.id)
-      throw new Error("GraphBase.updateNodeStatus: update for other flow? " + first);
+      return;
 
     if (rest.length)
       for (let i = 0; i < rest.length; i++) {

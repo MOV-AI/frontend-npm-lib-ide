@@ -93,9 +93,9 @@ export const Flow = (props, ref) => {
   const [dataFromDB, setDataFromDB] = useState();
   const [robotSelected, setRobotSelected] = useState("");
   const [runningFlow, setRunningFlow] = useState("");
-  const [warnings, setWarnings] = useState([]);
   const [flowDebugging, setFlowDebugging] = useState();
-  const [warningsVisibility, setWarningsVisibility] = useState(false);
+  const [warnings, setWarnings] = useState([]);
+  const [warningsVisibility, setWarningsVisibility] = useState(true);
   const [viewMode, setViewMode] = useState(FLOW_VIEW_MODE.default);
   const [tooltipConfig, setTooltipConfig] = useState(null);
   const [contextMenuOptions, setContextMenuOptions] = useState(null);
@@ -684,17 +684,6 @@ export const Flow = (props, ref) => {
   //========================================================================================
 
   /**
-   * On flow validation
-   * @param {*} validationWarnings
-   */
-  const onFlowValidated = validationWarnings => {
-    const persistentWarns = validationWarnings.warnings.filter(
-      el => el.isPersistent
-    );
-    setWarnings(persistentWarns);
-  };
-
-  /**
    * Remove Node Bookmark and set selectedNode to null
    */
   const unselectNode = useCallback(() => {
@@ -802,6 +791,14 @@ export const Flow = (props, ref) => {
     );
   }, [call, activateEditor, onLinkSelected, onNodeSelected]);
 
+  useEffect(() => {
+    on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, () => {
+      getMainInterface()?.regraph();
+      setWarnings(getMainInterface()?.graph?.warnings ?? []);
+    });
+    return () => off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
+  }, [on, off, setWarnings]);
+
   /**
    * Subscribe to mainInterface and canvas events
    */
@@ -830,18 +827,10 @@ export const Flow = (props, ref) => {
         invalidContainersParamAlert
       );
 
-      // Subscribe to flow validations
-      interfaceSubscriptionsList.current.push(
-        mainInterface.graph.onFlowValidated.subscribe(evtData => {
-          const persistentWarns = evtData.warnings.filter(
-            el => el.isPersistent
-          );
-
-          onFlowValidated({ warnings: persistentWarns });
-        })
-      );
-
-      mainInterface.onLoad = () => setLoading(false);
+      mainInterface.onLoad = () => {
+        setLoading(false);
+        setWarnings(getMainInterface()?.graph?.warnings ?? []);
+      };
 
       // subscribe to on enter default mode
       // When enter default mode remove other node/sub-flow bookmarks
@@ -1511,6 +1500,8 @@ export const Flow = (props, ref) => {
       <div id="flow-top-bar">
         <FlowTopBar
           id={id}
+          on={on}
+          off={off}
           call={call}
           name={name}
           alert={alert}
@@ -1550,7 +1541,6 @@ export const Flow = (props, ref) => {
         warningVisibility={warningsVisibility}
         robotSelected={robotSelected}
         runningFlow={runningFlow}
-        warnings={warnings}
         toggleFlowDebug={handleFlowDebugChange}
         flowDebugging={flowDebugging}
       />
