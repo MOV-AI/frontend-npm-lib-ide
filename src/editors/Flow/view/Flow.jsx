@@ -94,6 +94,7 @@ export const Flow = (props, ref) => {
   const [robotSelected, setRobotSelected] = useState("");
   const [runningFlow, setRunningFlow] = useState("");
   const [flowDebugging, setFlowDebugging] = useState();
+  const [warnings, setWarnings] = useState([]);
   const [warningsVisibility, setWarningsVisibility] = useState(true);
   const [viewMode, setViewMode] = useState(FLOW_VIEW_MODE.default);
   const [tooltipConfig, setTooltipConfig] = useState(null);
@@ -790,6 +791,14 @@ export const Flow = (props, ref) => {
     );
   }, [call, activateEditor, onLinkSelected, onNodeSelected]);
 
+  useEffect(() => {
+    on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, () => {
+      getMainInterface()?.regraph();
+      setWarnings(getMainInterface()?.graph?.warnings ?? []);
+    });
+    return () => off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
+  }, [on, off, setWarnings]);
+
   /**
    * Subscribe to mainInterface and canvas events
    */
@@ -818,7 +827,10 @@ export const Flow = (props, ref) => {
         invalidContainersParamAlert
       );
 
-      mainInterface.onLoad = () => setLoading(false);
+      mainInterface.onLoad = () => {
+        setLoading(false);
+        setWarnings(getMainInterface()?.graph?.warnings ?? []);
+      };
 
       // subscribe to on enter default mode
       // When enter default mode remove other node/sub-flow bookmarks
@@ -1488,6 +1500,8 @@ export const Flow = (props, ref) => {
       <div id="flow-top-bar">
         <FlowTopBar
           id={id}
+          on={on}
+          off={off}
           call={call}
           name={name}
           alert={alert}
@@ -1516,6 +1530,7 @@ export const Flow = (props, ref) => {
         loading={loading}
         viewMode={viewMode}
         dataFromDB={dataFromDB}
+        warnings={warnings}
         warningsVisibility={warningsVisibility}
         flowDebugging={flowDebugging}
         onReady={onReady}
