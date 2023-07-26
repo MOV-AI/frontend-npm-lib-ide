@@ -95,7 +95,7 @@ export const Flow = (props, ref) => {
   const [runningFlow, setRunningFlow] = useState("");
   const [warnings, setWarnings] = useState([]);
   const [flowDebugging, setFlowDebugging] = useState();
-  const [warningsVisibility, setWarningsVisibility] = useState(false);
+  const [warningsVisibility, setWarningsVisibility] = useState(true);
   const [viewMode, setViewMode] = useState(FLOW_VIEW_MODE.default);
   const [tooltipConfig, setTooltipConfig] = useState(null);
   const [contextMenuOptions, setContextMenuOptions] = useState(null);
@@ -683,17 +683,6 @@ export const Flow = (props, ref) => {
   //========================================================================================
 
   /**
-   * On flow validation
-   * @param {*} validationWarnings
-   */
-  const onFlowValidated = validationWarnings => {
-    const persistentWarns = validationWarnings.warnings.filter(
-      el => el.isPersistent
-    );
-    setWarnings(persistentWarns);
-  };
-
-  /**
    * Remove Node Bookmark and set selectedNode to null
    */
   const unselectNode = useCallback(() => {
@@ -835,8 +824,8 @@ export const Flow = (props, ref) => {
           el => el.isPersistent
         );
 
-        onFlowValidated({ warnings: persistentWarns });
-      })
+        setWarnings(persistentWarns);
+      });
 
       mainInterface.onLoad = () => setLoading(false);
 
