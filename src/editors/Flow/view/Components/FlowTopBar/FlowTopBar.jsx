@@ -283,16 +283,14 @@ const FlowTopBar = props => {
       const warnings = graph.warnings || [];
       const warningsVisibility = graph.warningsVisibility;
       const runtimeWarnings = warnings.filter(wn => wn.isRuntime);
-
-      if (runtimeWarnings.length) {
-        graph.setPermanentWarnings();
+      runtimeWarnings.forEach(warning => {
+        graph.setPermanentWarnings(warning);
         if (!warningsVisibility)
           alert({
             message: runtimeWarnings[0].message,
             severity: runtimeWarnings[0].type
           });
-      }
-
+      });
       return !(runtimeWarnings.length && action === "START");
     },
     [alert, mainInterface]

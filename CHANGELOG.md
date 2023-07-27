@@ -44,4 +44,3 @@
 - [FP-2473 - IDE Flows appear as running but nodes don't in tree view](https://movai.atlassian.net/browse/FP-2473)
 - [FP-2519 - nodes on tree view show as alive when they are not](https://movai.atlassian.net/browse/FP-2519)
 - [FP-2535 - Fixed issue with deleting subflows from flow](https://movai.atlassian.net/browse/FP-2535)
-- [FP-2541 - Invalid links warning message is missing in removing port](https://movai.atlassian.net/browse/FP-2541)

@@ -128,29 +128,24 @@ export default class MainInterface {
     this.graph = null;
     this.shortcuts = null;
     this.onLoad = () => {};
-    this.onLoad2 = () => {};
 
-    this.regraph();
-  }
-
-  regraph() {
     // Set initial mode as loading
     this.setMode(EVT_NAMES.LOADING);
 
     this.canvas = new Canvas({
       mInterface: this,
-      containerId: this.containerId,
-      width: this.width,
-      height: this.height,
-      classes: this.classes,
-      docManager: this.docManager
+      containerId,
+      width,
+      height,
+      classes,
+      docManager: call
     });
 
     this.graph = new this.graphCls({
-      id: this.id,
+      id,
       mInterface: this,
       canvas: this.canvas,
-      docManager: this.docManager,
+      docManager: call
     });
 
     // Load document and add subscribers
