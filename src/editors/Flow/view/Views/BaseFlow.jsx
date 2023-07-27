@@ -92,7 +92,7 @@ const BaseFlow = props => {
     // Dispatch on ready event
     onReady(mInt);
     return () => {
-      getMainInterface().graph?.destroy();
+      getMainInterface().graph.destroy();
     };
   }, [graphClass, dataFromDB, onReady, getMainInterface]);
 
@@ -120,8 +120,7 @@ BaseFlow.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
   model: PropTypes.string,
-  dataFromDB: PropTypes.object,
-  warnings: PropTypes.array,
+  dataFromDB: PropTypes.object
 };
 
 BaseFlow.defaultProps = {
