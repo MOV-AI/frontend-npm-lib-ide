@@ -103,7 +103,7 @@ const BaseFlow = props => {
           <Loader />
         </Backdrop>
       )}
-      <div className={classes.flowCanvas} id={containerId} tagindex="0">
+      <div className={classes.flowCanvas} id={containerId} tabIndex="0">
         {warnings.length > 0 && (
           <Warnings warnings={warnings} isVisible={warningsVisibility} />
         )}
