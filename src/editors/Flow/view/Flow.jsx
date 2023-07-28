@@ -95,7 +95,7 @@ export const Flow = (props, ref) => {
   const [runningFlow, setRunningFlow] = useState("");
   const [warnings, setWarnings] = useState([]);
   const [flowDebugging, setFlowDebugging] = useState();
-  const [warningsVisibility, setWarningsVisibility] = useState(false);
+  const [warningsVisibility, setWarningsVisibility] = useState(true);
   const [viewMode, setViewMode] = useState(FLOW_VIEW_MODE.default);
   const [tooltipConfig, setTooltipConfig] = useState(null);
   const [contextMenuOptions, setContextMenuOptions] = useState(null);
@@ -158,11 +158,11 @@ export const Flow = (props, ref) => {
    */
   const startNode = useCallback(
     node => {
-      commandNode("RUN", node, robotSelected).then(() => {
+      commandNode("RUN", node).then(() => {
         node.statusLoading = true;
       });
     },
-    [robotSelected, commandNode]
+    [commandNode]
   );
 
   /**
@@ -171,11 +171,11 @@ export const Flow = (props, ref) => {
    */
   const stopNode = useCallback(
     node => {
-      commandNode("KILL", node, robotSelected).then(() => {
+      commandNode("KILL", node).then(() => {
         node.statusLoading = true;
       });
     },
-    [robotSelected, commandNode]
+    [commandNode]
   );
 
   /**
@@ -486,7 +486,7 @@ export const Flow = (props, ref) => {
         )
       };
     },
-    [MENUS, call, id, instance, openDoc, getMenuComponent, t]
+    [call, id, instance, openDoc, getMenuComponent, t]
   );
 
   /**
@@ -530,7 +530,7 @@ export const Flow = (props, ref) => {
         )
       };
     },
-    [MENUS, call, id, instance, t]
+    [call, id, instance, t]
   );
 
   /**
@@ -608,7 +608,6 @@ export const Flow = (props, ref) => {
       activeBookmark
     );
   }, [
-    MENUS,
     id,
     name,
     instance,
@@ -684,17 +683,6 @@ export const Flow = (props, ref) => {
   //========================================================================================
 
   /**
-   * On flow validation
-   * @param {*} validationWarnings
-   */
-  const onFlowValidated = validationWarnings => {
-    const persistentWarns = validationWarnings.warnings.filter(
-      el => el.isPersistent
-    );
-    setWarnings(persistentWarns);
-  };
-
-  /**
    * Remove Node Bookmark and set selectedNode to null
    */
   const unselectNode = useCallback(() => {
@@ -705,7 +693,7 @@ export const Flow = (props, ref) => {
       MENUS.current.DETAIL.NAME
     );
     selectedNodeRef.current = null;
-  }, [MENUS, call, selectedNodeRef]);
+  }, [call, selectedNodeRef]);
 
   /**
    * On Node Selected
@@ -729,7 +717,7 @@ export const Flow = (props, ref) => {
         }
       }, 300);
     },
-    [MENUS, addNodeMenu, unselectNode, onLinkSelected]
+    [addNodeMenu, unselectNode, onLinkSelected]
   );
 
   /**
@@ -831,15 +819,13 @@ export const Flow = (props, ref) => {
       );
 
       // Subscribe to flow validations
-      interfaceSubscriptionsList.current.push(
-        mainInterface.graph.onFlowValidated.subscribe(evtData => {
-          const persistentWarns = evtData.warnings.filter(
-            el => el.isPersistent
-          );
+      mainInterface.graph.onFlowValidated.subscribe(evtData => {
+        const persistentWarns = evtData.warnings.filter(
+          el => el.isPersistent
+        );
 
-          onFlowValidated({ warnings: persistentWarns });
-        })
-      );
+        setWarnings(persistentWarns);
+      });
 
       mainInterface.onLoad = () => setLoading(false);
 

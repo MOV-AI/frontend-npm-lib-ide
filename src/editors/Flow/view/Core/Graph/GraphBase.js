@@ -607,8 +607,7 @@ export default class GraphBase {
     // is this a subflow node?
     const [first, ...rest] = nodeName.split("__");
 
-    if (first !== this.mInterface.id)
-      throw new Error("GraphBase.updateNodeStatus: update for other flow? " + first);
+    if (first !== this.mInterface.id) return;
 
     if (rest.length)
       for (let i = 0; i < rest.length; i++) {
