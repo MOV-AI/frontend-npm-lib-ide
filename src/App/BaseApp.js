@@ -252,7 +252,7 @@ function installViewPlugins(dependencies) {
 
 function getHostedPlugins(classes) {
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" wrap="nowrap">
       <AbstractHost hostName={HOSTS.ABSTRACT_HOST.NAME}></AbstractHost>
       <Grid container alignItems="flex-start">
         <TopBar hostName={HOSTS.TOP_BAR.NAME} debugMode={DEBUG_MODE}></TopBar>
