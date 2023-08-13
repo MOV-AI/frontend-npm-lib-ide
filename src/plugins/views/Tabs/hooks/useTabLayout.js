@@ -25,6 +25,7 @@ const useTabLayout = (props, dockRef) => {
   const workspaceManager = useMemo(() => new Workspace(), []);
   const activeTabId = useRef(null);
   const firstLoad = useRef(true);
+  const preventReloadNewDoc = useRef(false);
   const tabsById = useRef(new Map());
   const [layout, setLayout] = useState({ ...DEFAULT_LAYOUT });
   const { addTabToStack, removeTabFromStack, getNextTabFromStack } =
@@ -198,8 +199,9 @@ const useTabLayout = (props, dockRef) => {
       const newLayout = { ...prevLayout };
       const box = _getTabContainer(newLayout[location], prevTabId);
       if (box) {
-        tabData.id = `${tabData.id.substring(0, tabData.id.lastIndexOf("/"))}/${tabData.name
-          }`;
+        tabData.id = `${tabData.id.substring(0, tabData.id.lastIndexOf("/"))}/${
+          tabData.name
+        }`;
         const tabIndex = box.tabs.findIndex(_el => _el.id === prevTabId);
         box.tabs[tabIndex] = tabData;
         box.activeId = tabData.id;
@@ -305,6 +307,7 @@ const useTabLayout = (props, dockRef) => {
         name,
         scope,
         onSubmit: action => {
+          preventReloadNewDoc.current = true;
           const triggerAction = {
             // Save changes and close document
             save: () => _saveDoc(document),
@@ -460,7 +463,10 @@ const useTabLayout = (props, dockRef) => {
         if (!docFactory) return docData;
         return installTabPlugin(docFactory, docData)
           .then(viewPlugin => {
-            const Decorated = withError(() => viewPlugin.render(docFactory.props ?? {}), dependencies);
+            const Decorated = withError(
+              () => viewPlugin.render(docFactory.props ?? {}),
+              dependencies
+            );
 
             // Create and return tab data
             const extension = docFactory.store.model.EXTENSION ?? "";
@@ -773,10 +779,14 @@ const useTabLayout = (props, dockRef) => {
 
         updateTabId(doc.path.replace(`/${doc.version}`, ""), newTabData);
 
-        call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.RELOAD_DOC, {
-          scope,
-          name
-        });
+        if (!preventReloadNewDoc.current) {
+          call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.RELOAD_DOC, {
+            scope,
+            name
+          });
+        }
+
+        preventReloadNewDoc.current = false;
       }
     });
     // Unsubscribe on unmount
