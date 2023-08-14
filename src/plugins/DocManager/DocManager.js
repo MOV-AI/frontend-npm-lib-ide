@@ -217,7 +217,7 @@ class DocManager extends IDEPlugin {
           scope,
           onSubmit: async action => {
             switch (action) {
-              case SAVE_OUTDATED_DOC_ACTIONS.UPDATE_DOC:
+              case SAVE_OUTDATED_DOC_ACTIONS.UPDATE_DOC: {
                 this.discardDocChanges(modelKey);
                 const updatedDoc = await this.read(modelKey);
 
@@ -229,6 +229,7 @@ class DocManager extends IDEPlugin {
 
                 this.saveStack.delete(`${name}_${scope}`);
                 break;
+              }
               case SAVE_OUTDATED_DOC_ACTIONS.OVERWRITE_DOC:
                 this.doSave(modelKey, callback, undefined, opts);
                 break;
@@ -289,7 +290,7 @@ class DocManager extends IDEPlugin {
       });
     }
 
-    callback && callback(returnMessage);
+    callback?.(returnMessage);
     this.saveStack.delete(`${name}_${scope}`);
     return returnMessage;
   }
@@ -424,7 +425,7 @@ class DocManager extends IDEPlugin {
    *  Remove subscribers
    * @param {Event} event
    */
-  onUnload = _event => {
+  onUnload = () => {
     this.getStores().forEach(store => {
       const dirtyDocs = store.getDirties();
 
