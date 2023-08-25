@@ -1,5 +1,6 @@
 import React, { forwardRef, useCallback, useEffect, useRef } from "react";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
+import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
 import withAlerts from "../../decorators/withAlerts";
 import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
@@ -76,7 +77,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         if (data.id !== id || instance?.id !== Utils.getNameFromURL(id))
           deactivateEditor();
       },
-      [id, activateEditor]
+      [id, deactivateEditor]
     );
 
     /**
@@ -93,6 +94,8 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         );
 
         if (validTab && data.id === id) {
+          // We should reset bookmarks when changing tabs. Right? And Left too :D
+          PluginManagerIDE.resetBookmarks();
           updateRightMenu();
           activateEditor();
         }
@@ -110,7 +113,18 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
         off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.UPDATE_DOC_DIRTY);
       };
-    }, [id, addKeyBind, removeKeyBind, on, off, save, activateThisEditor]);
+    }, [
+      id,
+      addKeyBind,
+      removeKeyBind,
+      on,
+      off,
+      save,
+      call,
+      updateRightMenu,
+      activateThisEditor,
+      activateEditor
+    ]);
 
     return (
       <div
