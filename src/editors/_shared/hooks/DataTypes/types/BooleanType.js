@@ -11,6 +11,7 @@ class BooleanType extends DataType {
   default = false;
 
   editComponent = (props, mode = "row") => {
+    this.label = props.label ?? this.label;
     let pyValue = this.toString(props.rowData.value).toLowerCase();
     const editor = {
       row: () => this.booleanEditComponent(props, pyValue),
@@ -82,6 +83,7 @@ class BooleanType extends DataType {
 
     return (
       <Checkbox
+        data-testid={"Type=boolean-" + this.label}
         color={"primary"}
         style={{ width: "fit-content" }}
         checked={parsedValue}
