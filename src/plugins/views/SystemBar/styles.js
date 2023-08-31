@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { bindMagic } from "@tty-pt/styles";
 
 const menuButtonStyles = {
   margin: "0px",
@@ -9,14 +10,15 @@ const menuButtonStyles = {
   "& > .MuiTouchRipple-root": { borderRadius: "0px" }
 };
 
-export const systemBarStyles = debugMode =>
-  makeStyles(theme => ({
-    systemBar: {
-      background: theme.topBarColor,
-      height: "26px",
-      borderBottom: debugMode ? "solid 5px purple" : "1px solid #000",
-      width: "100%"
+export const systemBarStyles = bindMagic(theme => ({
+  systemBar: {
+    background: theme.topBarColor,
+    height: "26px",
+    borderBottom: "1px solid #000",
+    "&.debug": {
+      borderBottom: "solid 5px purple",
     },
+    width: "100%",
     menuButton: {
       ...menuButtonStyles,
       padding: "0 10px",
@@ -32,7 +34,8 @@ export const systemBarStyles = debugMode =>
     activeMenu: {
       background: theme.palette.grey[900]
     }
-  }));
+  },
+}));
 
 export const systemMenuStyles = makeStyles(theme => ({
   popper: {
@@ -105,7 +108,7 @@ export const systemMenuItemStyles = makeStyles(theme => ({
   }
 }));
 
-export const helpDialogStyles = makeStyles(_theme => ({
+export const helpDialogStyles = bindMagic(_theme => ({
   movaiIcon: {
     height: "24px",
     verticalAlign: "sub",

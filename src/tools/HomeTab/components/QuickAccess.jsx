@@ -16,7 +16,7 @@ import { quickAccessStyles } from "../styles";
 const QuickAccess = props => {
   const { call } = props;
   const { t } = useTranslation();
-  const classes = quickAccessStyles();
+  quickAccessStyles();
 
   // State
   const [docTypes, setDocTypes] = useState([]);
@@ -74,14 +74,14 @@ const QuickAccess = props => {
   }, [call]);
 
   return (
-    <Paper data-testid="section_quick-access" className={classes.paper}>
-      <div className={classes.columnTitle}>{t("QuickAccess")}</div>
+    <Paper data-testid="section_quick-access" className="paper">
+      <div className="column-title">{t("QuickAccess")}</div>
       <Divider />
-      <div className={classes.columnBody}>
+      <div className="column-body">
         <ContextMenu
           element={
-            <div className={classes.link}>
-              <AddIcon className={classes.linkIcon} />
+            <div className="link">
+              <AddIcon className="link-icon" />
               {t("CreateNewDoc")}
             </div>
           }
@@ -108,9 +108,9 @@ const QuickAccess = props => {
             href={AppSettings.HELP.DOCUMENTATION}
             target="_blank"
             rel="noreferrer"
-            className={classes.link}
+            className="link"
           >
-            <ChromeReaderModeIcon className={classes.linkIcon} />
+            <ChromeReaderModeIcon className="link-icon" />
 
             {t("Documentation")}
           </a>
@@ -118,8 +118,8 @@ const QuickAccess = props => {
           <></>
         )}
 
-        {/* <div data-testid="input_app-config" className={classes.link} onClick={handleOpenAppConfig}>
-          <BuildIcon className={classes.linkIcon} />
+        {/* <div data-testid="input_app-config" className="link-icon" onClick={handleOpenAppConfig}>
+          <BuildIcon className="link-icon" />
           {t("App Configuration")}
         </div> */}
         {getQuickAccessTools().map(tool => {
@@ -129,10 +129,10 @@ const QuickAccess = props => {
             <div
               key={`input_tool_${name}`}
               data-testid={`input_tool_${name}`}
-              className={classes.link}
+              className="link"
               onClick={() => openTool(call, name)}
             >
-              <Icon className={classes.linkIcon} />
+              <Icon className="link-icon" />
               {title}
             </div>
           );
