@@ -16,7 +16,7 @@ import {
   DialogActions,
   Button
 } from "@material-ui/core";
-import { withTheme } from "../../../decorators/withTheme";
+import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { DialogTitle } from "../../../plugins/Dialog/components/AppDialog/AppDialog";
 
 import { keyValueEditorDialogStyles } from "./styles";

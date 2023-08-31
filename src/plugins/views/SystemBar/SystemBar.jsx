@@ -18,7 +18,7 @@ const SystemBar = props => {
   const [systemMenus, setSystemMenus] = useState(false);
 
   // Other Hooks
-  const classes = systemBarStyles(debugMode)();
+  const classes = systemBarStyles();
   const dialogClasses = helpDialogStyles();
   const { t } = useTranslation();
 
@@ -92,15 +92,15 @@ const SystemBar = props => {
   return (
     <>
       {systemMenus && (
-        <div data-testid="section_system-bar" className={classes.systemBar}>
+        <div data-testid="section_system-bar" className={"system-bar" + (debugMode ? " debug" : "")}>
           {systemMenus.map(menu => {
             const activeButtonClass =
-              openedMenuId === menu.id ? classes.activeMenu : "";
+              openedMenuId === menu.id ? "active-menu" : "";
             return (
               <Button
                 data-testid="input_menu-item"
                 key={menu.id}
-                className={`${classes.menuButton} ${activeButtonClass}`}
+                className={`menu-button ${activeButtonClass}`}
                 onClick={handleClickMenu}
                 data-menu-id={menu.id}
               >
