@@ -9,9 +9,9 @@ import {
   DialogActions
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { PLUGINS } from "../../../../utils/Constants";
 import { ERROR_MESSAGES } from "../../../../utils/Messages";
-import { withTheme } from "../../../../decorators/withTheme";
 import { DialogTitle } from "../../../../plugins/Dialog/components/AppDialog/AppDialog";
 import Loader from "../../../_shared/Loader/Loader";
 import MaterialTree from "../../../_shared/MaterialTree/MaterialTree";

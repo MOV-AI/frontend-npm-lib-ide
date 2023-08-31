@@ -10,7 +10,7 @@ import {
   Radio,
   RadioGroup
 } from "@material-ui/core";
-import { withTheme } from "../../../decorators/withTheme";
+import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { ERROR_MESSAGES } from "../../../utils/Messages";
 import {
   DATA_TYPES,
