@@ -6,7 +6,6 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import { CircularProgress } from "@material-ui/core";
-import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import AppDialog from "../AppDialog/AppDialog";
 
 import { appDialogStyles } from "./styles";
@@ -236,4 +235,4 @@ FormDialog.defaultProps = {
   maxLength: 40
 };
 
-export default withTheme(FormDialog);
+export default FormDialog;
