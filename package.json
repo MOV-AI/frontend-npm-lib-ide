@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-ide",
-  "version": "1.2.0-2",
+  "version": "1.2.0-3",
   "main": "./dist/index.js",
   "type": "module",
   "exports": {
