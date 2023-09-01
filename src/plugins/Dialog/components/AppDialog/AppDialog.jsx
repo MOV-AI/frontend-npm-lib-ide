@@ -5,7 +5,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -145,4 +144,4 @@ AppDialog.defaultProps = {
   closeOnBackdrop: false
 };
 
-export default withTheme(AppDialog);
+export default AppDialog;

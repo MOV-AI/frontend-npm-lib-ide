@@ -135,6 +135,13 @@ export const Flow = (props, ref) => {
   };
 
   /**
+   * @private Get main interface instance
+   */
+  const getMainInterface = () => {
+    return mainInterfaceRef.current;
+  };
+
+  /**
    * Updates the status of flow debugging variable on graph
    * And then re strokes the links (to add or remove the debug colors)
    */
@@ -151,32 +158,6 @@ export const Flow = (props, ref) => {
   useEffect(() => {
     updateLinkStroke();
   }, [flowDebugging, updateLinkStroke]);
-
-  /**
-   * Start node
-   * @param {Object} target : Node to be started
-   */
-  const startNode = useCallback(
-    node => {
-      commandNode("RUN", node).then(() => {
-        node.statusLoading = true;
-      });
-    },
-    [commandNode]
-  );
-
-  /**
-   * Stop node
-   * @param {Object} target : Node to be stopped
-   */
-  const stopNode = useCallback(
-    node => {
-      commandNode("KILL", node).then(() => {
-        node.statusLoading = true;
-      });
-    },
-    [commandNode]
-  );
 
   /**
    * Execute command action to node to start or stop
@@ -224,18 +205,37 @@ export const Flow = (props, ref) => {
     [call, robotSelected, t]
   );
 
+  /**
+   * Start node
+   * @param {Object} target : Node to be started
+   */
+  const startNode = useCallback(
+    node => {
+      commandNode("RUN", node).then(() => {
+        node.statusLoading = true;
+      });
+    },
+    [commandNode]
+  );
+
+  /**
+   * Stop node
+   * @param {Object} target : Node to be stopped
+   */
+  const stopNode = useCallback(
+    node => {
+      commandNode("KILL", node).then(() => {
+        node.statusLoading = true;
+      });
+    },
+    [commandNode]
+  );
+
   //========================================================================================
   /*                                                                                      *
    *                                        Helper                                        *
    *                                                                                      */
   //========================================================================================
-
-  /**
-   * @private Get main interface instance
-   */
-  const getMainInterface = () => {
-    return mainInterfaceRef.current;
-  };
 
   /**
    * Set mode
@@ -413,42 +413,50 @@ export const Flow = (props, ref) => {
   );
 
   /**
-   * Open Dialog to Enter Paste Node name
-   * @param {*} position : x and y position in canvas
-   * @param {*} nodeToCopy : Node data
-   * @returns {Promise} Resolved only after submit or cancel dialog
+   * Remove Node Bookmark and set selectedNode to null
    */
-  const pasteNodeDialog = useCallback(
-    (position, nodeToCopy) => {
-      const node = nodeToCopy.node;
-      return new Promise(resolve => {
-        const args = {
-          title: t("PasteNodeModel", { nodeModel: node.model }),
-          value: `${node.id}_copy`,
-          onClose: () => {
-            setFlowsToDefault();
-            resolve();
-          },
-          onValidation: newName =>
-            getMainInterface().graph.validator.validateNodeName(
-              newName,
-              t(node.model)
-            ),
-          onSubmit: newName =>
-            getMainInterface().pasteNode(newName, node, position)
-        };
-        // Open Dialog
-        call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
-      });
-    },
-    [call, setFlowsToDefault, t]
-  );
+  const unselectNode = useCallback(() => {
+    call(
+      PLUGINS.RIGHT_DRAWER.NAME,
+      PLUGINS.RIGHT_DRAWER.CALL.REMOVE_BOOKMARK,
+      MENUS.current.NODE.NAME,
+      MENUS.current.DETAIL.NAME
+    );
+    selectedNodeRef.current = null;
+  }, [call, selectedNodeRef]);
 
-  //========================================================================================
-  /*                                                                                      *
-   *                               Right menu initialization                              *
-   *                                                                                      */
-  //========================================================================================
+  /**
+   * Call broadcast method to emit event to all open flows
+   */
+  const setFlowsToDefault = useCallback(() => {
+    activateEditor();
+
+    // Remove selected node and link bookmark
+    clearTimeout(debounceSelection.current);
+    contextArgs.current = null;
+    debounceSelection.current = setTimeout(unselectNode, 300);
+    unselectNode();
+
+    // unselect link
+    activateEditor();
+    selectedLinkRef.current = null;
+    getMainInterface().selectedLink = null;
+    call(
+      PLUGINS.RIGHT_DRAWER.NAME,
+      PLUGINS.RIGHT_DRAWER.CALL.REMOVE_BOOKMARK,
+      MENUS.current.LINK.NAME,
+      activeBookmark
+    );
+
+    // Update render of right menu
+    // broadcast event to other flows
+    call(
+      PLUGINS.DOC_MANAGER.NAME,
+      PLUGINS.DOC_MANAGER.CALL.BROADCAST,
+      PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR,
+      { action: "setMode", value: EVT_NAMES.DEFAULT }
+    );
+  }, [unselectNode, call, activateEditor]);
 
   /**
    * @private Get Menu component based on node model (Flow or Node)
@@ -551,6 +559,111 @@ export const Flow = (props, ref) => {
     },
     [call, getLinkMenuToAdd]
   );
+
+  /**
+   * On Link selected
+   * @param {BaseLink} link : Link instance
+   */
+  const onLinkSelected = useCallback(
+    link => {
+      activateEditor();
+      selectedLinkRef.current = link;
+      getMainInterface().selectedLink = link;
+      const currentMode = getMainInterface().mode.mode;
+      // We only want 1 selection at the time.
+      // So let's unselect nodes if any is selected
+      if (
+        currentMode.id === EVT_NAMES.SELECT_NODE &&
+        currentMode.props.shiftKey
+      ) {
+        // If we're making multiple node selection we need to reset the mode
+        getMainInterface().setMode(EVT_NAMES.DEFAULT);
+        // Since we resetted the mode, we need to add back the selected link
+        getMainInterface().selectedLink = link;
+      } else if (selectedNodeRef.current) {
+        // If we just selected 1 node, it's ok, let's just unselect it
+        selectedNodeRef.current.selected = false;
+      }
+
+      // Remove node menu
+      unselectNode();
+
+      activeBookmark = MENUS.current.LINK.NAME;
+      addLinkMenu(link, true);
+    },
+    [activateEditor, unselectNode, addLinkMenu]
+  );
+
+  /**
+   * On Node Selected
+   * @param {*} node
+   */
+  const onNodeSelected = useCallback(
+    node => {
+      clearTimeout(debounceSelection.current);
+      contextArgs.current = node;
+      debounceSelection.current = setTimeout(() => {
+        // We only want 1 selection at the time.
+        // So let's unselect links if any is selected
+        if (selectedLinkRef.current) {
+          // unselect link
+          activateEditor();
+          selectedLinkRef.current = null;
+          getMainInterface().selectedLink = null;
+          call(
+            PLUGINS.RIGHT_DRAWER.NAME,
+            PLUGINS.RIGHT_DRAWER.CALL.REMOVE_BOOKMARK,
+            MENUS.current.LINK.NAME,
+            activeBookmark
+          );
+        }
+
+
+        selectedNodeRef.current = node;
+        activeBookmark = MENUS.current.NODE.NAME;
+        addNodeMenu(node, true);
+      }, 300);
+    },
+    [activateEditor, call, addNodeMenu]
+  );
+
+  /**
+   * Open Dialog to Enter Paste Node name
+   * @param {*} position : x and y position in canvas
+   * @param {*} nodeToCopy : Node data
+   * @returns {Promise} Resolved only after submit or cancel dialog
+   */
+  const pasteNodeDialog = useCallback(
+    (position, nodeToCopy) => {
+      const node = nodeToCopy.node;
+      return new Promise(resolve => {
+        const args = {
+          title: t("PasteNodeModel", { nodeModel: node.model }),
+          value: `${node.id}_copy`,
+          onClose: () => {
+            setFlowsToDefault();
+            resolve();
+          },
+          onValidation: newName =>
+            getMainInterface().graph.validator.validateNodeName(
+              newName,
+              t(node.model)
+            ),
+          onSubmit: newName =>
+            getMainInterface().pasteNode(newName, node, position)
+        };
+        // Open Dialog
+        call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
+      });
+    },
+    [setFlowsToDefault, call, t]
+  );
+
+  //========================================================================================
+  /*                                                                                      *
+   *                               Right menu initialization                              *
+   *                                                                                      */
+  //========================================================================================
 
   const renderRightMenu = useCallback(() => {
     const details = props.data?.details || {};
@@ -683,87 +796,6 @@ export const Flow = (props, ref) => {
   //========================================================================================
 
   /**
-   * Remove Node Bookmark and set selectedNode to null
-   */
-  const unselectNode = useCallback(() => {
-    call(
-      PLUGINS.RIGHT_DRAWER.NAME,
-      PLUGINS.RIGHT_DRAWER.CALL.REMOVE_BOOKMARK,
-      MENUS.current.NODE.NAME,
-      MENUS.current.DETAIL.NAME
-    );
-    selectedNodeRef.current = null;
-  }, [call, selectedNodeRef]);
-
-  /**
-   * On Node Selected
-   * @param {*} node
-   */
-  const onNodeSelected = useCallback(
-    node => {
-      clearTimeout(debounceSelection.current);
-      contextArgs.current = node;
-      debounceSelection.current = setTimeout(() => {
-        if (!node) {
-          unselectNode();
-        } else {
-          // We only want 1 selection at the time.
-          // So let's unselect links if any is selected
-          if (selectedLinkRef.current) onLinkSelected(null);
-
-          selectedNodeRef.current = node;
-          activeBookmark = MENUS.current.NODE.NAME;
-          addNodeMenu(node, true);
-        }
-      }, 300);
-    },
-    [addNodeMenu, unselectNode, onLinkSelected]
-  );
-
-  /**
-   * On Link selected
-   * @param {BaseLink} link : Link instance
-   */
-  const onLinkSelected = useCallback(
-    link => {
-      activateEditor();
-      selectedLinkRef.current = link;
-      getMainInterface().selectedLink = link;
-      if (!link) {
-        call(
-          PLUGINS.RIGHT_DRAWER.NAME,
-          PLUGINS.RIGHT_DRAWER.CALL.REMOVE_BOOKMARK,
-          MENUS.current.LINK.NAME,
-          activeBookmark
-        );
-      } else {
-        const currentMode = getMainInterface().mode.mode;
-        // We only want 1 selection at the time.
-        // So let's unselect nodes if any is selected
-        if (
-          currentMode.id === EVT_NAMES.SELECT_NODE &&
-          currentMode.props.shiftKey
-        ) {
-          // If we're making multiple node selection we need to reset the mode
-          getMainInterface().setMode(EVT_NAMES.DEFAULT);
-          // Since we resetted the mode, we need to add back the selected link
-          getMainInterface().selectedLink = link;
-        } else if (selectedNodeRef.current) {
-          // If we just selected 1 node, it's ok, let's just unselect it
-          selectedNodeRef.current.selected = false;
-        }
-
-        // Remove node menu
-        unselectNode();
-
-        activeBookmark = MENUS.current.LINK.NAME;
-        addLinkMenu(link, true);
-      }
-    },
-    [activateEditor, call, unselectNode, addLinkMenu]
-  );
-
-  /**
    * Close context menu
    */
   const handleContextClose = useCallback(() => {
@@ -772,23 +804,148 @@ export const Flow = (props, ref) => {
     getMainInterface().setMode(EVT_NAMES.DEFAULT);
   }, []);
 
+  const getContextOptions = useCallback(
+    (mode, data, args) => {
+      const baseContextOptions = getBaseContextOptions(mode, data, args);
+      const contextOpts = contextOptions?.(baseContextOptions)?.[mode]?.(data);
+
+      return contextOpts ?? baseContextOptions;
+    },
+    [contextOptions]
+  );
+
   /**
-   * Call broadcast method to emit event to all open flows
+   * Handle copy node
    */
-  const setFlowsToDefault = useCallback(() => {
-    activateEditor();
-    // Remove selected node and link bookmark
-    onNodeSelected(null);
-    onLinkSelected(null);
-    // Update render of right menu
-    // broadcast event to other flows
-    call(
-      PLUGINS.DOC_MANAGER.NAME,
-      PLUGINS.DOC_MANAGER.CALL.BROADCAST,
-      PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR,
-      { action: "setMode", value: EVT_NAMES.DEFAULT }
-    );
-  }, [call, activateEditor, onLinkSelected, onNodeSelected]);
+  const handleCopyNode = useCallback(
+    evt => {
+      evt?.preventDefault?.();
+      const selectedNodes = getSelectedNodes();
+      const nodesPos = selectedNodes.map(n =>
+        Vec2.of(n.center.xCenter, n.center.yCenter)
+      );
+      let center = nodesPos.reduce((e, x) => e.add(x), Vec2.ZERO);
+      center = center.scale(1 / selectedNodes.length);
+      // Nodes to copy
+      const nodesToCopy = {
+        nodes: selectedNodes.map(n => n.data),
+        flow: data.id,
+        nodesPosFromCenter: nodesPos.map(pos => pos.sub(center))
+      };
+      // Write nodes to copy to clipboard
+      clipboard.write(KEYS.NODES_TO_COPY, nodesToCopy);
+    },
+    [clipboard, getSelectedNodes, data.id]
+  );
+
+  /**
+   * Handle Delete : Show confirmation dialog before performing delete action
+   * @param {{nodeId: string, callback: function}} data
+   */
+  const handleDelete = useCallback(
+    ({ message, callback }) => {
+      confirmationAlert({
+        submitText: t("Delete"),
+        title: t("ConfirmDelete"),
+        onSubmit: callback,
+        onClose: setFlowsToDefault,
+        message
+      });
+    },
+    [confirmationAlert, t, setFlowsToDefault]
+  );
+
+  /**
+   * Handle delete node
+   */
+  const handleDeleteNode = useCallback(() => {
+    const selectedNodes = getSelectedNodes();
+    if (!selectedNodes.length) return;
+    // Callback to delete all nodes
+    const callback = () => {
+      selectedNodes.forEach(node => {
+        getMainInterface().deleteNode(node.data);
+      });
+      unselectNode();
+    };
+    // Compose confirmation message
+    const message = t("NodeDeleteConfirmation", {
+      nodes:
+        selectedNodes.length === 1
+          ? selectedNodes[0].data.id
+          : t("TheSelectedNodes")
+    });
+    // Show confirmation before delete
+    handleDelete({ message, callback });
+  }, [handleDelete, unselectNode, getSelectedNodes, t]);
+
+  /**
+   * Handle paste nodes in canvas
+   */
+  const handlePasteNodes = useCallback(
+    async evt => {
+      evt?.preventDefault?.();
+      const position = (contextArgs.current =
+        getMainInterface().canvas.mousePosition);
+      const nodesToCopy = clipboard.read(KEYS.NODES_TO_COPY);
+      if (!nodesToCopy) return;
+
+      for (const [i, node] of nodesToCopy.nodes.entries()) {
+        const nodesPosFromCenter = nodesToCopy.nodesPosFromCenter || [
+          Vec2.ZERO
+        ];
+        const newPos = Vec2.of(position.x, position.y).add(
+          nodesPosFromCenter[i]
+        );
+        // Open dialog for each node to copy
+        await pasteNodeDialog(newPos.toObject(), {
+          node: node,
+          flow: nodesToCopy.flow
+        });
+      }
+    },
+    [clipboard, pasteNodeDialog]
+  );
+
+  /**
+   * Toggle exposed port
+   */
+  const handleToggleExposedPort = useCallback(() => {
+    const port = contextArgs.current;
+    getMainInterface().toggleExposedPort(port);
+  }, []);
+
+  /**
+   * Open Callback
+   * @param {string} callbackName : Callback name
+   */
+  const handleOpenCallback = useCallback(
+    callbackName => {
+      // If no callback name is passed -> returns
+      if (!callbackName) return;
+      // Open existing callback
+      const scope = CallbackModel.SCOPE;
+      call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.READ, {
+        scope,
+        name: callbackName
+      }).then(doc => {
+        call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
+          id: doc.getUrl(),
+          name: doc.getName(),
+          scope
+        });
+      });
+    },
+    [call]
+  );
+
+  /**
+   * Handle delete link
+   */
+  const handleDeleteLink = useCallback(() => {
+    const link = selectedLinkRef.current ?? contextArgs.current;
+    link.id && getMainInterface().deleteLink(link.id);
+  }, []);
 
   /**
    * Subscribe to mainInterface and canvas events
@@ -1139,107 +1296,6 @@ export const Flow = (props, ref) => {
   );
 
   /**
-   * Handle Delete : Show confirmation dialog before performing delete action
-   * @param {{nodeId: string, callback: function}} data
-   */
-  const handleDelete = useCallback(
-    ({ message, callback }) => {
-      confirmationAlert({
-        submitText: t("Delete"),
-        title: t("ConfirmDelete"),
-        onSubmit: callback,
-        onClose: setFlowsToDefault,
-        message
-      });
-    },
-    [confirmationAlert, t, setFlowsToDefault]
-  );
-
-  /**
-   * Handle copy node
-   */
-  const handleCopyNode = useCallback(
-    evt => {
-      evt?.preventDefault?.();
-      const selectedNodes = getSelectedNodes();
-      const nodesPos = selectedNodes.map(n =>
-        Vec2.of(n.center.xCenter, n.center.yCenter)
-      );
-      let center = nodesPos.reduce((e, x) => e.add(x), Vec2.ZERO);
-      center = center.scale(1 / selectedNodes.length);
-      // Nodes to copy
-      const nodesToCopy = {
-        nodes: selectedNodes.map(n => n.data),
-        flow: data.id,
-        nodesPosFromCenter: nodesPos.map(pos => pos.sub(center))
-      };
-      // Write nodes to copy to clipboard
-      clipboard.write(KEYS.NODES_TO_COPY, nodesToCopy);
-    },
-    [clipboard, getSelectedNodes, data.id]
-  );
-
-  /**
-   * Handle paste nodes in canvas
-   */
-  const handlePasteNodes = useCallback(
-    async evt => {
-      evt?.preventDefault?.();
-      const position = (contextArgs.current =
-        getMainInterface().canvas.mousePosition);
-      const nodesToCopy = clipboard.read(KEYS.NODES_TO_COPY);
-      if (!nodesToCopy) return;
-
-      for (const [i, node] of nodesToCopy.nodes.entries()) {
-        const nodesPosFromCenter = nodesToCopy.nodesPosFromCenter || [
-          Vec2.ZERO
-        ];
-        const newPos = Vec2.of(position.x, position.y).add(
-          nodesPosFromCenter[i]
-        );
-        // Open dialog for each node to copy
-        await pasteNodeDialog(newPos.toObject(), {
-          node: node,
-          flow: nodesToCopy.flow
-        });
-      }
-    },
-    [clipboard, pasteNodeDialog]
-  );
-
-  /**
-   * Handle delete node
-   */
-  const handleDeleteNode = useCallback(() => {
-    const selectedNodes = getSelectedNodes();
-    if (!selectedNodes.length) return;
-    // Callback to delete all nodes
-    const callback = () => {
-      selectedNodes.forEach(node => {
-        getMainInterface().deleteNode(node.data);
-      });
-      unselectNode();
-    };
-    // Compose confirmation message
-    const message = t("NodeDeleteConfirmation", {
-      nodes:
-        selectedNodes.length === 1
-          ? selectedNodes[0].data.id
-          : t("TheSelectedNodes")
-    });
-    // Show confirmation before delete
-    handleDelete({ message, callback });
-  }, [handleDelete, unselectNode, getSelectedNodes, t]);
-
-  /**
-   * Handle delete link
-   */
-  const handleDeleteLink = useCallback(() => {
-    const link = selectedLinkRef.current ?? contextArgs.current;
-    link.id && getMainInterface().deleteLink(link.id);
-  }, []);
-
-  /**
    * Triggers the correct deletion
    * (if a link is selected delete link, else delete nodes)
    */
@@ -1247,38 +1303,6 @@ export const Flow = (props, ref) => {
     if (selectedLinkRef.current) handleDeleteLink();
     else handleDeleteNode();
   }, [handleDeleteLink, handleDeleteNode]);
-
-  /**
-   * Toggle exposed port
-   */
-  const handleToggleExposedPort = useCallback(() => {
-    const port = contextArgs.current;
-    getMainInterface().toggleExposedPort(port);
-  }, []);
-
-  /**
-   * Open Callback
-   * @param {string} callbackName : Callback name
-   */
-  const handleOpenCallback = useCallback(
-    callbackName => {
-      // If no callback name is passed -> returns
-      if (!callbackName) return;
-      // Open existing callback
-      const scope = CallbackModel.SCOPE;
-      call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.READ, {
-        scope,
-        name: callbackName
-      }).then(doc => {
-        call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
-          id: doc.getUrl(),
-          name: doc.getName(),
-          scope
-        });
-      });
-    },
-    [call]
-  );
 
   /**
    * Handle zoom reset
@@ -1322,16 +1346,6 @@ export const Flow = (props, ref) => {
     setSearchVisible(false);
     activateKeyBind();
   }, [activateKeyBind]);
-
-  const getContextOptions = useCallback(
-    (mode, data, args) => {
-      const baseContextOptions = getBaseContextOptions(mode, data, args);
-      const contextOpts = contextOptions?.(baseContextOptions)?.[mode]?.(data);
-
-      return contextOpts ?? baseContextOptions;
-    },
-    [contextOptions]
-  );
 
   //========================================================================================
   /*                                                                                      *

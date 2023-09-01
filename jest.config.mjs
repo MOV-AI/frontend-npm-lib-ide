@@ -1,12 +1,13 @@
-module.exports = {
+export default {
   verbose: true,
   transformIgnorePatterns: [
     "/dist/",
-    "/node_modules/(?!(?:@mov-ai/.*|@babylonjs/core)/)",
+    "/../../libs/(?!(core)/)",
+    "/node_modules/(?!(@babylonjs/core|@mov-ai/mov-fe-lib-core)/)"
   ],
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
   testEnvironment: "jsdom",
-  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  moduleFileExtensions: ["ts", "tsx", "js", "mjs", "jsx", "json", "node"],
   moduleNameMapper: {
     "^@babylonjs/core$": "<rootDir>/__mocks__/@babylonjs/core.js",
     "\\.(svg)$": "<rootDir>/__mocks__/mockSvg.js",
@@ -16,3 +17,4 @@ module.exports = {
     "^.+\\.(js|jsx|ts|tsx)?$": "@swc/jest",
   }
 };
+
