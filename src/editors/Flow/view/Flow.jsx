@@ -70,9 +70,7 @@ export const Flow = (props, ref) => {
     confirmationAlert,
     contextOptions,
   } = props;
-  const update = useUpdate();
   const mainInterface = useSub(flowSub)[name];
-  const viewMode = mainInterface?.viewMode ?? "default";
 
   useRemix(props);
 
@@ -138,12 +136,8 @@ export const Flow = (props, ref) => {
    * Should update everything related to flowDebugging here
    */
   useEffect(() => {
-    if (!mainInterface)
-      return;
-    const graph = mainInterface.graph;
-    graph.isFlowDebugging = flowDebugging;
-    graph.reStrokeLinks();
-  }, [mainInterface, flowDebugging]);
+    updateLinkStroke();
+  }, [flowDebugging, updateLinkStroke]);
 
   /**
    * Start node
@@ -797,40 +791,38 @@ export const Flow = (props, ref) => {
       interfaceSubscriptionsList.current.push(
         mainInterface.mode[EVT_NAMES.ADD_NODE].onClick.subscribe(() => {
           const nodeName = getMainInterface().mode.current.props.node.data.name;
-          const args = {
+          // Open form dialog
+          dialog({
             title: t("AddNode"),
             submitText: t("Add"),
             value: nodeName,
-            onValidation: newName =>
+            onValidation: ({ name }) =>
               getMainInterface().graph.validator.validateNodeName(
-                newName,
+                name,
                 t("Node")
               ),
             onClose: setFlowsToDefault,
-            onSubmit: newName => getMainInterface().addNode(newName)
-          };
-          // Open form dialog
-          call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
+            onSubmit: ({ name }) => getMainInterface().addNode(name)
+          });
         })
       );
 
       interfaceSubscriptionsList.current.push(
         mainInterface.mode[EVT_NAMES.ADD_FLOW].onClick.subscribe(() => {
           const flowName = getMainInterface().mode.current.props.node.data.name;
-          const args = {
+          // Open form dialog
+          dialog({
             title: t("AddSubFlow"),
             submitText: t("Add"),
             value: flowName,
-            onValidation: newName =>
+            onValidation: ({ name }) =>
               getMainInterface().graph.validator.validateNodeName(
-                newName,
+                name,
                 t("SubFlow")
               ),
             onClose: setFlowsToDefault,
-            onSubmit: newName => getMainInterface().addFlow(newName)
-          };
-          // Open form dialog
-          call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
+            onSubmit: ({ name }) => getMainInterface().addFlow(name)
+          });
         })
       );
 
