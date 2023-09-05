@@ -52,6 +52,7 @@ export function dialog(newDialog) {
 export
 function Dialog() {
   const data = useSub(dialogSub);
+  console.log("Dialog!", data);
   const {
     onSubmit = () => {},
     onClose = () => {},

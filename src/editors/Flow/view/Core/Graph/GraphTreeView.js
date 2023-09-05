@@ -120,7 +120,7 @@ export default class GraphTreeView extends GraphBase {
         }
 
         // Add parent children to canvas
-        this.update();
+        this.update(parent);
         parent !== this.rootNode && this.subFlows.push(parent);
       }
     } catch (error) {
@@ -426,6 +426,19 @@ export default class GraphTreeView extends GraphBase {
     const value = { obj: inst, links: [] };
     this.nodes.set(inst.data.id, value);
   };
+
+  /**
+   * @private
+   * @override update : Add to canvas all children of parent node
+   *
+   * @param {TreeContainerNode} parent
+   */
+  update(parent) {
+    // Render parent children
+    parent.children.forEach(node => {
+      node.addToCanvas();
+    });
+  }
 
   reStrokeLinks = () => {
     /* empty on purpose */

@@ -45,8 +45,7 @@ import { FLOW_VIEW_MODE, TYPES } from "./Constants/constants";
 import GraphBase from "./Core/Graph/GraphBase";
 import GraphTreeView from "./Core/Graph/GraphTreeView";
 import { getBaseContextOptions } from "./contextOptions";
-import { useSub, useRemix, call, subscribe, subscribeAll, useUpdate } from "./../../../utils/noremix";
-import { flowSub } from "./Components/interface/MainInterface";
+import { useRemix, call, subscribe, subscribeAll } from "./../../../utils/noremix";
 import { dialog } from "./../../../plugins/Dialog/Dialog";
 
 import "./Resources/css/Flow.css";
@@ -70,7 +69,6 @@ export const Flow = (props, ref) => {
     confirmationAlert,
     contextOptions,
   } = props;
-  const mainInterface = useSub(flowSub)[name];
 
   useRemix(props);
 
@@ -93,6 +91,7 @@ export const Flow = (props, ref) => {
   );
 
   // State Hooks
+  const [loading, setLoading] = useState(true);
   const [dataFromDB, setDataFromDB] = useState();
   const [robotSelected, setRobotSelected] = useState("");
   const [runningFlow, setRunningFlow] = useState("");
@@ -112,6 +111,8 @@ export const Flow = (props, ref) => {
   // Refs
   const interfaceSubscriptionsList = useRef([]);
   const contextArgs = useRef(null);
+  const mainInterfaceRef = useRef();
+  const debounceSelection = useRef();
   const selectedNodeRef = useRef();
   const selectedLinkRef = useRef();
   const isEditableComponentRef = useRef(true);
@@ -127,10 +128,13 @@ export const Flow = (props, ref) => {
    * Returns flow base class from viewMode defaults to GraphBase
    * @returns {Class} flow base class based on the viewMode
    */
-  const baseFlowClass = useMemo(() => ({
-    [FLOW_VIEW_MODE.default]: GraphBase,
-    [FLOW_VIEW_MODE.treeView]: GraphTreeView
-  })[viewMode] ?? GraphBase, [viewMode]);
+  const getBaseFlowClass = () => {
+    const flowClasses = {
+      [FLOW_VIEW_MODE.default]: GraphBase,
+      [FLOW_VIEW_MODE.treeView]: GraphTreeView
+    };
+    return flowClasses[viewMode] ?? GraphBase;
+  };
 
   /**
    * @private Get main interface instance
@@ -250,31 +254,35 @@ export const Flow = (props, ref) => {
   const getSelectedNodes = useCallback(() => {
     const node = contextArgs.current;
     const selectedNodesSet = new Set(
-      [node].concat(mainInterface.selectedNodes)
+      [node].concat(getMainInterface().selectedNodes)
     );
     return Array.from(selectedNodesSet).filter(el => el);
-  }, [mainInterface]);
+  }, []);
 
   /**
    * Get search options
    */
   const getSearchOptions = useCallback(() => {
-    return mainInterface?.graph.getSearchOptions() || [];
-  }, [mainInterface]);
+    return getMainInterface()?.graph.getSearchOptions() || [];
+  }, []);
 
   /**
    * Open document in new tab
    * @param {*} docData
    */
   const openDoc = useCallback(
-    docData => call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.READ, {
-      scope: docData.scope,
-      name: docData.name
-    }).then(doc => call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
-      id: doc.getUrl(),
-      name: doc.getName(),
-      scope: doc.getScope()
-    })),
+    docData => {
+      call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.READ, {
+        scope: docData.scope,
+        name: docData.name
+      }).then(doc => {
+        call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
+          id: doc.getUrl(),
+          name: doc.getName(),
+          scope: doc.getScope()
+        });
+      });
+    },
     []
   );
 
@@ -322,11 +330,11 @@ export const Flow = (props, ref) => {
         }
       });
 
-      mainInterface
+      getMainInterface()
         .graph.clearInvalidExposedPorts(invalidExposedPorts)
         .validateFlow();
     },
-    [instance, mainInterface]
+    [instance]
   );
 
   /**
@@ -408,25 +416,6 @@ export const Flow = (props, ref) => {
       { action: "setMode", value: EVT_NAMES.DEFAULT }
     );
   }, [unselectNode, call, activateEditor]);
-
-  const pasteNodeDialog = useCallback((position, nodeToCopy) => dialog({
-    form: {
-      name: {
-        label: "Name",
-        placeholder: nodeToCopy.node.name,
-        defaultValue: `${nodeToCopy.node.id}_copy`,
-      }
-    },
-    title: t("PasteNodeModel", { nodeModel: nodeToCopy.node.model }),
-    onClose: setFlowsToDefault,
-    onValidation: ({ name }) => ({
-      name: mainInterface.graph.validator.validateNodeName(
-        name,
-        t(nodeToCopy.node.model)
-      ),
-    }),
-    onSubmit: ({ name }) => mainInterface.pasteNode(name, nodeToCopy.node, position)
-  }), [setFlowsToDefault, mainInterface, t]);
 
   /**
    * @private Get Menu component based on node model (Flow or Node)
@@ -596,31 +585,24 @@ export const Flow = (props, ref) => {
    * @param {*} nodeToCopy : Node data
    * @returns {Promise} Resolved only after submit or cancel dialog
    */
-  const pasteNodeDialog = useCallback(
-    (position, nodeToCopy) => {
-      const node = nodeToCopy.node;
-      return new Promise(resolve => {
-        const args = {
-          title: t("PasteNodeModel", { nodeModel: node.model }),
-          value: `${node.id}_copy`,
-          onClose: () => {
-            setFlowsToDefault();
-            resolve();
-          },
-          onValidation: newName =>
-            getMainInterface().graph.validator.validateNodeName(
-              newName,
-              t(node.model)
-            ),
-          onSubmit: newName =>
-            getMainInterface().pasteNode(newName, node, position)
-        };
-        // Open Dialog
-        call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
-      });
+  const pasteNodeDialog = useCallback((position, nodeToCopy) => dialog({
+    form: {
+      name: {
+        label: "Name",
+        placeholder: nodeToCopy.node.name,
+        defaultValue: `${nodeToCopy.node.id}_copy`,
+      }
     },
-    [setFlowsToDefault, call, t]
-  );
+    title: t("PasteNodeModel", { nodeModel: nodeToCopy.node.model }),
+    onClose: setFlowsToDefault,
+    onValidation: ({ name }) => ({
+      name: getMainInterface().graph.validator.validateNodeName(
+        name,
+        t(nodeToCopy.node.model)
+      ),
+    }),
+    onSubmit: ({ name }) => getMainInterface().pasteNode(name, nodeToCopy.node, position)
+  }), [setFlowsToDefault, t]);
 
   //========================================================================================
   /*                                                                                      *
@@ -657,7 +639,7 @@ export const Flow = (props, ref) => {
         title: t(FLOW_EXPLORER_PROFILE.title),
         view: explorerView.render({
           flowId: id,
-          mainInterface: mainInterface
+          mainInterface: getMainInterface()
         })
       };
     }
@@ -686,7 +668,6 @@ export const Flow = (props, ref) => {
   }, [
     id,
     name,
-    mainInterface,
     instance,
     props.data,
     getNodeMenuToAdd,
@@ -704,6 +685,14 @@ export const Flow = (props, ref) => {
    *                                                                                      */
   //========================================================================================
 
+  /**
+   * On Robot selection change
+   * @param {*} robotId
+   */
+  const onRobotChange = useCallback(robotId => {
+    setRobotSelected(robotId);
+  }, []);
+
   function hasNodesToStart() {
     for (const entry of instance.current.links.data)
       if (entry[1].from === "start/start/start") return true;
@@ -715,11 +704,23 @@ export const Flow = (props, ref) => {
    * On view mode change
    * @param {string} newViewMode : One of the following "default" or "treeView"
    */
-  const onViewModeChange = useCallback(newViewMode => {
-    if (!newViewMode || viewMode === newViewMode) return;
-    isEditableComponentRef.current = newViewMode === FLOW_VIEW_MODE.default;
-    mainInterface.setViewMode(newViewMode);
-  }, [mainInterface, viewMode]);
+  const onViewModeChange = useCallback(
+    newViewMode => {
+      if (!newViewMode || viewMode === newViewMode) return;
+      isEditableComponentRef.current = newViewMode === FLOW_VIEW_MODE.default;
+
+      setLoading(true);
+
+      // Set mode loading after changing view mode
+      setMode(EVT_NAMES.LOADING);
+
+      // Temporary fix to show loading (even though UI still freezes)
+      setTimeout(() => {
+        setViewMode(newViewMode);
+      }, 100);
+    },
+    [viewMode, setMode]
+  );
 
   /**
    * Toggle Warnings
@@ -727,10 +728,10 @@ export const Flow = (props, ref) => {
   const onToggleWarnings = useCallback(() => {
     setWarningsVisibility(prevState => {
       const newVisibility = !prevState;
-      mainInterface?.onToggleWarnings({ data: newVisibility });
+      getMainInterface()?.onToggleWarnings({ data: newVisibility });
       return newVisibility;
     });
-  }, [mainInterface]);
+  }, []);
 
   //========================================================================================
   /*                                                                                      *
@@ -744,8 +745,8 @@ export const Flow = (props, ref) => {
   const handleContextClose = useCallback(() => {
     contextArgs.current = null;
     setContextMenuOptions(null);
-    mainInterface.setMode(EVT_NAMES.DEFAULT);
-  }, [mainInterface]);
+    getMainInterface().setMode(EVT_NAMES.DEFAULT);
+  }, []);
 
   const getContextOptions = useCallback(
     (mode, data, args) => {
@@ -895,6 +896,7 @@ export const Flow = (props, ref) => {
    */
   const onReady = useCallback(
     mainInterface => {
+      console.log("onReady");
       mainInterfaceRef.current = mainInterface;
 
       // If we are running this function again,
@@ -925,9 +927,12 @@ export const Flow = (props, ref) => {
         );
 
         setWarnings(persistentWarns);
-      }),
+      });
 
-      mainInterface.onLoad = () => setLoading(false);
+      mainInterface.onLoad = () => {
+        console.log("ONLOAD");
+        setLoading(false)
+      };
 
       // subscribe to on enter default mode
       // When enter default mode remove other node/sub-flow bookmarks
@@ -935,7 +940,7 @@ export const Flow = (props, ref) => {
         mainInterface.mode[EVT_NAMES.DEFAULT].onEnter.subscribe(() => {
           setFlowsToDefault();
         })
-      ),
+      );
 
       // Subscribe to on node select event
       interfaceSubscriptionsList.current.push(
@@ -1256,8 +1261,8 @@ export const Flow = (props, ref) => {
    * Handle Move Node
    */
   const handleMoveNode = useCallback(e => {
-    mainInterface?.onMoveNode(e);
-  }, [mainInterface]);
+    getMainInterface()?.onMoveNode(e);
+  }, []);
 
   /*
    * Handle search nodes
@@ -1297,25 +1302,22 @@ export const Flow = (props, ref) => {
   /**
    * Component did mount
    */
-  useEffect(() => {
-    setFlowDebugging(workspaceManager.getFlowIsDebugging());
-
-    return subscribeAll([[
-      PLUGINS.RIGHT_DRAWER.NAME,
-      PLUGINS.RIGHT_DRAWER.ON.CHANGE_BOOKMARK,
-      bookmark => {
-        activeBookmark = bookmark.name;
-      }
-    ], [
-      PLUGINS.DOC_MANAGER.NAME,
-      PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR,
-      evt => {
-        // evt ex.: {action: "setMode", value: EVT_NAMES.DEFAULT}
-        const { action, value } = evt;
-        mainInterface?.[action](value);
-      }
-    ]]);
-  }, [workspaceManager, mainInterface]);
+  useEffect(() => subscribeAll([[
+    PLUGINS.RIGHT_DRAWER.NAME,
+    PLUGINS.RIGHT_DRAWER.ON.CHANGE_BOOKMARK,
+    bookmark => {
+      activeBookmark = bookmark.name;
+    }
+  ], [
+    // Subscribe to docManager broadcast for flowEditor (global events)
+    PLUGINS.DOC_MANAGER.NAME,
+    PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR,
+    evt => {
+      // evt ex.: {action: "setMode", value: EVT_NAMES.DEFAULT}
+      const { action, value } = evt;
+      getMainInterface()?.[action](value);
+    },
+  ]]), []);
 
   /**
    * Initialize data
@@ -1332,7 +1334,7 @@ export const Flow = (props, ref) => {
     PLUGINS.DOC_MANAGER.NAME,
     PLUGINS.DOC_MANAGER.ON.BEFORE_SAVE_DOC,
     docData => {
-      if (!mainInterface)
+      if (!getMainInterface())
         return;
 
       if (viewMode !== FLOW_VIEW_MODE.treeView || docData.doc.name !== name)
@@ -1344,7 +1346,7 @@ export const Flow = (props, ref) => {
           severity: ALERT_SEVERITIES.SUCCESS
         });
 
-      mainInterface.graph.subFlows.forEach(subFlow => call(
+      getMainInterface().graph.subFlows.forEach(subFlow => call(
         PLUGINS.DOC_MANAGER.NAME,
         PLUGINS.DOC_MANAGER.CALL.SAVE,
         {
@@ -1357,7 +1359,7 @@ export const Flow = (props, ref) => {
         { ignoreNew: true, preventAlert: true }
       ));
     }
-  ), [name, scope, viewMode, t, mainInterface]);
+  ), [name, scope, viewMode, t]);
 
   useEffect(() => {
     addKeyBind(
@@ -1431,11 +1433,6 @@ export const Flow = (props, ref) => {
     activateKeyBind();
   }, [searchVisible, activateKeyBind]);
 
-  const onStartStopFlow = useCallback((flow) => {
-    setRunningFlow(flow);
-    mainInterface?.nodeStatusUpdated({}); 
-  }, [setRunningFlow, mainInterface]);
-
   //========================================================================================
   /*                                                                                      *
    *                                        Render                                        *
@@ -1452,9 +1449,11 @@ export const Flow = (props, ref) => {
           alert={alert}
           confirmationAlert={confirmationAlert}
           scope={scope}
-          loading={mainInterface ? mainInterface.loading : true}
+          loading={loading}
           viewMode={viewMode}
           version={instance.current?.version}
+          mainInterface={mainInterfaceRef}
+          onRobotChange={onRobotChange}
           canRun={hasNodesToStart()}
           onStartStopFlow={setRunningFlow}
           onViewModeChange={onViewModeChange}
@@ -1469,8 +1468,8 @@ export const Flow = (props, ref) => {
       </div>
       <BaseFlow
         {...props}
-        graphClass={baseFlowClass}
-        loading={mainInterface ? mainInterface.loading : true}
+        graphClass={getBaseFlowClass()}
+        loading={loading}
         viewMode={viewMode}
         dataFromDB={dataFromDB}
         warnings={warnings}
@@ -1500,8 +1499,6 @@ Flow.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   scope: PropTypes.string.isRequired,
-  call: PropTypes.func.isRequired,
-  on: PropTypes.func.isRequired,
   data: PropTypes.object,
   instance: PropTypes.object,
   editable: PropTypes.bool,

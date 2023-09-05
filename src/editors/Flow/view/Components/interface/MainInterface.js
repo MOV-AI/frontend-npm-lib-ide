@@ -1,9 +1,9 @@
 import lodash from "lodash";
 import { BehaviorSubject } from "rxjs";
+import { filter } from "rxjs/operators";
 import { NODE_TYPES, TYPES } from "../../Constants/constants";
 import { getNodeNameFromId } from "../../Core/Graph/Utils";
-import GraphBase from "../../Core/Graph/GraphBase";
-import GraphTreeView from "../../Core/Graph/GraphTreeView";
+import Graph from "../../Core/Graph/GraphBase";
 import { EVT_NAMES } from "../../events";
 import StartNode from "../Nodes/StartNode";
 import InterfaceModes from "./InterfaceModes";
@@ -97,12 +97,14 @@ function ensureParents(json) {
 export default class MainInterface {
   constructor({
     id,
+    containerId,
     modelView,
     width,
     height,
     data,
     classes,
     call,
+    graphCls
   }) {
     //========================================================================================
     /*                                                                                      *
@@ -110,10 +112,12 @@ export default class MainInterface {
      *                                                                                      */
     //========================================================================================
     this.id = id;
+    this.containerId = containerId;
     this.width = width;
     this.height = height;
     this.modelView = modelView;
     this.data = data;
+    this.graphCls = graphCls ?? Graph;
     this.classes = classes;
     this.docManager = call;
     this.stateSub = new BehaviorSubject(0);
@@ -125,28 +129,20 @@ export default class MainInterface {
     this.shortcuts = null;
     this.onLoad = () => {};
 
+    // Set initial mode as loading
     this.setMode(EVT_NAMES.LOADING);
-    this.loading = true;
-
-    const containerId = "Flow-" + this.id;
-    const graphCls = this.viewMode === "treeView" ? GraphTreeView : GraphBase;
-
-    if (this.graph) {
-      this.canvas.destroy();
-      this.graph.destroy();
-    }
 
     this.canvas = new Canvas({
       mInterface: this,
       containerId,
-      width: this.width,
-      height: this.height,
-      classes: this.classes,
-      docManager: this.docManager,
+      width,
+      height,
+      classes,
+      docManager: call
     });
 
-    this.graph = new graphCls({
-      id: this.id,
+    this.graph = new this.graphCls({
+      id,
       mInterface: this,
       canvas: this.canvas,
       docManager: call
@@ -346,12 +342,17 @@ export default class MainInterface {
 
     this.mode.onDblClick.onEnter.subscribe(() => {
       this.setMode(EVT_NAMES.DEFAULT);
-      this.update();
     });
 
     // Linking mode events
     this.mode.linking.onEnter.subscribe(this.onLinkingEnter);
     this.mode.linking.onExit.subscribe(this.onLinkingExit);
+
+    // Canvas events (not modes)
+    // toggle warnings
+    this.canvas.events
+      .pipe(filter(event => event.name === EVT_NAMES.ON_TOGGLE_WARNINGS))
+      .subscribe(this.onToggleWarnings);
 
     return this;
   };
@@ -384,7 +385,6 @@ export default class MainInterface {
 
   onDefault = () => {
     this.selectedNodes.length = 0;
-    this.update();
   };
 
   onDragEnd = draggedNode => {
@@ -412,13 +412,11 @@ export default class MainInterface {
   onLinkingEnter = () => {
     const { data } = this.mode.current.props.src;
     this.onLinking(data);
-    this.update();
   };
 
   onLinkingExit = () => {
     this.onLinking();
     this.addLink();
-    this.update();
   };
 
   onSelectNode = data => {
@@ -486,13 +484,7 @@ export default class MainInterface {
     this.canvas.zoomToCoordinates(xCenter, yCenter);
   };
 
-  setViewMode(viewMode) {
-    this.viewMode = viewMode;
-    this.regraph();
-  }
-
   destroy = () => {
-    this.canvas.destroy();
-    this.graph.destroy();
+    // Nothing to do
   };
 }

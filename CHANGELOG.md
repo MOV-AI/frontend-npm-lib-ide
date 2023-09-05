@@ -1,7 +1,5 @@
 # 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
-<<<<<<< HEAD
-=======
 - [FP-2539 - Reset bookmarks when we change active tab](https://movai.atlassian.net/browse/FP-2539)
 - [FP-2527 - Preventing the reload of a new doc when it's closed](https://movai.atlassian.net/browse/FP-2527)
 - [FP-2216 - IDE- black screen after changing resolution](https://movai.atlassian.net/browse/FP-2216)
@@ -11,7 +9,6 @@
 - [FP-2359 - Added a way for the BaseApp keybinds to work](https://movai.atlassian.net/browse/FP-2359)
 - [FP-2438 - No longer saving NodeInstance's Parameter types](https://movai.atlassian.net/browse/FP-2438)
 - [FP-2480 - Added misc shortcuts to help with search node](https://movai.atlassian.net/browse/FP-2480)
->>>>>>> main
 - [FP-2406 - Make menu be able to persist on IDE](https://movai.atlassian.net/browse/FP-2406)
 - [FP-2409 - Added a validation to activateEditor based on the activeTab](https://movai.atlassian.net/browse/FP-2409)
 - [FP-2414 - Fixed an issue where we were always removing the bookmarks, even when not needed](https://movai.atlassian.net/browse/FP-2414)
@@ -37,9 +34,7 @@
 - [FP-2186 - Main Menu tools are not showing up](https://movai.atlassian.net/browse/FP-2186)
 - [FP-2221 - Disable the Language server](https://movai.atlassian.net/browse/FP-2221)
 - [FP-2238 - Logout behavior is different in IDE](https://movai.atlassian.net/browse/FP-2238)
-- [FP-2359 - Added a way for the BaseApp keybinds to work](https://movai.atlassian.net/browse/FP-2359)
 - [FP-2411 - Only save flow nodeInstance parameters when necessary](https://movai.atlassian.net/browse/FP-2411)
-- [FP-2438 - No longer saving NodeInstance's Parameter types](https://movai.atlassian.net/browse/FP-2438)
 - [FP-2364 - Flows without links to start node should only show "Save"](https://movai.atlassian.net/browse/FP-2364)
 - [FP-2427 - Update node instances when port messages change](https://movai.atlassian.net/browse/FP-2427)
 - [FP-2474 - Search node tool fails for big flows](https://movai.atlassian.net/browse/FP-2474)
@@ -52,3 +47,5 @@
 - [FP-2473 - IDE Flows appear as running but nodes don't in tree view](https://movai.atlassian.net/browse/FP-2473)
 - [FP-2519 - nodes on tree view show as alive when they are not](https://movai.atlassian.net/browse/FP-2519)
 - [FP-2535 - Fixed issue with deleting subflows from flow](https://movai.atlassian.net/browse/FP-2535)
+- [FP-2585 - Something went wrong when trying to delete link with keyboard](https://movai.atlassian.net/browse/FP-2585)
+- [FP-2477 - IDE - Callback - Info tab closes when adding an import/message](https://movai.atlassian.net/browse/FP-2477)

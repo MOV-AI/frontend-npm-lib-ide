@@ -10,7 +10,6 @@ import {
 } from "@material-ui/core";
 import { PLUGINS } from "../../../../utils/Constants";
 import { call, easySub, useSub } from "../../../../utils/noremix";
-import { withTheme } from "../../../../decorators/withTheme";
 import { DialogTitle } from "../../../../plugins/Dialog/components/AppDialog/AppDialog";
 import Loader from "../../../_shared/Loader/Loader";
 import MaterialTree from "../../../_shared/MaterialTree/MaterialTree";

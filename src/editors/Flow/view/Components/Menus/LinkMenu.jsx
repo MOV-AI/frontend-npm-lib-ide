@@ -80,7 +80,8 @@ const LinkMenu = props => {
   // On component mount or change Link prop
   useEffect(() => {
     const dependency = flowModel.current.getLinkDependency(linkData.id);
-    setDependencyLevel(dependency);
+    if (dependency)
+      setDependencyLevel(dependency);
   }, [linkData, flowModel]);
 
   //========================================================================================

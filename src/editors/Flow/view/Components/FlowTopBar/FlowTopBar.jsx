@@ -35,7 +35,6 @@ import {
 import { ERROR_MESSAGES } from "../../../../../utils/Messages";
 import { defaultFunction } from "../../../../../utils/Utils";
 import { FLOW_VIEW_MODE } from "../../Constants/constants";
-import { flowSub } from "../interface/MainInterface";
 import useNodeStatusUpdate from "./hooks/useNodeStatusUpdate";
 
 import { buttonStyles, flowTopBarStyles } from "./styles";
@@ -69,16 +68,17 @@ const FlowTopBar = props => {
     alert,
     scope,
     loading,
+    mainInterface,
     id,
     name,
     onRobotChange,
+    onViewModeChange,
+    viewMode,
     searchProps,
     confirmationAlert,
     canRun
   } = props;
   // State hooks
-  const mainInterface = useSub(flowSub)[name];
-  const viewMode = mainInterface?.viewMode ?? "default";
   const [actionLoading, setActionLoading] = useState(false);
   const [robotSelected, setRobotSelected] = useState("");
   const [robotList, setRobotList] = useState({});
@@ -276,12 +276,12 @@ const FlowTopBar = props => {
    */
   const canRunFlow = useCallback(
     action => {
-      const graph = mainInterface?.graph;
+      const graph = mainInterface.current?.graph;
       // let's validate flow before continuing
       graph?.validateFlow();
 
-      const warnings = graph?.warnings || [];
-      const warningsVisibility = graph?.warningsVisibility;
+      const warnings = graph.warnings || [];
+      const warningsVisibility = graph.warningsVisibility;
       const runtimeWarnings = warnings.filter(wn => wn.isRuntime);
       runtimeWarnings.forEach(warning => {
         graph.setPermanentWarnings(warning);
@@ -440,8 +440,10 @@ const FlowTopBar = props => {
    * @returns
    */
   const handleViewModeChange = useCallback(
-    (_event, newViewMode) => mainInterface?.setViewMode(newViewMode),
-    [mainInterface]
+    (_event, newViewMode) => {
+      onViewModeChange(newViewMode);
+    },
+    [onViewModeChange]
   );
 
   //========================================================================================
@@ -553,7 +555,7 @@ const FlowTopBar = props => {
             <ToggleButton
               data-testid="input_default-flow"
               value={FLOW_VIEW_MODE.default}
-              disabled={loading || viewMode === "default"}
+              disabled={loading}
             >
               <Tooltip title={t("DefaultFlowView")}>
                 <GrainIcon fontSize="small" />
@@ -562,7 +564,7 @@ const FlowTopBar = props => {
             <ToggleButton
               data-testid="input_tree-view-flow"
               value={FLOW_VIEW_MODE.treeView}
-              disabled={loading || viewMode === "treeView"}
+              disabled={loading}
             >
               <Tooltip title={t("TreeView")}>
                 <i className={`icon-tree ${classes.treeIcon}`}></i>
@@ -578,6 +580,7 @@ const FlowTopBar = props => {
 FlowTopBar.propTypes = {
   id: PropTypes.string,
   nodeStatusUpdated: PropTypes.func,
+  onViewModeChange: PropTypes.func,
   onStartStopFlow: PropTypes.func,
   onRobotChange: PropTypes.func,
   openFlow: PropTypes.func,
@@ -596,6 +599,7 @@ FlowTopBar.propTypes = {
 FlowTopBar.defaultProps = {
   openFlow: () => defaultFunction("openFlow"),
   onRobotChange: () => defaultFunction("onRobotChange"),
+  onViewModeChange: () => defaultFunction("onViewModeChange"),
   onStartStopFlow: () => defaultFunction("onStartStopFlow"),
   nodeStatusUpdated: () => defaultFunction("nodeStatusUpdated"),
   workspace: CONSTANTS.GLOBAL_WORKSPACE,

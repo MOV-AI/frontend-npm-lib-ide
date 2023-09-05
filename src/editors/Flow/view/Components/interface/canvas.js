@@ -20,7 +20,6 @@ class Canvas {
     this.maxMovingPixels = MAX_MOVING_PIXELS;
     this.mInterface = mInterface;
     this.width = width;
-    this.unsubscribes = [];
 
     this.initialize();
   }
@@ -75,14 +74,14 @@ class Canvas {
    * get mouse position
    */
   get mousePos() {
-    return this.mouse;
+    return this._mouse;
   }
 
   /**
    * Return mouse position in object with x and y
    */
   get mousePosition() {
-    return { x: this.mouse[0], y: this.mouse[1] };
+    return { x: this._mouse[0], y: this._mouse[1] };
   }
 
   /**
@@ -90,7 +89,7 @@ class Canvas {
    * @param {array} value [x,y] position in canvas
    */
   set mousePos(value) {
-    this.mouse = value;
+    this._mouse = value;
   }
 
   set hoveredNode(value) {
@@ -422,20 +421,20 @@ class Canvas {
     return this;
   };
 
-  addSub(type, onEnter, onExit) {
-    this.unsubscribes.push(this.mode[type].onEnter.subscribe(onEnter));
-    this.unsubscribes.push(this.mode[type].onExit.subscribe(onExit));
-  }
-
   /**
    * @private
    */
   addSubscribers = () => {
-    this.addSub("addNode", node => this.onAddNodeEnter(node), () => this.onAddNodeExit());
-    this.addSub("addFlow", flow => this.onAddFlowEnter(flow), () => this.onAddFlowExit());
-    this.addSub("addState", state => this.onAddStateEnter(state), () => this.onAddStateExit());
-    this.addSub("linking", data => this.onLinkingEnter(data), () => this.onLinkingExit());
-    this.addSub("default", () => this.delBrushCanvas(), () => {});
+    this.mode.addNode.onEnter.subscribe(node => this.onAddNodeEnter(node));
+    this.mode.addNode.onExit.subscribe(() => this.onAddNodeExit());
+    this.mode.addFlow.onEnter.subscribe(flow => this.onAddFlowEnter(flow));
+    this.mode.addFlow.onExit.subscribe(() => this.onAddFlowExit());
+    this.mode.addState.onEnter.subscribe(state => this.onAddStateEnter(state));
+    this.mode.addState.onExit.subscribe(() => this.onAddStateExit());
+    this.mode.linking.onEnter.subscribe(data => this.onLinkingEnter(data));
+    this.mode.linking.onExit.subscribe(() => this.onLinkingExit());
+    this.mode.default.onEnter.subscribe(() => this.delBrushCanvas());
+
     return this;
   };
 
@@ -532,7 +531,12 @@ class Canvas {
     if (d3.event.shiftKey && this.mode.current.id === EVT_NAMES.SELECT_NODE)
       return;
 
-    this.mInterface.onCanvasClick(this.mode.current.id);
+    const fn = this.mode.current.onClick ?? {
+      next: () => {
+        this.setMode(EVT_NAMES.DEFAULT, null, true);
+      }
+    };
+    fn.next();
   };
 
   /**
@@ -706,11 +710,6 @@ class Canvas {
           .scale(SCALE)
       );
   };
-
-  destroy() {
-    for (const sub of this.unsubscribes)
-      sub.unsubscribe();
-  }
 }
 
 export default Canvas;

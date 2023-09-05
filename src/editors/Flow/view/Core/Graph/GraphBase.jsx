@@ -6,7 +6,6 @@ import StartNode from "../../Components/Nodes/StartNode";
 import BaseLink from "../../Components/Links/BaseLink";
 import { InvalidLink } from "../../Components/Links/Errors";
 import { FLOW_VIEW_MODE, NODE_TYPES } from "../../Constants/constants";
-import { EVT_NAMES } from "../../events";
 import Factory from "../../Components/Nodes/Factory";
 import { shouldUpdateExposedPorts } from "./Utils";
 import { cachedNodeStatus } from "../../Components/interface/MainInterface";
@@ -437,7 +436,6 @@ export default class GraphBase {
     this.deleteLinks(linksToRemove);
     // Add missing links
     this.loadLinks(links);
-    this.nodesLoaded();
   };
 
   /**
@@ -594,15 +592,6 @@ export default class GraphBase {
   getNodeParent(nodePath, i) {
     return this.nodes.get(nodePath.slice(0, i + 1).join("__"));
   }
-
-  getNodeParent(nodePath, i, _) {
-    return this.nodes.get(nodePath.slice(0, i + 1).join("__"));
-  }
-
-  setNodeStatus(node, status) {
-    node.obj.status = [1, true, "true"].includes(status);
-  }
-
 
   /**
    * @private function
