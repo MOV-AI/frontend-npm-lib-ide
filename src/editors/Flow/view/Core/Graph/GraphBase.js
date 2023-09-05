@@ -12,7 +12,6 @@ import { shouldUpdateExposedPorts } from "./Utils";
 import { cachedNodeStatus } from "../../Components/interface/MainInterface";
 import GraphValidator from "./GraphValidator";
 
-const NODE_LOAD_CHECK_TIMEOUT = 500;
 const NODE_DATA = {
   NODE: {
     LABEL: "NodeLabel",
@@ -41,7 +40,6 @@ export default class GraphBase {
 
     this.nodes = new Map(); // <node name> : {obj: <node instance>, links: []}
     this.links = new Map(); // linkId : <link instance>
-    this.allNodesLoaded = false; // If we need to do some actions AFTER we are sure all nodes have loaded
     this.exposedPorts = {};
     this.selectedNodes = [];
     this.selectedLink = null;
@@ -279,12 +277,16 @@ export default class GraphBase {
     // Get nodes to remove on update
     const flowNodes = { ...data.NodeInst, ...data.Container };
     [...this.nodes.keys()].forEach(nodeId => {
-      if (!flowNodes.hasOwnProperty(nodeId) && nodeId !== "start") {
+      if (
+        !Object.prototype.hasOwnProperty.call(flowNodes, nodeId) &&
+        nodeId !== "start"
+      ) {
         this.deleteNode(nodeId);
       }
     });
     // Update links
     this.updateLinks(data.Links || {});
+    this.nodeStatusUpdated();
     // Update exposed ports
     this.loadExposedPorts(data.ExposedPorts || {}, true);
     // Let's re-validate the flow
@@ -338,11 +340,9 @@ export default class GraphBase {
     await this.loadNodes(flow.NodeInst);
     await this.loadNodes(flow.Container, NODE_TYPES.CONTAINER, false);
 
-    this.allNodesLoaded = true;
-
     this.loadLinks(flow.Links);
     this.loadExposedPorts(flow.ExposedPorts || {});
-    this.nodesLoaded();
+    this.nodeStatusUpdated();
     this.update();
   }
 
@@ -432,7 +432,7 @@ export default class GraphBase {
   updateLinks = links => {
     // Remove deleted links
     const linksToRemove = [...this.links.keys()].filter(
-      link => !links.hasOwnProperty(link)
+      link => !Object.prototype.hasOwnProperty.call(links, link)
     );
     this.deleteLinks(linksToRemove);
     // Add missing links
@@ -455,7 +455,7 @@ export default class GraphBase {
    * @param {object} node : Object describing the node
    * @param {string} nodeType : One of the types in NODE_TYPES
    */
-  async addNode(node, nodeType = NODE_TYPES.NODE) {
+  async addNode(node, nodeType = NODE_TYPES.NODE, parent = this.rootNode) {
     const events = { onDrag: this.onNodeDrag };
 
     try {
@@ -466,6 +466,8 @@ export default class GraphBase {
       );
       this.nodes.set(node.id, { obj: inst, links: [] });
 
+      if (parent?.addChild)
+        parent.addChild(inst);
       return inst;
     } catch (error) {
       console.warn("Error creating node", error);
@@ -585,17 +587,12 @@ export default class GraphBase {
    * @param {*} robotStatus
    */
   nodeStatusUpdated() {
-    if (this.allNodesLoaded)
-      this.nodesLoaded();
+    for (const [nodeName, status] of Object.entries(cachedNodeStatus))
+      this.updateNodeStatus(nodeName, status);
   }
 
-  nodesLoaded() {
-    this.allNodesLoaded = true;
-    Object.keys(cachedNodeStatus).forEach(nodeName => {
-      const status = cachedNodeStatus[nodeName];
-      this.updateNodeStatus(nodeName, status);
-    });
-    this.mInterface.setMode(EVT_NAMES.DEFAULT);
+  getNodeParent(nodePath, i) {
+    return this.nodes.get(nodePath.slice(0, i + 1).join("__"));
   }
 
   getNodeParent(nodePath, i, _) {
@@ -615,18 +612,29 @@ export default class GraphBase {
    * @param {Boolean} status : True -> Running / False -> Not Running
    * @param {TreeContainerNode} parent : Flow to look for the node
    */
-  updateNodeStatus = (nodeName, status, parent) => {
+  updateNodeStatus = (nodeName, status) => {
+    let parent = this.rootNode;
+
     // is this a subflow node?
-    const nodePath = nodeName.split("__");
+    const [first, ...rest] = nodeName.split("__");
 
-    for (let i = 0; i < nodePath.length; i++) {
-      const nodeParent = this.getNodeParent(nodePath, i, parent);
+    if (first !== this.mInterface.id) return;
 
-      if (nodeParent) {
-        this.setNodeStatus(nodeParent, status);
-        parent = nodeParent;
+    if (rest.length)
+      for (let i = 0; i < rest.length; i++) {
+        const nodeParent = this.getNodeParent(rest, i, parent);
+        if (nodeParent)
+          parent = nodeParent;
+        else
+          return;
       }
-    }
+
+    if (!parent)
+      return;
+
+    if (parent.obj)
+      parent.obj.status = status == 1;
+    parent.status = status == 1;
   };
 
   reset() {
@@ -661,4 +669,5 @@ export default class GraphBase {
       }))
       .filter(el => el.id !== StartNode.model);
   };
+
 }

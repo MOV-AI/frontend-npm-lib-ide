@@ -1,4 +1,3 @@
-import { DATA_TYPES } from "../../../utils/Constants";
 import Model from "../../Model/Model";
 import schema from "./schema";
 

@@ -1,16 +1,13 @@
 import { Button, snackbar, withNotification } from "@mov-ai/mov-fe-lib-react";
 import React from "react";
-import withMock from "storybook-addon-mock";
 import ConfigurationSelector from "../../editors/_shared/ConfigurationSelector/ConfigurationSelector";
 import ConfigurationType from "../../editors/_shared/hooks/DataTypes/types/ConfigurationType";
 import useDataTypes from "../../editors/_shared/hooks/useDataTypes";
-import { authParams } from "../_mockLogin";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: "Configuration Selector",
   component: ConfigurationSelector,
-  decorators: [withMock],
   argTypes: {
     isConfigFromParameter: {
       description:
@@ -77,5 +74,3 @@ const Template = args => {
 };
 
 export const Selector = withNotification(Template).bind({});
-
-Selector.parameters = authParams;

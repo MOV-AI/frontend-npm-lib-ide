@@ -1,5 +1,17 @@
 # 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
+<<<<<<< HEAD
+=======
+- [FP-2539 - Reset bookmarks when we change active tab](https://movai.atlassian.net/browse/FP-2539)
+- [FP-2527 - Preventing the reload of a new doc when it's closed](https://movai.atlassian.net/browse/FP-2527)
+- [FP-2216 - IDE- black screen after changing resolution](https://movai.atlassian.net/browse/FP-2216)
+- [FP-2542 - Removed code that prevented flow validations from running](https://movai.atlassian.net/browse/FP-2542)
+- [FP-2540 - Duplicated code on the new merge request](https://movai.atlassian.net/browse/FP-2540)
+- [FP-2530 - Added ParameterWithType for instances that need to save the type](https://movai.atlassian.net/browse/FP-2530)
+- [FP-2359 - Added a way for the BaseApp keybinds to work](https://movai.atlassian.net/browse/FP-2359)
+- [FP-2438 - No longer saving NodeInstance's Parameter types](https://movai.atlassian.net/browse/FP-2438)
+- [FP-2480 - Added misc shortcuts to help with search node](https://movai.atlassian.net/browse/FP-2480)
+>>>>>>> main
 - [FP-2406 - Make menu be able to persist on IDE](https://movai.atlassian.net/browse/FP-2406)
 - [FP-2409 - Added a validation to activateEditor based on the activeTab](https://movai.atlassian.net/browse/FP-2409)
 - [FP-2414 - Fixed an issue where we were always removing the bookmarks, even when not needed](https://movai.atlassian.net/browse/FP-2414)
@@ -31,5 +43,12 @@
 - [FP-2364 - Flows without links to start node should only show "Save"](https://movai.atlassian.net/browse/FP-2364)
 - [FP-2427 - Update node instances when port messages change](https://movai.atlassian.net/browse/FP-2427)
 - [FP-2474 - Search node tool fails for big flows](https://movai.atlassian.net/browse/FP-2474)
-- [FP-2466 - Persistent "add node" window](https://movai.atlassian.net/browse/FP-2466)
-- [FP-2473 - IDE: Flows appear as running but nodes don't in tree view](https://movai.atlassian.net/browse/FP-2473)
+- [FP-2447 - Info tab closes when adding an import](https://movai.atlassian.net/browse/FP-2447)
+- [FP-2465 - Data-testids for IDE](https://movai.atlassian.net/browse/FP-2465)
+- [FP-2481 - Can't start a valid flow in tree view - Start link(s) not found](https://movai.atlassian.net/browse/FP-2481)
+- [FP-2466 - Prevent multiple subscribes in Flow onReady function](https://movai.atlassian.net/browse/FP-2466)
+- [FP-2467 - We are now correctly deleting exposed ports on node deletion](https://movai.atlassian.net/browse/FP-2467)
+- [FP-2277 - Give back focus to Flow Editor after losing focus on some cases](https://movai.atlassian.net/browse/FP-2277)
+- [FP-2473 - IDE Flows appear as running but nodes don't in tree view](https://movai.atlassian.net/browse/FP-2473)
+- [FP-2519 - nodes on tree view show as alive when they are not](https://movai.atlassian.net/browse/FP-2519)
+- [FP-2535 - Fixed issue with deleting subflows from flow](https://movai.atlassian.net/browse/FP-2535)

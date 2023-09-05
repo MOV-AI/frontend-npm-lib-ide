@@ -98,14 +98,12 @@ export default class GraphValidator {
     const warnings = [];
     const links = this.graph.links;
     const nodes = this.graph.nodes;
-    let linksStart = false;
     let linksMismatches = false;
 
     this.addDeletedLinks();
 
     links.forEach((link, _, _links) => {
       const linkData = link.data;
-      linksStart = linksStart || this.isLinkFromStart(link);
 
       // Validate ports here
       const noPortsError = GraphValidator.validatePorts(linkData, nodes);
@@ -123,11 +121,9 @@ export default class GraphValidator {
         linksMismatches = link.error instanceof MisMatchMessageLink;
     });
 
-    // Check rule nr. 1 : Missing start link
-    if (!linksStart) warnings.push(WARNINGS[WARNING_TYPES.START_LINK]);
-    // Check rule nr. 2 : Links between ports with different message types
+    // Check rule nr. 1 : Links between ports with different message types
     if (linksMismatches) warnings.push(WARNINGS[WARNING_TYPES.LINK_MISMATCH]);
-    // Check rule nr. 3 : Links that don't have start or end port
+    // Check rule nr. 2 : Links that don't have start or end port
     if (this.graph.invalidLinks.length) {
       warnings.push({
         ...WARNINGS[WARNING_TYPES.INVALID_LINKS],

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import hotkeys from "hotkeys-js";
 import { Style } from "@mov-ai/mov-fe-lib-react";
 import { Typography } from "@material-ui/core";
@@ -64,10 +64,10 @@ function BaseApp(props) {
    *                                                                                      */
   //========================================================================================
 
-  const onToggleTheme = () => {
+  const onToggleTheme = useCallback(() => {
     setIsMenuOpen(true);
-    handleToggleTheme && handleToggleTheme();
-  };
+    handleToggleTheme?.();
+  }, [handleToggleTheme]);
 
   const onCloseMenu = () => {
     setIsMenuOpen(false);
@@ -82,7 +82,7 @@ function BaseApp(props) {
       selectedTheme: theme,
       isDarkTheme: theme === "dark"
     }),
-    [theme, handleLogOut, onToggleTheme]
+    [handleLogOut, isMenuOpen, theme, onToggleTheme]
   );
 
   const addAppKeybinds = () => {
@@ -117,7 +117,7 @@ function BaseApp(props) {
     // Write log in consle
     writeMovaiLogo();
     hotkeys.setScope(KEYBIND_SCOPES.APP);
-  }, []);
+  }, [dependencies]);
 
   // Set app settings
 
@@ -248,7 +248,7 @@ function installViewPlugins(dependencies) {
 
 function getHostedPlugins(classes) {
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" wrap="nowrap">
       <AbstractHost hostName={HOSTS.ABSTRACT_HOST.NAME}></AbstractHost>
       <Grid container alignItems="flex-start">
         <TopBar hostName={HOSTS.TOP_BAR.NAME} debugMode={DEBUG_MODE}></TopBar>
@@ -297,6 +297,6 @@ const MOVAI_LOGO = `
 ██╔████╔██║ ██║   ██║ ██║   ██║ █████╗ ███████║██║
 ██║╚██╔╝██║ ██║   ██║  █║  ██╔╝ ╚════╝ ██╔══██║██║
 ██║ ╚═╝ ██║ ╚██████═╝   ╚███═╝         ██║  ██║██║
-`;
+-`;
 
 export default BaseApp;

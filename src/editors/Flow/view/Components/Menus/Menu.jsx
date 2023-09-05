@@ -249,11 +249,11 @@ const Menu = ({ name, model, details: detailsProp, editable }) => {
    */
   const renderDescription = useCallback(() => {
     return data.description ? (
-      <Typography className={`${classes.itemValue} ${classes.description}`}>
+      <Typography data-testid="flow-description" className={`${classes.itemValue} ${classes.description}`}>
         {data.description}
       </Typography>
     ) : (
-      <Typography className={`${classes.itemValue} ${classes.disabled}`}>
+      <Typography data-testid="flow-description" className={`${classes.itemValue} ${classes.disabled}`}>
         N/A
       </Typography>
     );

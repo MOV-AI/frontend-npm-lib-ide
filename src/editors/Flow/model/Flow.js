@@ -263,8 +263,9 @@ class Flow extends Model {
    * @returns {boolean} : True on success, false otherwise
    */
   deleteNode(nodeId) {
+    const nodeTemplate = this.getNodeInstances().getItem(nodeId).template;
     this.deleteNodeLinks(nodeId);
-    this.deleteNodeExposedPorts(nodeId);
+    this.deleteNodeExposedPorts(nodeId, nodeTemplate);
     return this.getNodeInstances().deleteItem(nodeId);
   }
 
@@ -274,8 +275,9 @@ class Flow extends Model {
    * @returns {boolean} : True on success, false otherwise
    */
   deleteSubFlow(subFlowId) {
+    const subflowTemplate = this.getSubFlows().getItem(subFlowId).template;
     this.deleteNodeLinks(subFlowId);
-    this.deleteNodeExposedPorts(subFlowId);
+    this.deleteNodeExposedPorts(subFlowId, subflowTemplate);
     return this.getSubFlows().deleteItem(subFlowId);
   }
 
@@ -304,10 +306,10 @@ class Flow extends Model {
    * Delete Exposed Ports of NodeInst or Container
    * @param {string} id : The node (nodeInst or subFlow) id
    */
-  deleteNodeExposedPorts = id => {
+  deleteNodeExposedPorts = (id, template) => {
     this.getExposedPorts().data.forEach((_, key) => {
-      if (id === key) {
-        this.deleteExposedPorts(key);
+      if (template === key) {
+        this.deleteExposedPorts(id, template);
       }
     });
   };
@@ -339,8 +341,12 @@ class Flow extends Model {
    * Delete Exposed Port
    * @param {string} id : ExposedPort ID
    */
-  deleteExposedPorts(id) {
-    this.getExposedPorts().deleteItem(id);
+  deleteExposedPorts(id, template) {
+    const exposedPorts = this.getExposedPorts();
+
+    if (Object.keys(exposedPorts.getItem(template)).length > 1)
+      exposedPorts.deleteSubItem(template, id);
+    else exposedPorts.deleteItem(id);
   }
 
   /**

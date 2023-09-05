@@ -311,7 +311,7 @@ class DocManager extends IDEPlugin {
       });
     }
 
-    callback && callback(returnMessage);
+    callback?.(returnMessage);
     this.saveStack.delete(`${name}_${scope}`);
     return returnMessage;
   }
@@ -446,7 +446,7 @@ class DocManager extends IDEPlugin {
    *  Remove subscribers
    * @param {Event} event
    */
-  onUnload = _event => {
+  onUnload = () => {
     this.getStores().forEach(store => {
       const dirtyDocs = store.getDirties();
 

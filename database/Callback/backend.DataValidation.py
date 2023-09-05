@@ -7,7 +7,7 @@
 
 import re
 try:
-    from dal.scopes import ScopesTree
+    from dal.models.scopestree import ScopesTree
 except ImportError:
     from movai.data import ScopesTree
 
@@ -21,7 +21,7 @@ def validate_configuration(config_string):
 
     """
     try:
-        regex = r"^\$\(config \w+(\.\w+)*\)$"
+        regex = r"^\$\(config [\w-]+(\.[\w-]+)*\)"
         matches = re.finditer(regex, config_string, re.MULTILINE)
         matches_size = len([x for x in matches])
         if matches_size == 0:

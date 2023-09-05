@@ -1,9 +1,5 @@
 import lodash from "lodash";
 import { BehaviorSubject } from "rxjs";
-import { filter } from "rxjs/operators";
-import { easySub } from "../../../../../utils/noremix";
-import { dialog } from "../../../../../plugins/Dialog/Dialog";
-import i18n from "../../../../../i18n/i18n";
 import { NODE_TYPES, TYPES } from "../../Constants/constants";
 import { getNodeNameFromId } from "../../Core/Graph/Utils";
 import GraphBase from "../../Core/Graph/GraphBase";
@@ -13,9 +9,6 @@ import StartNode from "../Nodes/StartNode";
 import InterfaceModes from "./InterfaceModes";
 import Events from "./Events";
 import Canvas from "./canvas";
-
-export
-let _cachedNodeStatus = {};
 
 export
 let cachedNodeStatus = {};
@@ -35,26 +28,9 @@ const NODE_PROPS = {
   }
 };
 
-export
-const flowSub = easySub({});
-
-export
-const flowEmit = flowSub.easyEmit(({ id, ...rest }) => {
-  const old = flowSub.data.value;
-
-  if (old[id])
-    old[id].destroy();
-
-  return {
-    ...old,
-    [id]: new MainInterface({
-      ...rest,
-      id,
-    }),
-  };
-});
-
-function _set(obj, splits = [], value) {
+// thanks, ChatGPT
+// sets the object's value, given the path described by the splits
+function _set(obj, value, splits = []) {
   if (splits.length === 0) {
     throw new Error("Invalid splits array");
   }
@@ -69,6 +45,8 @@ function _set(obj, splits = [], value) {
   currentObj[splits[splits.length - 1]] = value;
 }
 
+// thanks, ChatGPT
+// ensure parents of lit nodes are lit
 function _marks(obj) {
   const result = {};
   const stack = [{ obj: obj, prefix: '' }];
@@ -90,11 +68,30 @@ function _marks(obj) {
   return result;
 }
 
+// ensure parents of lit nodes are lit, and children of unlit flows are unlit
 function ensureParents(json) {
-  for (const [key, value] of Object.entries(json))
-    _set(_cachedNodeStatus, key.split("__"), value)
+  const initial = { ...cachedNodeStatus };
+  const newStatus = {};
 
-  return _marks(_cachedNodeStatus);
+  for (const [key, value] of Object.entries(json))
+    _set(newStatus, value, key.split("__"))
+
+  const marks = _marks(newStatus);
+  const ret = { ...marks };
+
+  // turn off child nodes if parent is turned off
+  for (const key of Object.keys(initial)) {
+    if (!ret[key])
+      ret[key] = 0;
+    else
+      for (const key2 of Object.keys(marks))
+        if (key.startsWith(key2) && !marks[key2]) {
+          ret[key] = 0;
+          break;
+        }
+  }
+
+  return ret;
 }
 
 export default class MainInterface {
@@ -126,45 +123,7 @@ export default class MainInterface {
     this.canvas = null;
     this.graph = null;
     this.shortcuts = null;
-    this.viewMode = "default";
-    this.cache = {};
-    this.loading = true;
-    this.update = () => flowSub.update({
-      ...flowSub.data.value,
-      [id]: this,
-    });
-
-    this.initialize();
-  }
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                    Initialization                                    *
-   *                                                                                      */
-  //========================================================================================
-
-  initialize = () => {
-    // Load document and add subscribers
-    this.addSubscribers();
-    this.regraph();
-  };
-
-  majorUpdate() {
-    this.canvas.appendDocumentFragment();
-    this.graph.updateAllPositions();
-    this.nodeStatusUpdated({});
-    this.update();
-  }
-
-  regraph() {
-    const cached = this.cache[this.viewMode];
-
-    if (cached) {
-      this.canvas = cached.canvas;
-      this.graph = cached.graph;
-      this.majorUpdate();
-      return Promise.resolve();
-    }
+    this.onLoad = () => {};
 
     this.setMode(EVT_NAMES.LOADING);
     this.loading = true;
@@ -190,70 +149,28 @@ export default class MainInterface {
       id: this.id,
       mInterface: this,
       canvas: this.canvas,
-      docManager: this.docManager
+      docManager: call
     });
 
-    this.cache[this.viewMode] = {
-      canvas: this.canvas,
-      graph: this.graph,
-    };
-
-    // Canvas events (not modes)
-    // toggle warnings
-    this.canvas.events
-      .pipe(filter(event => event.name === EVT_NAMES.ON_TOGGLE_WARNINGS))
-      .subscribe(this.onToggleWarnings);
-
-    this.update();
-
-    return this.graph.loadData(this.modelView.current.serializeToDB()).then(() => {
-      this.canvas.el.focus();
-      this.setMode(EVT_NAMES.DEFAULT);
-      this.loading = false;
-      this.majorUpdate();
-    });
+    // Load document and add subscribers
+    this.addSubscribers();
+    this.loadDoc();
   }
 
-  onAddNode() {
-    const name = this.mode.current.props.node.data.name;
-
-    return dialog({
-      key: "AddNode-" + name,
-      title: i18n.t("AddNode"),
-      submitText: i18n.t("Add"),
-      name,
-      onValidation: ({ name }) => ({ name: this.graph.validator.validateNodeName(name, i18n.t("Node")) }),
-      onClose: () => this.setMode(EVT_NAMES.DEFAULT),
-      onSubmit: ({ name }) => this.addNode(name),
-    });
-  }
-
-  onAddFlow() {
-    const name = this.mode.current.props.node.data.name;
-
-    return dialog({
-      title: i18n.t("AddSubFlow"),
-      submitText: i18n.t("Add"),
-      name,
-      onValidation: ({ name }) => ({
-        name: this.graph.validator.validateNodeName(name, i18n.t("SubFlow")),
-      }),
-      onClose: () => this.setMode(EVT_NAMES.DEFAULT),
-      onSubmit: ({ name }) => this.addFlow(name)
-    });
-  }
-
-  onCanvasClick(mode) {
-    switch (mode) {
-      case "addNode":
-        return this.onAddNode();
-      case "addFlow":
-        return this.onAddFlow();
-      default:
-        this.setMode(EVT_NAMES.DEFAULT);
-        return;
-    }
-  }
+  /**
+   * @private
+   * Loads the document in the graph
+   * @returns {MainInterface} : The instance
+   */
+  loadDoc = async () => {
+    await this.graph.loadData(this.modelView.current.serializeToDB());
+    this.canvas.el.focus();
+    this.onToggleWarnings({ data: true });
+    this.setMode(EVT_NAMES.DEFAULT);
+    this.canvas.appendDocumentFragment();
+    this.graph.updateAllPositions();
+    this.onLoad();
+  };
 
   //========================================================================================
   /*                                                                                      *
@@ -533,7 +450,7 @@ export default class MainInterface {
    * Resets all Node status (Turns of the center)
    */
   resetAllNodeStatus = () => {
-    this.graph.resetStatus && this.graph.resetStatus();
+    this.graph.resetStatus?.();
   };
 
   onResetZoom = () => {
