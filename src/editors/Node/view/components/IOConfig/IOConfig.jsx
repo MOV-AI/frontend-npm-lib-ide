@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState, useRef, memo } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import _isEqual from "lodash/isEqual";
-import { MTableToolbar, MTableEditRow } from "material-table";
+import { MTableToolbar, MTableEditRow } from "@material-table/core";
 import { Typography } from "@material-ui/core";
 import { PLUGINS } from "../../../../../utils/Constants";
 import { call } from "../../../../../utils/noremix";

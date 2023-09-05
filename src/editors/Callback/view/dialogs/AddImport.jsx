@@ -153,4 +153,4 @@ const AddImportDialog = props => {
   );
 };
 
-export default withTheme(AddImportDialog);
+export default AddImportDialog;

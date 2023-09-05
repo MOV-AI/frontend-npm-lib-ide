@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "ESNext",
+    "baseUrl": "./src",
+    "rootDir": "./src",
+    "moduleResolution": "node",
+    "jsx": "react",
+    "allowJs": true,
+    "checkJs": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "strictPropertyInitialization": false,
+    "downlevelIteration": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "lib": ["dom", "es2018", "es2016.array.include"],
+    "types": ["node", "jest", "testing-library__jest-dom"]
+  },
+  "include": [
+	  "src/**/*.js",
+	  "src/**/*.jsx",
+	  "src/**/*.ts",
+	  "src/**/*.tsx"
+  ],
+  "exclude": [
+    "dist"
+  ]
+}

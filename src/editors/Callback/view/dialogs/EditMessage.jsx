@@ -12,7 +12,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { PLUGINS } from "../../../../utils/Constants";
 import { call, easySub, useSub } from "../../../../utils/noremix";
 import { ERROR_MESSAGES } from "../../../../utils/Messages";
-import { withTheme } from "../../../../decorators/withTheme";
 import { DialogTitle } from "../../../../plugins/Dialog/components/AppDialog/AppDialog";
 import Loader from "../../../_shared/Loader/Loader";
 import MaterialTree from "../../../_shared/MaterialTree/MaterialTree";
@@ -187,4 +186,4 @@ const EditMessageDialog = props => {
   );
 };
 
-export default withTheme(EditMessageDialog);
+export default EditMessageDialog;
