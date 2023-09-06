@@ -364,7 +364,11 @@ class Flow extends Model {
    * @returns
    */
   getLinkDependency(linkId) {
-    return this.getLinks().getItem(linkId)?.getDependency();
+    const item = this.getLinks().getItem(linkId);
+    if (item)
+      return item.getDependency();
+    else
+      return undefined;
   }
 
   toggleExposedPort(templateName, nodeName, portName) {
