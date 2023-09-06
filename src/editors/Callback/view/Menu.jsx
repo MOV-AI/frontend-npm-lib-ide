@@ -55,27 +55,36 @@ const Menu = props => {
    * Delete import from model
    * @param {*} pyLib
    */
-  const deleteImport = useCallback(pyLib => {
-    if (instance.current) instance.current.getPyLibs().deleteItem(pyLib.key);
-  }, [instance]);
+  const deleteImport = useCallback(
+    pyLib => {
+      if (instance.current) instance.current.getPyLibs().deleteItem(pyLib.key);
+    },
+    [instance]
+  );
 
   /**
    * Add Imports
    * @param {*} pyLibs
    */
-  const addImports = useCallback(value => {
-    if (instance.current) instance.current.getPyLibs().setData(value);
-    setActiveItem(ACTIVE_ITEM.IMPORTS);
-  }, [instance]);
+  const addImports = useCallback(
+    pyLibs => {
+      if (instance.current) instance.current.getPyLibs().setData(pyLibs);
+      setActiveItem(ACTIVE_ITEM.IMPORTS);
+    },
+    [instance]
+  );
 
   /**
    * Set message
    * @param {string} msg
    */
-  const setMessage = useCallback(value => {
-    if (instance.current) instance.current.setMessage(value);
-    setActiveItem(ACTIVE_ITEM.MESSAGE);
-  }, [instance]);
+  const setMessage = useCallback(
+    msg => {
+      if (instance.current) instance.current.setMessage(msg);
+      setActiveItem(ACTIVE_ITEM.MESSAGE);
+    },
+    [instance]
+  );
 
   //========================================================================================
   /*                                                                                      *
@@ -86,29 +95,35 @@ const Menu = props => {
   /**
    * Open dialog to set callback message
    */
-  const handleEditMessageClick = useCallback(evt => {
-    evt.stopPropagation();
+  const handleEditMessageClick = useCallback(
+    evt => {
+      evt.stopPropagation();
 
-    return dialog({
-      onSubmit: setMessage,
-      selectedMessage: data.message,
-      scope: scope,
-      Dialog: EditMessageDialog,
-    });
-  }, [scope, data.message, setMessage]);
+      return dialog({
+        onSubmit: setMessage,
+        selectedMessage: data.message,
+        scope: scope,
+        Dialog: EditMessageDialog,
+      });
+    },
+    [scope, data.message, setMessage]
+  );
 
   /**
    * Open dialog to add imports
    */
-  const handleAddImportsClick = useCallback(evt => {
-    evt.stopPropagation();
+  const handleAddImportsClick = useCallback(
+    evt => {
+      evt.stopPropagation();
 
-    return dialog({
-      onSubmit: addImports,
-      scope: scope,
-      Dialog: AddImportDialog,
-    });
-  }, [scope, addImports]);
+      return dialog({
+        onSubmit: addImports,
+        scope: scope,
+        Dialog: AddImportDialog,
+      });
+    },
+    [scope, addImports]
+  );
 
   /**
    * Handle expand/collapse action

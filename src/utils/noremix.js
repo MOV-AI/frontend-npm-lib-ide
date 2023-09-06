@@ -1,54 +1,19 @@
 import { useState, useEffect } from "react";
-
-function identity(a) {
-  return a;
-}
+import { makeSub } from "@tty-pt/sub";
 
 export
-function easySub(defaultData) {
-  const subs = new Map();
-  const valueMap = { value: defaultData };
-
-  function update(obj) {
-    valueMap.value = obj;
-    let allPromises = [];
-    for (const [sub] of subs)
-      allPromises.push(sub(obj));
-    return Promise.all(allPromises);
-  }
-
-  function subscribe(sub) {
-    subs.set(sub, true);
-    return () => {
-      subs.delete(sub);
-    };
-  }
-
-  function easyEmit(cb = identity) {
-    return async (...args) => update(await cb(...args, valueMap.value));
-  }
-
-  return { update, subscribe, data: valueMap, easyEmit };
-}
-
-export // currently unused
-function useSub(sub, defaultData) {
-  const [data, setData] = useState(sub.data.value ?? defaultData);
-  useEffect(() => sub.subscribe(setData), []);
-  return data;
-}
+const remixSub = makeSub(null);
 
 export
-const remixSub = easySub(null);
-
-export
-const remixEmit = remixSub.easyEmit(remix => remix);
+const remixEmit = remixSub.makeEmitNow();
 
 export
 function useRemix(props) {
-  useEffect(() => {
-    remixEmit({ on: props.on, off: props.off, call: props.call, emit: remixSub.data.value?.emit ?? {} });
-  }, [props.on, props.off, props.call]);
+  console.log("noremix.useRemix", props);
+  remixEmit({ on: props.on, off: props.off, call: props.call, emit: remixSub.data.value?.emit ?? {} });
+  // useEffect(() => {
+  //   remixEmit({ on: props.on, off: props.off, call: props.call, emit: remixSub.data.value?.emit ?? {} });
+  // }, [props.on, props.off, props.call]);
 }
 
 export
@@ -88,14 +53,15 @@ function useUpdate() {
 
 export
 function register(self, name) {
-  setTimeout(() => {
-    const current = remixSub.data.value ?? {};
-    return  remixEmit({
-      ...current,
-      emit: {
-        ...(current.emit ?? {}),
-        [self.name]: self.emit.bind(self),
-      }
-    });
-  }, 0);
+  console.log("noremix.register", self, name);
+  const current = remixSub.data.value ?? {};
+  const { on, off, call } = self;
+  return remixEmit({
+    ...{ on, off, call },
+    ...current,
+    emit: {
+      ...(current.emit ?? {}),
+      [self.name]: self.emit.bind(self),
+    }
+  });
 }

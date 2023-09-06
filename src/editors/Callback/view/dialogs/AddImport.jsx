@@ -2,6 +2,8 @@ import React, { useMemo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import _debounce from "lodash/debounce";
 import { makeStyles } from "@material-ui/core/styles";
+import { makeSub } from "@tty-pt/sub";
+import useSub from "@mov-ai/mov-fe-lib-react/dist/hooks/useSub";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +11,7 @@ import {
   DialogActions
 } from "@material-ui/core";
 import { PLUGINS } from "../../../../utils/Constants";
-import { call, easySub, useSub } from "../../../../utils/noremix";
+import { call } from "../../../../utils/noremix";
 import { DialogTitle } from "../../../../plugins/Dialog/components/AppDialog/AppDialog";
 import Loader from "../../../_shared/Loader/Loader";
 import MaterialTree from "../../../_shared/MaterialTree/MaterialTree";
@@ -22,8 +24,8 @@ const useStyles = makeStyles(_theme => ({
   }
 }));
 
-const libsSub = easySub({});
-const libsEmit = libsSub.easyEmit((scope, libs) => ({
+const libsSub = makeSub({});
+const libsEmit = libsSub.makeEmitNow((scope, libs) => ({
   ...libsSub.data.value,
   [scope]: libs
 }));
@@ -45,8 +47,8 @@ const AddImportDialog = props => {
   // Props
   const { open, scope, onClose, onSubmit } = props;
   // State hooks
-  const libs = useSub(libsSub)?.[scope];
-  const [filteredLibs, setFilteredLibs] = useState(libs);
+  const pyLibs = useSub(libsSub)?.[scope];
+  const [filteredLibs, setFilteredLibs] = useState(pyLibs);
   const [selectedLibs, setSelectedLibs] = useState();
   // Style hook
   const classes = useStyles();
@@ -60,7 +62,7 @@ const AddImportDialog = props => {
   //========================================================================================
 
   useEffect(() => { getLibs(scope) }, [scope]);
-  useEffect(() => { setFilteredLibs(libs) }, [libs]);
+  useEffect(() => { setFilteredLibs(pyLibs) }, [pyLibs]);
 
   //========================================================================================
   /*                                                                                      *
@@ -93,7 +95,7 @@ const AddImportDialog = props => {
    * @param {*} value
    */
   const onSearch = _debounce(value => {
-    const result = searchImports(value, libs);
+    const result = searchImports(value, pyLibs);
     setFilteredLibs(result);
   }, 500);
 
@@ -109,14 +111,14 @@ const AddImportDialog = props => {
    */
   const treeEl = useMemo(() => {
     // Return loader if data is not ready
-    if (!libs) return <Loader />;
+    if (!pyLibs) return <Loader />;
     // Return when data is ready or error message if not
     return <MaterialTree
       data={filteredLibs}
       onNodeSelect={onSelectLib}
       multiSelect={true}
     />;
-  }, [libs, filteredLibs]);
+  }, [pyLibs, filteredLibs]);
 
   return (
     <Dialog

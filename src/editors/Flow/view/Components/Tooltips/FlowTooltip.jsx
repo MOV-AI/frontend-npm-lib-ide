@@ -10,7 +10,7 @@ import Grid from "@material-ui/core/Grid";
 const styles = theme => ({
   root: {
     opacity: 0.9,
-    backgroundColor: theme.palette?.background?.secondary
+    backgroundColor: theme.palette.background.secondary
   },
   tooltip: {
     whiteSpace: "pre"

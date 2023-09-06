@@ -4,7 +4,7 @@ export const baseFlowStyles = makeStyles(theme => ({
   backdrop: {
     zIndex: theme.zIndex.drawer - 1,
     color: theme.backdrop?.color,
-    backgroundColor: theme.backdrop?.background ?? "black",
+    backgroundColor: theme.backdrop?.background,
     position: "absolute",
     height: "100%",
     width: "100%",
@@ -23,6 +23,6 @@ export const baseFlowStyles = makeStyles(theme => ({
     flexGrow: 1
   },
   flowEditor: {
-    interfaceColor: theme.palette?.background?.primary ?? "black"
+    interfaceColor: theme.palette.background.primary
   }
 }));

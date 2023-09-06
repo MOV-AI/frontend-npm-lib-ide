@@ -9,13 +9,14 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import CloseIcon from "@material-ui/icons/Close";
 import WarningIcon from "@material-ui/icons/Warning";
-import { easySub, useSub } from "./../../utils/noremix";
+import { makeSub } from "@tty-pt/sub";
+import useSub from "@mov-ai/mov-fe-lib-react/dist/hooks/useSub";
 import formJson from "./../../utils/form";
 
-const dialogSub = easySub({});
+const dialogSub = makeSub({});
 
 export
-const dialogSet = dialogSub.easyEmit();
+const dialogSet = dialogSub.makeEmitNow(a => a);
 
 export
 const dialogOpen = function (newDialog) {

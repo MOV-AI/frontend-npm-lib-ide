@@ -10,7 +10,9 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { PLUGINS } from "../../../../utils/Constants";
-import { call, easySub, useSub } from "../../../../utils/noremix";
+import { call } from "../../../../utils/noremix";
+import { makeSub } from "@tty-pt/sub";
+import useSub from "@mov-ai/mov-fe-lib-react/dist/hooks/useSub";
 import { ERROR_MESSAGES } from "../../../../utils/Messages";
 import { DialogTitle } from "../../../../plugins/Dialog/components/AppDialog/AppDialog";
 import Loader from "../../../_shared/Loader/Loader";
@@ -31,8 +33,8 @@ const useStyles = makeStyles(_theme => ({
   }
 }));
 
-const messagesSub = easySub({});
-const messagesEmit = messagesSub.easyEmit((scope, messages) => ({
+const messagesSub = makeSub({});
+const messagesEmit = messagesSub.makeEmitNow((scope, messages) => ({
   ...messagesSub.data.value,
   [scope]: messages
 }));
