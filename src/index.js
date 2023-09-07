@@ -38,7 +38,6 @@ import ShortcutsPlugin, {
   getShortcutsTab
 } from "./tools/AppShortcuts/AppShortcuts";
 // Utils
-import "./themes";
 import { ThemeProvider } from "@material-ui/core/styles";
 import i18n, { Translations } from "./i18n/i18n";
 import * as CONSTANTS from "./utils/Constants";

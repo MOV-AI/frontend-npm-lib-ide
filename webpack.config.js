@@ -13,28 +13,26 @@ module.exports = {
   devtool: "source-map",
   externals: [nodeExternals()],
   resolve: {
+    alias: {
+      vscode: require.resolve(
+        "@codingame/monaco-languageclient/lib/vscode-compatibility"
+      )
+    },
+    mainFields: ['main', 'module'],
     extensions: [".js", ".jsx"]
   },
   module: {
     rules: [
       {
-        test: /\.(js|mjs|jsx|ts|tsx)$/,
+        test: /\.(ts|tsx)?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
+      },
+      {
+        test: /\.(js|mjs|jsx)$/,
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-react", "@babel/preset-env"],
-            plugins: [
-              "@babel/plugin-syntax-dynamic-import",
-              "@babel/plugin-syntax-import-meta",
-              "@babel/plugin-proposal-class-properties",
-              "@babel/plugin-proposal-json-strings",
-              [
-                "@babel/plugin-transform-runtime",
-                { useESModules: true, helpers: true }
-              ]
-            ]
-          }
         }
       },
       {
