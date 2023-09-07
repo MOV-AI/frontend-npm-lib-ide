@@ -19,7 +19,7 @@ export const systemBarStyles = bindMagic(theme => ({
       borderBottom: "solid 5px purple",
     },
     width: "100%",
-    menuButton: {
+    "& .menu-button": {
       ...menuButtonStyles,
       padding: "0 10px",
       minWidth: "unset",
@@ -31,7 +31,7 @@ export const systemBarStyles = bindMagic(theme => ({
         marginLeft: "5px"
       }
     },
-    activeMenu: {
+    "& .active-menu": {
       background: theme.palette.grey[900]
     }
   },
