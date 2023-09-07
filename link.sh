@@ -1,2 +1,4 @@
 #!/bin/sh
-npm link ../core ../react ../../apps/fleetmanager/node_modules/react ../../apps/fleetmanager/node_modules/react-virtualized
+test -z "$PREF" && PREF=../../apps
+test -z "$APP" && APP=ide
+npm link ../sub ../core ../styles ../react $PREF/$APP/node_modules/react $PREF/$APP/node_modules/react-virtualized
