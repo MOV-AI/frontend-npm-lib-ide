@@ -2,10 +2,10 @@ const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 
 module.exports = {
-  entry: "./index.js",
+  entry: "./src/index.js",
   output: {
     path: path.resolve("./"),
-    filename: "dist/index.js",
+    filename: "dist/common.js",
     library: "MovaiIDE",
     libraryTarget: "umd"
   },
