@@ -8,7 +8,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import PropTypes from "prop-types";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { withTheme } from "../../../../decorators/withTheme";
+import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { defaultFunction } from "../../../../utils/Utils";
 
 import { appDialogStyles, appDialogTitleStyles } from "./styles";

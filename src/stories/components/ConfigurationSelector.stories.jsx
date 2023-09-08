@@ -1,5 +1,5 @@
-import { Button, snackbar, withNotification } from "@mov-ai/mov-fe-lib-react";
 import React from "react";
+import { Button, snackbar, withNotification } from "@mov-ai/mov-fe-lib-react";
 import ConfigurationSelector from "../../editors/_shared/ConfigurationSelector/ConfigurationSelector";
 import ConfigurationType from "../../editors/_shared/hooks/DataTypes/types/ConfigurationType";
 import useDataTypes from "../../editors/_shared/hooks/useDataTypes";
@@ -58,8 +58,8 @@ const Template = args => {
   }, [isConfigFromParameter]);
 
   return (
-    <>
-      <h2 style={{ textAlign: "left" }}>Selector for {title}</h2>
+    <div>
+      <h2 className="color" style={{ textAlign: "left" }}>Selector for {title}</h2>
       <ConfigurationSelector
         {...args}
         rowProps={props}
@@ -69,7 +69,7 @@ const Template = args => {
       <Button onClick={validateData} style={{ marginTop: 15 }}>
         Validate
       </Button>
-    </>
+    </div>
   );
 };
 
