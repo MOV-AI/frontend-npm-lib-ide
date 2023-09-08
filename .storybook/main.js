@@ -17,13 +17,17 @@ module.exports = {
     const finalConfig = config;
 
     finalConfig.entry = {
-      main: finalConfig.entry,
+      main: ["./node_modules/@mov-ai/mov-fe-lib-react/dist/styles/Themes.js"].concat(finalConfig.entry),
       "editor.worker": "monaco-editor-core/esm/vs/editor/editor.worker.js"
     };
+
+    finalConfig.resolve.alias.react = process.cwd() + "/node_modules/react";
 
     finalConfig.resolve.alias.vscode = require.resolve(
       "@codingame/monaco-languageclient/lib/vscode-compatibility"
     );
+
+    finalConfig.resolve.alias["@mov-ai/mov-fe-lib-core"] = process.cwd() + "/node_modules/@mov-ai/mov-fe-lib-core/dist";
 
     finalConfig.output.filename = "[name].bundle.js";
 

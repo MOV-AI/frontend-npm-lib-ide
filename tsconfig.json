@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "esnext",
     "module": "ESNext",
     "baseUrl": "./src",
     "rootDir": "./src",
@@ -9,7 +9,6 @@
     "allowJs": true,
     "checkJs": false,
     "declaration": true,
-    "emitDeclarationOnly": true,
     "outDir": "dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -24,6 +23,7 @@
     "types": ["node", "jest", "testing-library__jest-dom"]
   },
   "include": [
+	  "src/**/*.json",
 	  "src/**/*.js",
 	  "src/**/*.jsx",
 	  "src/**/*.ts",

@@ -1,5 +1,7 @@
-import "@mov-ai/mov-fe-lib-react/dist/styles/Themes";
 import "../themes";
+import { createThemes } from "@tty-pt/styles";
+import { createTheme } from "@material-ui/core/styles";
+createThemes(createTheme);
 import { Style, withDefaults } from "@mov-ai/mov-fe-lib-react";
 import React, { useEffect } from "react";
 // Base App

@@ -1,4 +1,5 @@
 import React from "react";
+import "@mov-ai/mov-fe-lib-react/dist/styles/Themes.js";
 import AppCE from "./AppCE";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export

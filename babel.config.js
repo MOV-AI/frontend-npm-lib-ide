@@ -1,6 +1,5 @@
 // babel.config.js
 module.exports = {
-  "sourceType": "module",
   presets: [
     [
       "@babel/preset-env",
