@@ -1,7 +1,6 @@
 import { Utils } from "@mov-ai/mov-fe-lib-core";
-import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
+import { SelectScopeModal, withTheme } from "@mov-ai/mov-fe-lib-react";
 import ReactDOM from "react-dom";
-import { withTheme } from "../../decorators/withTheme";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
 import i18n from "../../i18n/i18n";
 import {

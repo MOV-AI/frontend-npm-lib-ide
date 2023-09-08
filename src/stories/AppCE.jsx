@@ -1,5 +1,4 @@
 import { Style, withDefaults } from "@mov-ai/mov-fe-lib-react";
-import { MagicContext } from "@tty-pt/styles";
 import React, { useEffect } from "react";
 // Base App
 import BaseApp, { installEditor, installTool } from "../App/BaseApp";
@@ -27,15 +26,14 @@ import i18n from "../i18n/i18n";
 import { ApplicationTheme } from "../themes";
 import * as CONSTANTS from "../utils/Constants";
 // Externals
-import { ThemeProvider, withStyles } from "@material-ui/core/styles";
+// import { ThemeProvider, withStyles } from "@material-ui/core/styles";
 import { I18nextProvider } from "react-i18next";
 // Icons
 import HomeIcon from "@material-ui/icons/Home";
 import KeyboardIcon from "@material-ui/icons/Keyboard";
 
 const dependencies = {
-  "@tty-pt/styles": { MagicContext },
-  "@material-ui/styles": { ThemeProvider, withStyles },
+  // "@material-ui/core/styles": { ThemeProvider, withStyles },
   "react-i18next": { I18nextProvider },
   i18n
 };

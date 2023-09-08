@@ -18,7 +18,7 @@ module.exports = {
             "@codingame/monaco-languageclient/lib/vscode-compatibility"
           )
         },
-        extensions: [".js", ".json", ".ttf"]
+        extensions: [".js", ".jsx", ".ts", ".tsx", ".json", ".ttf"]
       }
     });
 
