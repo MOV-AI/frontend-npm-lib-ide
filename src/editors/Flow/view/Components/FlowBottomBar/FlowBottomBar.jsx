@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import WarningIcon from "@material-ui/icons/Warning";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Typography,
   Tooltip,

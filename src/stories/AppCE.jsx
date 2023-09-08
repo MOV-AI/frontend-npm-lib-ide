@@ -23,17 +23,17 @@ import ShortcutsPlugin, {
 import HomeTabPlugin, { getHomeTab } from "../tools/HomeTab/HomeTab";
 // Utils
 import i18n from "../i18n/i18n";
-import { ApplicationTheme } from "../themes";
+import ApplicationTheme from "../themes";
 import * as CONSTANTS from "../utils/Constants";
 // Externals
-import { ThemeProvider, withStyles } from "@material-ui/core/styles";
+// import { ThemeProvider, withStyles } from "@material-ui/core/styles";
 import { I18nextProvider } from "react-i18next";
 // Icons
 import HomeIcon from "@material-ui/icons/Home";
 import KeyboardIcon from "@material-ui/icons/Keyboard";
 
 const dependencies = {
-  "@material-ui/styles": { ThemeProvider, withStyles },
+  // "@material-ui/core/styles": { ThemeProvider, withStyles },
   "react-i18next": { I18nextProvider },
   i18n
 };
@@ -109,6 +109,6 @@ const AppCE = props => {
 export default withDefaults({
   name: "mov-fe-app-ide",
   component: AppCE,
-  themeProps: ApplicationTheme,
+  ApplicationTheme,
   dependencies
 });
