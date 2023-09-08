@@ -16,7 +16,8 @@ import {
   DialogActions,
   Button
 } from "@material-ui/core";
-import { withTheme } from "../../../decorators/withTheme";
+import { withTheme } from "@mov-ai/mov-fe-lib-react";
+import ApplicationTheme from "../../../themes";
 import { DialogTitle } from "../../../plugins/Dialog/components/AppDialog/AppDialog";
 
 import { keyValueEditorDialogStyles } from "./styles";
@@ -299,4 +300,4 @@ function arePropsEqual(prevProps, nextProps) {
   return _isEqual(prevProps, nextProps);
 }
 
-export default memo(withTheme(KeyValueEditorDialog), arePropsEqual);
+export default memo(withTheme(KeyValueEditorDialog, ApplicationTheme), arePropsEqual);

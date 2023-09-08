@@ -10,7 +10,8 @@ import {
   Radio,
   RadioGroup
 } from "@material-ui/core";
-import { withTheme } from "../../../decorators/withTheme";
+import { withTheme } from "@mov-ai/mov-fe-lib-react";
+import ApplicationTheme from "../../../themes";
 import { ERROR_MESSAGES } from "../../../utils/Messages";
 import {
   DATA_TYPES,
@@ -442,4 +443,4 @@ ParameterEditorDialog.propTypes = {
   alert: PropTypes.func
 };
 
-export default withAlerts(withTheme(ParameterEditorDialog));
+export default withAlerts(withTheme(ParameterEditorDialog, ApplicationTheme));

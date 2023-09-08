@@ -15,10 +15,7 @@ export const drawerPanelStyles = (isLeft, isOpen) =>
       [isLeft ? "marginRight" : "marginLeft"]: "auto",
       width: isOpen ? 340 : "auto",
       height: "100%",
-      "& .MuiBackdrop-root": {
-        display: "none"
-      },
-      "& .MuiDrawer-paper": {
+      "& > *": {
         width: 340,
         position: "absolute",
         transition: "none !important"

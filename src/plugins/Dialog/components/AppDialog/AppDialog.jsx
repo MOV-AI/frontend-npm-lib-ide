@@ -8,7 +8,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import PropTypes from "prop-types";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { withTheme } from "../../../../decorators/withTheme";
+import { withTheme } from "@mov-ai/mov-fe-lib-react";
+import ApplicationTheme from "../../../../themes";
 import { defaultFunction } from "../../../../utils/Utils";
 
 import { appDialogStyles, appDialogTitleStyles } from "./styles";
@@ -145,4 +146,4 @@ AppDialog.defaultProps = {
   closeOnBackdrop: false
 };
 
-export default withTheme(AppDialog);
+export default withTheme(AppDialog, ApplicationTheme);
