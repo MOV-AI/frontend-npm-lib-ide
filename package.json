@@ -57,8 +57,8 @@
     "@mov-ai/mov-fe-lib-core": "^1.1.2-9",
     "@mov-ai/mov-fe-lib-react": "^1.1.2-23",
     "@tty-pt/styles": "^0.2.2-14",
-    "react": ">=16.14.0",
-    "react-dom": ">=16.14.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "react-i18next": "^11.13.0"
   },
   "devDependencies": {
@@ -99,8 +99,8 @@
     "http-proxy-middleware": "^2.0.4",
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.0.3",
-    "react": ">=16.14.0",
-    "react-dom": ">=16.14.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "react-i18next": "^11.13.0",
     "storybook": "^6.4.0",
     "storybook-addon-mock": "^2.4.1",
