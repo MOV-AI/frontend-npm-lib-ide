@@ -122,7 +122,7 @@ class Store extends BaseStore {
 
     return saveMethodByIsNew[doc.getIsNew()](data).then(async res => {
       if (res.success) {
-        doc.setIsNew(false).setDirty(false);
+        doc.setIsNew(false).setDirty(false).setIsCreatedByUser(true);
         this.observer.onDocumentDirty(this.name, doc, doc.getDirty());
         res.model = doc;
 
