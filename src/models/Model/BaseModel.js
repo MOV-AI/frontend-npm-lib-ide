@@ -31,6 +31,7 @@ export default class Model extends Observable {
   isLoaded = false;
   isDirty = true;
   isOutdated = false;
+  isCreatedByUser = false;
 
   observables = ["name", "details"];
 
@@ -221,6 +222,15 @@ export default class Model extends Observable {
    */
   getFileExtension() {
     return ".NA";
+  }
+
+  getIsCreatedByUser() {
+    return this.isCreatedByUser;
+  }
+
+  setIsCreatedByUser(value) {
+    this.isCreatedByUser = value;
+    return this;
   }
 
   //========================================================================================
