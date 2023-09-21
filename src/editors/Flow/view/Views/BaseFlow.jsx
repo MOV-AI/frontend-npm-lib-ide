@@ -1,24 +1,19 @@
-import React, { useCallback, useEffect, useMemo, memo } from "react";
+import React, { useEffect, memo } from "react";
 import PropTypes from "prop-types";
 import Backdrop from "@material-ui/core/Backdrop";
 import { PLUGINS, SCOPES } from "../../../../utils/Constants";
-import { generateContainerId } from "../Constants/constants";
 import { EVT_NAMES } from "../events";
 import Loader from "../../../_shared/Loader/Loader";
+import { useSub, flowSub } from "../Components/interface/MainInterface";
 import Warnings from "../Components/Warnings/Warnings";
 import DependencyInfo from "../Components/Debugging/DependencyInfo";
-import useMainInterface from "./hooks/useMainInterface";
 
 import { baseFlowStyles } from "./styles";
 
 const BaseFlow = props => {
   const {
-    call,
-    instance,
     id,
     name,
-    type,
-    model,
     dataFromDB,
     off,
     on,
@@ -31,41 +26,17 @@ const BaseFlow = props => {
     graphClass,
     loading
   } = props;
-  const readOnly = false;
 
   // Other hooks
   const classes = baseFlowStyles();
-  const containerId = useMemo(
-    () => `${viewMode}-${generateContainerId(id)}`,
-    [viewMode, id]
-  );
-
-  const { mainInterface } = useMainInterface({
-    classes,
-    instance,
-    name,
-    data: dataFromDB,
-    graphCls: graphClass,
-    type,
-    width: "400px",
-    height: "200px",
-    containerId,
-    model,
-    readOnly,
-    call
-  });
-
-  const getMainInterface = useCallback(
-    () => mainInterface.current,
-    [mainInterface]
-  );
+  const mainInterface = useSub(flowSub)[name];
 
   // Enter in add node/sub-flow mode
   useEffect(() => {
     on(PLUGINS.FLOW_EXPLORER.NAME, PLUGINS.FLOW_EXPLORER.ON.ADD_NODE, node => {
       // event emitter is latching thus we need to skip
       // it while flow is loading
-      const currMode = getMainInterface()?.mode.current.id ?? EVT_NAMES.LOADING;
+      const currMode = mainInterface?.mode.current.id ?? EVT_NAMES.LOADING;
       if (currMode === EVT_NAMES.LOADING) return;
 
       const scopes = {
@@ -78,23 +49,24 @@ const BaseFlow = props => {
       //  it's considered a forbidden operation
       if (dataFromDB.Label === templateId && isSubFlow) return;
       // Add interface mode to add node/sub-flow
-      getMainInterface()?.setMode(scopes[node.scope], { templateId }, true);
+      mainInterface?.setMode(scopes[node.scope], { templateId }, true);
     });
 
     return () =>
       off(PLUGINS.FLOW_EXPLORER.NAME, PLUGINS.FLOW_EXPLORER.ON.ADD_NODE);
-  }, [getMainInterface, off, on, dataFromDB]);
+  }, [mainInterface, off, on, dataFromDB]);
 
   useEffect(() => {
-    const mInt = getMainInterface();
+    const mInt = mainInterface;
     if (!mInt) return;
 
     // Dispatch on ready event
     onReady(mInt);
     return () => {
-      getMainInterface().graph.destroy();
+      // shouldn't this be mainInterface.destroy()? TODO investigate
+      mainInterface?.graph.destroy();
     };
-  }, [graphClass, dataFromDB, onReady, getMainInterface]);
+  }, [graphClass, dataFromDB, onReady, mainInterface]);
 
   return (
     <div id={`${viewMode}-${id}`} className={classes.flowContainer}>
@@ -103,7 +75,7 @@ const BaseFlow = props => {
           <Loader />
         </Backdrop>
       )}
-      <div className={classes.flowCanvas} id={containerId} tabIndex="0">
+      <div className={classes.flowCanvas} id={"Flow-" + name} tagindex="0">
         {warnings.length > 0 && (
           <Warnings warnings={warnings} isVisible={warningsVisibility} />
         )}
@@ -114,13 +86,10 @@ const BaseFlow = props => {
 };
 
 BaseFlow.propTypes = {
-  call: PropTypes.func.isRequired,
-  instance: PropTypes.object,
   id: PropTypes.string,
   name: PropTypes.string,
-  type: PropTypes.string,
-  model: PropTypes.string,
-  dataFromDB: PropTypes.object
+  dataFromDB: PropTypes.object,
+  warnings: PropTypes.array,
 };
 
 BaseFlow.defaultProps = {

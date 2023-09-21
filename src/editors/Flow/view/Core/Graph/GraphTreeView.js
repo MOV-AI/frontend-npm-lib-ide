@@ -66,7 +66,6 @@ export default class GraphTreeView extends GraphBase {
     // Add root node to canvas
     try {
       // Let's add the start node to the list (so links know where to start)
-      this.addStartNode();
       await this._addRootNode(flow);
       this.rootNode.addToCanvas();
     } catch (e) {
@@ -81,7 +80,6 @@ export default class GraphTreeView extends GraphBase {
 
     try {
       this.loadLinks(flow.Links, this.rootNode);
-      this.onFlowValidated.next({ warnings: [] });
       this.nodeStatusUpdated();
       this.update(this.rootNode);
     } catch (error) {
@@ -206,7 +204,6 @@ export default class GraphTreeView extends GraphBase {
    */
   reset(node = this.rootNode) {
     if (!node) return;
-    node.selected = false;
     node.children.forEach(child => {
       this.reset(child);
     });

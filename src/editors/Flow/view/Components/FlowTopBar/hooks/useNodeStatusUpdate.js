@@ -97,7 +97,7 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
     nodeStatusRef.current = emptyNodeStatus;
     allNodeStatusRef.current = emptyAllNodeStatus;
     // Send updates to canvas
-    mainInterface.current?.resetAllNodeStatus();
+    mainInterface?.resetAllNodeStatus();
   }, [mainInterface]);
 
   /**
@@ -154,10 +154,10 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
 
         activeFlow = isOnline ? robotStatusData.active_flow : "";
         onStartStopFlow(activeFlow);
-        mainInterface.current?.nodeStatusUpdated(running ? runningNodes.reduce(
-          (a, key) => ({ ...a, [mainInterface.current?.id + "__" + key]: 1 }),
+        mainInterface?.nodeStatusUpdated(running ? runningNodes.reduce(
+          (a, key) => ({ ...a, [mainInterface.id + "__" + key]: 1 }),
           {}
-        ) : { [mainInterface.current?.id]: 0 }, { isOnline, activeFlow });
+        ) : { [mainInterface?.id]: 0 }, { isOnline, activeFlow });
       }
       // Robot doesn't have "Status" key in Redis
       else {

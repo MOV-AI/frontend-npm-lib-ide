@@ -6,6 +6,7 @@ import StartNode from "../../Components/Nodes/StartNode";
 import BaseLink from "../../Components/Links/BaseLink";
 import { InvalidLink } from "../../Components/Links/Errors";
 import { FLOW_VIEW_MODE, NODE_TYPES } from "../../Constants/constants";
+import { EVT_NAMES } from "../../events";
 import Factory from "../../Components/Nodes/Factory";
 import { shouldUpdateExposedPorts } from "./Utils";
 import { cachedNodeStatus } from "../../Components/interface/MainInterface";
@@ -40,7 +41,6 @@ export default class GraphBase {
     this.nodes = new Map(); // <node name> : {obj: <node instance>, links: []}
     this.links = new Map(); // linkId : <link instance>
     this.exposedPorts = {};
-    this.selectedNodes = [];
     this.selectedLink = null;
     this.tempNode = null;
     this.warnings = [];
@@ -233,18 +233,24 @@ export default class GraphBase {
   onNodeDrag = (draggedNode, d) => {
     const allNodes = this.nodes;
     const allLinks = this.links;
-    let nodes = [...this.selectedNodes];
+    let nodes = [...this.mInterface.selectedNodes];
 
     if (draggedNode) {
-      const gnode = this.nodes.get(draggedNode.data.id);
-      nodes = new Set([gnode.obj].concat(nodes));
+      let found = false;
+
+      for (const node of this.mInterface.selectedNodes)
+        if (node.data.id === draggedNode.data.id) {
+          found = true;
+          break;
+        }
+
+      if (!found)
+        nodes = new Set([draggedNode]);
     }
 
-    if (this.canvas.inBoundaries(d.x, d.y)) {
-      this.selectedNodes.forEach(node => {
+    if (this.canvas.inBoundaries(d.x, d.y))
+      for (const node of nodes)
         node.setPositionDelta(d.dx, d.dy);
-      });
-    }
 
     function update() {
       nodes.forEach(node => {
@@ -276,10 +282,7 @@ export default class GraphBase {
     // Get nodes to remove on update
     const flowNodes = { ...data.NodeInst, ...data.Container };
     [...this.nodes.keys()].forEach(nodeId => {
-      if (
-        !Object.prototype.hasOwnProperty.call(flowNodes, nodeId) &&
-        nodeId !== "start"
-      ) {
+      if (!flowNodes.hasOwnProperty(nodeId) && nodeId !== "start") {
         this.deleteNode(nodeId);
       }
     });
@@ -343,6 +346,7 @@ export default class GraphBase {
     this.loadExposedPorts(flow.ExposedPorts || {});
     this.nodeStatusUpdated();
     this.update();
+    this.mInterface.update();
   }
 
   /**
@@ -431,7 +435,7 @@ export default class GraphBase {
   updateLinks = links => {
     // Remove deleted links
     const linksToRemove = [...this.links.keys()].filter(
-      link => !Object.prototype.hasOwnProperty.call(links, link)
+      link => !links.hasOwnProperty(link)
     );
     this.deleteLinks(linksToRemove);
     // Add missing links
@@ -627,10 +631,6 @@ export default class GraphBase {
   };
 
   reset() {
-    // Reset all selected nodes
-    this.nodes.forEach(node => {
-      node.obj.selected = false;
-    });
     // Reset selected link
     if (this.selectedLink) {
       this.selectedLink.onSelected(false);

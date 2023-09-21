@@ -101,7 +101,8 @@ export const PLUGINS = {
       UPDATE_DOCS: "updateDocs",
       LOAD_DOCS: "loadDocs",
       SAVE_DOC: "saveDoc",
-      BEFORE_SAVE_DOC: "beforeSaveDoc"
+      BEFORE_SAVE_DOC: "beforeSaveDoc",
+      DISCARD_DOC: "discardDoc",
     }
   },
   TABS: {
