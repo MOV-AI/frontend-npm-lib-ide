@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
-import { PLUGINS } from "./../../../utils/Constants";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
+import { setBookmark } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import InfoIcon from "@material-ui/icons/Info";
 import Menu from "./Menu";
 
@@ -47,7 +47,7 @@ export const Callback = (props, ref) => {
     const menuName = `${id}-detail-menu`;
     const menuTitle = t("CallbackDetailsMenuTitle");
     // add bookmark
-    call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.SET_BOOKMARK, {
+    setBookmark({
       [menuName]: {
         icon: <InfoIcon />,
         name: menuName,
@@ -55,7 +55,7 @@ export const Callback = (props, ref) => {
         view: <Menu id={id} call={call} name={name} scope={scope} />
       }
     });
-  }, [call, id, name, scope, t]);
+  }, [id, name, scope, t]);
 
   usePluginMethods(ref, {
     renderRightMenu

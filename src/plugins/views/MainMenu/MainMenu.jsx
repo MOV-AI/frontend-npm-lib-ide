@@ -12,6 +12,7 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import { Tooltip } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
+import { activatePluginView } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import { MainContext } from "../../../main-context";
 import AppSettings from "../../../App/AppSettings";
 import { getMainMenuTools } from "../../../tools";
@@ -46,10 +47,7 @@ const MainMenu = props => {
       isActive: true,
       getOnClick: () => {
         // Toggle left drawer
-        call(
-          HOSTS.LEFT_DRAWER.NAME,
-          HOSTS.LEFT_DRAWER.CALL.ACTIVATE_PLUGIN_VIEW
-        );
+        activatePluginView();
       }
     },
     ...getMainMenuTools().map(tool => {

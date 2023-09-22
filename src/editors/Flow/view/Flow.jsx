@@ -14,6 +14,7 @@ import CompareArrowsIcon from "@material-ui/icons/CompareArrows";
 import { Rest } from "@mov-ai/mov-fe-lib-core";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
+import { addBookmark, setBookmark, removeBookmark } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import {
   FLOW_EXPLORER_PROFILE,
   FLOW_CONTEXT_MODES,
@@ -496,9 +497,7 @@ export const Flow = (props, ref) => {
     (node, nodeSelection) => {
       const MenuComponent = getMenuComponent(node?.data?.model);
       if (!node || !MenuComponent) return;
-      call(
-        PLUGINS.RIGHT_DRAWER.NAME,
-        PLUGINS.RIGHT_DRAWER.CALL.ADD_BOOKMARK,
+      addBookmark(
         getNodeMenuToAdd(node),
         activeBookmark,
         nodeSelection,
@@ -540,16 +539,14 @@ export const Flow = (props, ref) => {
   const addLinkMenu = useCallback(
     (link, linkSelection) => {
       if (!link) return;
-      call(
-        PLUGINS.RIGHT_DRAWER.NAME,
-        PLUGINS.RIGHT_DRAWER.CALL.ADD_BOOKMARK,
+      addBookmark(
         getLinkMenuToAdd(link),
         activeBookmark,
         linkSelection,
         true
       );
     },
-    [call, getLinkMenuToAdd]
+    [getLinkMenuToAdd]
   );
 
   const renderRightMenu = useCallback(() => {
@@ -601,9 +598,7 @@ export const Flow = (props, ref) => {
     }
 
     // add bookmark
-    call(
-      PLUGINS.RIGHT_DRAWER.NAME,
-      PLUGINS.RIGHT_DRAWER.CALL.SET_BOOKMARK,
+    setBookmark(
       bookmarks,
       activeBookmark
     );
@@ -686,14 +681,12 @@ export const Flow = (props, ref) => {
    * Remove Node Bookmark and set selectedNode to null
    */
   const unselectNode = useCallback(() => {
-    call(
-      PLUGINS.RIGHT_DRAWER.NAME,
-      PLUGINS.RIGHT_DRAWER.CALL.REMOVE_BOOKMARK,
+    removeBookmark(
       MENUS.current.NODE.NAME,
       MENUS.current.DETAIL.NAME
     );
     selectedNodeRef.current = null;
-  }, [call, selectedNodeRef]);
+  }, [selectedNodeRef]);
 
   /**
    * On Node Selected
@@ -730,9 +723,7 @@ export const Flow = (props, ref) => {
       selectedLinkRef.current = link;
       getMainInterface().selectedLink = link;
       if (!link) {
-        call(
-          PLUGINS.RIGHT_DRAWER.NAME,
-          PLUGINS.RIGHT_DRAWER.CALL.REMOVE_BOOKMARK,
+        removeBookmark(
           MENUS.current.LINK.NAME,
           activeBookmark
         );

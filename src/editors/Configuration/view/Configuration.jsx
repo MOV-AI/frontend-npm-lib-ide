@@ -48,7 +48,7 @@ export const Configuration = (props, ref) => {
     const menuName = `${id}-detail-menu`;
     const menuTitle = t("ConfigurationDetailsMenuTitle");
     // add bookmark
-    call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.SET_BOOKMARK, {
+    setBookmark({
       [menuName]: {
         icon: <InfoIcon></InfoIcon>,
         name: menuName,
@@ -58,7 +58,7 @@ export const Configuration = (props, ref) => {
         )
       }
     });
-  }, [call, id, name, instance, props.data, t]);
+  }, [id, name, instance, props.data, t]);
 
   usePluginMethods(ref, {
     renderRightMenu

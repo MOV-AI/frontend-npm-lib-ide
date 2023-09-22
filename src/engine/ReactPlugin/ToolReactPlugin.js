@@ -1,10 +1,9 @@
 import React, { forwardRef, useEffect } from "react";
 import { makeStyles } from "@material-ui/core";
-import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
+import { resetBookmarks } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
 import withAlerts from "../../decorators/withAlerts";
 import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
-import { PLUGINS } from "../../utils/Constants";
 import { composeDecorators } from "../../utils/Utils";
 import { ViewPlugin } from "./ViewReactPlugin";
 
@@ -30,19 +29,8 @@ export function withToolPlugin(ReactComponent, methods = []) {
      * Component did mount
      */
     useEffect(() => {
-      PluginManagerIDE.resetBookmarks();
-      on(
-        PLUGINS.TABS.NAME,
-        PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE,
-        async ({ id }) => {
-          if (profile.name === id) PluginManagerIDE.resetBookmarks();
-        }
-      );
-
-      return () => {
-        off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
-      };
-    }, [off, on, profile.name]);
+      resetBookmarks();
+    }, []);
 
     return <RefComponent {...props} ref={ref} />;
   });

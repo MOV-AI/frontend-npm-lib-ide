@@ -7,6 +7,7 @@ import Model from "../model/Node";
 import CallbackModel from "../../Callback/model/Callback";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
+import { setBookmark } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import {
   DEFAULT_KEY_VALUE_DATA,
   TABLE_KEYS_NAMES,
@@ -209,7 +210,7 @@ export const Node = (props, ref) => {
     const menuName = `${id}-detail-menu`;
     const menuTitle = t("NodeDetailsMenuTitle");
     // add bookmark
-    call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.SET_BOOKMARK, {
+    setBookmark({
       [menuName]: {
         icon: <InfoIcon></InfoIcon>,
         name: menuName,
@@ -219,7 +220,7 @@ export const Node = (props, ref) => {
         )
       }
     });
-  }, [call, id, name, props.data, instance, t]);
+  }, [id, name, props.data, instance, t]);
 
   usePluginMethods(ref, {
     renderRightMenu

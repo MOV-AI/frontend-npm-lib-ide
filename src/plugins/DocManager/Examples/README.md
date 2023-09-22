@@ -33,16 +33,14 @@ const Configuration = props => {
     const actualConfig = configRef.current;
     // add bookmark
 
-    call(
-      PLUGINS.RIGHT_DRAWER.NAME,
-      PLUGINS.RIGHT_DRAWER.CALL.SET_BOOKMARK, {
+    setBookmark({
       [menuName]: {
         icon: <InfoIcon></InfoIcon>,
         name: menuName,
         view: <Menu id={path} details={actualConfig.getDetails()}></Menu>
       }
     });
-  }, [call, configRef, path]);
+  }, [configRef, path]);
 
   const updateConfigExtension = configExtension => {
     if (instance.current) instance.current.setExtension(value);
