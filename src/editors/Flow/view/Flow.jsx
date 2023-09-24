@@ -158,11 +158,11 @@ export const Flow = (props, ref) => {
    */
   const startNode = useCallback(
     node => {
-      commandNode("RUN", node).then(() => {
+      commandNode("RUN", node, robotSelected).then(() => {
         node.statusLoading = true;
       });
     },
-    [commandNode]
+    [robotSelected, commandNode]
   );
 
   /**
@@ -171,11 +171,11 @@ export const Flow = (props, ref) => {
    */
   const stopNode = useCallback(
     node => {
-      commandNode("KILL", node).then(() => {
+      commandNode("KILL", node, robotSelected).then(() => {
         node.statusLoading = true;
       });
     },
-    [commandNode]
+    [robotSelected, commandNode]
   );
 
   /**
@@ -186,7 +186,7 @@ export const Flow = (props, ref) => {
    * @param {Function} callback : Success callback
    */
   const commandNode = useCallback(
-    (action, node, selectedRobot = robotSelected) => {
+    (action, node, selectedRobot) => {
       const nodeNamePath = node.getNodePath();
       return Rest.cloudFunction({
         cbName: "backend.FlowTopBar",
@@ -221,7 +221,7 @@ export const Flow = (props, ref) => {
           });
         });
     },
-    [call, robotSelected, t]
+    [call, t]
   );
 
   //========================================================================================
@@ -820,9 +820,7 @@ export const Flow = (props, ref) => {
 
       // Subscribe to flow validations
       mainInterface.graph.onFlowValidated.subscribe(evtData => {
-        const persistentWarns = evtData.warnings.filter(
-          el => el.isPersistent
-        );
+        const persistentWarns = evtData.warnings.filter(el => el.isPersistent);
 
         setWarnings(persistentWarns);
       });

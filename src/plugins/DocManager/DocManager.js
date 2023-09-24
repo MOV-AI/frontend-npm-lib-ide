@@ -379,6 +379,11 @@ class DocManager extends IDEPlugin {
    * @param {object<{documentName, documentType}>} doc
    */
   onStoreUpdate(_, doc, action = "set") {
+    if (doc.document && !doc.document.isCreatedByUser) {
+        doc.document.isDirty = false;
+        doc.document.isNew = false;
+    }
+
     this.emit(PLUGINS.DOC_MANAGER.ON.UPDATE_DOCS, this, {
       action,
       ...doc
