@@ -5,6 +5,7 @@ import React, {
   useState,
   useRef
 } from "react";
+import _isEqual from "lodash/isEqual";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { withError } from "@mov-ai/mov-fe-lib-react";
 import { Tooltip } from "@material-ui/core";
@@ -44,15 +45,13 @@ const useTabLayout = (props, dockRef) => {
 
       // Load tools tab data
       lastTabs.forEach(tab => {
-        const isTool = !Boolean(tab.extension);
-        if (isTool) {
+        if (!tab.extension) {
           const toolName = tab.id;
           const tabData = getToolTabData(tab, tab.tabProps);
           tabsById.current.set(tabData.id, tabData);
           workspaceManager.setTabs(tabsById.current);
           addTabToStack(tabData, DOCK_POSITIONS.DOCK);
-          dockRef.current &&
-            dockRef.current.updateTab(toolName, tabData, false);
+          dockRef.current?.updateTab?.(toolName, tabData, false);
         }
       });
 
@@ -60,7 +59,7 @@ const useTabLayout = (props, dockRef) => {
       activeTabId.current = currentActiveTabId;
       emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: currentActiveTabId });
     },
-    [dockRef, workspaceManager, emit]
+    [emit, workspaceManager, addTabToStack, dockRef]
   );
 
   /**
@@ -133,7 +132,6 @@ const useTabLayout = (props, dockRef) => {
           t => t.id === layoutActiveId
         );
       }
-
       activeTabId.current = layoutActiveId;
 
       if (!tabExists && layoutActiveId) {
@@ -235,22 +233,27 @@ const useTabLayout = (props, dockRef) => {
    * @param {Boolean} isDirty : Document dirty state
    * @returns {Element} Tab element to render
    */
-  const _getCustomTab = useCallback((docData, onCloseTab, isDirty) => {
-    return (
-      <Tooltip title={docData.tabTitle || docData.id}>
-        <div onMouseDown={evt => _onTabMouseDown(evt, docData.id, onCloseTab)}>
-          {getIconByScope(docData.scope, {
-            fontSize: 13,
-            marginTop: 2,
-            marginRight: 10,
-            marginLeft: 0
-          })}
-          {docData.name + docData.extension}
-          {isDirty && " *"}
-        </div>
-      </Tooltip>
-    );
-  }, []);
+  const _getCustomTab = useCallback(
+    (docData, onCloseTab, isDirty) => {
+      return (
+        <Tooltip title={docData.tabTitle || docData.id}>
+          <div
+            onMouseDown={evt => _onTabMouseDown(evt, docData.id, onCloseTab)}
+          >
+            {getIconByScope(docData.scope, {
+              fontSize: 13,
+              marginTop: 2,
+              marginRight: 10,
+              marginLeft: 0
+            })}
+            {docData.name + docData.extension}
+            {isDirty && " *"}
+          </div>
+        </Tooltip>
+      );
+    },
+    [_onTabMouseDown]
+  );
 
   /**
    * Save document and apply layout
@@ -273,7 +276,7 @@ const useTabLayout = (props, dockRef) => {
         }
       );
     },
-    [call]
+    [call, close]
   );
 
   /**
@@ -291,7 +294,7 @@ const useTabLayout = (props, dockRef) => {
         close({ tabId: id });
       });
     },
-    [call]
+    [call, close]
   );
 
   /**
@@ -354,12 +357,14 @@ const useTabLayout = (props, dockRef) => {
       }
     },
     [
-      call,
-      workspaceManager,
-      applyLayout,
       _closeDirtyTab,
+      workspaceManager,
       getDockFromTabId,
-      removeTabFromStack
+      removeTabFromStack,
+      applyLayout,
+      emit,
+      getNextTabFromStack,
+      call
     ]
   );
 
@@ -488,7 +493,7 @@ const useTabLayout = (props, dockRef) => {
           });
       });
     },
-    [call, _getCustomTab, _closeTab, installTabPlugin]
+    [call, installTabPlugin, dependencies, _getCustomTab, _closeTab]
   );
 
   /**
@@ -609,7 +614,7 @@ const useTabLayout = (props, dockRef) => {
       // Close tab dynamically
       _closeTab(tabId);
     },
-    [call, _closeTab]
+    [_closeTab]
   );
 
   /**
@@ -683,20 +688,21 @@ const useTabLayout = (props, dockRef) => {
       }
       // Emit new active tab id
       if (!tabId) return;
-      if (newActiveTabId) {
+
+      if (newActiveTabId && !_isEqual(layout, newLayout)) {
         activeTabId.current = newActiveTabId;
         emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
       }
     },
     [
-      emit,
-      call,
-      _getFirstContainer,
-      _closeTab,
-      applyLayout,
       getDockFromTabId,
+      layout,
+      _closeTab,
+      getNextTabFromStack,
+      _getFirstContainer,
+      applyLayout,
       addTabToStack,
-      getNextTabFromStack
+      emit
     ]
   );
 

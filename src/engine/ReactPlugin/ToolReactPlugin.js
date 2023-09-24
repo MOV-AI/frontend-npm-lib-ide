@@ -8,7 +8,7 @@ import { PLUGINS } from "../../utils/Constants";
 import { composeDecorators } from "../../utils/Utils";
 import { ViewPlugin } from "./ViewReactPlugin";
 
-export const useStyles = makeStyles(_theme => ({
+export const useStyles = makeStyles(() => ({
   root: {
     height: "100%"
   }
@@ -31,9 +31,13 @@ export function withToolPlugin(ReactComponent, methods = []) {
      */
     useEffect(() => {
       PluginManagerIDE.resetBookmarks();
-      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async ({ id }) => {
-        if (profile.name === id) PluginManagerIDE.resetBookmarks();
-      });
+      on(
+        PLUGINS.TABS.NAME,
+        PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE,
+        async ({ id }) => {
+          if (profile.name === id) PluginManagerIDE.resetBookmarks();
+        }
+      );
 
       return () => {
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
