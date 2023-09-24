@@ -48,13 +48,13 @@ const withBookmarks = Component => {
      *                                                                                      */
     //========================================================================================
 
-    const activateActiveTabEditor = async () => {
+    const activateActiveTabEditor = useCallback(async () => {
       const tab = await call(
         PLUGINS.TABS.NAME,
         PLUGINS.TABS.CALL.GET_ACTIVE_TAB
       );
       activateKeyBind(tab.id);
-    };
+    }, [call]);
 
     /**
      * Select bookmark
@@ -74,7 +74,7 @@ const withBookmarks = Component => {
         drawerRef.current.activateBookmarkView();
         emit(PLUGINS.RIGHT_DRAWER.ON.CHANGE_BOOKMARK, { name });
       },
-      [active, emit]
+      [activateActiveTabEditor, active, emit]
     );
 
     /**
