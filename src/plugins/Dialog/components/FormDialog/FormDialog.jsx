@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Button from "@material-ui/core/Button";
@@ -60,7 +60,7 @@ const FormDialog = props => {
     setTimeout(() => {
       inputRef.current?.querySelector("input")?.focus();
     });
-  }, [defaultValue]);
+  }, [defaultValue, validateValue]);
 
   //========================================================================================
   /*                                                                                      *
@@ -73,19 +73,22 @@ const FormDialog = props => {
    * @param {String} _value : New value
    * @returns {ValidationResult}
    */
-  const validateValue = _value => {
-    const res = onValidation(_value);
-    // Set state
-    setValidation({ error: !res.result, message: res.error });
-    setValue(_value);
-    if (onPostValidation && res.result) {
-      onPostValidation(_value).then(result => {
-        setValidation(result);
-      });
-    }
-    // Return validation result
-    return res;
-  };
+  const validateValue = useCallback(
+    _value => {
+      const res = onValidation(_value);
+      // Set state
+      setValidation({ error: !res.result, message: res.error });
+      setValue(_value);
+      if (onPostValidation && res.result) {
+        onPostValidation(_value).then(result => {
+          setValidation(result);
+        });
+      }
+      // Return validation result
+      return res;
+    },
+    [onPostValidation, onValidation]
+  );
 
   //========================================================================================
   /*                                                                                      *
