@@ -1,12 +1,11 @@
+import React from "react";
+import ReactDOM from "react-dom";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
-import ReactDOM from "react-dom";
 import { withTheme } from "../../decorators/withTheme";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
 import i18n from "../../i18n/i18n";
-import {
-  PLUGINS, SAVE_OUTDATED_DOC_ACTIONS
-} from "../../utils/Constants";
+import { PLUGINS, SAVE_OUTDATED_DOC_ACTIONS } from "../../utils/Constants";
 import AlertBeforeAction from "./components/AlertDialog/AlertBeforeAction";
 import AlertDialog from "./components/AlertDialog/AlertDialog";
 import AppDialog from "./components/AppDialog/AppDialog";
@@ -46,7 +45,6 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
-
   }
 
   /**
@@ -65,7 +63,6 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
-
   }
 
   /**
@@ -86,7 +83,6 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
-
   }
 
   /**
@@ -107,7 +103,6 @@ class Dialog extends IDEPlugin {
       />,
       targetElement
     );
-
   }
 
   /**
@@ -305,8 +300,6 @@ class Dialog extends IDEPlugin {
    *                                                                                      */
   //========================================================================================
 
-
-
   /**
    * @private Handle dialog open : Prepare element where the dialog will be rendered
    * @returns {DOMElement} Target element to render dialog
@@ -330,7 +323,7 @@ class Dialog extends IDEPlugin {
     targetElement.parentNode.removeChild(targetElement);
     this.call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_ACTIVE_TAB);
 
-    onClose && onClose();
+    onClose?.();
   }
 
   //========================================================================================

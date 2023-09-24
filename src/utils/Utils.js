@@ -89,7 +89,7 @@ export const getIconByScope = (scope, style) => {
  * @param {string} name : Document name
  * @returns {boolean}
  */
-export function validateDocumentName(name) {
+export function validateDocumentName(name = "") {
   if (!Utils.validateEntityName(name)) {
     throw new Error(ERROR_MESSAGES.INVALID_NAME);
   } else {
