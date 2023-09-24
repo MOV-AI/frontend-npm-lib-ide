@@ -1,5 +1,6 @@
 # 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
 
+- [FP-2560 - Set default for validation Name to empty to prevent error](https://movai.atlassian.net/browse/FP-2560)
 - [FP-2477 - Added validation to not close drawer](https://movai.atlassian.net/browse/FP-2477)
 - [FP-2539 - Reset bookmarks when we change active tab](https://movai.atlassian.net/browse/FP-2539)
 - [FP-2527 - Preventing the reload of a new doc when it's closed](https://movai.atlassian.net/browse/FP-2527)
