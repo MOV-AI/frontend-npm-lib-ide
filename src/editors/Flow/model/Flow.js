@@ -9,6 +9,7 @@ import {
   SubFlow
 } from "./subModels"; // from internal subModels
 import schema from "./schema";
+import { link } from "joi";
 
 class Flow extends Model {
   constructor() {
@@ -364,7 +365,13 @@ class Flow extends Model {
    * @returns
    */
   getLinkDependency(linkId) {
-    return this.getLinks().getItem(linkId).getDependency();
+    console.log(
+      "getLinkDependency",
+      linkId,
+      this.getLinks(),
+      this.getLinks().getItem(linkId)
+    );
+    return this.getLinks().getItem(linkId)?.getDependency();
   }
 
   toggleExposedPort(templateName, nodeName, portName) {
