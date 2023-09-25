@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import clsx from "clsx";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import WarningIcon from "@material-ui/icons/Warning";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -47,13 +46,13 @@ const Warnings = props => {
       return (
         <SnackbarContent
           key={index}
-          className={`${clsx(classes[type])} ${classes.snackbar} ${
+          className={`${classes[type]} ${classes.snackbar} ${
             onClick ? classes.clickableSnack : ""
           }`}
           onClick={handleOnSnackClick}
           message={
             <span className={classes.message}>
-              <Icon className={clsx(classes.icon, classes.iconVariant)} />
+              <Icon className={`${classes.icon} ${classes.iconVariant}`} />
               {message}
               {html()}
             </span>
