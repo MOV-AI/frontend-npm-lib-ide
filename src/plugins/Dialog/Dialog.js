@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
-import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
-import { withTheme } from "../../decorators/withTheme";
+import { SelectScopeModal, withTheme } from "@mov-ai/mov-fe-lib-react";
+import ApplicationTheme from "./../../themes";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
 import i18n from "../../i18n/i18n";
 import { PLUGINS, SAVE_OUTDATED_DOC_ACTIONS } from "../../utils/Constants";
@@ -271,7 +271,7 @@ class Dialog extends IDEPlugin {
   selectScopeModal(data) {
     const { onSubmit, message, selected, scopeList, onClose } = data;
     const targetElement = this._handleDialogOpen();
-    const ThemedModal = withTheme(SelectScopeModal);
+    const ThemedModal = withTheme(SelectScopeModal, ApplicationTheme);
 
     // Handle submit
     const handleDialogSubmit = selectedItem => {
