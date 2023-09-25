@@ -14,11 +14,14 @@ const overrides = {
   }
 };
 
+const terciaryBackground = "#303030";
+
 const overrideTheme = {
   // Override dark theme
   dark: {
+    terciaryBackground,
     background: commonColors.black,
-    topBarColor: Themes.dark.palette.background.default,
+    topBarColor: terciaryBackground,
     dockLayout: {
       background: commonColors.white
     },
@@ -58,6 +61,7 @@ const overrideTheme = {
   },
   // Override light theme
   light: {
+    terciaryBackground: Themes.light.palette.background.primary,
     dockLayout: {
       background: commonColors.black
     },
