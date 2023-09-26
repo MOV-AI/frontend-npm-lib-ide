@@ -84,7 +84,7 @@ const useKeyValueMethods = () => {
           whiteSpace: "nowrap",
           overflow: "hidden"
         },
-        render: rowData => <span data-testid="parameteres_output_name">{rowData.name}</span>
+        render: rowData => <span data-testid="parameters_output_name">{rowData.name}</span>
       },
       {
         title: t("Value"),
