@@ -135,7 +135,10 @@ const withBookmarks = Component => {
     const resetBookmarks = useCallback(() => {
       setBookmarks({});
       setRenderedView([]);
-      drawerRef.current.resetDrawer();
+      // It turns out that we shouldn't close the drawer on reset,
+      // If it comes back that we need to close the drawer on tab change
+      // This needs to be revisited. Till then, this is commented.
+      // drawerRef.current.resetDrawer();
     }, []);
 
     /**
