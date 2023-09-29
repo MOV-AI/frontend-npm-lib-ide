@@ -5,7 +5,6 @@ import React, {
   useState,
   useRef
 } from "react";
-import _isEqual from "lodash/isEqual";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { withError } from "@mov-ai/mov-fe-lib-react";
 import { Tooltip } from "@material-ui/core";
@@ -689,20 +688,17 @@ const useTabLayout = (props, dockRef) => {
       // Emit new active tab id
       if (!tabId) return;
 
-      if (newActiveTabId && !_isEqual(layout, newLayout)) {
-        activeTabId.current = newActiveTabId;
-        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
-      }
+      activeTabId.current = newActiveTabId;
+      emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
     },
     [
       getDockFromTabId,
-      layout,
+      emit,
       _closeTab,
       getNextTabFromStack,
       _getFirstContainer,
       applyLayout,
-      addTabToStack,
-      emit
+      addTabToStack
     ]
   );
 
