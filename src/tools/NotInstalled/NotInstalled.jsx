@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme } from "@material-ui/core/styles";
+import { useTheme } from "@material-ui/styles";
 
 const NotInstalled = props => {
   const { name } = props;

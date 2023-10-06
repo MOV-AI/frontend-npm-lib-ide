@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 import { useTranslation } from "react-i18next";
 import { Divider } from "@material-ui/core";
 import PortTooltipContent from "./PortTooltipContent";

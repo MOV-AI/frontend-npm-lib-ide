@@ -1,11 +1,11 @@
 import React, { forwardRef, useCallback, useEffect, useRef } from "react";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
-import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
 import withAlerts from "../../decorators/withAlerts";
 import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
 import withLoader from "../../decorators/withLoader";
 import { withDataHandler } from "../../plugins/DocManager/DataHandler";
+import { drawerSub } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
 import { KEYBINDINGS } from "../../utils/shortcuts";
 import { PLUGINS } from "../../utils/Constants";
 import { composeDecorators } from "../../utils/Utils";
@@ -94,8 +94,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         );
 
         if (validTab && data.id === id) {
-          // We should reset bookmarks when changing tabs. Right? And Left too :D
-          PluginManagerIDE.resetBookmarks();
+          drawerSub.url = id;
           updateRightMenu();
           activateEditor();
         }

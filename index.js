@@ -39,7 +39,7 @@ import ShortcutsPlugin, {
 } from "./src/tools/AppShortcuts/AppShortcuts";
 // Utils
 import ApplicationTheme from "./src/themes";
-import { ThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
 import i18n, { Translations } from "./src/i18n/i18n";
 import * as CONSTANTS from "./src/utils/Constants";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "./src/utils/Messages";
@@ -50,6 +50,7 @@ import LocalStorage from "./src/utils/LocalStorage";
 // Hooks
 import useDataTypes from "./src/editors/_shared/hooks/useDataTypes";
 import useDataSubscriber from "./src/plugins/DocManager/useDataSubscriber";
+export * from "./src/plugins/hosts/DrawerPanel/DrawerPanel";
 import PluginManagerIDE from "./src/engine/PluginManagerIDE/PluginManagerIDE";
 import { usePluginMethods } from "./src/engine/ReactPlugin/ViewReactPlugin";
 import { openTool } from "./src/utils/generalFunctions";

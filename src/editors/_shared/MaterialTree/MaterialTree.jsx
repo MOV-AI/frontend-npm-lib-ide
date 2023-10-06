@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 import SvgIcon from "@material-ui/core/SvgIcon";
-import { alpha, withStyles } from "@material-ui/core/styles";
+import { alpha, withStyles } from "@material-ui/styles";
 import TreeView from "@material-ui/lab/TreeView";
 import TreeItem from "@material-ui/lab/TreeItem";
 import _isEqual from "lodash/isEqual";
