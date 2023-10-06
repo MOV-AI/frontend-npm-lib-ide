@@ -68,12 +68,7 @@ const BookmarkManager = props => {
       title: `Random ${id} Bookmark`,
       view: <h2>{id}</h2>
     };
-    addBookmark(
-      bookmark,
-      id,
-      true,
-      true
-    );
+    addBookmark("right", bookmark, id, true);
   };
 
   //========================================================================================

@@ -26,33 +26,36 @@ const debugDrawer = true;
 const echo = makeEcho(debugDrawer, "DrawerPanel");
 
 const bookmarkSub = makeSub({
-  bookmarks: {},
-  active: null,
   left: {
     open: true,
     activeView: DRAWER.VIEWS.PLUGIN,
     renderedView: <></>,
+    bookmarks: {},
+    active: null,
   },
   right: {
     open: false,
     activeView: DRAWER.VIEWS.PLUGIN,
     renderedView: <></>,
+    bookmarks: {},
+    active: null,
   }
 });
 
 // const setBookmarks = bookmarkSub.makeEmitNow((current, bookmarks) => ({ ...current, bookmarks }));
 
-function setActive(bookmarks, side, active) {
-  if (!bookmarks[active])
+function setActive(side, active) {
+  if (!side.bookmarks[active])
     return side;
 
   else {
-    const renderedView = bookmarks[active].view;
+    const renderedView = side.bookmarks[active].view;
 
     return  {
       ...side,
       renderedView,
       activeView: DRAWER.VIEWS.BOOKMARK,
+      active,
     }
   }
 }
@@ -75,7 +78,7 @@ function getValidBookmark(bookmarks, name) {
  * @param {String} activeBookmark bookmark to make active
  */
 export
-const setBookmark = bookmarkSub.makeEmitNow((current, bookmarks, activeBookmark) => {
+const setBookmark = bookmarkSub.makeEmitNow((current, side = "right", bookmarks, activeBookmark) => {
   if (!bookmarks)
     return current;
 
@@ -83,18 +86,25 @@ const setBookmark = bookmarkSub.makeEmitNow((current, bookmarks, activeBookmark)
 
   return echo("setBookmark", {
     ...current,
-    bookmarks,
-    active,
-    right: setActive(bookmarks, current.right, active),
+    [side]: setActive({
+      ...current[side],
+      bookmarks,
+      active,
+    }, active),
   });
 });
 
 export
-const resetBookmarks = bookmarkSub.makeEmitNow((current) => {
-  return echo("setBookmark", {
+const resetBookmarks = bookmarkSub.makeEmitNow((current, side = "right") => {
+  return echo("resetBookmarks", {
     ...current,
-    bookmarks: {},
-    active: null,
+    [side]: {
+      ...current[side],
+      bookmarks: {},
+      activeView: DRAWER.VIEWS.PLUGIN,
+      active: null,
+      open: side === "left" ? true : current[side].open,
+    },
   });
 });
 
@@ -109,10 +119,10 @@ const resetBookmarks = bookmarkSub.makeEmitNow((current) => {
  *  @param {string} activeBookmark : bookmark to make active
  */
 export
-const addBookmark = bookmarkSub.makeEmitNow((current, data, activeBookmark, _isDefault, shouldOpen) => {
+const addBookmark = bookmarkSub.makeEmitNow((current, side = "right", data, activeBookmark, shouldOpen = true) => {
   const name = data.name;
   const bookmarks = {
-    ...current.bookmarks,
+    ...current[side].bookmarks,
     [name]: data,
   };
 
@@ -121,12 +131,11 @@ const addBookmark = bookmarkSub.makeEmitNow((current, data, activeBookmark, _isD
 
   return echo("addBookmark", {
     ...current,
-    bookmarks,
-    active,
-    right: setActive(bookmarks,
-      { ...current.right, open: current.right.open ?? shouldOpen },
-      active
-    ),
+    [side]: setActive({
+      ...current[side],
+      open: current[side].open || shouldOpen,
+      bookmarks,
+    }, active),
   });
 });
 
@@ -136,8 +145,8 @@ const addBookmark = bookmarkSub.makeEmitNow((current, data, activeBookmark, _isD
  * @param {string} activeBookmark : bookmark to make active
  */
 export
-const removeBookmark = bookmarkSub.makeEmitNow((current, name, activeBookmark) => {
-  let bookmarks = { ...current.bookmarks };
+const removeBookmark = bookmarkSub.makeEmitNow((current, side = "right", name, activeBookmark) => {
+  let bookmarks = { ...current[side].bookmarks };
 
   delete bookmarks[name];
 
@@ -145,9 +154,10 @@ const removeBookmark = bookmarkSub.makeEmitNow((current, name, activeBookmark) =
 
   return echo("removeBookmark", {
     ...current,
-    bookmarks,
-    active,
-    right: setActive(bookmarks, current.right, current.active !== name ? current.active : (
+    [side]: setActive({
+      ...current[side],
+      bookmarks,
+    }, current[side].active !== name ? current[side].active : (
       active
     )),
   });
@@ -183,25 +193,25 @@ const resetDrawer = bookmarkSub.makeEmitNow((current, side, open = false) => ech
 }));
 
 export
-const activateBookmarkView = bookmarkSub.makeEmitNow((current) => echo("activateBookmarkView", {
+const activateBookmarkView = bookmarkSub.makeEmitNow((current, side = "right") => echo("activateBookmarkView", {
   ...current,
-  right: {
-    ...current.right,
+  [side]: {
+    ...current[side],
     activeView: DRAWER.VIEWS.BOOKMARK,
   }
 }));
 
 export
-const activatePluginView = bookmarkSub.makeEmitNow((current, activeView) => {
-  let open = !current.left.open;
+const activatePluginView = bookmarkSub.makeEmitNow((current, side = "left") => {
+  let open = !current[side].open;
 
-  if (current.left.activeView !== DRAWER.VIEWS.PLUGIN)
+  if (current[side].activeView !== DRAWER.VIEWS.PLUGIN)
     open = true;
 
   return echo("activatePluginView", {
     ...current,
-    left: {
-      ...current.left,
+    [side]: {
+      ...current[side],
       activeView: DRAWER.VIEWS.PLUGIN,
       open,
     }
@@ -213,24 +223,23 @@ const activatePluginView = bookmarkSub.makeEmitNow((current, activeView) => {
  * @param {String} name : Bookmark name
  */
 export
-const selectBookmark = bookmarkSub.makeEmitNow((current, name) => {
-  const drawerView = current.right.activeView;
+const selectBookmark = bookmarkSub.makeEmitNow((current, side = "right", name) => {
+  const drawerView = current[side].activeView;
 
   if (current.active === name && drawerView === DRAWER.VIEWS.BOOKMARK)
-    return { ...current, right: { ...current.right, open: !current.right.open } };
+    return { ...current, [side]: { ...current[side], open: !current[side].open } };
 
   return echo("selectBookmark", {
     ...current,
-    active: name,
-    right: {
-      ...setActive(current.bookmarks, current.right, name),
-      open: true,
-    }
+    [side]: setActive({
+      ...current[side],
+      open: current[side].active === name ? !current[side].open : true,
+    }, name),
   });
 });
 
 function BookmarkTab(props) {
-  const { active, bookmark, classes, selectBookmark } = props;
+  const { active, bookmark, anchor, classes } = props;
 
   //========================================================================================
   /*                                                                                      *
@@ -239,8 +248,8 @@ function BookmarkTab(props) {
   //========================================================================================
 
   const handleOnClick = useCallback(() => {
-    selectBookmark(bookmark.name);
-  }, [bookmark.name, selectBookmark]);
+    selectBookmark(anchor, bookmark.name);
+  }, [bookmark.name, anchor]);
 
   return (
     <Tooltip title={bookmark.title || bookmark.name} placement="left">
@@ -272,12 +281,7 @@ function DrawerPanel(props, ref) {
     className,
   } = props;
 
-  const {
-    active,
-    bookmarks,
-    right,
-    left
-  } = useSub(bookmarkSub);
+  const { right, left } = useSub(bookmarkSub);
 
   const side = anchor === "left" ? left : right;
 
@@ -285,6 +289,8 @@ function DrawerPanel(props, ref) {
     renderedView,
     activeView,
     open,
+    active,
+    bookmarks,
   } = side;
 
   console.log("DrawerPanel", active, bookmarks, right, left, anchor, side);
@@ -316,10 +322,10 @@ function DrawerPanel(props, ref) {
   const selectBookmarkCallback = useCallback(
     name => {
       activateActiveTabEditor();
-      selectBookmark(name);
-      emit(PLUGINS.RIGHT_DRAWER.ON.CHANGE_BOOKMARK, { name });
+      selectBookmark(anchor, name);
+      emit((anchor === "right" ? PLUGINS.RIGHT_DRAWER : PLUGINS.LEFT_DRAWER).ON.CHANGE_BOOKMARK, { name });
     },
-    [active, emit]
+    [anchor, active, emit]
   );
 
   //========================================================================================
@@ -333,11 +339,11 @@ function DrawerPanel(props, ref) {
    */
   usePluginMethods(ref, {
     // ...(anchor === "right" ? {
-      setBookmark,
-      addBookmark,
-      resetBookmarks: () => resetDrawer("right"),
-      removeBookmark,
-      activateBookmarkView,
+      setBookmark: setBookmark.bind(null, anchor),
+      addBookmark: addBookmark.bind(null, anchor),
+      resetBookmarks: resetBookmarks.bind(null, anchor),
+      removeBookmark: removeBookmark.bind(null, anchor),
+      activateBookmarkView: activateBookmarkView.bind(null, anchor),
     // } : {
       activatePluginView,
     // }),
@@ -365,6 +371,7 @@ function DrawerPanel(props, ref) {
             <BookmarkTab
               data-testid="section_bookmark-tab"
               key={bookmark.name}
+              anchor={anchor}
               classes={classes}
               bookmark={bookmark}
               active={active}
@@ -374,11 +381,12 @@ function DrawerPanel(props, ref) {
         </div>
       );
     },
-    [active, anchor, bookmarks, classes, selectBookmark]
+    [active, anchor, bookmarks, classes, selectBookmarkCallback]
   );
 
   return (
     <div className={classes.bookmarksContainer}>
+      {anchor === "left" ? renderBookmarks() : null }
       <Drawer
         id={hostName}
         open={open}

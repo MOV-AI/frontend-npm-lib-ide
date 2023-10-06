@@ -8,7 +8,6 @@ import { useTheme } from "@material-ui/core/styles";
 import InfoIcon from "@material-ui/icons/Info";
 import Model from "../model/Configuration";
 import { defaultFunction } from "../../../utils/Utils";
-import { PLUGINS } from "../../../utils/Constants";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
 import useDataSubscriber from "../../../plugins/DocManager/useDataSubscriber";
@@ -48,7 +47,7 @@ export const Configuration = (props, ref) => {
     const menuName = `${id}-detail-menu`;
     const menuTitle = t("ConfigurationDetailsMenuTitle");
     // add bookmark
-    setBookmark({
+    setBookmark("right", {
       [menuName]: {
         icon: <InfoIcon></InfoIcon>,
         name: menuName,

@@ -33,7 +33,7 @@ const Configuration = props => {
     const actualConfig = configRef.current;
     // add bookmark
 
-    setBookmark({
+    setBookmark("right", {
       [menuName]: {
         icon: <InfoIcon></InfoIcon>,
         name: menuName,

@@ -210,7 +210,7 @@ export const Node = (props, ref) => {
     const menuName = `${id}-detail-menu`;
     const menuTitle = t("NodeDetailsMenuTitle");
     // add bookmark
-    setBookmark({
+    setBookmark("right", {
       [menuName]: {
         icon: <InfoIcon></InfoIcon>,
         name: menuName,

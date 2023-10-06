@@ -497,12 +497,7 @@ export const Flow = (props, ref) => {
     (node, nodeSelection) => {
       const MenuComponent = getMenuComponent(node?.data?.model);
       if (!node || !MenuComponent) return;
-      addBookmark(
-        getNodeMenuToAdd(node),
-        activeBookmark,
-        nodeSelection,
-        true
-      );
+      addBookmark("right", getNodeMenuToAdd(node), activeBookmark, true);
     },
     [call, getMenuComponent, getNodeMenuToAdd]
   );
@@ -539,12 +534,7 @@ export const Flow = (props, ref) => {
   const addLinkMenu = useCallback(
     (link, linkSelection) => {
       if (!link) return;
-      addBookmark(
-        getLinkMenuToAdd(link),
-        activeBookmark,
-        linkSelection,
-        true
-      );
+      addBookmark("right", getLinkMenuToAdd(link), activeBookmark, true);
     },
     [getLinkMenuToAdd]
   );
@@ -599,6 +589,7 @@ export const Flow = (props, ref) => {
 
     // add bookmark
     setBookmark(
+      "right",
       bookmarks,
       activeBookmark
     );
@@ -682,6 +673,7 @@ export const Flow = (props, ref) => {
    */
   const unselectNode = useCallback(() => {
     removeBookmark(
+      "right",
       MENUS.current.NODE.NAME,
       MENUS.current.DETAIL.NAME
     );
@@ -724,6 +716,7 @@ export const Flow = (props, ref) => {
       getMainInterface().selectedLink = link;
       if (!link) {
         removeBookmark(
+          "right",
           MENUS.current.LINK.NAME,
           activeBookmark
         );

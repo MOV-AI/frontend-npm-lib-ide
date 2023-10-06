@@ -47,7 +47,7 @@ export const Callback = (props, ref) => {
     const menuName = `${id}-detail-menu`;
     const menuTitle = t("CallbackDetailsMenuTitle");
     // add bookmark
-    setBookmark({
+    setBookmark("right", {
       [menuName]: {
         icon: <InfoIcon />,
         name: menuName,
