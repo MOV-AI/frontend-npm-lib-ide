@@ -3,6 +3,7 @@ import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { Button } from "@mov-ai/mov-fe-lib-react";
 import { useTheme } from "@mov-ai/mov-fe-lib-react";
 import { PLUGINS } from "../../../utils/Constants";
+import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import { withToolPlugin } from "../../../engine";
 // Icons
 import {
@@ -52,14 +53,13 @@ const getIcon = () => {
 
 const BookmarkManager = props => {
   const theme = useTheme();
-  const { call } = props;
 
   /**
    * Add bookmark menu in left/right drawer
    *    Always set newly added menu as active and make it visible (open drawer if necessary)
    * @param {*} position : Either "leftDrawer" or "rightDrawer"
    */
-  const addBookmark = position => () => {
+  const localAddBookmark = position => () => {
     if (!position) return;
     const id = Utils.randomId();
     const bookmark = {
@@ -68,14 +68,7 @@ const BookmarkManager = props => {
       title: `Random ${id} Bookmark`,
       view: <h2>{id}</h2>
     };
-    call(
-      position,
-      PLUGINS.RIGHT_DRAWER.CALL.ADD_BOOKMARK,
-      bookmark,
-      id,
-      true,
-      true
-    );
+    drawerSub.add(id, bookmark, true);
   };
 
   //========================================================================================
@@ -89,14 +82,14 @@ const BookmarkManager = props => {
       <h1 style={{ color: theme.palette.text.primary }}>Bookmark Manager</h1>
       <Button
         color="primary"
-        onClick={addBookmark(PLUGINS.LEFT_DRAWER.NAME)}
+        onClick={localAddBookmark(PLUGINS.LEFT_DRAWER.NAME)}
         style={{ float: "left" }}
       >
         Add bookmark to Left Drawer
       </Button>
       <Button
         color="primary"
-        onClick={addBookmark(PLUGINS.RIGHT_DRAWER.NAME)}
+        onClick={localAddBookmark(PLUGINS.RIGHT_DRAWER.NAME)}
         style={{ float: "right" }}
       >
         Add bookmark to Right Drawer
