@@ -1,30 +1,337 @@
-import React, { forwardRef, useState } from "react";
+import React, { useCallback } from "react";
+import { differenceWith, isEqual } from "lodash";
 import PropTypes from "prop-types";
-import { Drawer, Typography } from "@material-ui/core";
-import { DRAWER } from "../../../utils/Constants";
+import { Drawer, Typography, Tooltip, IconButton } from "@material-ui/core";
+import { makeSub, useSub } from "@mov-ai/mov-fe-lib-react";
+import { DRAWER, PLUGINS } from "../../../utils/Constants";
+import { activateKeyBind } from "../../../utils/Utils";
 import { withHostReactPlugin } from "../../../engine/ReactPlugin/HostReactPlugin";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
-import withBookmarks, {
-  exposedMethods
-} from "../../../decorators/withBookmarks";
-
+import { bookmarkStyles } from "./../../../decorators/styles";
 import { drawerPanelStyles } from "./styles";
 
-const DrawerPanel = forwardRef((props, ref) => {
+function makeEcho(debug, fileDesc) {
+  if (debug)
+    return function (text, ...args) {
+      console.log(fileDesc, text, ...args);
+      return args[0];
+    };
+  else
+    return function (_text, firstArg) {
+      return firstArg;
+    };
+}
+
+const debugDrawer = false;
+const shared = true;
+window.sharedBookmarks = shared;
+
+const echo = makeEcho(debugDrawer, "DrawerPanel");
+
+const MODE = {
+  PLUGIN: 0,
+  BOOKMARK: 1,
+};
+
+const bookmarkSub = makeSub({
+  url: "initial",
+});
+
+function setActive(side, active) {
+  if (!side.bookmarks[active])
+    return side;
+
+  else return  {
+    ...side,
+    mode: MODE.BOOKMARK,
+    active,
+  };
+}
+
+/**
+ * Small extract method to return a valid bookmark from the bookmarks list
+ * @param {Array} bookmarks : the bookmarks list
+ * @param {String} name : name to search
+ * @returns a valid bookmark
+ */
+function getValidBookmark(bookmarks, name) {
+  if (bookmarks[name]) return name;
+
+  return Object.keys(bookmarks)[0];
+}
+
+export
+const setUrl = bookmarkSub.makeEmitNow((current, url) => ({
+  ...current,
+  url,
+}));
+
+function getOpen(current, url, side) {
+  return window.sharedBookmarks ? current[side] : current[url][side].open;
+}
+
+/**
+ * Register a bookmark if necessary without affecting other state.
+ */
+export
+const registerBookmark = bookmarkSub.makeEmitNow((current, side = "right", name, value, open, deps = []) => {
+  let url = current.url;
+
+  if (typeof side === "object") {
+    url = side.url ?? current.url;
+    side = side.side;
+  }
+
+  const cur = current[url]?.[side] ?? {};
+
+  if (cur.bookmarks?.[name])
+    return open && (cur.active !== name || cur.mode !== MODE.BOOKMARK || !getOpen(current, url, side)) ? { // must open
+      ...current,
+      [url]: {
+        ...current[url],
+        [side]: {
+          ...cur,
+          mode: MODE.BOOKMARK,
+          active: name,
+          open,
+          deps,
+        },
+      },
+      [side]: open,
+    } : cur.deps.length !== deps.length || differenceWith(cur.deps, deps, isEqual).length ? { // deps changed
+      ...current,
+      [url]: {
+        ...current[url],
+        [side]: {
+          ...cur,
+          bookmarks: {
+            ...(cur.bookmarks ?? {}),
+            [name]: { name, ...value },
+          },
+          deps,
+        },
+      },
+    } : current; // no change
+
+  // never registered
+  return echo("registerBookmark", {
+    ...current,
+    [url]: {
+      ...(current[url] ?? {}),
+      [side]: {
+        ...cur,
+        bookmarks: {
+          ...(cur.bookmarks ?? {}),
+          [name]: { name, ...value },
+        },
+        open: open || cur.open,
+        mode: open ? MODE.BOOKMARK : cur.mode,
+        active: open ? name : cur.active,
+        deps,
+      },
+    },
+    [side]: open || current[side],
+  });
+});
+
+/**
+ * Remove bookmark by name
+ * @param {string} name : bookmark name
+ * @param {string} activeBookmark : bookmark to make active
+ */
+export
+const removeBookmark = bookmarkSub.makeEmitNow((current, side = "right", name, activeBookmark) => {
+  const url = current.url;
+
+  let bookmarks = { ...current[url][side].bookmarks };
+
+  delete bookmarks[name];
+
+  return echo("removeBookmark", {
+    ...current,
+    [url]: {
+      ...(current[url] ?? {}),
+      [side]: setActive({
+        ...current[url][side],
+        bookmarks,
+      }, current[url][side].active !== name ? current[url][side].active : (
+        getValidBookmark(bookmarks, activeBookmark)
+      )),
+    },
+  });
+});
+
+export
+const openDrawer = bookmarkSub.makeEmitNow((current, side) => echo("openDrawer", {
+  ...current,
+  [current.url]: {
+    ...current[current.url],
+    [side]: { ...current[current.url][side], open: true },
+  },
+  [side]: true,
+}));
+
+export
+const closeDrawer = bookmarkSub.makeEmitNow((current, side) => echo("closeDrawer", {
+  ...current,
+  [current.url]: {
+    ...current[current.url],
+    [side]: { ...current[current.url][side], open: false },
+  },
+  [side]: false,
+}));
+
+export
+const toggleDrawer = bookmarkSub.makeEmitNow((current, side) => echo("toggleDrawer", {
+  ...current,
+  [current.url]: {
+    ...current[current.url],
+    [side]: {
+      ...current[current.url][side],
+      open: !current[current.url][side].open,
+    },
+  },
+  [side]: !current[side],
+}));
+
+export
+const resetDrawer = bookmarkSub.makeEmitNow((current, side, open = false) => echo("resetDrawer", {
+  ...current,
+  [current.url]: {
+    ...current[current.url],
+    [side]: {
+      ...current[current.url][side],
+      mode: MODE.PLUGIN,
+      open,
+    },
+  },
+  [side]: open,
+}));
+
+export
+const activateBookmarkView = bookmarkSub.makeEmitNow((current, url, side = "right") => echo("activateBookmarkView", {
+  ...current,
+  [url]: {
+    ...current[url],
+    [side]: {
+      ...current[url][side],
+      mode: MODE.BOOKMARK,
+    },
+  },
+}));
+
+export
+const activatePluginView = bookmarkSub.makeEmitNow((current, side = "left") => {
+  const url = current.url;
+  let open = !getOpen(current, url, side) || current[url]?.[side].mode !== MODE.PLUGIN;
+
+  return echo("activatePluginView", {
+    ...current,
+    [url]: {
+      ...current[url],
+      [side]: {
+        ...(current[url]?.[side] ?? {}),
+        mode: MODE.PLUGIN,
+        open,
+      }
+    },
+    [side]: open,
+  });
+});
+
+function bookmarkSelected(cur, name) {
+  return cur.active === name || cur.mode !== MODE.PLUGIN && Object.keys(cur.bookmarks)[0] === name;
+}
+
+/**
+ * Select bookmark
+ * @param {String} name : Bookmark name
+ */
+export
+const selectBookmark = bookmarkSub.makeEmitNow((current, side = "right", name) => {
+  const url = current.url;
+  const cur = current[url][side];
+  const open = bookmarkSelected(cur, name) ? !getOpen(current, url, side) : true;
+
+  return echo("selectBookmark", {
+    ...current,
+    [url]: {
+      ...current[url],
+      [side]: setActive({
+        ...current[url][side],
+        open,
+      }, name),
+    },
+    [side]: open,
+  });
+});
+
+function BookmarkTab(props) {
+  const { active, name, bookmark, anchor, classes } = props;
+
+  //========================================================================================
+  /*                                                                                      *
+   *                                       Handlers                                       *
+   *                                                                                      */
+  //========================================================================================
+
+  const handleOnClick = useCallback(() => {
+    selectBookmark(anchor, name);
+  }, [name, anchor]);
+
+  return (
+    <Tooltip title={bookmark.title || name} placement="left">
+      <IconButton
+        data-testid="input_bookmark-tab"
+        onClick={handleOnClick}
+        aria-label={bookmark.title}
+        className={classes.bookmark}
+        size="small"
+      >
+        <p
+          className={active !== name ? classes.unselectedBookmark : ""}
+        >
+          {bookmark.icon}
+        </p>
+      </IconButton>
+    </Tooltip>
+  );
+}
+
+function DrawerPanel(props, ref) {
   const {
+    anchor,
+    emit,
+    call,
     viewPlugins,
     hostName,
     style,
-    anchor,
-    initialOpenState,
     className,
-    length,
-    children: bookmarkView
   } = props;
-  const [open, setOpen] = useState(initialOpenState);
-  const [activeView, setActiveView] = useState(DRAWER.VIEWS.PLUGIN);
-  const realOpen = open && (anchor === "left" || length);
-  const classes = drawerPanelStyles(anchor === "left", realOpen)();
+
+  const sub = useSub(bookmarkSub);
+  const { url } = sub;
+  const { left, right } = sub[url] ?? {};
+
+  const side = (anchor === "left" ? left : right) ?? {};
+
+  const {
+    mode = anchor === "left" ? MODE.PLUGIN : MODE.BOOKMARK,
+    bookmarks = {},
+  } = side;
+
+  const active = side.active ?? Object.keys(bookmarks)[0];
+
+  const renderedView = bookmarks[active]?.view ?? <></>;
+
+  const open = (window.sharedBookmarks ? sub[anchor] : side.open) ?? anchor === "left";
+
+  // Refs
+  const oppositeSide = anchor === "left" ? "right" : "left";
+  // Style hooks
+  const classes = bookmarkStyles(anchor, oppositeSide)();
+  const realOpen = open && (anchor === "left" || mode === MODE.BOOKMARK && bookmarks[active]);
+  const drawerClasses = drawerPanelStyles(anchor === "left", realOpen)();
 
   //========================================================================================
   /*                                                                                      *
@@ -32,60 +339,26 @@ const DrawerPanel = forwardRef((props, ref) => {
    *                                                                                      */
   //========================================================================================
 
-  /**
-   * Toggle drawer
-   */
-  const toggleDrawer = () => {
-    setOpen(prevState => {
-      return !prevState;
-    });
+  const activateActiveTabEditor = async () => {
+    const tab = await call(
+      PLUGINS.TABS.NAME,
+      PLUGINS.TABS.CALL.GET_ACTIVE_TAB
+    );
+    activateKeyBind(tab.id);
   };
 
   /**
-   * Open Drawer
+   * Select bookmark
+   * @param {String} name : Bookmark name
    */
-  const openDrawer = () => {
-    setOpen(true);
-  };
-
-  /**
-   * Close Drawer
-   */
-  const closeDrawer = () => {
-    setOpen(false);
-  };
-
-  /**
-   * Activate Plugin View
-   */
-  const activatePluginView = () => {
-    if (activeView === DRAWER.VIEWS.PLUGIN) toggleDrawer();
-    else openDrawer();
-    setActiveView(DRAWER.VIEWS.PLUGIN);
-  };
-
-  /**
-   * Activate Bookmark view
-   */
-  const activateBookmarkView = () => {
-    setActiveView(DRAWER.VIEWS.BOOKMARK);
-  };
-
-  /**
-   * Get active view
-   * @returns {string} Return current active view in drawer
-   */
-  const getActiveView = () => {
-    return activeView;
-  };
-
-  /**
-   * Reset state of active view
-   */
-  const resetDrawer = () => {
-    setActiveView(DRAWER.VIEWS.PLUGIN);
-    setOpen(initialOpenState);
-  };
+  const selectBookmarkCallback = useCallback(
+    name => {
+      activateActiveTabEditor();
+      selectBookmark(anchor, name);
+      emit((anchor === "right" ? PLUGINS.RIGHT_DRAWER : PLUGINS.LEFT_DRAWER).ON.CHANGE_BOOKMARK, { name });
+    },
+    [anchor, active, emit]
+  );
 
   //========================================================================================
   /*                                                                                      *
@@ -94,16 +367,15 @@ const DrawerPanel = forwardRef((props, ref) => {
   //========================================================================================
 
   /**
-   * Expose methods
+   * Methods exposed
    */
   usePluginMethods(ref, {
-    activateBookmarkView,
-    activatePluginView,
-    getActiveView,
-    toggleDrawer,
-    resetDrawer,
-    openDrawer,
-    closeDrawer
+    removeBookmark: removeBookmark.bind(null, anchor),
+    activateBookmarkView: activateBookmarkView.bind(null, anchor),
+    activatePluginView: activatePluginView.bind(null, anchor),
+    open: () => openDrawer(anchor),
+    close: () => closeDrawer(anchor),
+    toggle: () => toggleDrawer(anchor),
   });
 
   //========================================================================================
@@ -112,37 +384,68 @@ const DrawerPanel = forwardRef((props, ref) => {
    *                                                                                      */
   //========================================================================================
 
-  return (
-    <Drawer
-      id={hostName}
-      open={realOpen}
-      anchor={anchor}
-      variant="persistent"
-      style={{ ...style }}
-      className={`${classes.drawer} ${className}`}
-    >
-      <Typography component="div" className={classes.content}>
-        {activeView === DRAWER.VIEWS.PLUGIN ? viewPlugins : bookmarkView}
-      </Typography>
-    </Drawer>
+  /**
+   * Render Bookmarks
+   * @param {String} side : "left" or "right"
+   * @returns {Element} : Bookmark panel
+   */
+  const renderBookmarks = useCallback(
+    () => {
+      return (
+        <div className={classes.panel}>
+          {Object.entries(bookmarks).map(([name, bookmark]) => (
+            <BookmarkTab
+              data-testid="section_bookmark-tab"
+              key={name}
+              name={name}
+              anchor={anchor}
+              classes={classes}
+              bookmark={bookmark}
+              active={active}
+              selectBookmark={selectBookmarkCallback}
+            />
+          ))}
+        </div>
+      );
+    },
+    [active, anchor, bookmarks, classes, selectBookmarkCallback]
   );
-});
+  // console.log("DRAWERPANEL", sub, realOpen);
+
+  return (
+    <div className={classes.bookmarksContainer}>
+      {anchor === "left" ? renderBookmarks() : null }
+      <Drawer
+        id={hostName}
+        open={realOpen}
+        anchor={anchor}
+        variant="persistent"
+        style={style}
+        className={`${drawerClasses.drawer} ${className}`}
+      >
+        <Typography component="div" className={drawerClasses.content}>
+          {mode === MODE.PLUGIN ? viewPlugins : (
+            <div className={classes.bookmarkHolder}>{renderedView}</div>
+          )}
+        </Typography>
+      </Drawer>
+      {anchor === "right" ? renderBookmarks() : null }
+    </div>
+  );
+};
 
 DrawerPanel.pluginMethods = [
-  ...exposedMethods,
+  ...Object.values(PLUGINS.RIGHT_DRAWER.CALL),
   ...Object.values(DRAWER.METHODS)
 ];
 
 export default withHostReactPlugin(
-  withBookmarks(DrawerPanel),
+  DrawerPanel,
   DrawerPanel.pluginMethods
 );
 
 DrawerPanel.propTypes = {
   hostName: PropTypes.string.isRequired,
-  initialOpenState: PropTypes.bool
 };
 
-DrawerPanel.defaultProps = {
-  initialOpenState: false
-};
+DrawerPanel.defaultProps = {};

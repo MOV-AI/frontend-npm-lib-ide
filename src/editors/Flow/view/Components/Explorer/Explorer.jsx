@@ -136,6 +136,7 @@ const Explorer = props => {
   return (
     <Typography
       className={classes.flowExplorerHolder}
+      style={{ height: "100%" }}
       data-testid="section_flow-explorer-menu"
       component="div"
     >
