@@ -82,9 +82,7 @@ const DrawerPanel = forwardRef((props, ref) => {
    */
   const resetDrawer = () => {
     setActiveView(DRAWER.VIEWS.PLUGIN);
-    // Hack to always close the right drawer automatically
-    //  because we'll have tools that doesn't have any right menu
-    if (!initialOpenState) setOpen(initialOpenState);
+    setOpen(initialOpenState);
   };
 
   //========================================================================================
