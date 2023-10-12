@@ -22,9 +22,11 @@ const MenuDetails = props => {
 
   return (
     <>
-      <h2 className={classes.header}>{name ?? id}</h2>
+      <Typography component="h2" variant="h2" className={classes.header}>
+        {name ?? id}
+      </Typography>
       <ListItem divider>
-        <ListItemText primary={t(label)} />
+        <ListItemText primary={t(label)} className={classes.label} />
         <NodeLink
           data-testid="section_node-link"
           name={template}
