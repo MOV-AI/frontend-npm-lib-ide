@@ -137,9 +137,10 @@ const withBookmarks = Component => {
       setRenderedView([]);
       // It turns out that we shouldn't close the drawer on reset,
       // If it comes back that we need to close the drawer on tab change
-      // This needs to be revisited. Till then, this is commented.
-      // drawerRef.current.resetDrawer();
-    }, []);
+      // This needs to be revisited.
+      if (anchor === "left")
+        drawerRef.current.resetDrawer();
+    }, [anchor]);
 
     /**
      * Set bookmarks
@@ -224,7 +225,7 @@ const withBookmarks = Component => {
     return (
       <div className={classes.bookmarksContainer}>
         {renderBookmarks("left")}
-        <Component {...props} ref={drawerRef}>
+        <Component {...props} ref={drawerRef} length={Object.keys(bookmarks || {}).length}>
           <div className={classes.bookmarkHolder}>{renderedView}</div>
         </Component>
         {renderBookmarks("right")}

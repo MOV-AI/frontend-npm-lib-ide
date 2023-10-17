@@ -18,11 +18,13 @@ const DrawerPanel = forwardRef((props, ref) => {
     anchor,
     initialOpenState,
     className,
+    length,
     children: bookmarkView
   } = props;
   const [open, setOpen] = useState(initialOpenState);
   const [activeView, setActiveView] = useState(DRAWER.VIEWS.PLUGIN);
-  const classes = drawerPanelStyles(anchor === "left", open)();
+  const realOpen = open && (anchor === "left" || length);
+  const classes = drawerPanelStyles(anchor === "left", realOpen)();
 
   //========================================================================================
   /*                                                                                      *
@@ -82,9 +84,7 @@ const DrawerPanel = forwardRef((props, ref) => {
    */
   const resetDrawer = () => {
     setActiveView(DRAWER.VIEWS.PLUGIN);
-    // Hack to always close the right drawer automatically
-    //  because we'll have tools that doesn't have any right menu
-    if (!initialOpenState) setOpen(initialOpenState);
+    setOpen(initialOpenState);
   };
 
   //========================================================================================
@@ -115,7 +115,7 @@ const DrawerPanel = forwardRef((props, ref) => {
   return (
     <Drawer
       id={hostName}
-      open={open}
+      open={realOpen}
       anchor={anchor}
       variant="persistent"
       style={{ ...style }}

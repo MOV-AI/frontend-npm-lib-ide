@@ -40,7 +40,8 @@ const menuStyles = makeStyles(_theme => ({
     textAlign: "justify"
   },
   link: {
-    fontSize: "1rem"
+    fontSize: "1rem",
+    wordBreak: "break-word"
   }
 }));
 
@@ -53,7 +54,15 @@ export const propertiesStyles = makeStyles(_theme => ({
 
 export const menuDetailsStyles = makeStyles(_theme => ({
   header: {
-    textAlign: "center"
+    textAlign: "center",
+    padding: "16px",
+    wordWrap: "break-word",
+    fontSize: "2rem",
+    fontWeight: "500"
+  },
+  label: {
+    flexShrink: 0,
+    marginRight: "16px"
   }
 }));
 
