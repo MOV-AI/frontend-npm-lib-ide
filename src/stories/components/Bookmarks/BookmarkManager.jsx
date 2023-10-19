@@ -3,7 +3,7 @@ import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { Button } from "@mov-ai/mov-fe-lib-react";
 import { useTheme } from "@material-ui/core/styles";
 import { PLUGINS } from "../../../utils/Constants";
-import { registerBookmark } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import { withToolPlugin } from "../../../engine";
 // Icons
 import AccessAlarmIcon from "@material-ui/icons/AccessAlarm";
@@ -67,7 +67,7 @@ const BookmarkManager = props => {
       title: `Random ${id} Bookmark`,
       view: <h2>{id}</h2>
     };
-    registerBookmark("right", id, bookmark, true);
+    drawerSub.add(id, bookmark, true);
   };
 
   //========================================================================================

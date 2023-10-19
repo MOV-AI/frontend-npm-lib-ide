@@ -1,279 +1,100 @@
-import React, { useCallback } from "react";
-import { differenceWith, isEqual } from "lodash";
+// live configurable debug and behavior
+// accissible in devTools via window.drawer
+
+import React, { useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
+import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { Drawer, Typography, Tooltip, IconButton } from "@material-ui/core";
-import { makeSub, useSub } from "@mov-ai/mov-fe-lib-react";
 import { DRAWER, PLUGINS } from "../../../utils/Constants";
 import { activateKeyBind } from "../../../utils/Utils";
 import { withHostReactPlugin } from "../../../engine/ReactPlugin/HostReactPlugin";
-import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { bookmarkStyles } from "./../../../decorators/styles";
 import { drawerPanelStyles } from "./styles";
+import { Sub, reflect } from "@tty-pt/sub";
 
-function makeEcho(debug, fileDesc) {
-  if (debug)
-    return function (text, ...args) {
-      console.log(fileDesc, text, ...args);
-      return args[0];
-    };
-  else
-    return function (_text, firstArg) {
-      return firstArg;
-    };
-}
+class DrawerSub extends Sub {
+  shared = true;
 
-const debugDrawer = false;
-const shared = true;
-window.sharedBookmarks = shared;
-
-const echo = makeEcho(debugDrawer, "DrawerPanel");
-
-const MODE = {
-  PLUGIN: 0,
-  BOOKMARK: 1,
-};
-
-const bookmarkSub = makeSub({
-  url: "initial",
-});
-
-function setActive(side, active) {
-  if (!side.bookmarks[active])
-    return side;
-
-  else return  {
-    ...side,
-    mode: MODE.BOOKMARK,
-    active,
-  };
-}
-
-/**
- * Small extract method to return a valid bookmark from the bookmarks list
- * @param {Array} bookmarks : the bookmarks list
- * @param {String} name : name to search
- * @returns a valid bookmark
- */
-function getValidBookmark(bookmarks, name) {
-  if (bookmarks[name]) return name;
-
-  return Object.keys(bookmarks)[0];
-}
-
-export
-const setUrl = bookmarkSub.makeEmitNow((current, url) => ({
-  ...current,
-  url,
-}));
-
-function getOpen(current, url, side) {
-  return window.sharedBookmarks ? current[side] : current[url][side].open;
-}
-
-/**
- * Register a bookmark if necessary without affecting other state.
- */
-export
-const registerBookmark = bookmarkSub.makeEmitNow((current, side = "right", name, value, open, deps = []) => {
-  let url = current.url;
-
-  if (typeof side === "object") {
-    url = side.url ?? current.url;
-    side = side.side;
+  constructor() {
+    super({ url: "initial" }, "DrawerSub");
+    this._suffix = "right";
   }
 
-  const cur = current[url]?.[side] ?? {};
+  isValidSuffix(suffix) {
+    return suffix === "left" || suffix === "right";
+  }
 
-  if (cur.bookmarks?.[name])
-    return open && (cur.active !== name || cur.mode !== MODE.BOOKMARK || !getOpen(current, url, side)) ? { // must open
-      ...current,
-      [url]: {
-        ...current[url],
-        [side]: {
-          ...cur,
-          mode: MODE.BOOKMARK,
-          active: name,
-          open,
-          deps,
-        },
-      },
-      [side]: open,
-    } : cur.deps.length !== deps.length || differenceWith(cur.deps, deps, isEqual).length ? { // deps changed
-      ...current,
-      [url]: {
-        ...current[url],
-        [side]: {
-          ...cur,
-          bookmarks: {
-            ...(cur.bookmarks ?? {}),
-            [name]: { name, ...value },
-          },
-          deps,
-        },
-      },
-    } : current; // no change
+  @reflect("$url")
+  set plugin(value) {
+    this._target = value;
+  }
 
-  // never registered
-  return echo("registerBookmark", {
-    ...current,
-    [url]: {
-      ...(current[url] ?? {}),
-      [side]: {
-        ...cur,
-        bookmarks: {
-          ...(cur.bookmarks ?? {}),
-          [name]: { name, ...value },
-        },
-        open: open || cur.open,
-        mode: open ? MODE.BOOKMARK : cur.mode,
-        active: open ? name : cur.active,
-        deps,
-      },
-    },
-    [side]: open || current[side],
-  });
-});
+  @reflect("$url")
+  set active(active) {
+    this.plugin = false;
+    this._target = active;
+  }
 
-/**
- * Remove bookmark by name
- * @param {string} name : bookmark name
- * @param {string} activeBookmark : bookmark to make active
- */
-export
-const removeBookmark = bookmarkSub.makeEmitNow((current, side = "right", name, activeBookmark) => {
-  const url = current.url;
+  @reflect("$url", true)
+  set open(value) {
+    if (value === this.open) {
+      this._target = this._value;
+      return;
+    }
+    this._target = this.set({
+      ...this._value,
+      [this.index]: { ...this._value[this.index] ?? {}, open: value },
+      [this._suffix]: value,
+      url: this._url,
+    });
+  }
 
-  let bookmarks = { ...current[url][side].bookmarks };
+  get open() {
+    return this.shared ? this._value[this._suffix] : this._value[this.index]?.open;
+  }
 
-  delete bookmarks[name];
+  @reflect("$url.bookmarks")
+  add(name = "", value, open = false, props = {}) {
+    const bookmarks = this.get();
+    if (bookmarks?.[name] && !(Object.entries(props)).filter(
+      ([key, value]) => value !== bookmarks[name].props[key]
+    ).length)
+      return bookmarks;
+    name = name.replace(".", "/");
+    this.open = this.open || open;
+    if (this.open) {
+      this.plugin = false;
+      this.active = name;
+    }
+    return {
+      ...(bookmarks ?? {}),
+      [name]: { ...value, props },
+    };
+  }
 
-  return echo("removeBookmark", {
-    ...current,
-    [url]: {
-      ...(current[url] ?? {}),
-      [side]: setActive({
-        ...current[url][side],
-        bookmarks,
-      }, current[url][side].active !== name ? current[url][side].active : (
-        getValidBookmark(bookmarks, activeBookmark)
-      )),
-    },
-  });
-});
-
-export
-const openDrawer = bookmarkSub.makeEmitNow((current, side) => echo("openDrawer", {
-  ...current,
-  [current.url]: {
-    ...current[current.url],
-    [side]: { ...current[current.url][side], open: true },
-  },
-  [side]: true,
-}));
-
-export
-const closeDrawer = bookmarkSub.makeEmitNow((current, side) => echo("closeDrawer", {
-  ...current,
-  [current.url]: {
-    ...current[current.url],
-    [side]: { ...current[current.url][side], open: false },
-  },
-  [side]: false,
-}));
-
-export
-const toggleDrawer = bookmarkSub.makeEmitNow((current, side) => echo("toggleDrawer", {
-  ...current,
-  [current.url]: {
-    ...current[current.url],
-    [side]: {
-      ...current[current.url][side],
-      open: !current[current.url][side].open,
-    },
-  },
-  [side]: !current[side],
-}));
-
-export
-const resetDrawer = bookmarkSub.makeEmitNow((current, side, open = false) => echo("resetDrawer", {
-  ...current,
-  [current.url]: {
-    ...current[current.url],
-    [side]: {
-      ...current[current.url][side],
-      mode: MODE.PLUGIN,
-      open,
-    },
-  },
-  [side]: open,
-}));
-
-export
-const activateBookmarkView = bookmarkSub.makeEmitNow((current, url, side = "right") => echo("activateBookmarkView", {
-  ...current,
-  [url]: {
-    ...current[url],
-    [side]: {
-      ...current[url][side],
-      mode: MODE.BOOKMARK,
-    },
-  },
-}));
-
-export
-const activatePluginView = bookmarkSub.makeEmitNow((current, side = "left") => {
-  const url = current.url;
-  let open = !getOpen(current, url, side) || current[url]?.[side].mode !== MODE.PLUGIN;
-
-  return echo("activatePluginView", {
-    ...current,
-    [url]: {
-      ...current[url],
-      [side]: {
-        ...(current[url]?.[side] ?? {}),
-        mode: MODE.PLUGIN,
-        open,
-      }
-    },
-    [side]: open,
-  });
-});
-
-function bookmarkSelected(cur, name) {
-  return cur.active === name || cur.mode !== MODE.PLUGIN && Object.keys(cur.bookmarks)[0] === name;
+  @reflect("$url.bookmarks")
+  remove(name) {
+    let bookmarks = { ...this.get() };
+    delete bookmarks[name];
+    return bookmarks;
+  }
 }
 
-/**
- * Select bookmark
- * @param {String} name : Bookmark name
- */
-export
-const selectBookmark = bookmarkSub.makeEmitNow((current, side = "right", name) => {
-  const url = current.url;
-  const cur = current[url][side];
-  const open = bookmarkSelected(cur, name) ? !getOpen(current, url, side) : true;
+function selectBookmark(anchor, name) {
+  drawerSub.suffix = anchor;
+  drawerSub.open = name !== drawerSub._value[drawerSub.index]?.active ? true : !drawerSub.open;
+  drawerSub.active = name;
+}
 
-  return echo("selectBookmark", {
-    ...current,
-    [url]: {
-      ...current[url],
-      [side]: setActive({
-        ...current[url][side],
-        open,
-      }, name),
-    },
-    [side]: open,
-  });
-});
+export
+const drawerSub = new DrawerSub();
+window.drawer = drawerSub;
+drawerSub._suffix = "left";
+drawerSub.open = true;
+drawerSub._suffix = "right";
 
 function BookmarkTab(props) {
   const { active, name, bookmark, anchor, classes } = props;
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                       Handlers                                       *
-   *                                                                                      */
-  //========================================================================================
 
   const handleOnClick = useCallback(() => {
     selectBookmark(anchor, name);
@@ -298,7 +119,7 @@ function BookmarkTab(props) {
   );
 }
 
-function DrawerPanel(props, ref) {
+function DrawerPanel(props) {
   const {
     anchor,
     emit,
@@ -309,35 +130,21 @@ function DrawerPanel(props, ref) {
     className,
   } = props;
 
-  const sub = useSub(bookmarkSub);
-  const { url } = sub;
-  const { left, right } = sub[url] ?? {};
-
-  const side = (anchor === "left" ? left : right) ?? {};
-
+  const cur = drawerSub.use("");
+  const url = cur.url;
+  const side = cur[url + "/" + anchor] ?? {};
+  const sharedOpen = cur[anchor];
   const {
-    mode = anchor === "left" ? MODE.PLUGIN : MODE.BOOKMARK,
-    bookmarks = {},
+    plugin = anchor === "left" ? true : false,
+    bookmarks = {}, open = sharedOpen,
   } = side;
-
   const active = side.active ?? Object.keys(bookmarks)[0];
-
   const renderedView = bookmarks[active]?.view ?? <></>;
-
-  const open = (window.sharedBookmarks ? sub[anchor] : side.open) ?? anchor === "left";
-
-  // Refs
+  const realOpen = open && (plugin || bookmarks?.[active]);
+  drawerSub.echo("DrawerPanel", cur, sharedOpen, realOpen);
   const oppositeSide = anchor === "left" ? "right" : "left";
-  // Style hooks
   const classes = bookmarkStyles(anchor, oppositeSide)();
-  const realOpen = open && (anchor === "left" || mode === MODE.BOOKMARK && bookmarks[active]);
   const drawerClasses = drawerPanelStyles(anchor === "left", realOpen)();
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                   Component's methods                                *
-   *                                                                                      */
-  //========================================================================================
 
   const activateActiveTabEditor = async () => {
     const tab = await call(
@@ -347,70 +154,39 @@ function DrawerPanel(props, ref) {
     activateKeyBind(tab.id);
   };
 
-  /**
-   * Select bookmark
-   * @param {String} name : Bookmark name
-   */
   const selectBookmarkCallback = useCallback(
     name => {
       activateActiveTabEditor();
       selectBookmark(anchor, name);
-      emit((anchor === "right" ? PLUGINS.RIGHT_DRAWER : PLUGINS.LEFT_DRAWER).ON.CHANGE_BOOKMARK, { name });
     },
     [anchor, active, emit]
   );
 
-  //========================================================================================
-  /*                                                                                      *
-   *                                   React lifecycles                                   *
-   *                                                                                      */
-  //========================================================================================
+  const viewProps = bookmarks[active]?.props;
 
-  /**
-   * Methods exposed
-   */
-  usePluginMethods(ref, {
-    removeBookmark: removeBookmark.bind(null, anchor),
-    activateBookmarkView: activateBookmarkView.bind(null, anchor),
-    activatePluginView: activatePluginView.bind(null, anchor),
-    open: () => openDrawer(anchor),
-    close: () => closeDrawer(anchor),
-    toggle: () => toggleDrawer(anchor),
-  });
+  const realView = useMemo(() => {
+    if (typeof renderedView === "object")
+      return renderedView;
 
-  //========================================================================================
-  /*                                                                                      *
-   *                                         Render                                       *
-   *                                                                                      */
-  //========================================================================================
+    return renderedView(viewProps)
+  }, [viewProps]);
 
-  /**
-   * Render Bookmarks
-   * @param {String} side : "left" or "right"
-   * @returns {Element} : Bookmark panel
-   */
-  const renderBookmarks = useCallback(
-    () => {
-      return (
-        <div className={classes.panel}>
-          {Object.entries(bookmarks).map(([name, bookmark]) => (
-            <BookmarkTab
-              data-testid="section_bookmark-tab"
-              key={name}
-              name={name}
-              anchor={anchor}
-              classes={classes}
-              bookmark={bookmark}
-              active={active}
-              selectBookmark={selectBookmarkCallback}
-            />
-          ))}
-        </div>
-      );
-    },
-    [active, anchor, bookmarks, classes, selectBookmarkCallback]
-  );
-  // console.log("DRAWERPANEL", sub, realOpen);
+  const renderBookmarks = useCallback(() => (
+    <div className={classes.panel}>
+      {Object.entries(bookmarks).map(([name, bookmark]) => (
+        <BookmarkTab
+          data-testid="section_bookmark-tab"
+          key={name}
+          name={name}
+          anchor={anchor}
+          classes={classes}
+          bookmark={bookmark}
+          active={active}
+          selectBookmark={selectBookmarkCallback}
+        />
+      ))}
+    </div>
+  ), [active, anchor, bookmarks, classes, selectBookmarkCallback]);
 
   return (
     <div className={classes.bookmarksContainer}>
@@ -424,8 +200,8 @@ function DrawerPanel(props, ref) {
         className={`${drawerClasses.drawer} ${className}`}
       >
         <Typography component="div" className={drawerClasses.content}>
-          {mode === MODE.PLUGIN ? viewPlugins : (
-            <div className={classes.bookmarkHolder}>{renderedView}</div>
+          {plugin ? viewPlugins : (
+            <div className={classes.bookmarkHolder}>{realView}</div>
           )}
         </Typography>
       </Drawer>
@@ -439,13 +215,11 @@ DrawerPanel.pluginMethods = [
   ...Object.values(DRAWER.METHODS)
 ];
 
-export default withHostReactPlugin(
+export default withTheme(withHostReactPlugin(
   DrawerPanel,
   DrawerPanel.pluginMethods
-);
+));
 
 DrawerPanel.propTypes = {
   hostName: PropTypes.string.isRequired,
 };
-
-DrawerPanel.defaultProps = {};

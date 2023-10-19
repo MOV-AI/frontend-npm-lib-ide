@@ -12,11 +12,11 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import { Tooltip } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
-import { activatePluginView } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import { MainContext } from "../../../main-context";
 import AppSettings from "../../../App/AppSettings";
 import { getMainMenuTools } from "../../../tools";
-import { PLUGINS, HOSTS } from "../../../utils/Constants";
+import { PLUGINS } from "../../../utils/Constants";
 import { getIconByScope, getIconFn } from "../../../utils/Utils";
 import { openTool } from "../../../utils/generalFunctions";
 import movaiIcon from "../../../Branding/movai-logo-transparent.png";
@@ -45,10 +45,7 @@ const MainMenu = props => {
       icon: getIconFn(TextSnippetIcon),
       title: "Explorer",
       isActive: true,
-      getOnClick: () => {
-        // Toggle left drawer
-        activatePluginView();
-      }
+      getOnClick: () => { drawerSub.suffix = "left"; drawerSub.plugin = true; drawerSub.open = true; },
     },
     ...getMainMenuTools().map(tool => {
       return {

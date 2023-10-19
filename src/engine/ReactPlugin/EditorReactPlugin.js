@@ -5,7 +5,7 @@ import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
 import withLoader from "../../decorators/withLoader";
 import { withDataHandler } from "../../plugins/DocManager/DataHandler";
-import { setUrl } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { drawerSub } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
 import { KEYBINDINGS } from "../../utils/shortcuts";
 import { PLUGINS } from "../../utils/Constants";
 import { composeDecorators } from "../../utils/Utils";
@@ -94,7 +94,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         );
 
         if (validTab && data.id === id) {
-          setUrl(id);
+          drawerSub.url = id;
           updateRightMenu();
           activateEditor();
         }

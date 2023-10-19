@@ -14,7 +14,7 @@ import CompareArrowsIcon from "@material-ui/icons/CompareArrows";
 import { Rest } from "@mov-ai/mov-fe-lib-core";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
-import { registerBookmark, removeBookmark } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import {
   FLOW_EXPLORER_PROFILE,
   FLOW_CONTEXT_MODES,
@@ -497,10 +497,7 @@ export const Flow = (props, ref) => {
     (node, nodeSelection) => {
       const MenuComponent = getMenuComponent(node?.data?.model);
       if (!node || !MenuComponent) return;
-      registerBookmark({
-        side: "right",
-        url: id,
-      }, node.data.id + "-" + MENUS.current.NODE.NAME, getNodeMenuToAdd(node), true);
+      drawerSub.add(node.data.id + "-" + MENUS.current.NODE.NAME, getNodeMenuToAdd(node), true);
     },
     [call, getMenuComponent, getNodeMenuToAdd]
   );
@@ -537,10 +534,7 @@ export const Flow = (props, ref) => {
   const addLinkMenu = useCallback(
     (link, _linkSelection) => {
       if (!link) return;
-      registerBookmark({
-        side: "right",
-        url: id,
-      }, link.data.id + "-" + MENUS.current.LINK.NAME, getLinkMenuToAdd(link), true);
+      drawerSub.add(link.data.id + "-" + MENUS.current.LINK.NAME, getLinkMenuToAdd(link), true);
     },
     [getLinkMenuToAdd]
   );
@@ -548,10 +542,7 @@ export const Flow = (props, ref) => {
   const renderRightMenu = useCallback(() => {
     const details = props.data?.details || {};
 
-    registerBookmark({
-      side: "right",
-      url: id,
-    }, MENUS.current.DETAIL.NAME, {
+    drawerSub.add(MENUS.current.DETAIL.NAME, {
       icon: <InfoIcon></InfoIcon>,
       title: t(MENUS.current.DETAIL.TITLE),
       view: (
@@ -564,13 +555,10 @@ export const Flow = (props, ref) => {
           editable={true}
         ></Menu>
       )
-    });
+    }, true);
 
     if (isEditableComponentRef.current)
-      registerBookmark({
-        side: "right",
-        url: id,
-      }, FLOW_EXPLORER_PROFILE.name, {
+      drawerSub.add(FLOW_EXPLORER_PROFILE.name, {
         icon: <Add />,
         title: t(FLOW_EXPLORER_PROFILE.title),
         view: (new Explorer(FLOW_EXPLORER_PROFILE)).render({
@@ -581,21 +569,15 @@ export const Flow = (props, ref) => {
 
     // Add node menu if any is selected
     if (selectedNodeRef.current)
-      registerBookmark({
-        side: "right",
-        url: id,
-      }, selectedNodeRef.current.data.id + "-" + MENUS.current.NODE.NAME, getNodeMenuToAdd(
+      drawerSub.add(selectedNodeRef.current.data.id + "-" + MENUS.current.NODE.NAME, getNodeMenuToAdd(
         selectedNodeRef.current
-      ));
+      ), true);
 
     // Add link menu if any is selected
     if (selectedLinkRef.current)
-      registerBookmark({
-        side: "right",
-        url: id,
-      }, selectedLinkRef.current.data.id + "-" + MENUS.current.LINK.NAME, getLinkMenuToAdd(
+      drawerSub.add(selectedLinkRef.current.data.id + "-" + MENUS.current.LINK.NAME, getLinkMenuToAdd(
         selectedLinkRef.current
-      ));
+      ), true);
   }, [
     id,
     name,
@@ -681,8 +663,7 @@ export const Flow = (props, ref) => {
       contextArgs.current = node;
       debounceSelection.current = setTimeout(() => {
         if (selectedNodeRef.current)
-          removeBookmark(
-            "right",
+          drawerSub.remove(
             selectedNodeRef.current.data.id + "-" + MENUS.current.NODE.NAME,
             activeBookmark
           );
@@ -710,8 +691,7 @@ export const Flow = (props, ref) => {
     link => {
       activateEditor();
       if (selectedLinkRef.current)
-        removeBookmark(
-          "right",
+        drawerSub.remove(
           selectedLinkRef.current.data.id + "-" + MENUS.current.LINK.NAME,
           activeBookmark
         );

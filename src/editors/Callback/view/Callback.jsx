@@ -5,7 +5,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
-import { registerBookmark } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import InfoIcon from "@material-ui/icons/Info";
 import Menu from "./Menu";
 
@@ -47,10 +47,7 @@ export const Callback = (props, ref) => {
     const menuName = `${name}-detail-menu`;
     const menuTitle = t("CallbackDetailsMenuTitle");
     // add bookmark
-    registerBookmark({
-      side: "right",
-      url: id,
-    }, menuName, {
+    drawerSub.add(menuName, {
       icon: <InfoIcon />,
       name: menuName,
       title: menuTitle,

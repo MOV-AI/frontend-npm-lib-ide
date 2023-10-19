@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect } from "react";
 import { makeStyles } from "@material-ui/core";
-import { setUrl } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { drawerSub } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
 import withAlerts from "../../decorators/withAlerts";
 import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
@@ -30,13 +30,13 @@ export function withToolPlugin(ReactComponent, methods = []) {
      * Component did mount
      */
     useEffect(() => {
-      setUrl(profile.name);
+      drawerSub.url = profile.name;
       on(
         PLUGINS.TABS.NAME,
         PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE,
         async ({ id }) => {
           if (profile.name === id)
-            setUrl(profile.name);
+            drawerSub.url = profile.name;
         }
       );
 

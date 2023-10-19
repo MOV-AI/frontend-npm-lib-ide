@@ -7,7 +7,7 @@ import Model from "../model/Node";
 import CallbackModel from "../../Callback/model/Callback";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
-import { registerBookmark } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import {
   DEFAULT_KEY_VALUE_DATA,
   TABLE_KEYS_NAMES,
@@ -210,7 +210,7 @@ export const Node = (props, ref) => {
     const menuName = `${name}-detail-menu`;
     const menuTitle = t("NodeDetailsMenuTitle");
     // add bookmark
-    registerBookmark({ side: "right", url: id }, menuName, {
+    drawerSub.add(menuName, {
       icon: <InfoIcon></InfoIcon>,
       title: menuTitle,
       view: (

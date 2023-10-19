@@ -11,7 +11,7 @@ import { defaultFunction } from "../../../utils/Utils";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
 import useDataSubscriber from "../../../plugins/DocManager/useDataSubscriber";
-import { registerBookmark } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import Menu from "./Menu";
 
 import { configurationStyles } from "./styles";
@@ -47,10 +47,7 @@ export const Configuration = (props, ref) => {
     const menuName = `${id}-detail-menu`;
     const menuTitle = t("ConfigurationDetailsMenuTitle");
     // add bookmark
-    registerBookmark({
-      side: "right",
-      url: id,
-    }, menuName, {
+    drawerSub.add(menuName, {
       icon: <InfoIcon></InfoIcon>,
       name: menuName,
       title: menuTitle,
