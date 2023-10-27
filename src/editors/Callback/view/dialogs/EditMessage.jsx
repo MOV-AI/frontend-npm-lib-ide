@@ -8,7 +8,7 @@ import {
   Button,
   DialogActions
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 import { PLUGINS } from "../../../../utils/Constants";
 import { ERROR_MESSAGES } from "../../../../utils/Messages";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
