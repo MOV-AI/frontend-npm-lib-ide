@@ -1,7 +1,7 @@
 import React from "react";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { Button } from "@mov-ai/mov-fe-lib-react";
-import { useTheme } from "@material-ui/core/styles";
+import { useTheme } from "@material-ui/styles";
 import { PLUGINS } from "../../../utils/Constants";
 import { withToolPlugin } from "../../../engine";
 // Icons
