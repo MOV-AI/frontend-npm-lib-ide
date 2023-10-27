@@ -53,3 +53,4 @@
 - [FP-2449 - Editing a node will corrupt the node](https://movai.atlassian.net/browse/FP-2449)
 - [FP-2604 - Left menu disappears when opening scene in IDE](https://movai.atlassian.net/browse/FP-2604)
 - [FP-2605 - Tabs without bookmarks shouldn't be opened](https://movai.atlassian.net/browse/FP-2605)
+- [FP-2595 - Text too big, can't see full flow name](https://movai.atlassian.net/browse/FP-2595)
