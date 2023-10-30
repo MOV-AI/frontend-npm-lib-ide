@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
 import { AppBar, Toolbar } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
-import { useTheme } from "@material-ui/core/styles";
+import { useTheme } from "@material-ui/styles";
 import InfoIcon from "@material-ui/icons/Info";
 import Model from "../model/Configuration";
 import { defaultFunction } from "../../../utils/Utils";

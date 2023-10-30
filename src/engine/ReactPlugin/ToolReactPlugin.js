@@ -1,4 +1,5 @@
 import React, { forwardRef, useEffect } from "react";
+import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { makeStyles } from "@material-ui/core";
 import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
 import withAlerts from "../../decorators/withAlerts";
@@ -49,6 +50,7 @@ export function withToolPlugin(ReactComponent, methods = []) {
 
   // Decorate component
   const DecoratedToolComponent = composeDecorators(ToolComponent, [
+    withTheme,
     withAlerts,
     withKeyBinds,
     withMenuHandler
