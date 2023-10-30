@@ -10,12 +10,13 @@ import {
 import TextSnippetIcon from "@material-ui/icons/Description";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { Tooltip } from "@material-ui/core";
-import { useTheme } from "@material-ui/core/styles";
+import { useTheme } from "@material-ui/styles";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
+import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import { MainContext } from "../../../main-context";
 import AppSettings from "../../../App/AppSettings";
 import { getMainMenuTools } from "../../../tools";
-import { PLUGINS, HOSTS } from "../../../utils/Constants";
+import { PLUGINS } from "../../../utils/Constants";
 import { getIconByScope, getIconFn } from "../../../utils/Utils";
 import { openTool } from "../../../utils/generalFunctions";
 import movaiIcon from "../../../Branding/movai-logo-transparent.png";
@@ -44,13 +45,7 @@ const MainMenu = props => {
       icon: getIconFn(TextSnippetIcon),
       title: "Explorer",
       isActive: true,
-      getOnClick: () => {
-        // Toggle left drawer
-        call(
-          HOSTS.LEFT_DRAWER.NAME,
-          HOSTS.LEFT_DRAWER.CALL.ACTIVATE_PLUGIN_VIEW
-        );
-      }
+      getOnClick: () => { drawerSub.suffix = "left"; drawerSub.plugin = true; drawerSub.open = true; },
     },
     ...getMainMenuTools().map(tool => {
       return {

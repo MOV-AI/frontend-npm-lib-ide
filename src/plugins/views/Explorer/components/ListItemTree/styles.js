@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 import { DEFAULT_EXPLORER_ROW_HEIGHT } from "../../../../../utils/Constants";
 
 export const listItemsTreeWithSearchStyles = makeStyles(_theme => ({

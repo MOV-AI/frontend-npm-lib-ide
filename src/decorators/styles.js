@@ -1,8 +1,8 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 
 export const bookmarkStyles = (side, oppositeSide) =>
   makeStyles(theme => ({
-    bookmarksContainer: { position: "relative" },
+    bookmarksContainer: { position: "relative", height: "100%" },
     bookmarkHolder: { height: "100%" },
     panel: {
       position: "absolute",
