@@ -2,7 +2,8 @@ import { makeStyles } from "@material-ui/styles";
 
 export const buttonStyles = makeStyles(_theme => ({
   buttonPill: {
-    borderRadius: "99px"
+    borderRadius: "99px",
+    padding: "4px",
   }
 }));
 
@@ -40,7 +41,9 @@ export const flowTopBarStyles = makeStyles(theme => ({
     marginRight: "10px"
   },
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
+    display: "flex",
+    alignItems: "center",
   },
   treeIcon: {
     fontSize: "1.2rem"

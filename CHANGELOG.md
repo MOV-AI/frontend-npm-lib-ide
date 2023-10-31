@@ -54,3 +54,4 @@
 - [FP-2604 - Left menu disappears when opening scene in IDE](https://movai.atlassian.net/browse/FP-2604)
 - [FP-2605 - Tabs without bookmarks shouldn't be opened](https://movai.atlassian.net/browse/FP-2605)
 - [FP-2595 - Text too big, can't see full flow name](https://movai.atlassian.net/browse/FP-2595)
+- [FP-2618 - Search for parameters not working](https://movai.atlassian.net/browse/FP-2618)

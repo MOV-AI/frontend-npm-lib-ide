@@ -47,11 +47,14 @@ function filter(searchQuery, subject) {
       // Is array
       if (Array.isArray(subject)) {
         subject = subject?.filter(e => {
+          if (e === undefined)
+            return false;
+
           const value = filter(searchQuery, e);
 
           if (typeof value === DATA_TYPES.BOOLEAN) return value;
 
-          return Boolean(value?.length !== 0);
+          return value?.length !== 0;
         });
         return subject;
       }
