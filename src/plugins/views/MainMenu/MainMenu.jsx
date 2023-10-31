@@ -10,7 +10,7 @@ import {
 import TextSnippetIcon from "@material-ui/icons/Description";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { Tooltip } from "@material-ui/core";
-import { useTheme } from "@material-ui/core/styles";
+import { useTheme } from "@material-ui/styles";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { MainContext } from "../../../main-context";
 import AppSettings from "../../../App/AppSettings";
