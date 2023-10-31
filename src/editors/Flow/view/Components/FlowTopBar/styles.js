@@ -40,7 +40,8 @@ export const flowTopBarStyles = makeStyles(theme => ({
     marginRight: "10px"
   },
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
+    display: "flex",
   },
   treeIcon: {
     fontSize: "1.2rem"
