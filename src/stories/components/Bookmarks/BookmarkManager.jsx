@@ -3,7 +3,7 @@ import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { Button } from "@mov-ai/mov-fe-lib-react";
 import { useTheme } from "@material-ui/styles";
 import { PLUGINS } from "../../../utils/Constants";
-import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { useDrawer } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import { withToolPlugin } from "../../../engine";
 // Icons
 import AccessAlarmIcon from "@material-ui/icons/AccessAlarm";
@@ -52,6 +52,7 @@ const getIcon = () => {
 
 const BookmarkManager = props => {
   const theme = useTheme();
+  const drawer = useDrawer();
 
   /**
    * Add bookmark menu in left/right drawer
@@ -67,7 +68,7 @@ const BookmarkManager = props => {
       title: `Random ${id} Bookmark`,
       view: <h2>{id}</h2>
     };
-    drawerSub.add(id, bookmark, true);
+    drawer.add(id, bookmark, true);
   };
 
   //========================================================================================

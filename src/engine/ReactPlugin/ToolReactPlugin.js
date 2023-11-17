@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect } from "react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { makeStyles } from "@material-ui/core";
-import { drawerSub } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { useDrawer } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
 import withAlerts from "../../decorators/withAlerts";
 import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
@@ -26,25 +26,26 @@ export function withToolPlugin(ReactComponent, methods = []) {
 
   const ToolComponent = forwardRef((props, ref) => {
     const { on, off, profile } = props;
+    const drawer = useDrawer();
 
     /**
      * Component did mount
      */
     useEffect(() => {
-      drawerSub.url = profile.name;
+      drawer.setUrl(profile.name);
       on(
         PLUGINS.TABS.NAME,
         PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE,
         async ({ id }) => {
           if (profile.name === id)
-            drawerSub.url = profile.name;
+            drawer.url = profile.name;
         }
       );
 
       return () => {
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
       };
-    }, [profile.name]);
+    }, [profile.name, drawer.setUrl]);
 
     return <RefComponent {...props} ref={ref} />;
   });

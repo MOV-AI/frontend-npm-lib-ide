@@ -12,7 +12,7 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import { Tooltip } from "@material-ui/core";
 import { useTheme } from "@material-ui/styles";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
-import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { useDrawer } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import { MainContext } from "../../../main-context";
 import AppSettings from "../../../App/AppSettings";
 import { getMainMenuTools } from "../../../tools";
@@ -38,6 +38,7 @@ const MainMenu = props => {
     handleLogOut,
     handleToggleTheme
   } = useContext(MainContext);
+  const drawer = useDrawer();
   // Refs
   const MENUS = [
     {
@@ -45,7 +46,11 @@ const MainMenu = props => {
       icon: getIconFn(TextSnippetIcon),
       title: "Explorer",
       isActive: true,
-      getOnClick: () => { drawerSub.suffix = "left"; drawerSub.plugin = true; drawerSub.open = true; },
+      getOnClick: () => {
+        drawer.setSuffix("left");
+        drawer.setPlugin(true);
+        drawer.setOpen(true);
+      },
     },
     ...getMainMenuTools().map(tool => {
       return {

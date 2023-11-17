@@ -19,6 +19,7 @@ class Workspace {
     this.RECENT_DOCUMENTS_KEY = `movai.${USER_NAME}.${APP_NAME}.recentDocuments`;
     this.DEBUGGING_FLOW_KEY = `movai.${USER_NAME}.${APP_NAME}.flowIsDebugging`;
     this.layoutAndTabs = this.getLayoutAndTabs();
+    this.storage.set(this.LAYOUT_KEY, this.layoutAndTabs[0]);
     this.layout = this.layoutAndTabs[0];
     this.tabs = this.layoutAndTabs[1];
     this.tabStack = this.getTabStack();

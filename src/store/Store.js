@@ -1,5 +1,6 @@
 import { Utils, Document } from "@mov-ai/mov-fe-lib-core";
 import BaseStore from "./BaseStore";
+import { useDrawer } from "./../plugins/hosts/DrawerPanel/DrawerPanel";
 
 class Store extends BaseStore {
   /**

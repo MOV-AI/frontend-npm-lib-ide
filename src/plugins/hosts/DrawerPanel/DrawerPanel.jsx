@@ -2,6 +2,7 @@
 // accissible in devTools via window.drawer
 
 import React, { useCallback, useMemo } from "react";
+import { unstable_batchedUpdates } from 'react-dom' // or 'react-native'
 import PropTypes from "prop-types";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { Drawer, Typography, Tooltip, IconButton } from "@material-ui/core";
@@ -10,88 +11,164 @@ import { activateKeyBind } from "../../../utils/Utils";
 import { withHostReactPlugin } from "../../../engine/ReactPlugin/HostReactPlugin";
 import { bookmarkStyles } from "./../../../decorators/styles";
 import { drawerPanelStyles } from "./styles";
-import { Sub, reflect } from "@tty-pt/sub";
+import { create } from "zustand";
 
-class DrawerSub extends Sub {
-  shared = true;
-
-  constructor() {
-    super({ url: "initial" }, "DrawerSub");
-    this._suffix = "right";
-  }
-
-  isValidSuffix(suffix) {
-    return suffix === "left" || suffix === "right";
-  }
-
-  @reflect("$url")
-  set plugin(value) {
-    this._target = value;
-  }
-
-  @reflect("$url")
-  set active(active) {
-    this.plugin = false;
-    this._target = active;
-  }
-
-  @reflect("$url", true)
-  set open(value) {
-    if (value === this.open) {
-      this._target = this._value;
-      return;
-    }
-    this._target = this.set({
-      ...this._value,
-      [this.index]: { ...this._value[this.index] ?? {}, open: value },
-      [this._suffix]: value,
-      url: this._url,
-    });
-  }
-
-  get open() {
-    return this.shared ? this._value[this._suffix] : this._value[this.index]?.open;
-  }
-
-  @reflect("$url.bookmarks")
-  add(name = "", value, open = false, props = {}) {
-    const bookmarks = this.get();
-    if (bookmarks?.[name] && !(Object.entries(props)).filter(
-      ([key, value]) => value !== bookmarks[name].props[key]
-    ).length)
-      return bookmarks;
-    name = name.replace(".", "/");
-    this.open = this.open || open;
-    if (this.open) {
-      this.plugin = false;
-      this.active = name;
-    }
-    return {
-      ...(bookmarks ?? {}),
-      [name]: { ...value, props },
-    };
-  }
-
-  @reflect("$url.bookmarks")
-  remove(name) {
-    let bookmarks = { ...this.get() };
-    delete bookmarks[name];
-    return bookmarks;
-  }
+function getIndex(state = {}) {
+  return (state.url ?? "initial") + "/" + (state.suffix ?? "right");
 }
 
-function selectBookmark(anchor, name) {
-  drawerSub.suffix = anchor;
-  drawerSub.open = name !== drawerSub._value[drawerSub.index]?.active ? true : !drawerSub.open;
-  drawerSub.active = name;
+/*
+function popIndex(index) {
+  const splits = index.split("/");
+  const butLast = [ ...splits ];
+  butLast.splice(-1, 1)
+  return { url: butLast.join("/"), suffix: splits[splits.length - 1] };
+}
+*/
+
+function getOpen(state = {}) {
+  return state.shared ? state[state.suffix] : state[getIndex(state)]?.open;
+}
+
+function makeSiteSet(set) {
+  return (path, callback = a => a) => {
+    if (!path)
+      return set((state = {}) => {
+        const index = getIndex(state);
+        const current = state[index] ?? {};
+        const value = callback(current, state);
+
+        if (value === current)
+          return state;
+
+        return {
+          ...state,
+          [index]: Object.assign(current, value),
+        }
+      });
+    else
+      return set((state = {}) => {
+        const index = getIndex(state);
+        const current = state[index] ?? {};
+        const value = callback(current[path], state);
+
+        if (current[path] === value)
+          return state;
+
+        return {
+          ...state,
+          [index]: Object.assign(current, { [path]: value }),
+        };
+      });
+  };
 }
 
 export
-const drawerSub = new DrawerSub();
-window.drawer = drawerSub;
-drawerSub._suffix = "left";
-drawerSub.open = true;
-drawerSub._suffix = "right";
+const useDrawer = create((set) => {
+  const siteSet = makeSiteSet(set);
+
+  return {
+    // state
+    shared: true,
+    url: "initial",
+    suffix: "right",
+
+    // setters and getters
+    setPlugin: plugin => siteSet("plugin", () => ({ plugin })),
+    setUrl: url => set((state) => {
+      console.log("setUrl", url, state.url);
+      if (url === state.url)
+        return state;
+      return { url };
+    }),
+    setSuffix: suffix => set((state) => suffix === state.suffix ? state : { suffix }),
+    setActive: active => siteSet("", (current, state) => active === current && state.plugin === false ? state : { active, plugin: false }),
+    setOpen: open => set(state => {
+      if (open === getOpen(state))
+        return state;
+
+      const index = getIndex(state);
+
+      return {
+        ...state,
+        [index]: { ...state[index] ?? {}, open },
+        [state.suffix]: open,
+        url: state.url,
+      };
+    }),
+
+    // emits
+
+    add: (name = "", value, openArg = false, props = {}, argIndex) => set(state => {
+      const stateIndex = getIndex(state);
+      const index = argIndex ?? stateIndex;
+      const current = state[index] ?? {};
+      console.log("add", state, name, value, openArg, props, argIndex);
+      name = name.replace(".", "/");
+
+      if (current.bookmarks?.[name] && !(Object.entries(props)).filter(
+        ([key, value]) => value !== current.bookmarks[name].props[key]
+      ).length && (name === current.active || !openArg || stateIndex !== index))
+        return state;
+
+      const oldOpen = getOpen(state);
+      const open = oldOpen || openArg;
+      let plugin = current.plugin;
+      let active = current.active;
+
+      if (open) {
+        plugin = false;
+        active = name;
+      }
+
+      return {
+        [index]: {
+          ...current,
+          open, plugin, active,
+          bookmarks: {
+            ...(current.bookmarks ?? {}),
+            [name]: { ...value, props },
+          }
+        },
+        [state.suffix]: open,
+      };
+    }),
+
+    remove: (name, argIndex) => set(state => {
+      const stateIndex = getIndex(state);
+      const index = argIndex ?? stateIndex;
+      const current = state[index];
+      let bookmarks = { ...current.bookmarks };
+      delete bookmarks[name];
+      console.log("remove", name, argIndex, current.bookmarks, bookmarks);
+      return {
+        [index]: {
+          ...current,
+          bookmarks,
+        },
+      };
+    }),
+  };
+})
+
+function selectBookmark(anchor, name) {
+  unstable_batchedUpdates(() => {
+    let state = useDrawer.getState();
+    state.setSuffix(anchor);
+    state = useDrawer.getState();
+    state.setOpen(name !== state[getIndex(state)]?.active ? true : !getOpen(state));
+    state.setActive(name);
+  });
+}
+
+unstable_batchedUpdates(() => {
+  let state = useDrawer.getState();
+  state.setSuffix("left");
+  state.setOpen(true);
+  state.setSuffix("right");
+});
+
+window.drawer = useDrawer;
 
 function BookmarkTab(props) {
   const { active, name, bookmark, anchor, classes } = props;
@@ -130,7 +207,7 @@ function DrawerPanel(props) {
     className,
   } = props;
 
-  const cur = drawerSub.use("");
+  const cur = useDrawer();
   const url = cur.url;
   const side = cur[url + "/" + anchor] ?? {};
   const sharedOpen = cur[anchor];
@@ -141,7 +218,6 @@ function DrawerPanel(props) {
   const active = side.active ?? Object.keys(bookmarks)[0];
   const renderedView = bookmarks[active]?.view ?? <></>;
   const realOpen = open && (plugin || bookmarks?.[active]);
-  drawerSub.echo("DrawerPanel", cur, sharedOpen, realOpen);
   const oppositeSide = anchor === "left" ? "right" : "left";
   const classes = bookmarkStyles(anchor, oppositeSide)();
   const drawerClasses = drawerPanelStyles(anchor === "left", realOpen)();
@@ -187,6 +263,7 @@ function DrawerPanel(props) {
       ))}
     </div>
   ), [active, anchor, bookmarks, classes, selectBookmarkCallback]);
+  console.log("Drawer", anchor, cur);
 
   return (
     <div className={classes.bookmarksContainer}>

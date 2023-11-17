@@ -1,11 +1,11 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { makeStyles, useTheme } from "@material-ui/styles";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
-import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { useDrawer } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import InfoIcon from "@material-ui/icons/Info";
 import Menu from "./Menu";
 
@@ -36,24 +36,26 @@ export const Callback = (props, ref) => {
   const classes = useStyles();
   const theme = useTheme();
   const { t } = useTranslation();
+  const drawer = useDrawer();
 
   //========================================================================================
   /*                                                                                      *
    *                                   React callbacks                                    *
    *                                                                                      */
   //========================================================================================
+  const rindex = useMemo(() => id + "/right", [id]);
 
   const renderRightMenu = useCallback(() => {
     const menuName = `${name}-detail-menu`;
     const menuTitle = t("CallbackDetailsMenuTitle");
     // add bookmark
-    drawerSub.add(menuName, {
+    drawer.add(menuName, {
       icon: <InfoIcon />,
       name: menuName,
       title: menuTitle,
       view: <Menu id={id} call={call} name={name} scope={scope} />
-    });
-  }, [call, id, name, scope, t]);
+    }, false, {}, rindex);
+  }, [call, id, name, scope, t, drawer.add, rindex]);
 
   usePluginMethods(ref, {
     renderRightMenu

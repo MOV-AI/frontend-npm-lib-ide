@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Typography } from "@material-ui/core";
@@ -7,7 +7,7 @@ import Model from "../model/Node";
 import CallbackModel from "../../Callback/model/Callback";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
-import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { useDrawer } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import {
   DEFAULT_KEY_VALUE_DATA,
   TABLE_KEYS_NAMES,
@@ -46,6 +46,7 @@ export const Node = (props, ref) => {
     keysToDisconsider: Model.KEYS_TO_DISCONSIDER
   });
   const defaultColumns = getColumns();
+  const drawer = useDrawer();
 
   //========================================================================================
   /*                                                                                      *
@@ -204,20 +205,21 @@ export const Node = (props, ref) => {
    *                                   React callbacks                                    *
    *                                                                                      */
   //========================================================================================
+  const rindex = useMemo(() => id + "/right", [id]);
 
   useEffect(() => {
     const details = props.data?.details ?? {};
     const menuName = `${name}-detail-menu`;
     const menuTitle = t("NodeDetailsMenuTitle");
     // add bookmark
-    drawerSub.add(menuName, {
+    drawer.add(menuName, {
       icon: <InfoIcon></InfoIcon>,
       title: menuTitle,
       view: (
         <Menu id={id} name={name} details={details} model={instance}></Menu>
       )
-    });
-  }, []);
+    }, false, {}, rindex);
+  }, [drawer.add, rindex]);
 
   usePluginMethods(ref, {
     renderRightMenu: () => {},

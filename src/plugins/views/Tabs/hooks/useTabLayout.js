@@ -16,7 +16,7 @@ import {
 } from "../../../../utils/Constants";
 import { getIconByScope } from "../../../../utils/Utils";
 import PluginManagerIDE from "../../../../engine/PluginManagerIDE/PluginManagerIDE";
-import { drawerSub } from "../../../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { useDrawer } from "../../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import Workspace from "../../../../utils/Workspace";
 import { getToolTabData } from "../../../../tools";
 import useTabStack from "./useTabStack";
@@ -24,13 +24,19 @@ import useTabStack from "./useTabStack";
 const useTabLayout = (props, dockRef) => {
   const { dependencies, emit, call, on, off } = props;
   const workspaceManager = useMemo(() => new Workspace(), []);
-  const activeTabId = useRef();
+  const [activeTabId, setActiveTabId] = useState();
+  // const activeTabId = useRef();
   const firstLoad = useRef(true);
   const preventReloadNewDoc = useRef(false);
   const tabsById = useRef(new Map());
   const [layout, setLayout] = useState({ ...DEFAULT_LAYOUT });
   const { addTabToStack, removeTabFromStack, getNextTabFromStack } =
     useTabStack(workspaceManager);
+  const drawer = useDrawer();
+
+  useEffect(() => {
+      drawer.setUrl(activeTabId);
+  }, [drawer.setUrl]);
 
   //========================================================================================
   /*                                                                                      *
@@ -41,7 +47,6 @@ const useTabLayout = (props, dockRef) => {
   const openNonEditorTabs = useCallback(
     lastTabs => {
       // Save current active tab id
-      const currentActiveTabId = activeTabId.current;
 
       // Load tools tab data
       lastTabs.forEach(tab => {
@@ -54,13 +59,8 @@ const useTabLayout = (props, dockRef) => {
           dockRef.current?.updateTab?.(toolName, tabData, false);
         }
       });
-
-      // Set current active tab id after extra tabs update
-      activeTabId.current = currentActiveTabId;
-      drawerSub.url = currentActiveTabId;
-      emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: currentActiveTabId });
     },
-    [emit, workspaceManager, addTabToStack, dockRef]
+    [workspaceManager, addTabToStack, dockRef]
   );
 
   /**
@@ -133,18 +133,17 @@ const useTabLayout = (props, dockRef) => {
           t => t.id === layoutActiveId
         );
       }
-      activeTabId.current = layoutActiveId;
-      drawerSub.url = layoutActiveId;
 
+      let actualTab = layoutActiveId;
       if (!tabExists && layoutActiveId) {
         const newActiveTabId = getNextTabFromStack();
         if (maxboxChildren) maxboxChildren.activeId = newActiveTabId;
         else _layout.dockbox.children[0].activeId = newActiveTabId;
-        activeTabId.current = newActiveTabId;
-        drawerSub.url = newActiveTabId;
+        actualTab = newActiveTabId;
       }
+      setActiveTabId(actualTab);
     },
-    [getNextTabFromStack]
+    [getNextTabFromStack, setActiveTabId]
   );
 
   /**
@@ -356,7 +355,9 @@ const useTabLayout = (props, dockRef) => {
         const dock = getDockFromTabId(tabId);
         removeTabFromStack(tabId, dock);
         applyLayout(newLayout);
-        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: getNextTabFromStack() });
+        const newActiveId = getNextTabFromStack();
+        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveId });
+        drawer.setUrl(newActiveId);
       }
     },
     [
@@ -533,6 +534,7 @@ const useTabLayout = (props, dockRef) => {
       };
 
       emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: tabData.id });
+      drawer.setUrl(tabData.id);
       addTabToStack(tabData, tabPosition);
       tabsById.current.set(tabData.id, tabData);
       workspaceManager.setTabs(tabsById.current);
@@ -544,8 +546,7 @@ const useTabLayout = (props, dockRef) => {
       }
 
       // Update new open tab id
-      activeTabId.current = tabData.id;
-      drawerSub.url = tabData.id;
+      setActiveTabId(tabData.id);
       // Set new layout
       setLayout(prevState => {
         const newState = { ...prevState };
@@ -578,6 +579,8 @@ const useTabLayout = (props, dockRef) => {
       focusExistingTab,
       addTabToStack,
       findTab,
+      drawer.setUrl,
+      setActiveTabId,
       emit
     ]
   );
@@ -693,8 +696,9 @@ const useTabLayout = (props, dockRef) => {
       // Emit new active tab id
       if (!tabId) return;
 
-      activeTabId.current = newActiveTabId;
+      setActiveTabId(newActiveTabId);
       emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
+      drawer.setUrl(newActiveTabId);
     },
     [
       getDockFromTabId,
@@ -703,6 +707,8 @@ const useTabLayout = (props, dockRef) => {
       getNextTabFromStack,
       _getFirstContainer,
       applyLayout,
+      setActiveTabId,
+      drawer.setUrl,
       addTabToStack
     ]
   );
@@ -716,8 +722,7 @@ const useTabLayout = (props, dockRef) => {
     (prevTabId, newTabData) => {
       _getTabData(newTabData).then(tabData => {
         // Update new open tab id
-        activeTabId.current = tabData.id;
-        drawerSub.url = tabData.id;
+        setActiveTabId(tabData.id);
         // Set new layout
         setLayout(prevState => {
           // look for tab in windowbox
@@ -738,15 +743,15 @@ const useTabLayout = (props, dockRef) => {
    * @returns {string} active tab id
    */
   const getActiveTab = useCallback(() => {
-    return tabsById.current.get(activeTabId.current);
-  }, []);
+    return tabsById.current.get(activeTabId);
+  }, [activeTabId]);
 
   /**
    * Focus on active tab
    */
   const focusActiveTab = useCallback(() => {
-    focusExistingTab(activeTabId.current);
-  }, [focusExistingTab]);
+    focusExistingTab(activeTabId);
+  }, [focusExistingTab, activeTabId]);
 
   //========================================================================================
   /*                                                                                      *
