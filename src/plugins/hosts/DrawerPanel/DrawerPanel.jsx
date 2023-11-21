@@ -8,94 +8,22 @@ import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { Drawer, Typography, Tooltip, IconButton } from "@material-ui/core";
 import { DRAWER, PLUGINS } from "../../../utils/Constants";
 import { activateKeyBind } from "../../../utils/Utils";
+import { useUseful, makeUsefulOpen, getIndex, getOpen } from "../../../utils/useful";
 import { withHostReactPlugin } from "../../../engine/ReactPlugin/HostReactPlugin";
 import { bookmarkStyles } from "./../../../decorators/styles";
 import { drawerPanelStyles } from "./styles";
 import { create } from "zustand";
 
-function getIndex(state = {}) {
-  return (state.url ?? "initial") + "/" + (state.suffix ?? "right");
-}
-
-/*
-function popIndex(index) {
-  const splits = index.split("/");
-  const butLast = [ ...splits ];
-  butLast.splice(-1, 1)
-  return { url: butLast.join("/"), suffix: splits[splits.length - 1] };
-}
-*/
-
-function getOpen(state = {}) {
-  return state.shared ? state[state.suffix] : state[getIndex(state)]?.open;
-}
-
-function makeSiteSet(set) {
-  return (path, callback = a => a) => {
-    if (!path)
-      return set((state = {}) => {
-        const index = getIndex(state);
-        const current = state[index] ?? {};
-        const value = callback(current, state);
-
-        if (value === current)
-          return state;
-
-        return {
-          ...state,
-          [index]: Object.assign(current, value),
-        }
-      });
-    else
-      return set((state = {}) => {
-        const index = getIndex(state);
-        const current = state[index] ?? {};
-        const value = callback(current[path], state);
-
-        if (current[path] === value)
-          return state;
-
-        return {
-          ...state,
-          [index]: Object.assign(current, { [path]: value }),
-        };
-      });
-  };
-}
-
 export
 const useDrawer = create((set) => {
-  const siteSet = makeSiteSet(set);
+  const useful = makeUsefulOpen(set);
 
   return {
-    // state
-    shared: true,
-    url: "initial",
-    suffix: "right",
+    ...useful,
 
     // setters and getters
-    setPlugin: plugin => siteSet("plugin", () => ({ plugin })),
-    setUrl: url => set((state) => {
-      console.log("setUrl", url, state.url);
-      if (url === state.url)
-        return state;
-      return { url };
-    }),
-    setSuffix: suffix => set((state) => suffix === state.suffix ? state : { suffix }),
-    setActive: active => siteSet("", (current, state) => active === current && state.plugin === false ? state : { active, plugin: false }),
-    setOpen: open => set(state => {
-      if (open === getOpen(state))
-        return state;
-
-      const index = getIndex(state);
-
-      return {
-        ...state,
-        [index]: { ...state[index] ?? {}, open },
-        [state.suffix]: open,
-        url: state.url,
-      };
-    }),
+    setPlugin: plugin => useful.siteSet("plugin", () => ({ plugin })),
+    setActive: active => useful.siteSet("", (current, state) => active === current && state.plugin === false ? state : { active, plugin: false }),
 
     // emits
 
@@ -103,16 +31,16 @@ const useDrawer = create((set) => {
       const stateIndex = getIndex(state);
       const index = argIndex ?? stateIndex;
       const current = state[index] ?? {};
+      const oldOpen = getOpen(state);
+      const open = oldOpen || openArg;
       console.log("add", state, name, value, openArg, props, argIndex);
       name = name.replace(".", "/");
 
       if (current.bookmarks?.[name] && !(Object.entries(props)).filter(
         ([key, value]) => value !== current.bookmarks[name].props[key]
-      ).length && (name === current.active || !openArg || stateIndex !== index))
+      ).length && (name !== current.active && (!open || stateIndex !== index)))
         return state;
 
-      const oldOpen = getOpen(state);
-      const open = oldOpen || openArg;
       let plugin = current.plugin;
       let active = current.active;
 
@@ -207,10 +135,7 @@ function DrawerPanel(props) {
     className,
   } = props;
 
-  const cur = useDrawer();
-  const url = cur.url;
-  const side = cur[url + "/" + anchor] ?? {};
-  const sharedOpen = cur[anchor];
+  const { side, sharedOpen, state } = useUseful(useDrawer, anchor);
   const {
     plugin = anchor === "left" ? true : false,
     bookmarks = {}, open = sharedOpen,
@@ -263,7 +188,7 @@ function DrawerPanel(props) {
       ))}
     </div>
   ), [active, anchor, bookmarks, classes, selectBookmarkCallback]);
-  console.log("Drawer", anchor, cur);
+  console.log("Drawer", anchor, state);
 
   return (
     <div className={classes.bookmarksContainer}>

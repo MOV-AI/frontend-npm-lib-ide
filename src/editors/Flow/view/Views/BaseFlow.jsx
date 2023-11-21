@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useMemo, memo } from "react";
 import PropTypes from "prop-types";
 import Backdrop from "@material-ui/core/Backdrop";
 import { PLUGINS, SCOPES } from "../../../../utils/Constants";
+import { useUseful } from "./../../../../utils/useful";
+import { useFlow } from "./../Flow";
 import { generateContainerId } from "../Constants/constants";
 import { EVT_NAMES } from "../events";
 import Loader from "../../../_shared/Loader/Loader";
@@ -95,6 +97,9 @@ const BaseFlow = props => {
       getMainInterface().graph.destroy();
     };
   }, [graphClass, dataFromDB, onReady, getMainInterface]);
+
+  const { side: flowSide } = useUseful(useFlow, "right");
+  console.log("BaseFlow", flowSide);
 
   return (
     <div id={`${viewMode}-${id}`} className={classes.flowContainer}>

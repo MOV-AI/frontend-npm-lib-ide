@@ -9,6 +9,7 @@ import {
   MAX_MOVING_PIXELS
 } from "../../Constants/constants";
 import { EVT_NAMES } from "../../events";
+import { useFlow } from "./../../Flow";
 import TemporaryLink from "../Links/TemporaryLink";
 
 class Canvas {
@@ -264,7 +265,7 @@ class Canvas {
       }
     });
     const selectedSet = new Set(
-      [...this.mInterface.selectedNodes].concat(nodesInsideQuad)
+      [...useFlow.getState()[this.id + "/right"]?.selectedNodes ?? []].concat(nodesInsideQuad)
     );
     if (selectedSet.size > 0) {
       this.setMode(

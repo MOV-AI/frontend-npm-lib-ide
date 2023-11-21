@@ -9,6 +9,7 @@ import StartNode from "../Nodes/StartNode";
 import InterfaceModes from "./InterfaceModes";
 import Events from "./Events";
 import Canvas from "./canvas";
+import { useFlow } from "./../../Flow";
 
 export
 let cachedNodeStatus = {};
@@ -175,21 +176,21 @@ export default class MainInterface {
   //========================================================================================
 
   get selectedNodes() {
-    return this.graph.selectedNodes;
+    return useFlow.getState()[this.id + "/right"]?.selectedNodes ?? [];
   }
 
   set selectedNodes(nodes) {
-    this.graph.selectedNodes = nodes;
+    useFlow.getState().setSelectedNodes(nodes);
     if (this.selectedLink) this.selectedLink.onSelected(false);
   }
 
   get selectedLink() {
-    return this.graph.selectedLink;
+    return useFlow.getState()[this.id + "/right"]?.selectedLink;
   }
 
   set selectedLink(link) {
     if (this.graph.selectedLink) this.graph.selectedLink.onSelected(false);
-    this.graph.selectedLink = link;
+    useFlow.getState().setSelectedLink(link);
   }
 
   setMode = (mode, props, force) => {
@@ -384,7 +385,7 @@ export default class MainInterface {
   //========================================================================================
 
   onDefault = () => {
-    this.selectedNodes.length = 0;
+    // this.selectedNodes.length = 0;
   };
 
   onDragEnd = draggedNode => {
@@ -421,7 +422,7 @@ export default class MainInterface {
 
   onSelectNode = data => {
     const { nodes, shiftKey } = data;
-    const { selectedNodes } = this;
+    const selectedNodes = useFlow.getState()[this.id + "/right"]?.selectedNodes ?? [];
     const filterNodes = nodes.filter(n => n.data.model !== StartNode.model);
 
     this.selectedLink = null;

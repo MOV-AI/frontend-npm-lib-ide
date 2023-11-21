@@ -24,6 +24,7 @@ import {
 import Workspace from "../../../utils/Workspace";
 import { KEYBINDINGS } from "../../../utils/shortcuts";
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "../../../utils/Messages";
+import { useUseful, makeUseful } from "../../../utils/useful";
 import CallbackModel from "../../Callback/model/Callback";
 import Clipboard, { KEYS } from "./Utils/Clipboard";
 import Vec2 from "./Utils/Vec2";
@@ -46,11 +47,45 @@ import { FLOW_VIEW_MODE, TYPES } from "./Constants/constants";
 import GraphBase from "./Core/Graph/GraphBase";
 import GraphTreeView from "./Core/Graph/GraphTreeView";
 import { getBaseContextOptions } from "./contextOptions";
+import { create } from "zustand";
 
 import "./Resources/css/Flow.css";
 import { flowStyles } from "./styles";
 
-let activeBookmark = null;
+export
+const useFlow = create((set) => {
+  const useful = makeUseful(set);
+
+  return {
+    ...useful,
+    setSelectedNodes: nodes => useful.siteSet("selectedNodes", (current, state) => {
+      const currentNodes = current ?? [];
+      console.log("setSelectedNodes", current, state, nodes);
+
+      if (
+        currentNodes.length === nodes.length
+        && nodes.filter((item, idx) => item === currentNodes[idx]).length
+      )
+        return current;
+
+      return nodes;
+    }),
+    setSelectedNode: node => useful.siteSet("selectedNode", (current, state) => {
+      console.log("setSelectedNode", current, state, node);
+      if (current?.data?.id === node?.data?.id)
+        return current;
+
+      return node;
+    }),
+    setSelectedLink: link => useful.siteSet("selectedLink", (current, state) => {
+      console.log("setSelectedLink", current, state, link);
+      if (current?.data?.id === link?.data?.id)
+        return current;
+
+      return link;
+    }),
+  }
+});
 
 export const Flow = (props, ref) => {
   // Props
@@ -98,8 +133,8 @@ export const Flow = (props, ref) => {
   const [flowDebugging, setFlowDebugging] = useState();
   const [warningsVisibility, setWarningsVisibility] = useState(true);
   const [viewMode, setViewMode] = useState(FLOW_VIEW_MODE.default);
-  const [tooltipConfig, setTooltipConfig] = useState(null);
-  const [contextMenuOptions, setContextMenuOptions] = useState(null);
+  const [tooltipConfig, setTooltipConfig] = useState();
+  const [contextMenuOptions, setContextMenuOptions] = useState();
   const [searchVisible, setSearchVisible] = useState(false);
 
   // Other Hooks
@@ -109,14 +144,17 @@ export const Flow = (props, ref) => {
 
   // Refs
   const interfaceSubscriptionsList = useRef([]);
-  const contextArgs = useRef(null);
+  const contextArgs = useRef();
   const mainInterfaceRef = useRef();
-  const debounceSelection = useRef();
-  const selectedNodeRef = useRef();
-  const selectedLinkRef = useRef();
+  // const debounceSelection = useRef();
+  // const selectedNodeRef = useRef();
+  // const selectedLinkRef = useRef();
   const isEditableComponentRef = useRef(true);
   const workspaceManager = useMemo(() => new Workspace(), []);
   const drawer = useDrawer();
+  const { side: flowSide, state: flow } = useUseful(useFlow, "right");
+
+  useEffect(() => flow.setUrl(id), [flow.setUrl, id]);
 
   //========================================================================================
   /*                                                                                      *
@@ -254,10 +292,10 @@ export const Flow = (props, ref) => {
   const getSelectedNodes = useCallback(() => {
     const node = contextArgs.current;
     const selectedNodesSet = new Set(
-      [node].concat(getMainInterface().selectedNodes)
+      [node].concat(flowSide.selectedNodes ?? [])
     );
     return Array.from(selectedNodesSet).filter(el => el);
-  }, []);
+  }, [flowSide.selectedNodes]);
 
   /**
    * Get search options
@@ -462,7 +500,7 @@ export const Flow = (props, ref) => {
       Node: NodeMenu,
       Flow: ContainerMenu
     };
-    return model in componentByModel ? componentByModel[model] : null;
+    return model in componentByModel ? componentByModel[model] : undefined;
   }, []);
 
   /**
@@ -571,16 +609,16 @@ export const Flow = (props, ref) => {
       }, false, {}, rindex);
 
     // Add node menu if any is selected
-    if (selectedNodeRef.current)
-      drawer.add(selectedNodeRef.current.data.id, getNodeMenuToAdd(
-        selectedNodeRef.current
-      ), true, {}, rindex);
+    if (flowSide.selectedNode)
+      drawer.add(flowSide.selectedNode.data.id, getNodeMenuToAdd(
+        flowSide.selectedNode
+      ), false, {}, rindex);
 
     // Add link menu if any is selected
-    if (selectedLinkRef.current)
-      drawer.add(selectedLinkRef.current.data.id, getLinkMenuToAdd(
-        selectedLinkRef.current
-      ), true, {}, rindex);
+    if (flowSide.selectedLink)
+      drawer.add(flowSide.selectedLink.data.id, getLinkMenuToAdd(
+        flowSide.selectedLink
+      ), false, {}, rindex);
   }, [
     id,
     name,
@@ -589,6 +627,8 @@ export const Flow = (props, ref) => {
     call,
     getNodeMenuToAdd,
     getLinkMenuToAdd,
+    flowSide.selectedNode,
+    flowSide.selectedLink,
     drawer.add,
     t
   ]);
@@ -667,31 +707,35 @@ export const Flow = (props, ref) => {
    */
   const onNodeSelected = useCallback(
     node => {
-      clearTimeout(debounceSelection.current);
+      // clearTimeout(debounceSelection.current);
       contextArgs.current = node;
+      console.log("onNodeSelected", node, flowSide.selectedNode);
       // debounceSelection.current = setTimeout(() => {
-        if (selectedNodeRef.current) {
-          console.log("onNodeSelected", node);
+        if (flowSide.selectedNode) {
           drawer.remove(
-            selectedNodeRef.current.data.id,
+            flowSide.selectedNode.data.id,
             rindex,
           );
         }
         if (!node) {
-          selectedNodeRef.current = null;
+          flow.setSelectedNode();
+          flow.setSelectedNodes([]);
         } else {
           // We only want 1 selection at the time.
           // So let's unselect links if any is selected
-          if (selectedLinkRef.current) onLinkSelected(null);
+          if (flowSide.selectedLink) onLinkSelected();
 
-          selectedNodeRef.current = node;
-          activeBookmark = selectedNodeRef.current.data.id;
+          flow.setSelectedNode(node);
+          flow.setSelectedNodes([node]);
+          drawer.setActive(flowSide.selectedNode ? flowSide.selectedNode.data.id : undefined);
           addNodeMenu(node, true);
         }
       // }, 300);
     },
-    [addNodeMenu, onLinkSelected, drawer.remove, rindex]
+    [addNodeMenu, onLinkSelected, drawer.remove, rindex, flowSide.selectedNode, flowSide.selectedLink, flow.setSelectedNode, flow.setSelectedNodes, drawer.setActive]
   );
+
+  console.log("Flow", props, flow);
 
   /**
    * On Link selected
@@ -700,13 +744,13 @@ export const Flow = (props, ref) => {
   const onLinkSelected = useCallback(
     link => {
       activateEditor();
-      if (selectedLinkRef.current)
+      if (flowSide.selectedLink)
         drawer.remove(
-          selectedLinkRef.current.data.id,
+          flowSide.selectedLink.data.id,
           rindex
         );
-      selectedLinkRef.current = link;
-      getMainInterface().selectedLink = link;
+      flow.setSelectedLink(link);
+      // getMainInterface().selectedLink = link;
       if (link) {
         const currentMode = getMainInterface().mode.mode;
         // We only want 1 selection at the time.
@@ -718,28 +762,33 @@ export const Flow = (props, ref) => {
           // If we're making multiple node selection we need to reset the mode
           getMainInterface().setMode(EVT_NAMES.DEFAULT);
           // Since we resetted the mode, we need to add back the selected link
-          getMainInterface().selectedLink = link;
-        } else if (selectedNodeRef.current) {
+          flow.setSelectedLink(link);
+          // getMainInterface().selectedLink = link;
+        } else if (flowSide.selectedNode) {
           // If we just selected 1 node, it's ok, let's just unselect it
-          selectedNodeRef.current.selected = false;
+          flow.setSelectedNode({
+            ...(flowSide.selectedNode ?? {}),
+            selected: false,
+          });
         }
 
         // Remove node menu
-        selectedNodeRef.current = null;
+        flow.setSelectedNode();
+        flow.setSelectedNodes([]);
 
-        activeBookmark = link.data.id;
+        drawer.setActive(link.data.id);
         addLinkMenu(link, true);
       }
     },
-    [activateEditor, call, addLinkMenu, drawer.remove, rindex]
+    [activateEditor, call, addLinkMenu, drawer.remove, rindex, flowSide.selectedNode, flowSide.selectedLink, flow.setSelectedNode, flow.setSelectedLink]
   );
 
   /**
    * Close context menu
    */
   const handleContextClose = useCallback(() => {
-    contextArgs.current = null;
-    setContextMenuOptions(null);
+    contextArgs.current = undefined;
+    setContextMenuOptions();
     getMainInterface().setMode(EVT_NAMES.DEFAULT);
   }, []);
 
@@ -749,8 +798,8 @@ export const Flow = (props, ref) => {
   const setFlowsToDefault = useCallback(() => {
     activateEditor();
     // Remove selected node and link bookmark
-    onNodeSelected(null);
-    onLinkSelected(null);
+    // onNodeSelected();
+    // onLinkSelected();
     // Update render of right menu
     // broadcast event to other flows
     call(
@@ -759,7 +808,7 @@ export const Flow = (props, ref) => {
       PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR,
       { action: "setMode", value: EVT_NAMES.DEFAULT }
     );
-  }, [call, activateEditor, onLinkSelected, onNodeSelected]);
+  }, [call, activateEditor]);
 
   /**
    * Subscribe to mainInterface and canvas events
@@ -808,9 +857,10 @@ export const Flow = (props, ref) => {
 
       // Subscribe to on node select event
       interfaceSubscriptionsList.current.push(
-        mainInterface.mode[EVT_NAMES.SELECT_NODE].onEnter.subscribe(() => {
-          const selectedNodes = mainInterface.selectedNodes;
-          const node = selectedNodes.length !== 1 ? null : selectedNodes[0];
+        mainInterface.mode[EVT_NAMES.SELECT_NODE].onEnter.subscribe(arg => {
+          console.log("SELECT_NODE", arg.nodes, flow);
+          // const selectedNodes = mainInterface.selectedNodes;
+          const node = arg.nodes.length < 1 ? undefined : arg.nodes[0];
           onNodeSelected(node);
         })
       );
@@ -1048,7 +1098,7 @@ export const Flow = (props, ref) => {
             )
           )
           .subscribe(() => {
-            setTooltipConfig(null);
+            setTooltipConfig();
           })
       );
 
@@ -1080,6 +1130,8 @@ export const Flow = (props, ref) => {
       startNode,
       stopNode,
       t,
+      flowSide.selectedNode,
+      flowSide.selectedNodes,
       handleDeleteLink,
       handlePasteNodes,
       handleToggleExposedPort,
@@ -1187,7 +1239,7 @@ export const Flow = (props, ref) => {
       selectedNodes.forEach(node => {
         getMainInterface().deleteNode(node.data);
       });
-      selectedNodeRef.current = null;
+      flow.setSelectedNode();
     };
     // Compose confirmation message
     const message = t("NodeDeleteConfirmation", {
@@ -1198,24 +1250,24 @@ export const Flow = (props, ref) => {
     });
     // Show confirmation before delete
     handleDelete({ message, callback });
-  }, [handleDelete, getSelectedNodes, t]);
+  }, [handleDelete, getSelectedNodes, t, flow.setSelectedNode]);
 
   /**
    * Handle delete link
    */
   const handleDeleteLink = useCallback(() => {
-    const link = selectedLinkRef.current ?? contextArgs.current;
+    const link = flowSide.selectedLink ?? contextArgs.current;
     link.id && getMainInterface().deleteLink(link.id);
-  }, []);
+  }, [flowSide.selectedLink]);
 
   /**
    * Triggers the correct deletion
    * (if a link is selected delete link, else delete nodes)
    */
   const handleShortcutDelete = useCallback(() => {
-    if (selectedLinkRef.current) handleDeleteLink();
+    if (flowSide.selectedLink) handleDeleteLink();
     else handleDeleteNode();
-  }, [handleDeleteLink, handleDeleteNode]);
+  }, [handleDeleteLink, handleDeleteNode, flowSide.selectedLink]);
 
   /**
    * Toggle exposed port
@@ -1316,7 +1368,7 @@ export const Flow = (props, ref) => {
       PLUGINS.RIGHT_DRAWER.NAME,
       PLUGINS.RIGHT_DRAWER.ON.CHANGE_BOOKMARK,
       bookmark => {
-        activeBookmark = bookmark.name;
+        drawer.setActive(bookmark.name);
       }
     );
 
@@ -1369,7 +1421,7 @@ export const Flow = (props, ref) => {
                 scope,
                 name: subFlows[i].templateName
               },
-              null,
+              undefined,
               // {{ignoreNew: true}} Because we don't want to show the new doc popup on missing subflows
               // {{preventAlert: true}} Because independently of how many saves we do we just to want to show the snackbar once
               { ignoreNew: true, preventAlert: true }

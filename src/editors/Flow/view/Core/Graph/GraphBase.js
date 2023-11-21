@@ -9,6 +9,7 @@ import { FLOW_VIEW_MODE, NODE_TYPES } from "../../Constants/constants";
 import Factory from "../../Components/Nodes/Factory";
 import { shouldUpdateExposedPorts } from "./Utils";
 import { cachedNodeStatus } from "../../Components/interface/MainInterface";
+import { useFlow } from "./../../Flow";
 import GraphValidator from "./GraphValidator";
 
 const NODE_DATA = {
@@ -40,7 +41,6 @@ export default class GraphBase {
     this.nodes = new Map(); // <node name> : {obj: <node instance>, links: []}
     this.links = new Map(); // linkId : <link instance>
     this.exposedPorts = {};
-    this.selectedNodes = [];
     this.selectedLink = null;
     this.tempNode = null;
     this.warnings = [];
@@ -233,7 +233,8 @@ export default class GraphBase {
   onNodeDrag = (draggedNode, d) => {
     const allNodes = this.nodes;
     const allLinks = this.links;
-    let nodes = [...this.selectedNodes];
+    const selectedNodes = useFlow.getState()[this.id + "/right"]?.selectedNodes ?? [draggedNode];
+    let nodes = [...selectedNodes];
 
     if (draggedNode) {
       const gnode = this.nodes.get(draggedNode.data.id);
@@ -241,7 +242,7 @@ export default class GraphBase {
     }
 
     if (this.canvas.inBoundaries(d.x, d.y)) {
-      this.selectedNodes.forEach(node => {
+      selectedNodes.forEach(node => {
         node.setPositionDelta(d.dx, d.dy);
       });
     }
@@ -457,11 +458,13 @@ export default class GraphBase {
     const events = { onDrag: this.onNodeDrag };
 
     try {
-      const inst = await Factory.create(
+      const inst = Object.assign(await Factory.create(
         this.docManager,
         Factory.OUTPUT[nodeType],
         { canvas: this.canvas, node, events }
-      );
+      ), {
+        selected: (useFlow.getState().selectedNodes ?? []).includes(node.id)
+      });
       this.nodes.set(node.id, { obj: inst, links: [] });
 
       if (parent?.addChild)
