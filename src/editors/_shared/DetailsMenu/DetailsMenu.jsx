@@ -1,13 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  Typography
-} from "@material-ui/core";
-
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Typography  from "@mui/material/Typography";
 import { detailsMenuStyles } from "./styles";
 
 const DetailsMenu = ({ name, details }) => {
@@ -19,7 +16,7 @@ const DetailsMenu = ({ name, details }) => {
   return (
     <div>
       <h2 className={classes.detailsName}>{name}</h2>
-      <List sx={{ width: "100%", bgcolor: "background.paper" }} component="nav">
+      <List sx={{ width: "100%" }} component="nav">
         <ListItem>
           <ListItemText primary={t("Name-Colon")} />
           <Typography>{name}</Typography>

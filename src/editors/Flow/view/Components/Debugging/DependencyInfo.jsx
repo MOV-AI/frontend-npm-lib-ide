@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { LINK_DEPENDENCY } from "../../../../../utils/Constants";
 import { convertToValidString } from "../../../../../utils/Utils";
 

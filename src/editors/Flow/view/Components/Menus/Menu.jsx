@@ -1,19 +1,17 @@
 import React, { useCallback, useState } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import {
-  Collapse,
-  Divider,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Typography
-} from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import Add from "@material-ui/icons/Add";
+import Collapse from "@mui/material/Collapse";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Typography  from "@mui/material/Typography";
+import EditIcon from "@mui/icons-material/Edit";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import Add from "@mui/icons-material/Add";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import Model from "../../../model/Flow";
 import useDataSubscriber from "../../../../../plugins/DocManager/useDataSubscriber";

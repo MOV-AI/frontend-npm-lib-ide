@@ -26,15 +26,14 @@ import i18n from "../i18n/i18n";
 import ApplicationTheme from "../themes";
 import * as CONSTANTS from "../utils/Constants";
 // Externals
-// import { ThemeProvider, withStyles } from "@material-ui/styles";
+// import { ThemeProvider, withStyles } from "@mui/styles";
 import { I18nextProvider } from "react-i18next";
 // Icons
-import HomeIcon from "@material-ui/icons/Home";
-import KeyboardIcon from "@material-ui/icons/Keyboard";
+import HomeIcon from "@mui/icons/Home";
+import KeyboardIcon from "@mui/icons/Keyboard";
 
 const dependencies = {
   "react-i18next": { I18nextProvider },
-  "@material-ui/styles": { ThemeProvider, withStyles },
   i18n
 };
 

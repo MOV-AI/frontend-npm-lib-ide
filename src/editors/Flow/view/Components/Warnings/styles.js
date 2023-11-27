@@ -1,5 +1,4 @@
-import { amber, green } from "@material-ui/core/colors";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
 const commonStyles = {
   display: "flex",
@@ -53,16 +52,13 @@ export const warningsStyles = makeStyles(theme => ({
     minWidth: "200px"
   },
   success: {
-    backgroundColor: green[600]
+    backgroundColor: theme.palette?.success.main
   },
   error: {
     backgroundColor: theme.palette?.error.dark
   },
   info: {
     backgroundColor: theme.palette?.primary.main
-  },
-  warning: {
-    backgroundColor: amber[700]
   },
   clickableSnack: {
     border: "2px solid #666",

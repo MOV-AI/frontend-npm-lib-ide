@@ -1,4 +1,5 @@
 import { Themes } from "@mov-ai/mov-fe-lib-react";
+import { themeSub } from "@tty-pt/styles";
 import lodash from "lodash";
 
 const commonColors = {
@@ -117,3 +118,4 @@ Object.keys(overrideTheme).forEach(theme => {
 // Merge app theme with base theme
 const mergedTheme = lodash.merge({}, Themes, overrideTheme);
 export default mergedTheme;
+themeSub.add(mergedTheme);

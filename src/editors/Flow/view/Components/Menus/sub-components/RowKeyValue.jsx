@@ -1,10 +1,10 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import Edit from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/DeleteOutline";
-import IconButton from "@material-ui/core/IconButton";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import { Typography } from "@material-ui/core";
+import Edit from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/DeleteOutline";
+import IconButton from "@mui/material/IconButton";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import Typography  from "@mui/material/Typography";
 import {
   DATA_TYPES,
   DEFAULT_VALUE,

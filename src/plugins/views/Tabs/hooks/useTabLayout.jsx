@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { withError } from "@mov-ai/mov-fe-lib-react";
-import { Tooltip } from "@material-ui/core";
+import Tooltip  from "@mui/material/Tooltip";
 import {
   DEFAULT_LAYOUT,
   DOCK_POSITIONS,
@@ -255,6 +255,56 @@ const useTabLayout = (props, dockRef) => {
   );
 
   /**
+   * Close tab : Remove from layout
+   * @param {string} tabId : Tab ID (document URL)
+   * @param {boolean} forceClose : Force document to close
+   * @returns {LayoutData} : Layout without tab
+   */
+  const _closeTab = useCallback(
+    async (tabId, forceClose) => {
+      const tabData = findTab(tabId);
+      if (!tabData) return;
+      const currentLayout = dockRef.current.saveLayout();
+      const locations = Object.values(DOCK_POSITIONS);
+      // look for tab in layout locations
+      for (const location of locations) {
+        const box = _getTabContainer(currentLayout[location], tabId);
+
+        if (box) {
+          // If it's in a maximized tab, let's minimize it and then call _closeTab again
+          if (location === DOCK_POSITIONS.MAX && box.tabs.length === 1) {
+            const maxboxMainTab =
+              dockRef.current.state.layout.maxbox.children[0];
+            await dockRef.current.dockMove(
+              maxboxMainTab,
+              null,
+              DOCK_MODES.MAXIMIZE
+            );
+          } else {
+            // Let's remove the tab
+            box.tabs = box.tabs.filter(_el => _el.id !== tabId);
+            // _onLayoutRemoveTab(currentLayout, tabId, forceClose);
+          }
+          return;
+        }
+      }
+    },
+    [dockRef, _getTabContainer, findTab]
+  );
+
+  /**
+   * Close Tab
+   */
+  const close = useCallback(
+    data => {
+      const { tabId } = data;
+      // Close tab dynamically
+      _closeTab(tabId);
+    },
+    [_closeTab]
+  );
+
+  /**
    * Save document and apply layout
    * @param {{name: string, scope: string}} docData
    */
@@ -293,7 +343,7 @@ const useTabLayout = (props, dockRef) => {
         close({ tabId: id });
       });
     },
-    [call, close]
+    [call]
   );
 
   /**
@@ -365,46 +415,6 @@ const useTabLayout = (props, dockRef) => {
       getNextTabFromStack,
       call
     ]
-  );
-
-  /**
-   * Close tab : Remove from layout
-   * @param {string} tabId : Tab ID (document URL)
-   * @param {boolean} forceClose : Force document to close
-   * @returns {LayoutData} : Layout without tab
-   */
-  const _closeTab = useCallback(
-    async (tabId, forceClose) => {
-      const tabData = findTab(tabId);
-      if (!tabData) return;
-      const currentLayout = dockRef.current.saveLayout();
-      const locations = Object.values(DOCK_POSITIONS);
-      // look for tab in layout locations
-      for (const location of locations) {
-        const box = _getTabContainer(currentLayout[location], tabId);
-
-        if (box) {
-          // If it's in a maximized tab, let's minimize it and then call _closeTab again
-          if (location === DOCK_POSITIONS.MAX && box.tabs.length === 1) {
-            const maxboxMainTab =
-              dockRef.current.state.layout.maxbox.children[0];
-            await dockRef.current.dockMove(
-              maxboxMainTab,
-              null,
-              DOCK_MODES.MAXIMIZE
-            );
-            return _closeTab(tabId);
-          }
-
-          // Let's remove the tab
-          box.tabs = box.tabs.filter(_el => _el.id !== tabId);
-
-          // And update the Layout
-          return _onLayoutRemoveTab(currentLayout, tabId, forceClose);
-        }
-      }
-    },
-    [dockRef, _getTabContainer, _onLayoutRemoveTab, findTab]
   );
 
   /**
@@ -602,18 +612,6 @@ const useTabLayout = (props, dockRef) => {
       }
     },
     [call, emit, _getTabData, open]
-  );
-
-  /**
-   * Close Tab
-   */
-  const close = useCallback(
-    data => {
-      const { tabId } = data;
-      // Close tab dynamically
-      _closeTab(tabId);
-    },
-    [_closeTab]
   );
 
   /**

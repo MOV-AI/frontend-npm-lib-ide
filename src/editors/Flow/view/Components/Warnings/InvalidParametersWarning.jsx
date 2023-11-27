@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 import ParameterLine from "./components/ParameterLine";
 
 import { invalidParametersWarningStyles } from "./styles";

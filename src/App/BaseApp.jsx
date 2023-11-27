@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import hotkeys from "hotkeys-js";
-import { Style } from "@mov-ai/mov-fe-lib-react";
-import { Typography } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
+import { makeMagic } from "@tty-pt/styles";
+// import { Style } from "@mov-ai/mov-fe-lib-react";
+import Typography  from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 import DocManager from "../plugins/DocManager/DocManager";
 import Dialog from "../plugins/Dialog/Dialog";
 import Alerts from "../plugins/Alerts/Alerts";
@@ -38,6 +39,12 @@ import "./App.css";
 import { appStyles } from "./styles";
 
 const DEBUG_MODE = false;
+
+makeMagic({
+  "?#root > *": {
+    height: "100vh",
+  },
+});
 
 function BaseApp(props) {
   // Props
@@ -149,7 +156,6 @@ function BaseApp(props) {
 
   return (
     <MainContext.Provider value={mainContextMemo}>
-      <Style />
       <div className="App" onContextMenu={onContextMenu}>
         {getHostedPlugins(classes)}
       </div>
@@ -252,12 +258,12 @@ function installViewPlugins(dependencies) {
 
 function getHostedPlugins(classes) {
   return (
-    <Grid container direction="column" wrap="nowrap">
+    <div className="vertical-0 size-vertical size-horizontal">
       <AbstractHost hostName={HOSTS.ABSTRACT_HOST.NAME}></AbstractHost>
       <Grid container alignItems="flex-start">
         <TopBar hostName={HOSTS.TOP_BAR.NAME} debugMode={DEBUG_MODE}></TopBar>
       </Grid>
-      <Grid container alignItems="stretch" className={classes.mainGrid}>
+      <div className="horizontal-0 flex-grow">
         <Typography component="div" className={classes.leftPanel}>
           <SidePanel
             hostName={HOSTS.LEFT_PANEL.NAME}
@@ -278,7 +284,7 @@ function getHostedPlugins(classes) {
           hostName={PLUGINS.RIGHT_DRAWER.NAME}
           anchor="right"
         ></DrawerPanel>
-      </Grid>
+      </div>
       <Grid container alignItems="flex-end">
         <BottomBar
           hostName={HOSTS.BOTTOM_BAR.NAME}
@@ -286,7 +292,7 @@ function getHostedPlugins(classes) {
         ></BottomBar>
       </Grid>
       <AlertPanel hostName="alertPanel" />
-    </Grid>
+    </div>
   );
 }
 

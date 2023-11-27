@@ -1,9 +1,6 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
 export const mainMenuStyles = makeStyles(theme => ({
-  mainMenuHolder: {
-    height: "100%"
-  },
   appsHolder: {
     "& span[role='button']": {
       padding: "0",

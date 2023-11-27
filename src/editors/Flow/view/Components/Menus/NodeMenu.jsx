@@ -1,16 +1,14 @@
 import React, { useCallback, useEffect, useState, memo } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import {
-  Collapse,
-  Divider,
-  Grid,
-  ListItem,
-  ListItemText,
-  Typography
-} from "@material-ui/core";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
+import Collapse from "@mui/material/Collapse";
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Typography  from "@mui/material/Typography";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import {
   DATA_TYPES,
   TABLE_KEYS_NAMES,

@@ -2,8 +2,8 @@ import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
-import Tooltip from "@material-ui/core/Tooltip";
-import Button from "@material-ui/core/Button";
+import Tooltip from "@mui/material/Tooltip";
+import Button from "@mui/material/Button";
 import { PLUGINS } from "../../../../../../utils/Constants";
 
 import { parameterLineStyles } from "../styles";

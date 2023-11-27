@@ -1,10 +1,13 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import FolderOpenIcon from "@material-ui/icons/FolderOpen";
-import Grid from "@material-ui/core/Grid";
-import Circle from "@material-ui/icons/FiberManualRecord";
-import { IconButton, Tooltip, Typography } from "@material-ui/core";
-import { Edit, AddBox } from "@material-ui/icons";
+import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import Grid from "@mui/material/Grid";
+import Circle from "@mui/icons-material/FiberManualRecord";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import Typography  from "@mui/material/Typography";
+import Edit from "@mui/icons-material/Edit";
+import AddBox  from "@mui/icons-material/AddBox";
 import { SCOPES } from "../../../../../../../utils/Constants";
 import { callbackStyles } from "./styles";
 

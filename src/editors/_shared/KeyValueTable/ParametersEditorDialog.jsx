@@ -1,15 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
-import {
-  MenuItem,
-  Select,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  Radio,
-  RadioGroup
-} from "@material-ui/core";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import InputLabel from "@mui/material/InputLabel";
+import Radio from "@mui/material/Radio";
+import RadioGroup  from "@mui/material/RadioGroup";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../themes";
 import { ERROR_MESSAGES } from "../../../utils/Messages";

@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { Divider, Link, Tooltip, Typography } from "@material-ui/core";
+import Divider from "@mui/material/Divider";
+import Link from "@mui/material/Link";
+import Tooltip from "@mui/material/Tooltip";
+import Typography  from "@mui/material/Typography";
 import { SCOPES } from "../../../../../../utils/Constants";
 import { portStyles } from "../styles";
 

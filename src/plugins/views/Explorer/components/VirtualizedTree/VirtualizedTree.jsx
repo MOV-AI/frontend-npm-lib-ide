@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { AutoSizer } from "@mov-ai/mov-fe-lib-react";
 import { FixedSizeList } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
 import { DEFAULT_EXPLORER_ROW_HEIGHT } from "../../../../../utils/Constants";
-
 import { virtualizedTreeStyles } from "./styles";
 
 const VirtualizedTree = props => {

@@ -1,8 +1,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
-import { MenuItem, Tooltip, Paper, Divider } from "@material-ui/core";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import MenuItem from "@mui/material/MenuItem";
+import Tooltip from "@mui/material/Tooltip";
+import Paper from "@mui/material/Paper";
+import Divider  from "@mui/material/Divider";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 import { shortcutsListStyles } from "../styles";
 

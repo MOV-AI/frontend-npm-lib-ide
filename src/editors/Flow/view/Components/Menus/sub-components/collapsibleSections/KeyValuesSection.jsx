@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
-import { Typography } from "@material-ui/core";
+import Typography  from "@mui/material/Typography";
 import TableKeyValue from "../TableKeyValue";
 import { EMPTY_MESSAGE } from "../../../../../../../utils/Constants";
 

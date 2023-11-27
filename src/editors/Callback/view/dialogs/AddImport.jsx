@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import _debounce from "lodash/debounce";
-import { makeStyles } from "@material-ui/styles";
-import {
-  Dialog,
-  DialogContent,
-  Button,
-  DialogActions
-} from "@material-ui/core";
+import { makeStyles } from "@mui/styles";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import Button from "@mui/material/Button";
+import DialogActions  from "@mui/material/DialogActions";
 import { PLUGINS } from "../../../../utils/Constants";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../../themes";

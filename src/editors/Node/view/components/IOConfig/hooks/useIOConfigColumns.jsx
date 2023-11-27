@@ -1,11 +1,9 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  FormControl,
-  NativeSelect,
-  TextField,
-  Tooltip
-} from "@material-ui/core";
+import FormControl from "@mui/material/FormControl";
+import NativeSelect from "@mui/material/NativeSelect";
+import TextField from "@mui/material/TextField";
+import Tooltip  from "@mui/material/Tooltip";
 import useSelectOptions from "./useSelectOptions";
 
 import { configColumnsStyles } from "./styles";

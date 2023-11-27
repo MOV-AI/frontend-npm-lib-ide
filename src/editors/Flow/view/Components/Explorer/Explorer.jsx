@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
-import { Typography } from "@material-ui/core";
+import Typography  from "@mui/material/Typography";
 import ListItemsTreeWithSearch, {
   toggleExpandRow
 } from "./../../../../../plugins/views/Explorer/components/ListItemTree/ListItemsTreeWithSearch";

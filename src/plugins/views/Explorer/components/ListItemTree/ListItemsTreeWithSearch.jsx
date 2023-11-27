@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Divider, List, ListItem } from "@material-ui/core";
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
+import ListItem  from "@mui/material/ListItem";
 import Search from "../../../../../utils/components/Search/Search";
 import VirtualizedTree from "../VirtualizedTree/VirtualizedTree";
 

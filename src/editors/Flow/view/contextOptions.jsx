@@ -1,10 +1,10 @@
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import ToggleOnIcon from "@material-ui/icons/ToggleOn";
-import FileCopyIcon from "@material-ui/icons/FileCopy";
-import NoteAddIcon from "@material-ui/icons/NoteAdd";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
-import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import { FLOW_CONTEXT_MODES } from "../../../utils/Constants";
 import { FLOW_VIEW_MODE } from "./Constants/constants";
 import { insertIf } from "../../../utils/Utils";

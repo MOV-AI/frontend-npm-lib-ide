@@ -1,7 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { ListItem, ListItemText, Typography } from "@material-ui/core";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Typography  from "@mui/material/Typography";
 import { defaultFunction } from "../../../../../../utils/Utils";
 import NodeLink from "./NodeLink";
 

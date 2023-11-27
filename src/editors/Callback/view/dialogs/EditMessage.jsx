@@ -1,14 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Typography,
-  TextField,
-  Dialog,
-  DialogContent,
-  Button,
-  DialogActions
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import Button from "@mui/material/Button";
+import DialogActions  from "@mui/material/DialogActions";
+import { makeStyles } from "@mui/styles";
 import { PLUGINS } from "../../../../utils/Constants";
 import { ERROR_MESSAGES } from "../../../../utils/Messages";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
