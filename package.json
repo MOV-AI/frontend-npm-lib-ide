@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-ide",
-  "version": "1.0.0-79",
+  "version": "1.0.1-0",
   "main": "./dist/index.js",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/mov-ai"
@@ -32,7 +32,6 @@
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@material-table/core": "^4.3.11",
-    "@mov-ai/mov-fe-lib-code-editor": "^1.0.8-2",
     "@remixproject/engine": "^0.3.19",
     "@remixproject/engine-web": "^0.3.19",
     "d3": "^5.16.0",
@@ -54,8 +53,9 @@
     "@material-ui/icons": ">=4.11.2",
     "@material-ui/lab": ">=4.0.0-alpha.60",
     "@material-ui/styles": "^4.11.5",
-    "@mov-ai/mov-fe-lib-core": "^1.1.2-28",
-    "@mov-ai/mov-fe-lib-react": "^1.1.2-29",
+    "@mov-ai/mov-fe-lib-code-editor": "^1.0.9-2",
+    "@mov-ai/mov-fe-lib-core": "^1.2.0-1",
+    "@mov-ai/mov-fe-lib-react": "^1.2.0-1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-i18next": "^11.13.0"
@@ -74,8 +74,9 @@
     "@material-ui/icons": ">=4.11.2",
     "@material-ui/lab": ">=4.0.0-alpha.60",
     "@material-ui/styles": "^4.11.5",
-    "@mov-ai/mov-fe-lib-core": "^1.1.2-28",
-    "@mov-ai/mov-fe-lib-react": "^1.1.2-29",
+    "@mov-ai/mov-fe-lib-code-editor": "^1.0.9-2",
+    "@mov-ai/mov-fe-lib-core": "^1.2.0-1",
+    "@mov-ai/mov-fe-lib-react": "^1.2.0-1",
     "@storybook/addon-actions": "^6.5.12",
     "@storybook/addon-essentials": "^6.5.12",
     "@storybook/addon-interactions": "^6.5.12",
