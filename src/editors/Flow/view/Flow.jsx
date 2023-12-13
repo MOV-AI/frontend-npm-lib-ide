@@ -8,9 +8,9 @@ import React, {
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { filter } from "rxjs/operators";
-import InfoIcon from "@material-ui/icons/Info";
-import Add from "@material-ui/icons/Add";
-import CompareArrowsIcon from "@material-ui/icons/CompareArrows";
+import InfoIcon from "@mui/icons-material/Info";
+import Add from "@mui/icons-material/Add";
+import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import { Rest } from "@mov-ai/mov-fe-lib-core";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";

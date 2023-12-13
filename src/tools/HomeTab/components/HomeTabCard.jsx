@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
-import CallMadeIcon from "@material-ui/icons/CallMade";
-import Button from "@material-ui/core/Button";
+import CallMadeIcon from "@mui/icons-material/CallMade";
+import Button  from "@mui/material/Button";
 import { stopPropagation } from "../../../utils/Utils";
 
 import { homeTabCardStyles } from "../styles";

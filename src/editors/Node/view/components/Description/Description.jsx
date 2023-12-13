@@ -1,8 +1,8 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 import { MOVAI_FLOW_TYPES } from "../../../../../utils/Constants";
 import CollapsibleHeader from "../../../../_shared/CollapsibleHeader/CollapsibleHeader";
 

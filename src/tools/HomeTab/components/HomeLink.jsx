@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import IconButton from "@material-ui/core/IconButton";
-import { Tooltip } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from "@mui/material/IconButton";
+import Tooltip  from "@mui/material/Tooltip";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { getIconByScope } from "../../../utils/Utils";
 
 import { homeTabLinkStyles } from "../styles";

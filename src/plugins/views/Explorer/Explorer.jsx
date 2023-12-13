@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
-import { Typography } from "@material-ui/core";
+import Typography  from "@mui/material/Typography";
 import { withAlerts } from "../../../decorators";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { SUCCESS_MESSAGES } from "../../../utils/Messages";

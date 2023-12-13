@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogContentText from "@mui/material/DialogContentText";
 import AppDialog from "../AppDialog/AppDialog";
 
 const ConfirmationDialog = props => {

@@ -1,10 +1,12 @@
 import React, { useState, useRef } from "react";
-import { IconButton, InputAdornment, TextField } from "@material-ui/core";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField  from "@mui/material/TextField";
 import { useTranslation } from "react-i18next";
 import { SCOPES, ALERT_SEVERITIES } from "../../../utils/Constants";
 import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
 import { Document } from "@mov-ai/mov-fe-lib-core";
-import CodeIcon from "@material-ui/icons/Code";
+import CodeIcon from "@mui/icons-material/Code";
 
 const ConfigurationSelector = props => {
   // Props

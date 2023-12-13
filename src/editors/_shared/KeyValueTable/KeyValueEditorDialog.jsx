@@ -2,20 +2,18 @@ import React, { useCallback, useEffect, useState, memo } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import _isEqual from "lodash/isEqual";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import {
-  Typography,
-  TextField,
-  FormControl,
-  InputLabel,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  Button
-} from "@material-ui/core";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button  from "@mui/material/Button";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../themes";
 import { DialogTitle } from "../../../plugins/Dialog/components/AppDialog/AppDialog";

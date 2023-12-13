@@ -1,9 +1,8 @@
 import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
-import Paper from "@material-ui/core/Paper";
-import Divider from "@material-ui/core/Divider";
-
+import Paper from "@mui/material/Paper";
+import Divider from "@mui/material/Divider";
 import { shortcutsTableStyles } from "../styles";
 import MaterialTable from "../../../editors/_shared/MaterialTable/MaterialTable";
 import { parseKeybinds } from "../../../utils/Utils";

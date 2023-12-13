@@ -1,13 +1,11 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import {
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select
-} from "@material-ui/core";
+import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select  from "@mui/material/Select";
 import { convertToValidString } from "../../../../../../../utils/Utils";
 
 import { propertiesStyles } from "../../styles";

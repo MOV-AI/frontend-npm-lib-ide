@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
 export const parametersDialogStyles = makeStyles(_theme => ({
   marginTop: { marginTop: "15px" },

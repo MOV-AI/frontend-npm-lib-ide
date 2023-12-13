@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
 export const drawerPanelStyles = (isLeft, isOpen) =>
   makeStyles(theme => ({
@@ -11,13 +11,13 @@ export const drawerPanelStyles = (isLeft, isOpen) =>
     },
     drawer: {
       overflow: "hidden",
-      position: "relative",
       [isLeft ? "marginRight" : "marginLeft"]: "auto",
       width: isOpen ? 340 : "auto",
       height: "100%",
+      position: "unset !important",
       "& > *": {
+        position: "unset !important",
         width: 340,
-        position: "absolute",
         transition: "none !important"
       }
     }

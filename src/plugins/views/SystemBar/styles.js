@@ -1,8 +1,8 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
 const menuButtonStyles = {
   margin: "0px",
-  padding: "0px",
+  padding: "0px !important",
   lineHeight: "26px",
   textTransform: "none",
   borderRadius: "0px",
@@ -12,25 +12,18 @@ const menuButtonStyles = {
 export const systemBarStyles = debugMode =>
   makeStyles(theme => ({
     systemBar: {
-      background: theme.topBarColor,
+      background: theme.palette.background.secondary,
       height: "26px",
       borderBottom: debugMode ? "solid 5px purple" : "1px solid #000",
       width: "100%"
     },
     menuButton: {
       ...menuButtonStyles,
-      padding: "0 10px",
+      padding: "0 10px !important",
       minWidth: "unset",
-      color: theme.palette.grey[200],
-      "&:hover": {
-        background: theme.palette.grey[900]
-      },
       "&:first-child": {
         marginLeft: "5px"
       }
-    },
-    activeMenu: {
-      background: theme.palette.grey[900]
     }
   }));
 
@@ -65,7 +58,7 @@ export const systemMenuItemStyles = makeStyles(theme => ({
     display: "inline-flex",
     fontSize: "0.875rem",
     width: "100%",
-    justifyContent: "space-between",
+    justifyContent: "space-between !important",
     color: theme.palette.grey[200],
     "& > .MuiButton-label": { paddingLeft: "10px" },
     "&:hover": {

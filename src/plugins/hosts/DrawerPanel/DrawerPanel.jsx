@@ -1,6 +1,7 @@
 import React, { forwardRef, useState } from "react";
 import PropTypes from "prop-types";
-import { Drawer, Typography } from "@material-ui/core";
+import Drawer from "@mui/material/Drawer";
+import Typography  from "@mui/material/Typography";
 import { DRAWER } from "../../../utils/Constants";
 import { withHostReactPlugin } from "../../../engine/ReactPlugin/HostReactPlugin";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
@@ -111,6 +112,9 @@ const DrawerPanel = forwardRef((props, ref) => {
    *                                         Render                                       *
    *                                                                                      */
   //========================================================================================
+
+  if (!realOpen)
+    return null;
 
   return (
     <Drawer

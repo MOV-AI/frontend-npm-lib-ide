@@ -2,8 +2,8 @@ import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import _isEqual from "lodash/isEqual";
-import AddBox from "@material-ui/icons/AddBox";
-import Edit from "@material-ui/icons/Edit";
+import AddBox from "@mui/icons-material/AddBox";
+import Edit from "@mui/icons-material/Edit";
 import CollapsibleHeader from "../CollapsibleHeader/CollapsibleHeader";
 import MaterialTable from "../MaterialTable/MaterialTable";
 

@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
 export const tabsStyles = makeStyles(theme => ({
   "@global": {
@@ -33,8 +33,8 @@ export const tabsStyles = makeStyles(theme => ({
           "& .dock-tab": {
             borderTopLeftRadius: "5px",
             borderTopRightRadius: "5px",
-            background: theme.backdrop?.background,
-            color: theme.backdrop?.color,
+            background: theme.palette.background.secondary,
+            color: theme.textColor,
             padding: "0 10px",
             "& .dock-tab-close-btn": {
               right: "1px"

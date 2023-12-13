@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, memo } from "react";
 import PropTypes from "prop-types";
-import Backdrop from "@material-ui/core/Backdrop";
+import Backdrop from "@mui/material/Backdrop";
 import { PLUGINS, SCOPES } from "../../../../utils/Constants";
 import { generateContainerId } from "../Constants/constants";
 import { EVT_NAMES } from "../events";

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Typography } from "@material-ui/core";
+import Typography  from "@mui/material/Typography";
 import { convertToValidString } from "../../../../../../utils/Utils";
 import Search, { filter } from "../../../../../_shared/Search/Search";
 import RowKeyValue from "./RowKeyValue";

@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography } from "@material-ui/core";
+import Typography  from "@mui/material/Typography";
 import { getRefComponent } from "../utils/Utils";
 import Loader from "../editors/_shared/Loader/Loader";
 

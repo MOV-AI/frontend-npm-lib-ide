@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import AppCE from "../../AppCE";
 import { installTool } from "../../../App/BaseApp";
-import BookmarkIcon from "@material-ui/icons/Bookmark";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkManager, {
   BOOKMARKS_PROFILE,
   getTabData

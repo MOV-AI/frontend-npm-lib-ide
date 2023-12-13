@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Link } from "@material-ui/core";
+import Link  from "@mui/material/Link";
 import menuStyles from "../styles";
 
 /**

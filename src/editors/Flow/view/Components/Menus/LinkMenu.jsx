@@ -1,19 +1,17 @@
 import React, { useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import {
-  Collapse,
-  Divider,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  List,
-  ListItem,
-  ListItemText,
-  MenuItem,
-  Select,
-  Typography,
-  Tooltip
-} from "@material-ui/core";
+import Collapse from "@mui/material/Collapse";
+import Divider from "@mui/material/Divider";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import InputLabel from "@mui/material/InputLabel";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Typography from "@mui/material/Typography";
+import Tooltip  from "@mui/material/Tooltip";
 import { useTranslation } from "react-i18next";
 import {
   LINK_DEPENDENCY,
