@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-ide",
-  "version": "1.0.1-1",
+  "version": "1.0.1-2",
   "main": "./dist/index.js",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/mov-ai"
