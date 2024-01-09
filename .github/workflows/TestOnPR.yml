@@ -15,6 +15,7 @@ jobs:
     with:
       deploy: "false"
       run_tests: "false"
+      legacy: true
     secrets:
       auto_commit_user: ${{ secrets.RAISE_BOT_COMMIT_USER }}
       auto_commit_mail: ${{ secrets.RAISE_BOT_COMMIT_MAIL }}
