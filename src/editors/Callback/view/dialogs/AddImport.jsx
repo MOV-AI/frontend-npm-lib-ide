@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../i18n/i18n";
 import _debounce from "lodash/debounce";
 import { makeStyles } from "@material-ui/styles";
 import {
@@ -34,8 +34,6 @@ const AddImportDialog = props => {
   const [selectedLibs, setSelectedLibs] = useState();
   // Style hook
   const classes = useStyles();
-  // Translation hook
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *

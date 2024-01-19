@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import PropTypes from "prop-types";
 import ExposedPortLine from "./components/ExposedPortLine";
 
@@ -10,8 +10,6 @@ const InvalidExposedPortsWarning = props => {
 
   // Style hooks
   const classes = invalidExposedPortsWarningStyles();
-  // Translation hooks
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *

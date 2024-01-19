@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import PropTypes from "prop-types";
 import { Typography } from "@material-ui/core";
 import { withAlerts } from "../../../decorators";
@@ -19,8 +19,6 @@ const Explorer = props => {
 
   // to debug data
   window.ExplorerData = data;
-
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *
@@ -201,7 +199,7 @@ const Explorer = props => {
         message: t("DeleteDocConfirmationMessage", { docName: name })
       });
     },
-    [call, t]
+    [call]
   );
 
   //========================================================================================

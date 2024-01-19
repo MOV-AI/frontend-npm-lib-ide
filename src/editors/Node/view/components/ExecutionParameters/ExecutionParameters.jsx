@@ -1,6 +1,6 @@
 import React, { useCallback, useState, memo } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -35,7 +35,6 @@ const ExecutionParameters = props => {
   const [openTooltip, setOpenTooltip] = useState(TOOLTIP.close);
   // Hooks
   const classes = executionParamStyles();
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *

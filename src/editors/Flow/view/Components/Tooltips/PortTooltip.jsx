@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import { Divider } from "@material-ui/core";
 import PortTooltipContent from "./PortTooltipContent";
 import List from "@material-ui/core/List";
@@ -24,7 +24,6 @@ const useStyles = makeStyles(() => ({
 
 const PortTooltip = props => {
   const classes = useStyles();
-  const { t } = useTranslation();
   const { anchorPosition, port } = props;
   const title = t("Port");
 

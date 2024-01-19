@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import {
   Collapse,
   List,
@@ -38,7 +38,6 @@ const Menu = props => {
   const [activeItem, setActiveItem] = useState(0);
   // Other hooks
   const classes = menuStyles();
-  const { t } = useTranslation();
   const { data } = useDataSubscriber({
     instance,
     propsData: props.data,
@@ -258,7 +257,7 @@ const Menu = props => {
         {t("NoImports")}
       </Typography>
     );
-  }, [classes, getImportsList, deleteImport, t]);
+  }, [classes, getImportsList, deleteImport]);
 
   /**
    * Get Callback message
@@ -291,7 +290,7 @@ const Menu = props => {
         {t("NoMessageDefined")}
       </Typography>
     );
-  }, [classes, data.message, handleRemoveMessage, t]);
+  }, [classes, data.message, handleRemoveMessage]);
 
   return (
     <div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import PropTypes from "prop-types";
 import { ContextMenu } from "@mov-ai/mov-fe-lib-react";
 import Paper from "@material-ui/core/Paper";
@@ -15,7 +15,6 @@ import { quickAccessStyles } from "../styles";
 
 const QuickAccess = props => {
   const { call } = props;
-  const { t } = useTranslation();
   const classes = quickAccessStyles();
 
   // State

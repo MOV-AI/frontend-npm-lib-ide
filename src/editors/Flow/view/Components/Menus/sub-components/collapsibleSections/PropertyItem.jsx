@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../../../i18n/i18n";
 import {
   FormControl,
   Grid,
@@ -22,7 +22,6 @@ const PropertyItem = ({
   onChangeProperties
 }) => {
   // Other hooks
-  const { t } = useTranslation();
   const classes = propertiesStyles();
 
   //========================================================================================
@@ -56,7 +55,7 @@ const PropertyItem = ({
    */
   const getDefaultText = useCallback(
     isDefault => (isDefault ? `(${t("Default")})` : ""),
-    [t]
+    []
   );
 
   return (

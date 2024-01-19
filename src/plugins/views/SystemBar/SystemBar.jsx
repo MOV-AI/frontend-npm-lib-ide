@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import Button from "@material-ui/core/Button";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import SystemMenu from "./Components/SystemMenu";
@@ -20,7 +20,6 @@ const SystemBar = props => {
   // Other Hooks
   const classes = systemBarStyles(debugMode)();
   const dialogClasses = helpDialogStyles();
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *

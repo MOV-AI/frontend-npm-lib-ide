@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../../i18n/i18n";
 import PropTypes from "prop-types";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -13,8 +13,6 @@ const ExposedPortLine = props => {
 
   // Style hooks
   const classes = parameterLineStyles();
-  // Translation hooks
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *

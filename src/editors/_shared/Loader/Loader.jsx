@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import { LinearProgress } from "@material-ui/core";
 import loader from "../../../Branding/movai-logo-transparent.png";
 

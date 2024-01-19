@@ -14,7 +14,7 @@ import {
   Typography,
   Tooltip
 } from "@material-ui/core";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import {
   LINK_DEPENDENCY,
   MOVAI_FLOW_TYPES
@@ -32,7 +32,6 @@ const LinkMenu = props => {
   const [dependencyLevel, setDependencyLevel] = useState(0);
 
   // Other Hooks
-  const { t } = useTranslation();
   const classes = linkMenuStyles();
 
   //========================================================================================

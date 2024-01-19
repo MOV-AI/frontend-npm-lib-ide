@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import InfoLogo from "@material-ui/icons/Info";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
@@ -11,7 +11,6 @@ import { keyValueHookStyles } from "./styles";
 const useKeyValueMethods = () => {
   // Hooks
   const classes = keyValueHookStyles();
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *

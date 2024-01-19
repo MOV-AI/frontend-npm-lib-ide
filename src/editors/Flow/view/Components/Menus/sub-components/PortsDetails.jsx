@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../../i18n/i18n";
 import { Divider, Link, Tooltip, Typography } from "@material-ui/core";
 import { SCOPES } from "../../../../../../utils/Constants";
 import { portStyles } from "../styles";
@@ -13,7 +13,6 @@ const PortsDetails = props => {
   const [outputPorts, setOutputPorts] = useState([]);
   // Other Hooks
   const classes = portStyles();
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *
@@ -90,7 +89,7 @@ const PortsDetails = props => {
         </Tooltip>
       );
     },
-    [protectedDocs, classes, openDoc, t]
+    [protectedDocs, classes, openDoc]
   );
 
   /**

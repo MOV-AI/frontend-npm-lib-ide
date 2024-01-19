@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { IconButton, InputAdornment, TextField } from "@material-ui/core";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import { SCOPES, ALERT_SEVERITIES } from "../../../utils/Constants";
 import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
 import { Document } from "@mov-ai/mov-fe-lib-core";
@@ -18,8 +18,6 @@ const ConfigurationSelector = props => {
   const [selected, setSelected] = useState(null);
   // Refs
   const inputTextRef = useRef();
-  // Translation Hook
-  const { t } = useTranslation();
 
   const rowData = rowProps?.rowData;
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import SearchIcon from "@material-ui/icons/Search";
 import ClearIcon from "@material-ui/icons/Clear";
 import { TextField, IconButton, Tooltip } from "@material-ui/core";
@@ -77,8 +77,6 @@ const Search = props => {
   // State hooks
   const [searchInput, setSearchInput] = useState("");
 
-  // Translation hook
-  const { t } = useTranslation();
   // Style hook
   const classes = searchStyles();
 

@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, memo } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import PropTypes from "prop-types";
 import MaterialTableCore from "@material-table/core";
 import { useTheme } from "@material-ui/styles";
@@ -20,7 +20,6 @@ const MaterialTable = forwardRef((props, ref) => {
   // Hooks
   const theme = useTheme();
   const classes = materialTableStyles();
-  const { t } = useTranslation();
   // Refs
   const defaultTableRef = useRef();
   const openedPanels = useRef({});

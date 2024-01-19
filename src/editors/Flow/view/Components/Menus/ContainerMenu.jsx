@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import PropTypes from "prop-types";
 import { Collapse, Divider, ListItem, ListItemText } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -22,8 +22,6 @@ const ContainerMenu = props => {
   const [templateData, setTemplateData] = useState({});
   const [flowData, setFlowData] = useState({});
   const [expanded, setExpanded] = useState(false);
-  // Other hooks
-  const { t } = useTranslation();
   const data = nodeInst.data;
 
   //========================================================================================
@@ -147,7 +145,7 @@ const ContainerMenu = props => {
         ParameterEditorDialog
       );
     },
-    [call, handleSubmitParameter, t]
+    [call, handleSubmitParameter]
   );
 
   /**
@@ -165,7 +163,7 @@ const ContainerMenu = props => {
         message: t("DeleteKeyConfirmationMessage", { key: paramName })
       });
     },
-    [call, handleDeleteParameter, t]
+    [call, handleDeleteParameter]
   );
 
   //========================================================================================
