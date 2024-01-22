@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import { makeStyles, useTheme } from "@material-ui/styles";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
 import { PLUGINS } from "./../../../utils/Constants";
@@ -35,7 +35,6 @@ export const Callback = (props, ref) => {
   // Style Hooks
   const classes = useStyles();
   const theme = useTheme();
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *
@@ -55,7 +54,7 @@ export const Callback = (props, ref) => {
         view: <Menu id={id} call={call} name={name} scope={scope} />
       }
     });
-  }, [call, id, name, scope, t]);
+  }, [call, id, name, scope]);
 
   usePluginMethods(ref, {
     renderRightMenu

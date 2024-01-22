@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import {
   Collapse,
   Divider,
@@ -47,7 +47,6 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
   });
   // Other hooks
   const classes = menuStyles();
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *
@@ -164,7 +163,7 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
         ParametersEditorDialog
       );
     },
-    [model, validateParamName, handleSubmitParameter, call, t]
+    [model, validateParamName, handleSubmitParameter, call]
   );
 
   //========================================================================================
@@ -201,7 +200,7 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
     };
 
     call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
-  }, [model, call, t]);
+  }, [model, call]);
 
   /**
    * Handle Add new Parameter
@@ -239,7 +238,7 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
       };
       call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, args);
     },
-    [model, call, t]
+    [model, call]
   );
 
   /**
@@ -305,7 +304,7 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
         {t("NoParameters")}
       </Typography>
     );
-  }, [classes, editable, getParameters, handleParamDelete, handleParamEdit, t]);
+  }, [classes, editable, getParameters, handleParamDelete, handleParamEdit]);
 
   return (
     <Typography data-testid="section_flow-details-menu" component="div">

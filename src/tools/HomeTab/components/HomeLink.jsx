@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import IconButton from "@material-ui/core/IconButton";
 import { Tooltip } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -10,7 +10,6 @@ import { homeTabLinkStyles } from "../styles";
 function HomeLink(props) {
   const { doc, openRecentDocument, removeRecentDocument } = props;
   const { id, scope, name, isDeleted } = doc;
-  const { t } = useTranslation();
   const classes = homeTabLinkStyles();
   const rowClasses = isDeleted ? [classes.row, classes.deleted] : classes.row;
 

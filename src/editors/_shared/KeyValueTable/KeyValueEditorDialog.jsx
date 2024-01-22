@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, memo } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import _isEqual from "lodash/isEqual";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -54,7 +54,6 @@ const KeyValueEditorDialog = props => {
   });
   // Other hooks
   const classes = keyValueEditorDialogStyles();
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *
@@ -117,7 +116,7 @@ const KeyValueEditorDialog = props => {
       // Return validation result
       return isValid;
     },
-    [nameValidation, t, validate]
+    [nameValidation, validate]
   );
 
   /**
@@ -151,7 +150,7 @@ const KeyValueEditorDialog = props => {
         return { ...prevState, value };
       });
     },
-    [t, validate, valueValidation]
+    [validate, valueValidation]
   );
 
   /**

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import PropTypes from "prop-types";
 import { ContextMenu } from "@mov-ai/mov-fe-lib-react";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -24,9 +24,6 @@ const ItemRow = props => {
 
   // Style hook
   const classes = itemRowStyles();
-
-  // Translation hook
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *

@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 import _isEqual from "lodash/isEqual";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import { defaultFunction } from "../../../../../utils/Utils";
 import ParameterEditorDialog from "../../../../_shared/KeyValueTable/ParametersEditorDialog";
 import KeyValueTable from "../../../../_shared/KeyValueTable/KeyValueTable";
@@ -12,7 +12,6 @@ const ParametersTable = props => {
   const { editable, data, openEditDialog, onRowDelete, defaultColumns } = props;
   // Hooks
   const { getLabel } = useDataTypes();
-  const { t } = useTranslation();
   // Override default columns
   const typeColumn = {
     title: t("Type"),

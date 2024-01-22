@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../i18n/i18n";
 import AppDialog from "../AppDialog/AppDialog";
 import WarningIcon from "@material-ui/icons/Warning";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -11,7 +11,6 @@ import { alertBeforeActionStyles } from "./styles";
 
 const AlertBeforeAction = props => {
   const classes = alertBeforeActionStyles();
-  const { t } = useTranslation();
   const { onSubmit, onClose, actions, message, showAlertIcon, title } = props;
 
   const handleConfirmation = action => {

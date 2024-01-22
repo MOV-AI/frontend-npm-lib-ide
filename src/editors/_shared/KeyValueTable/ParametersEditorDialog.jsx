@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import PropTypes from "prop-types";
 import {
   MenuItem,
@@ -46,7 +46,6 @@ const ParameterEditorDialog = props => {
   // Hooks
   const [data, setData] = useState({});
   const [valueOption, setValueOption] = useState(VALUE_OPTIONS.DEFAULT);
-  const { t } = useTranslation();
   const classes = parametersDialogStyles();
   const { getDataTypes, getLabel, getEditComponent, getValidValue, validate } =
     useDataTypes();
@@ -222,7 +221,6 @@ const ParameterEditorDialog = props => {
       validate,
       valueToSave,
       customValidation,
-      t
     ]
   );
 
@@ -328,7 +326,6 @@ const ParameterEditorDialog = props => {
     getDataTypes,
     getLabel,
     handleTypeChange,
-    t
   ]);
 
   const renderValueOptions = useCallback(() => {
@@ -368,7 +365,6 @@ const ParameterEditorDialog = props => {
     valueOption,
     classes,
     handleChangeValueOption,
-    t,
     disabled
   ]);
 
@@ -418,7 +414,6 @@ const ParameterEditorDialog = props => {
       renderValueOptions,
       renderValue,
       getEditComponent,
-      t
     ]
   );
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import ParameterLine from "./components/ParameterLine";
@@ -11,8 +11,6 @@ const InvalidParametersWarning = props => {
 
   // Style hooks
   const classes = invalidParametersWarningStyles();
-  // Translation hooks
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *

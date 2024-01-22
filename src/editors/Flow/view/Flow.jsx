@@ -6,7 +6,7 @@ import React, {
   useRef
 } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import { filter } from "rxjs/operators";
 import InfoIcon from "@material-ui/icons/Info";
 import Add from "@material-ui/icons/Add";
@@ -103,7 +103,6 @@ export const Flow = (props, ref) => {
 
   // Other Hooks
   const classes = flowStyles();
-  const { t } = useTranslation();
   const clipboard = useMemo(() => new Clipboard(), []);
 
   // Refs
@@ -221,7 +220,7 @@ export const Flow = (props, ref) => {
           });
         });
     },
-    [call, t]
+    [call]
   );
 
   //========================================================================================
@@ -358,7 +357,7 @@ export const Flow = (props, ref) => {
         );
       }
     },
-    [call, t, deleteInvalidLinks]
+    [call, deleteInvalidLinks]
   );
 
   /**
@@ -384,7 +383,7 @@ export const Flow = (props, ref) => {
         );
       }
     },
-    [call, t, deleteInvalidExposedPorts]
+    [call, deleteInvalidExposedPorts]
   );
 
   /**
@@ -409,7 +408,7 @@ export const Flow = (props, ref) => {
         InvalidParametersWarning
       );
     },
-    [t, call]
+    [call]
   );
 
   /**
@@ -441,7 +440,7 @@ export const Flow = (props, ref) => {
         call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
       });
     },
-    [call, setFlowsToDefault, t]
+    [call, setFlowsToDefault]
   );
 
   //========================================================================================
@@ -486,7 +485,7 @@ export const Flow = (props, ref) => {
         )
       };
     },
-    [call, id, instance, openDoc, getMenuComponent, t]
+    [call, id, instance, openDoc, getMenuComponent]
   );
 
   /**
@@ -530,7 +529,7 @@ export const Flow = (props, ref) => {
         )
       };
     },
-    [call, id, instance, t]
+    [call, id, instance]
   );
 
   /**
@@ -615,7 +614,6 @@ export const Flow = (props, ref) => {
     call,
     getNodeMenuToAdd,
     getLinkMenuToAdd,
-    t
   ]);
 
   usePluginMethods(ref, {
@@ -1108,7 +1106,6 @@ export const Flow = (props, ref) => {
       handleDeleteNode,
       startNode,
       stopNode,
-      t,
       handleDeleteLink,
       handlePasteNodes,
       handleToggleExposedPort,
@@ -1150,7 +1147,7 @@ export const Flow = (props, ref) => {
         message
       });
     },
-    [confirmationAlert, t, setFlowsToDefault]
+    [confirmationAlert, setFlowsToDefault]
   );
 
   /**
@@ -1227,7 +1224,7 @@ export const Flow = (props, ref) => {
     });
     // Show confirmation before delete
     handleDelete({ message, callback });
-  }, [handleDelete, unselectNode, getSelectedNodes, t]);
+  }, [handleDelete, unselectNode, getSelectedNodes]);
 
   /**
    * Handle delete link
@@ -1410,7 +1407,7 @@ export const Flow = (props, ref) => {
     return () => {
       off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.BEFORE_SAVE_DOC);
     };
-  }, [name, scope, viewMode, on, off, call, t]);
+  }, [name, scope, viewMode, on, off, call]);
 
   useEffect(() => {
     addKeyBind(

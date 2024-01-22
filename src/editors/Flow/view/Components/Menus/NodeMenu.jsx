@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, memo } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import {
   Collapse,
   Divider,
@@ -54,7 +54,6 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
   const [protectedDocs, setProtectedDocs] = useState([]);
   // Other hooks
   const classes = nodeMenuStyles();
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *
@@ -246,7 +245,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
         ParameterEditorDialog
       );
     },
-    [call, handleSubmitParameter, t]
+    [call, handleSubmitParameter]
   );
 
   /**
@@ -264,7 +263,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
         message: t("DeleteKeyConfirmationMessage", { key: paramName })
       });
     },
-    [call, handleDeleteParameter, t]
+    [call, handleDeleteParameter]
   );
 
   //========================================================================================

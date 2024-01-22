@@ -1,10 +1,9 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../../i18n/i18n";
 import { ContextMenu } from ".";
 
 const FlowContextMenu = props => {
-  const { t } = useTranslation();
   const { anchorPosition, options, onClose } = props;
 
   const generateOptions = useCallback(() => {

@@ -7,7 +7,7 @@ import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
 import PropTypes from "prop-types";
 import React, { useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../i18n/i18n";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../../themes";
 import { defaultFunction } from "../../../../utils/Utils";
@@ -54,7 +54,6 @@ export const DialogTitle = props => {
  * @returns {ReactComponent} AppDialog component wrapper
  */
 const AppDialog = props => {
-  const { t } = useTranslation();
   const {
     allowSubmit = true,
     actions,

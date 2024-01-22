@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import PropTypes from "prop-types";
 import WarningIcon from "@material-ui/icons/Warning";
 import { makeStyles } from "@material-ui/styles";
@@ -20,9 +20,6 @@ const FlowBottomBar = props => {
   const [barStatus, setBarStatus] = useState("default");
   const [allRobots, setRobots] = useState({});
   const [selectedRobotName, setSelectedRobotName] = useState("");
-
-  // Translation hook
-  const { t } = useTranslation();
 
   // Prop(s)
   const {

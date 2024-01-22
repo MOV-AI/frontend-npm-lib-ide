@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../../../i18n/i18n";
 
 import PropertyItem from "./PropertyItem";
 
@@ -10,7 +10,6 @@ const PropertiesSection = ({
   templateData,
   nodeInstance
 }) => {
-  const { t } = useTranslation();
   const properties = useMemo(
     () => ({
       persistent: {
@@ -35,7 +34,7 @@ const PropertiesSection = ({
         ]
       }
     }),
-    [t]
+    []
   );
 
   //========================================================================================

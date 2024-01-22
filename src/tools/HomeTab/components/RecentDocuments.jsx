@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -16,7 +16,6 @@ const MAX_RECENT_DOCS = 10;
 const RecentDocuments = props => {
   const classes = recentDocumentsStyles();
   const { workspaceManager, openRecentDocument, on, off } = props;
-  const { t } = useTranslation();
 
   // State
   const [recentDocs, setRecentDocs] = useState(

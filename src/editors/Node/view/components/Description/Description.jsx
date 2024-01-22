@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { MOVAI_FLOW_TYPES } from "../../../../../utils/Constants";
@@ -26,7 +26,6 @@ const Description = props => {
   // Props
   const { onChangeDescription, value, nodeType, editable } = props;
   // Hooks
-  const { t } = useTranslation();
   const classes = descriptionStyles();
 
   //========================================================================================

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import PropTypes from "prop-types";
 import {
   VerticalBar,
@@ -29,7 +29,6 @@ const MainMenu = props => {
   // Other hooks
   const classes = mainMenuStyles();
   const theme = useTheme();
-  const { t } = useTranslation();
   const {
     isDarkTheme,
     isMenuOpen,
