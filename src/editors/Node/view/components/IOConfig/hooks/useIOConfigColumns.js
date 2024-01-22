@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../../i18n/i18n";
 import {
   FormControl,
   NativeSelect,
@@ -14,7 +14,6 @@ const useIOConfigColumns = data => {
   const { autoFocus, scopePorts, scopeSystemPortsData } = data;
   // Hooks
   const classes = configColumnsStyles();
-  const { t } = useTranslation();
   const { getGroupOptions, getPackageOptions, getMessageOptions } =
     useSelectOptions({ scopeSystemPortsData, scopePorts });
 
@@ -305,7 +304,6 @@ const useIOConfigColumns = data => {
     getMessageEditComponent,
     getPackageEditComponent,
     getTransportEditComponent,
-    t
   ]);
 
   return { getColumns };

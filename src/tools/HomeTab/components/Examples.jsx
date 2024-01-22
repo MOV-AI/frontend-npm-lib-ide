@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
@@ -12,7 +12,6 @@ const HOME_EXAMPLES = window.SERVER_DATA?.Examples || [];
 const Examples = props => {
   const classes = examplesDocumentsStyles();
   const { openExistingDocument } = props;
-  const { t } = useTranslation();
 
   /**
    * Render examples from configuration file
@@ -40,7 +39,7 @@ const Examples = props => {
         <h2>{t("NoHomeTabExamples")}</h2>
       </div>
     );
-  }, [t, classes.defaultMessage]);
+  }, [classes.defaultMessage]);
 
   //========================================================================================
   /*                                                                                      *

@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import PropTypes from "prop-types";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
@@ -12,7 +12,6 @@ const InvalidLinksWarning = props => {
   // Style hooks
   const classes = invalidLinksWarningStyles();
   // Translation hooks
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *

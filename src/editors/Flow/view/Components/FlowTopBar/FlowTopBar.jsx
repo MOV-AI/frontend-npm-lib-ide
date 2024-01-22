@@ -7,7 +7,7 @@ import React, {
   useRef
 } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import { RobotManager, CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import {
   Typography,
@@ -84,7 +84,6 @@ const FlowTopBar = props => {
   const [robotList, setRobotList] = useState({});
   // Other hooks
   const classes = flowTopBarStyles();
-  const { t } = useTranslation();
   const { robotSubscribe, robotUnsubscribe, getFlowPath, robotStatus } =
     useNodeStatusUpdate(props, robotSelected, viewMode);
   // Refs
@@ -197,7 +196,7 @@ const FlowTopBar = props => {
           });
         });
     },
-    [initSelectedRobot, workspaceManager, alert, t]
+    [initSelectedRobot, workspaceManager, alert]
   );
 
   //========================================================================================
@@ -367,7 +366,7 @@ const FlowTopBar = props => {
         });
       if (buttonDOMRef.current) buttonDOMRef.current.blur();
     },
-    [alert, canRunFlow, getFlowPath, robotSelected, setActionLoading, t]
+    [alert, canRunFlow, getFlowPath, robotSelected, setActionLoading]
   );
 
   /**
@@ -398,7 +397,6 @@ const FlowTopBar = props => {
     [
       robotStatus.activeFlow,
       sendActionToRobot,
-      t,
       robotList,
       robotSelected,
       id,
@@ -467,7 +465,7 @@ const FlowTopBar = props => {
         </>
       </Tooltip>
     );
-  }, [actionLoading, t]);
+  }, [actionLoading]);
 
   /**
    * Render Stop button content
@@ -482,7 +480,7 @@ const FlowTopBar = props => {
         <StopIcon />
       </Tooltip>
     );
-  }, [actionLoading, t]);
+  }, [actionLoading]);
 
   return (
     <AppBar

@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import {
   Divider,
   List,
@@ -13,8 +13,6 @@ import { detailsMenuStyles } from "./styles";
 const DetailsMenu = ({ name, details }) => {
   // Style hook
   const classes = detailsMenuStyles();
-  // Translation hook
-  const { t } = useTranslation();
 
   return (
     <div>

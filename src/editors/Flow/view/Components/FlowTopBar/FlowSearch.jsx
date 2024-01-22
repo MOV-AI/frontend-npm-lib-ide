@@ -9,12 +9,11 @@ import {
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { flowTopBarStyles } from "./styles";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 
 const FlowSearch = props => {
   const { options, onChange, onEnabled, onDisabled, visible } = props;
   const classes = flowTopBarStyles();
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *
@@ -93,7 +92,7 @@ const FlowSearch = props => {
         />
       );
     },
-    [classes.searchInputText, t]
+    [classes.searchInputText]
   );
 
   if (!visible) {

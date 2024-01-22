@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../../../i18n/i18n";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import Grid from "@material-ui/core/Grid";
 import Circle from "@material-ui/icons/FiberManualRecord";
@@ -23,7 +23,6 @@ const Callback = props => {
   } = props;
   // Hooks
   const classes = callbackStyles();
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *

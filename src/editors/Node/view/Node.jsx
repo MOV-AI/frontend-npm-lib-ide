@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import { Typography } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
 import Model from "../model/Node";
@@ -37,7 +37,6 @@ export const Node = (props, ref) => {
   // Hooks
   const [protectedCallbacks, setProtectedCallbacks] = useState([]);
   const classes = nodeStyles();
-  const { t } = useTranslation();
   const { getColumns } = useKeyValueMethods();
   const { data } = useDataSubscriber({
     instance,
@@ -78,7 +77,7 @@ export const Node = (props, ref) => {
       }
       return { result: true, error: "" };
     },
-    [data, t]
+    [data]
   );
 
   //========================================================================================
@@ -219,7 +218,7 @@ export const Node = (props, ref) => {
         )
       }
     });
-  }, [call, id, name, props.data, instance, t]);
+  }, [call, id, name, props.data, instance]);
 
   usePluginMethods(ref, {
     renderRightMenu
@@ -267,7 +266,7 @@ export const Node = (props, ref) => {
         ParameterEditorDialog
       );
     },
-    [data, validateName, updateKeyValue, call, t]
+    [data, validateName, updateKeyValue, call]
   );
 
   /**

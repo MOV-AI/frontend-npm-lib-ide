@@ -1,4 +1,4 @@
-import { i18nHelper } from "@mov-ai/mov-fe-lib-react";
+import { i18nHelper, Translations as LibReactTranslations } from "@mov-ai/mov-fe-lib-react";
 import translationEN from "./languages/en.json";
 import translationPT from "./languages/pt.json";
 
@@ -27,8 +27,16 @@ export const Translations = Object.values(AVAILABLE_TRANSLATIONS).reduce(
 );
 
 const i18n = i18nHelper.createInstance({
-  en: translationEN,
-  pt: translationPT
+  en: {
+    ...LibReactTranslations.en,
+    ...translationEN,
+  },
+  pt: {
+    ...LibReactTranslations.pt,
+    ...translationPT,
+  }
 });
+
+export const t = i18n.t;
 
 export default i18n;

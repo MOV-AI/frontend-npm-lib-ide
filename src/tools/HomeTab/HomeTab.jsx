@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../i18n/i18n";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import {
   ALERT_SEVERITIES,
@@ -20,7 +20,6 @@ const HomeTab = props => {
   const { call, on, off, alert } = props;
   const workspaceManager = useMemo(() => new Workspace(), []);
   const classes = homeTabStyles();
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *
@@ -47,7 +46,7 @@ const HomeTab = props => {
         call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, doc);
       }
     },
-    [alert, call, t]
+    [alert, call]
   );
 
   //========================================================================================

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
@@ -13,8 +13,6 @@ const DependencyInfo = props => {
 
   const { activateKeyBind } = props;
 
-  // Translation hook
-  const { t } = useTranslation();
   // Style hook
   const classes = dependencyInfoStyles();
 

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../../i18n/i18n";
 import { ListItem, ListItemText, Typography } from "@material-ui/core";
 import { defaultFunction } from "../../../../../../utils/Utils";
 import NodeLink from "./NodeLink";
@@ -12,7 +12,6 @@ const MenuDetails = props => {
   const { id, name, template, model, type, openDoc, label } = props;
   // Other hooks
   const classes = menuDetailsStyles();
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *

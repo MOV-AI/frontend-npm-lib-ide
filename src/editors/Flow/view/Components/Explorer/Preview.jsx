@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from "react";
 import * as d3 from "d3";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import Factory from "../Nodes/Factory";
 import { generateContainerId } from "../../Constants/constants";
 import { previewStyles } from "./styles";
@@ -9,7 +9,6 @@ import { previewStyles } from "./styles";
 const Preview = props => {
   const { flowId, node, call } = props;
   const classes = previewStyles();
-  const { t } = useTranslation();
   const containerId = useRef(`preview_${generateContainerId(flowId)}`);
   const svg = useRef(null);
 

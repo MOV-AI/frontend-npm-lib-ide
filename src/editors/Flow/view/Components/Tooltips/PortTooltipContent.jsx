@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../../i18n/i18n";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
@@ -9,7 +9,6 @@ import { portTooltipContentStyles } from "./styles";
 const ITEMS_INDEX = "tooltip-fragment-row";
 
 const PortTooltipContent = props => {
-  const { t } = useTranslation();
   const { name, message, template, callback } = props;
   const classes = portTooltipContentStyles();
   const text = {

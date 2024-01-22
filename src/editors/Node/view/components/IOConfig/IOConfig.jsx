@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef, memo } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from ".././../../../../i18n/i18n";
 import PropTypes from "prop-types";
 import _isEqual from "lodash/isEqual";
 import { MTableToolbar, MTableEditRow } from "@material-table/core";
@@ -41,7 +41,6 @@ const IOConfig = props => {
 
   // Other hooks
   const classes = ioConfigStyles();
-  const { t } = useTranslation();
   const { getEffectiveMessage } = useHelper();
   const { getColumns } = useIOConfigColumns({
     scopeSystemPortsData,

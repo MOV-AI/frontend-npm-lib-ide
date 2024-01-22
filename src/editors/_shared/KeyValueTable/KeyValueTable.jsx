@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import _isEqual from "lodash/isEqual";
 import AddBox from "@material-ui/icons/AddBox";
 import Edit from "@material-ui/icons/Edit";
@@ -19,8 +19,6 @@ const KeyValueTable = props => {
     columns,
     testId = "section_key-value-table"
   } = props;
-  // Hooks
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *

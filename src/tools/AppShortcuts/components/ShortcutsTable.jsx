@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
@@ -11,8 +11,6 @@ import { parseKeybinds } from "../../../utils/Utils";
 const ShortcutsTable = props => {
   const { data, scope } = props;
 
-  // Translation hook
-  const { t } = useTranslation();
   // Style hook
   const classes = shortcutsTableStyles();
   const columns = useRef(getColumns());

@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
 import { AppBar, Toolbar } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
@@ -35,7 +35,6 @@ export const Configuration = (props, ref) => {
   // Style Hooks
   const classes = configurationStyles();
   const theme = useTheme();
-  const { t } = useTranslation();
 
   //========================================================================================
   /*                                                                                      *
@@ -58,7 +57,7 @@ export const Configuration = (props, ref) => {
         )
       }
     });
-  }, [call, id, name, instance, props.data, t]);
+  }, [call, id, name, instance, props.data]);
 
   usePluginMethods(ref, {
     renderRightMenu

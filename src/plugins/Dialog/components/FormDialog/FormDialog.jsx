@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../../i18n/i18n";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -15,8 +15,6 @@ import { appDialogStyles } from "./styles";
 const DEFAULT_VALIDATION = () => ({ result: true, error: "" });
 
 const FormDialog = props => {
-  // Translation hook
-  const { t } = useTranslation();
   // Props
   const {
     size,

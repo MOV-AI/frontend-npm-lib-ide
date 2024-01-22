@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { t } from "../../../i18n/i18n";
 import PropTypes from "prop-types";
 import { MenuItem, Tooltip, Paper, Divider } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -8,7 +8,6 @@ import { shortcutsListStyles } from "../styles";
 
 const ShortcutsList = props => {
   const { scopes, selectedScope, setSelectedScope } = props;
-  const { t } = useTranslation();
   const classes = shortcutsListStyles();
 
   //========================================================================================
