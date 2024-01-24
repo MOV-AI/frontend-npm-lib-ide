@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import _isEqual from "lodash/isEqual";
 import { RobotManager } from "@mov-ai/mov-fe-lib-core";
-import i18n from "../../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { compareDocumentPaths } from "../../../Utils/utils";
 
 const DEBOUNCE_TIME = 600; // ms

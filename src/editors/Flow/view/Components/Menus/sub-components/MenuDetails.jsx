@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { ListItem, ListItemText, Typography } from "@material-ui/core";
 import { defaultFunction } from "../../../../../../utils/Utils";
 import NodeLink from "./NodeLink";
@@ -25,7 +25,7 @@ const MenuDetails = props => {
         {name ?? id}
       </Typography>
       <ListItem divider>
-        <ListItemText primary={t(label)} className={classes.label} />
+        <ListItemText primary={i18n.t(label)} className={classes.label} />
         <NodeLink
           data-testid="section_node-link"
           name={template}
@@ -36,11 +36,11 @@ const MenuDetails = props => {
         </NodeLink>
       </ListItem>
       <ListItem divider>
-        <ListItemText primary={t("Scope-Colon")} />
+        <ListItemText primary={i18n.t("Scope-Colon")} />
         <Typography>{model}</Typography>
       </ListItem>
       <ListItem divider>
-        <ListItemText primary={t("Type-Colon")} />
+        <ListItemText primary={i18n.t("Type-Colon")} />
         <Typography>{type}</Typography>
       </ListItem>
     </>

@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import _isEqual from "lodash/isEqual";
 import AddBox from "@material-ui/icons/AddBox";
 import Edit from "@material-ui/icons/Edit";
@@ -62,7 +62,7 @@ const KeyValueTable = props => {
       rowData => ({
         icon: () => <Edit></Edit>,
         disabled: !editable,
-        tooltip: t("Edit"),
+        tooltip: i18n.t("Edit"),
         onClick: () => openEditDialog(varName, rowData.name)
       })
     ];
@@ -70,7 +70,7 @@ const KeyValueTable = props => {
     if (editable)
       actions.push({
         icon: () => <AddBox></AddBox>,
-        tooltip: t("AddAction", { actionTitle: title }),
+        tooltip: i18n.t("AddAction", { actionTitle: title }),
         isFreeAction: true,
         onClick: () => openEditDialog(varName)
       });

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef, memo } from "react";
-import { t } from ".././../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import _isEqual from "lodash/isEqual";
 import { MTableToolbar, MTableEditRow } from "@material-table/core";
@@ -322,7 +322,7 @@ const IOConfig = props => {
   return (
     <CollapsibleHeader
       testId="section_io-configuration"
-      title={t("IOConfiguration")}
+      title={i18n.t("IOConfiguration")}
       defaultExpanded={true}
     >
       <Typography

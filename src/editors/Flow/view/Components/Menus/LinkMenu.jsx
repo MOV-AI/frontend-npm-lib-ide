@@ -14,7 +14,7 @@ import {
   Typography,
   Tooltip
 } from "@material-ui/core";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
   LINK_DEPENDENCY,
   MOVAI_FLOW_TYPES
@@ -90,23 +90,23 @@ const LinkMenu = props => {
 
   return (
     <div data-testid="section_flow-link-menu">
-      <h2>{t("Link")}</h2>
+      <h2>{i18n.t("Link")}</h2>
       <List className={classes.listHolder} component="nav">
         <ListItem>
-          <ListItemText primary={t("From")} />
+          <ListItemText primary={i18n.t("From")} />
         </ListItem>
         <Collapse in>
           <Divider />
           <Typography component="div" className={classes.directionContainer}>
             <ListItem>
-              <ListItemText primary={t("Node-Colon")} />
+              <ListItemText primary={i18n.t("Node-Colon")} />
               <Tooltip title={linkData.sourceNode}>
                 <Typography>{linkData.sourceNode}</Typography>
               </Tooltip>
             </ListItem>
             <Divider />
             <ListItem>
-              <ListItemText primary={t("Port-Colon")} />
+              <ListItemText primary={i18n.t("Port-Colon")} />
               <Tooltip title={parsePortName(linkData.sourcePort)}>
                 <Typography>{parsePortName(linkData.sourcePort)}</Typography>
               </Tooltip>
@@ -115,20 +115,20 @@ const LinkMenu = props => {
         </Collapse>
         <Divider />
         <ListItem>
-          <ListItemText primary={t("To")} />
+          <ListItemText primary={i18n.t("To")} />
         </ListItem>
         <Collapse in>
           <Divider />
           <Typography component="div" className={classes.directionContainer}>
             <ListItem>
-              <ListItemText primary={t("Node-Colon")} />
+              <ListItemText primary={i18n.t("Node-Colon")} />
               <Tooltip title={linkData.targetNode}>
                 <Typography>{linkData.targetNode}</Typography>
               </Tooltip>
             </ListItem>
             <Divider />
             <ListItem>
-              <ListItemText primary={t("Port-Colon")} />
+              <ListItemText primary={i18n.t("Port-Colon")} />
               <Tooltip title={parsePortName(linkData.targetPort)}>
                 <Typography>{parsePortName(linkData.targetPort)}</Typography>
               </Tooltip>
@@ -139,7 +139,7 @@ const LinkMenu = props => {
           <>
             <Divider />
             <ListItem>
-              <ListItemText primary={t("LinkDependencies")} />
+              <ListItemText primary={i18n.t("LinkDependencies")} />
             </ListItem>
             <Collapse in>
               <Typography
@@ -147,7 +147,7 @@ const LinkMenu = props => {
                 className={classes.dependencyContainer}
               >
                 <FormControl fullWidth={true}>
-                  <InputLabel>{t("DependenciesLevel")}</InputLabel>
+                  <InputLabel>{i18n.t("DependenciesLevel")}</InputLabel>
                   <Select
                     value={dependencyLevel}
                     onChange={onChangeDependency}
@@ -161,7 +161,7 @@ const LinkMenu = props => {
                           value={dep.VALUE}
                           className={classes.infoContainer}
                         >
-                          <p>{t(dep.LABEL)}</p>
+                          <p>{i18n.t(dep.LABEL)}</p>
                           <div
                             className={classes.colorChip}
                             style={{ backgroundColor: dep.COLOR }}
@@ -171,7 +171,7 @@ const LinkMenu = props => {
                     })}
                   </Select>
                   <FormHelperText>
-                    {t("LinkDependenciesHelperText")}
+                    {i18n.t("LinkDependenciesHelperText")}
                   </FormHelperText>
                 </FormControl>
               </Typography>

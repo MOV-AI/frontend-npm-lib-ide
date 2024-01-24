@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { IconButton, InputAdornment, TextField } from "@material-ui/core";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { SCOPES, ALERT_SEVERITIES } from "../../../utils/Constants";
 import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
 import { Document } from "@mov-ai/mov-fe-lib-core";
@@ -32,7 +32,7 @@ const ConfigurationSelector = props => {
     // TO BE REMOVED AFTER STANDARDIZATION OF PARSING PROCESS
     if (document.workspace !== "global") {
       alert({
-        message: t("OnlyGlobalConfiguration"),
+        message: i18n.t("OnlyGlobalConfiguration"),
         severity: ALERT_SEVERITIES.WARNING
       });
     }

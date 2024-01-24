@@ -87,13 +87,11 @@ test("Serialize OF db", () => {
         name: "move_distance",
         value: "0.2",
         description: data.Parameter.move_distance.Description,
-        type: DATA_TYPES.ANY
       },
       detection_type: {
         name: "detection_type",
         value: "gentag",
         description: data.Parameter.detection_type.Description,
-        type: DATA_TYPES.ANY
       }
     },
     envVars: { varA: { name: "varA", value: "/opt/movai" } },
@@ -149,14 +147,12 @@ test("Serialize TO db", () => {
         value: "0.2",
         description:
           "[Float] Distance in meters to move forward with the cart before regrabbing",
-        type: DATA_TYPES.ANY
       },
       detection_type: {
         name: "detection_type",
         value: "gentag",
         description:
           "[Sring] Type of detection to be used. Can be either tag or cart_detector",
-        type: DATA_TYPES.ANY
       }
     },
     envVars: { varA: { name: "varA", value: "/opt/movai" } },

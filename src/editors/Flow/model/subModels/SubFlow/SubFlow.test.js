@@ -17,7 +17,7 @@ test("Serialize OF db", () => {
       ContainerLabel: "subflow",
       ContainerFlow: "tugbot_actuators",
       Visualization: [0.01, 0.02],
-      Parameter: { varA: { Value: "5", Type: DATA_TYPES.ANY } }
+      Parameter: { varA: { Value: "5" } }
     }
   };
 
@@ -26,7 +26,7 @@ test("Serialize OF db", () => {
     template: data.subflow.ContainerFlow,
     position: { x: 0.01, y: 0.02 },
     parameters: {
-      varA: { name: "varA", value: "5", type: DATA_TYPES.ANY }
+      varA: { name: "varA", value: "5", type: undefined }
     }
   };
 
@@ -39,11 +39,10 @@ test("Serialize TO db", () => {
     name: "align",
     position: { x: 0.01, y: 0.03 },
     parameters: {
-      camera: { name: "camera", value: "back1", type: DATA_TYPES.ANY },
+      camera: { name: "camera", value: "back1" },
       move_distance_to_car: {
         name: "move_distance_to_car",
         value: "0.30",
-        type: DATA_TYPES.NUMBER
       }
     }
   };
@@ -56,8 +55,8 @@ test("Serialize TO db", () => {
       y: { Value: 0.03 }
     },
     Parameter: {
-      camera: { Value: "back1", Type: DATA_TYPES.ANY },
-      move_distance_to_car: { Value: "0.30", Type: DATA_TYPES.NUMBER }
+      camera: { Value: "back1" },
+      move_distance_to_car: { Value: "0.30" }
     }
   };
 
@@ -74,11 +73,10 @@ test("Create subflow", () => {
     name: "align",
     position: [0.01, 0.03],
     parameters: {
-      camera: { name: "camera", value: "back1", type: DATA_TYPES.ANY },
+      camera: { name: "camera", value: "back1" },
       move_distance_to_car: {
         name: "move_distance_to_car",
         value: "0.30",
-        type: DATA_TYPES.NUMBER
       }
     }
   };

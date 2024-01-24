@@ -1,6 +1,6 @@
 import React, { useCallback, useState, memo } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -123,31 +123,31 @@ const ExecutionParameters = props => {
   return (
     <CollapsibleHeader
       testId="section_execution-parameters"
-      title={t("ExecutionParameters")}
+      title={i18n.t("ExecutionParameters")}
     >
       <Typography component="div" className={classes.center}>
         {/*-------------------- Persistent ------------------------*/}
-        {renderCheckbox("persistent", t("Persistent"), persistent, {
+        {renderCheckbox("persistent", i18n.t("Persistent"), persistent, {
           id: TOOLTIP.persistent,
-          title: t("PersistentNodeTitle"),
-          description: t("PersistentNodeDescription")
+          title: i18n.t("PersistentNodeTitle"),
+          description: i18n.t("PersistentNodeDescription")
         })}
         {/* ---------------- Remappable -------------------*/}
-        {renderCheckbox("remappable", t("Remappable"), remappable, {
+        {renderCheckbox("remappable", i18n.t("Remappable"), remappable, {
           id: TOOLTIP.remappable,
-          title: t("Remappable"),
-          description: t("RemappableDescription")
+          title: i18n.t("Remappable"),
+          description: i18n.t("RemappableDescription")
         })}
         {/* ---------------- Launch -------------------*/}
-        {renderCheckbox("launch", t("Launch"), launch, {
+        {renderCheckbox("launch", i18n.t("Launch"), launch, {
           id: TOOLTIP.launch,
-          title: t("Launch"),
-          description: t("LaunchDescription")
+          title: i18n.t("Launch"),
+          description: i18n.t("LaunchDescription")
         })}
       </Typography>
       <TextField
         inputProps={{ "data-testid": "input_path" }}
-        label={t("Path")}
+        label={i18n.t("Path")}
         disabled={!editable}
         className={classes.textField}
         defaultValue={path}

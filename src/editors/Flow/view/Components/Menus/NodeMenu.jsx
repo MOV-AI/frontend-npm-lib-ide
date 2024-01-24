@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, memo } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
   Collapse,
   Divider,
@@ -214,7 +214,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
    */
   const handleKeyValueDialog = useCallback(
     (objData, param, viewOnly) => {
-      const paramType = t(DIALOG_TITLE[param.toUpperCase()]);
+      const paramType = i18n.t(DIALOG_TITLE[param.toUpperCase()]);
       const obj = {
         ...objData,
         varName: param,
@@ -225,7 +225,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
 
       const args = {
         onSubmit: handleSubmitParameter,
-        title: t("EditParamType", { paramType }),
+        title: i18n.t("EditParamType", { paramType }),
         data: obj,
         showDefault: !viewOnly,
         showValueOptions: true,
@@ -257,10 +257,10 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
     (item, varName) => {
       const paramName = item.key;
       call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, {
-        submitText: t("Delete"),
-        title: t("DeleteDocConfirmationTitle"),
+        submitText: i18n.t("Delete"),
+        title: i18n.t("DeleteDocConfirmationTitle"),
         onSubmit: () => handleDeleteParameter(paramName, varName),
-        message: t("DeleteKeyConfirmationMessage", { key: paramName })
+        message: i18n.t("DeleteKeyConfirmationMessage", { key: paramName })
       });
     },
     [call, handleDeleteParameter]
@@ -312,7 +312,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
             data-menu-id={ACTIVE_ITEM.PROPERTIES}
             onClick={handleExpandClick}
           >
-            <ListItemText primary={t("Properties")} />
+            <ListItemText primary={i18n.t("Properties")} />
             {renderExpandIcon(ACTIVE_ITEM.PROPERTIES)}
           </ListItem>
           <Collapse in={activeItem === ACTIVE_ITEM.PROPERTIES} unmountOnExit>
@@ -333,7 +333,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
             data-menu-id={ACTIVE_ITEM.PARAMETERS}
             onClick={handleExpandClick}
           >
-            <ListItemText primary={t("Parameters")} />
+            <ListItemText primary={i18n.t("Parameters")} />
             {renderExpandIcon(ACTIVE_ITEM.PARAMETERS)}
           </ListItem>
           <Collapse in={activeItem === ACTIVE_ITEM.PARAMETERS} unmountOnExit>
@@ -354,7 +354,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
             data-menu-id={ACTIVE_ITEM.ENVVARS}
             onClick={handleExpandClick}
           >
-            <ListItemText primary={t("EnvVars")} />
+            <ListItemText primary={i18n.t("EnvVars")} />
             {renderExpandIcon(ACTIVE_ITEM.ENVVARS)}
           </ListItem>
           <Collapse in={activeItem === ACTIVE_ITEM.ENVVARS} unmountOnExit>
@@ -375,7 +375,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
             data-menu-id={ACTIVE_ITEM.CMDLINE}
             onClick={handleExpandClick}
           >
-            <ListItemText primary={t("CommandLine")} />
+            <ListItemText primary={i18n.t("CommandLine")} />
             {renderExpandIcon(ACTIVE_ITEM.CMDLINE)}
           </ListItem>
           <Collapse in={activeItem === ACTIVE_ITEM.CMDLINE} unmountOnExit>

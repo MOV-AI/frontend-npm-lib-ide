@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 
 import PropertyItem from "./PropertyItem";
 
@@ -13,24 +13,24 @@ const PropertiesSection = ({
   const properties = useMemo(
     () => ({
       persistent: {
-        title: t("Persistent"),
+        title: i18n.t("Persistent"),
         options: [
-          { text: t("IsPersistent"), value: true },
-          { text: t("NotPersistent"), value: false }
+          { text: i18n.t("IsPersistent"), value: true },
+          { text: i18n.t("NotPersistent"), value: false }
         ]
       },
       remappable: {
-        title: t("Remappable"),
+        title: i18n.t("Remappable"),
         options: [
-          { text: t("IsRemappable"), value: true },
-          { text: t("NotRemappable"), value: false }
+          { text: i18n.t("IsRemappable"), value: true },
+          { text: i18n.t("NotRemappable"), value: false }
         ]
       },
       launch: {
-        title: t("Launch"),
+        title: i18n.t("Launch"),
         options: [
-          { text: t("ToLaunch"), value: true },
-          { text: t("NotToLaunch"), value: false }
+          { text: i18n.t("ToLaunch"), value: true },
+          { text: i18n.t("NotToLaunch"), value: false }
         ]
       }
     }),

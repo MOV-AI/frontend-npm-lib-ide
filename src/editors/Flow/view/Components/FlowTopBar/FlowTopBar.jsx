@@ -7,7 +7,7 @@ import React, {
   useRef
 } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { RobotManager, CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import {
   Typography,
@@ -189,7 +189,7 @@ const FlowTopBar = props => {
         .catch(err => {
           console.warn("getRunningRobot error", err);
           alert({
-            message: t(ERROR_MESSAGES.ERROR_RUNNING_SPECIFIC_CALLBACK, {
+            message: i18n.t(ERROR_MESSAGES.ERROR_RUNNING_SPECIFIC_CALLBACK, {
               callbackName: BACKEND_CALLBACK_NAME
             }),
             severity: ALERT_SEVERITIES.ERROR
@@ -348,8 +348,8 @@ const FlowTopBar = props => {
             // Set actionLoading false and show error message
             setActionLoading(false);
             alert({
-              message: t("FailedFlowAction", {
-                action: t(action.toLowerCase())
+              message: i18n.t("FailedFlowAction", {
+                action: i18n.t(action.toLowerCase())
               }),
               severity: ALERT_SEVERITIES.ERROR
             });
@@ -358,7 +358,7 @@ const FlowTopBar = props => {
         .catch(err => {
           console.warn("Error sending action to robot", err);
           alert({
-            message: t(ERROR_MESSAGES.ERROR_RUNNING_SPECIFIC_CALLBACK, {
+            message: i18n.t(ERROR_MESSAGES.ERROR_RUNNING_SPECIFIC_CALLBACK, {
               callbackName: BACKEND_CALLBACK_NAME
             }),
             severity: ALERT_SEVERITIES.ERROR
@@ -380,8 +380,8 @@ const FlowTopBar = props => {
         sendActionToRobot("START", flowUrl);
       } else {
         // Confirmation alert if Another flow is running!
-        const title = t("AnotherFlowRunningConfirmationTitle");
-        const message = t("AnotherFlowRunningConfirmationMessage", {
+        const title = i18n.t("AnotherFlowRunningConfirmationTitle");
+        const message = i18n.t("AnotherFlowRunningConfirmationMessage", {
           robotName: robotList[robotSelected].RobotName,
           activeFlow: robotStatus.activeFlow,
           id: id
@@ -389,7 +389,7 @@ const FlowTopBar = props => {
         confirmationAlert({
           title,
           message,
-          submitText: t("Run"),
+          submitText: i18n.t("Run"),
           onSubmit: () => sendActionToRobot("START", flowUrl)
         });
       }
@@ -459,9 +459,9 @@ const FlowTopBar = props => {
     return actionLoading ? (
       <CircularProgress size={25} color="inherit" />
     ) : (
-      <Tooltip title={t("StartFlow")}>
+      <Tooltip title={i18n.t("StartFlow")}>
         <>
-          <PlayArrowIcon /> {t("SaveAndRun")}
+          <PlayArrowIcon /> {i18n.t("SaveAndRun")}
         </>
       </Tooltip>
     );
@@ -476,7 +476,7 @@ const FlowTopBar = props => {
     return actionLoading ? (
       <CircularProgress size={25} color="inherit" />
     ) : (
-      <Tooltip title={t("StopFlow")}>
+      <Tooltip title={i18n.t("StopFlow")}>
         <StopIcon />
       </Tooltip>
     );
@@ -555,7 +555,7 @@ const FlowTopBar = props => {
               value={FLOW_VIEW_MODE.default}
               disabled={loading}
             >
-              <Tooltip title={t("DefaultFlowView")}>
+              <Tooltip title={i18n.t("DefaultFlowView")}>
                 <GrainIcon fontSize="small" />
               </Tooltip>
             </ToggleButton>
@@ -564,7 +564,7 @@ const FlowTopBar = props => {
               value={FLOW_VIEW_MODE.treeView}
               disabled={loading}
             >
-              <Tooltip title={t("TreeView")}>
+              <Tooltip title={i18n.t("TreeView")}>
                 <i className={`icon-tree ${classes.treeIcon}`}></i>
               </Tooltip>
             </ToggleButton>

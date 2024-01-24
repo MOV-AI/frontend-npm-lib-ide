@@ -1,5 +1,5 @@
 import React from "react";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import ExposedPortLine from "./components/ExposedPortLine";
 
@@ -22,10 +22,10 @@ const InvalidExposedPortsWarning = props => {
       className={classes.root}
       data-testid="section_invalid-exposed-ports-warning"
     >
-      <p>{t("InvalidExposedPortsMessagePre")}</p>
+      <p>{i18n.t("InvalidExposedPortsMessagePre")}</p>
       <div className={classes.invalidExposedPortsHeader}>
-        <h5>{t("InvalidExposedPorts")}</h5>
-        <h5>{t("NodeTemplate")}</h5>
+        <h5>{i18n.t("InvalidExposedPorts")}</h5>
+        <h5>{i18n.t("NodeTemplate")}</h5>
       </div>
       <div className={classes.invalidExposedPortsMessageHolder}>
         {invalidExposedPorts.map(exposedPortInfo => (
@@ -38,7 +38,7 @@ const InvalidExposedPortsWarning = props => {
         ))}
       </div>
       <p className={classes.postMessage}>
-        {t("InvalidExposedPortsMessagePost")}
+        {i18n.t("InvalidExposedPortsMessagePost")}
       </p>
     </div>
   );

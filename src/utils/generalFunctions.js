@@ -1,4 +1,4 @@
-import i18n from "../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import AppSettings from "../App/AppSettings";
 import { PLUGINS } from "../utils/Constants";
 import movaiIconWhite from "../Branding/movai-logo-white.png";

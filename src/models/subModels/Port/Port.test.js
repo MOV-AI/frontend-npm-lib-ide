@@ -1,4 +1,4 @@
-import Manager from "../../Manager";
+import { Manager } from "../../../models";
 import Port from "./Port";
 
 test("Smoke test", () => {

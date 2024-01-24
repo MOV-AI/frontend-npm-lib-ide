@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
@@ -12,10 +12,10 @@ const PortTooltipContent = props => {
   const { name, message, template, callback } = props;
   const classes = portTooltipContentStyles();
   const text = {
-    name: t("Name"),
-    message: t("Message"),
-    protocol: t("Protocol"),
-    callback: t("Callback")
+    name: i18n.t("Name"),
+    message: i18n.t("Message"),
+    protocol: i18n.t("Protocol"),
+    callback: i18n.t("Callback")
   };
 
   const itemTextProps = {

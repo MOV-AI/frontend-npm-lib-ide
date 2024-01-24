@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import {
   MenuItem,
@@ -198,7 +198,7 @@ const ParameterEditorDialog = props => {
         .then(res => {
           if (!res.success)
             throw new Error(
-              t(res.error) || t(ERROR_MESSAGES.DATA_VALIDATION_FAILED)
+              i18n.t(res.error) || i18n.t(ERROR_MESSAGES.DATA_VALIDATION_FAILED)
             );
           // Prepare data to submit
           if (res.parsed) data.value = res.parsed.toString();
@@ -301,7 +301,7 @@ const ParameterEditorDialog = props => {
     if (preventRenderType) return null;
     return (
       <FormControl className={classes.marginTop}>
-        <InputLabel>{`${t("Type")} *`}</InputLabel>
+        <InputLabel>{`${i18n.t("Type")} *`}</InputLabel>
         <Select
           fullWidth
           value={data.type || DATA_TYPES.ANY}
@@ -341,20 +341,20 @@ const ParameterEditorDialog = props => {
             value={VALUE_OPTIONS.CUSTOM}
             disabled={disabled}
             control={<Radio inputProps={{ "data-testid": "input_custom" }} />}
-            label={t("UseCustomValue")}
+            label={i18n.t("UseCustomValue")}
           />
           <FormControlLabel
             value={VALUE_OPTIONS.DEFAULT}
             disabled={disabled}
             control={<Radio inputProps={{ "data-testid": "input_default" }} />}
-            label={t("UseDefaultValue")}
+            label={i18n.t("UseDefaultValue")}
           />
           <FormControlLabel
             value={VALUE_OPTIONS.DISABLED}
             disabled={disabled}
             control={<Radio inputProps={{ "data-testid": "input_disabled" }} />}
-            label={t("DisableParamType", {
-              paramType: data.paramType || t("Value")
+            label={i18n.t("DisableParamType", {
+              paramType: data.paramType || i18n.t("Value")
             })}
           />
         </RadioGroup>
@@ -380,8 +380,8 @@ const ParameterEditorDialog = props => {
           {!options.isDefault && showValueOptions && renderValueOptions()}
           {!options.isDefault && valueOption === VALUE_OPTIONS.DISABLED ? (
             <p className={classes.disabledValue}>
-              {t("DisabledParamType", {
-                paramType: data.paramType || t("Value")
+              {i18n.t("DisabledParamType", {
+                paramType: data.paramType || i18n.t("Value")
               })}
             </p>
           ) : (

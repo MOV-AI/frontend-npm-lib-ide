@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
@@ -36,7 +36,7 @@ const Examples = props => {
     return (
       <div className={classes.defaultMessage}>
         <i className="icon-Happy"></i>
-        <h2>{t("NoHomeTabExamples")}</h2>
+        <h2>{i18n.t("NoHomeTabExamples")}</h2>
       </div>
     );
   }, [classes.defaultMessage]);
@@ -52,7 +52,7 @@ const Examples = props => {
       data-testid="section_examples"
       className={`${classes.paper} ${classes.examplePaper}`}
     >
-      <div className={classes.columnTitle}>{t("Examples")}</div>
+      <div className={classes.columnTitle}>{i18n.t("Examples")}</div>
       <Divider />
       <div className={classes.columnExample}>
         {HOME_EXAMPLES.length ? getExamples() : getDefaultMessage()}

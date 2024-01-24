@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { MOVAI_FLOW_TYPES } from "../../../../../utils/Constants";
@@ -42,7 +42,7 @@ const Description = props => {
     return (
       <>
         <Typography component="span" className={classes.heading}>
-          {t("Description")}
+          {i18n.t("Description")}
         </Typography>
         {nodeType && (
           <Typography component="span" className={classes.typeContainer}>
@@ -71,7 +71,7 @@ const Description = props => {
         inputProps={{ "data-testid": "input_description" }}
         disabled={!editable}
         className={classes.textField}
-        label={t("Description")}
+        label={i18n.t("Description")}
         minRows="4"
         multiline
         defaultValue={value}

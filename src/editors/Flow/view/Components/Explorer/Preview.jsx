@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from "react";
 import * as d3 from "d3";
 import PropTypes from "prop-types";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import Factory from "../Nodes/Factory";
 import { generateContainerId } from "../../Constants/constants";
 import { previewStyles } from "./styles";
@@ -76,7 +76,7 @@ const Preview = props => {
       {!node.children && node.name ? (
         <div id={containerId.current} ref={svg}></div>
       ) : (
-        <p>{t("PreviewHelperText")}</p>
+        <p>{i18n.t("PreviewHelperText")}</p>
       )}
     </div>
   );

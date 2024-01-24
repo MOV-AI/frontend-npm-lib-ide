@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { t } from "../../../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import { Typography } from "@material-ui/core";
 import TableKeyValue from "../TableKeyValue";
@@ -90,7 +90,7 @@ const KeyValuesSection = props => {
     </Typography>
   ) : (
     <Typography className={`${classes.itemValue} ${classes.disabled}`}>
-      {t(EMPTY_MESSAGE[varName.toUpperCase()])}
+      {i18n.t(EMPTY_MESSAGE[varName.toUpperCase()])}
     </Typography>
   );
 };

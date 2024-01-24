@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { t } from "../../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -29,11 +29,11 @@ const ExposedPortLine = props => {
   const buildTooltipTitle = (template, node, params) => {
     return (
       <>
-        <strong>{t("NodeTemplate-Colon")}</strong> {template}
+        <strong>{i18n.t("NodeTemplate-Colon")}</strong> {template}
         <br />
-        <strong>{t("NodeInstance-Colon")}</strong> {node}
+        <strong>{i18n.t("NodeInstance-Colon")}</strong> {node}
         <br />
-        <strong>{t("InvalidExposedPorts-Colon")}</strong>
+        <strong>{i18n.t("InvalidExposedPorts-Colon")}</strong>
         <ul>
           {params.map(param => (
             <li key={`${node}_${param}`}>{param}</li>
@@ -99,7 +99,7 @@ const ExposedPortLine = props => {
             onClick={handleOpenDocument}
           >
             <Tooltip
-              title={t("CloseModalOpenTemplate", {
+              title={i18n.t("CloseModalOpenTemplate", {
                 templateName: exposedPortInfo.nodeInst.templateName
               })}
             >
