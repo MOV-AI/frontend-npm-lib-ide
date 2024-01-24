@@ -8,8 +8,6 @@ import { loaderStyles } from "./styles";
 const Loader = _props => {
   // Style hook
   const classes = loaderStyles();
-  // Translation hook
-  const { t } = useTranslation();
   // Render
   return (
     <div className={classes.root}>
