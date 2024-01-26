@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { t } from "../../../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import Grid from "@material-ui/core/Grid";
 import Circle from "@material-ui/icons/FiberManualRecord";
@@ -70,7 +70,7 @@ const Callback = props => {
     <Grid className={classes.gridContainer}>
       <Grid item xs={3} className={classes.titleColumn}>
         <Circle className={classes.circle} />
-        {t("Callback")}:
+        {i18n.t("Callback")}:
       </Grid>
       <Grid className={classes.gridContainer} item xs={6}>
         <Tooltip title={id}>
@@ -80,7 +80,7 @@ const Callback = props => {
       <Grid item xs={3} className={classes.actionColumn}>
         {/* FolderIcon - Open Modal to Select Callback (with Workspace and Version) */}
         {props.editable && (
-          <Tooltip title={t("SelectCallback")}>
+          <Tooltip title={i18n.t("SelectCallback")}>
             <IconButton
               data-testid="input_select-callback"
               className={classes.icon}
@@ -93,7 +93,7 @@ const Callback = props => {
         )}
 
         {/* EditIcon - Call Callback Editor */}
-        <Tooltip title={t("EditCallback")}>
+        <Tooltip title={i18n.t("EditCallback")}>
           <>
             <IconButton
               data-testid="input_edit-callback"
@@ -109,7 +109,7 @@ const Callback = props => {
 
         {/* AddIcon - Create new Callback with associated Message */}
         {props.editable && (
-          <Tooltip title={t("CreateCallback")}>
+          <Tooltip title={i18n.t("CreateCallback")}>
             <IconButton
               data-testid="input_create-callback"
               className={classes.icon}

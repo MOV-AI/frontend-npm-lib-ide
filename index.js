@@ -1,4 +1,5 @@
 import "./index.css";
+export { Translations } from "./src/i18n";
 import reportWebVitals from "./src/reportWebVitals";
 // Import shared classes to be exported
 import BaseApp, { installEditor, installTool } from "./src/App/BaseApp";
@@ -40,7 +41,6 @@ import ShortcutsPlugin, {
 // Utils
 import ApplicationTheme from "./src/themes";
 import { ThemeProvider } from "@material-ui/styles";
-import i18n, { Translations } from "./src/i18n/i18n";
 import * as CONSTANTS from "./src/utils/Constants";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "./src/utils/Messages";
 import Workspace from "./src/utils/Workspace";
@@ -83,7 +83,6 @@ export { HomeTabPlugin, getHomeTab };
 export { ShortcutsPlugin, getShortcutsTab };
 export { FlowExplorer };
 export { ThemeProvider, ApplicationTheme };
-export { i18n, Translations };
 export { useDataTypes, useDataSubscriber, usePluginMethods };
 export { openTool };
 

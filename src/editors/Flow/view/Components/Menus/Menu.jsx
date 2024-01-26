@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
   Collapse,
   Divider,
@@ -26,7 +26,6 @@ import {
   TABLE_KEYS_NAMES,
   DIALOG_TITLE
 } from "../../../../../utils/Constants";
-import { validateDocumentName } from "../../../../../utils/Utils";
 import ParametersEditorDialog from "../../../../_shared/KeyValueTable/ParametersEditorDialog";
 import DetailsMenu from "../../../../_shared/DetailsMenu/DetailsMenu";
 import TableKeyValue from "./sub-components/TableKeyValue";
@@ -146,12 +145,12 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
   const handleParameterDialog = useCallback(
     dataId => {
       const obj = model.current.getParameter(dataId) || DEFAULT_KEY_VALUE_DATA;
-      const paramType = t(DIALOG_TITLE.PARAMETERS);
+      const paramType = i18n.t(DIALOG_TITLE.PARAMETERS);
 
       const args = {
         onSubmit: formData => handleSubmitParameter(obj.name, formData),
         nameValidation: newData => validateParamName(obj.name, newData),
-        title: t("EditParamType", { paramType }),
+        title: i18n.t("EditParamType", { paramType }),
         data: obj,
         call
       };
@@ -193,8 +192,8 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
     const args = {
       size: "md",
       multiline: true,
-      title: t("EditDescription"),
-      inputLabel: t("Description"),
+      title: i18n.t("EditDescription"),
+      inputLabel: i18n.t("Description"),
       value: model.current.getDescription(),
       onSubmit: description => model.current.setDescription(description)
     };
@@ -228,10 +227,10 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
   const handleParamDelete = useCallback(
     ({ key, value }) => {
       const args = {
-        submitText: t("Delete"),
-        title: t("ConfirmDeleteParam", { paramName: key }),
+        submitText: i18n.t("Delete"),
+        title: i18n.t("ConfirmDeleteParam", { paramName: key }),
         onSubmit: () => model.current.deleteParameter(key),
-        message: t("ParameterDeleteConfirmationMessage", {
+        message: i18n.t("ParameterDeleteConfirmationMessage", {
           paramName: key,
           value
         })
@@ -301,7 +300,7 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
       </Typography>
     ) : (
       <Typography className={`${classes.itemValue} ${classes.disabled}`}>
-        {t("NoParameters")}
+        {i18n.t("NoParameters")}
       </Typography>
     );
   }, [classes, editable, getParameters, handleParamDelete, handleParamEdit]);
@@ -317,7 +316,7 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
           data-menu-id={ACTIVE_ITEM.description}
           onClick={handleExpandClick}
         >
-          <ListItemText primary={t("Description")} />
+          <ListItemText primary={i18n.t("Description")} />
           <IconButton
             data-testid="input_description-edit"
             disabled={!editable}
@@ -342,7 +341,7 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
           data-menu-id={ACTIVE_ITEM.parameters}
           onClick={handleExpandClick}
         >
-          <ListItemText primary={t("Parameters")} />
+          <ListItemText primary={i18n.t("Parameters")} />
           <IconButton
             data-testid="input_parameters-add"
             disabled={!editable}

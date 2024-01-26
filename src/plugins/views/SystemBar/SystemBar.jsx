@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import Button from "@material-ui/core/Button";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import SystemMenu from "./Components/SystemMenu";
@@ -103,7 +103,7 @@ const SystemBar = props => {
                 onClick={handleClickMenu}
                 data-menu-id={menu.id}
               >
-                {t(menu.title)}
+                {i18n.t(menu.title)}
               </Button>
             );
           })}

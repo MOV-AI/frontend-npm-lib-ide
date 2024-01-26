@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { ContextMenu } from ".";
 
 const FlowContextMenu = props => {
@@ -10,7 +10,7 @@ const FlowContextMenu = props => {
     return options?.map(
       opt =>
         opt.onClick && {
-          label: t(opt.label, opt.labelVars),
+          label: i18n.t(opt.label, opt.labelVars),
           icon: opt.icon,
           disabled: opt.disabled,
           onClick: e => {

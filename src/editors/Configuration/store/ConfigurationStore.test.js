@@ -1,6 +1,6 @@
 import Store from "./ConfigurationStore";
 import { DBSubscriber } from "../../../store";
-import { Model } from "../../../models";
+import { ConfigurationModel } from "./..";
 
 test("Smoke test", () => {
   const obj = new Store();
@@ -20,5 +20,5 @@ test("Validate defaults", () => {
   expect(store.workspace).toBe("global");
   expect(store.name).toBe("Configuration");
   expect(store.title).toBe("Configurations");
-  expect(store.model).toBe(Model);
+  expect(store.model).toBe(ConfigurationModel);
 });

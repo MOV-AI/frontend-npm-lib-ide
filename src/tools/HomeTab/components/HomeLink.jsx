@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import IconButton from "@material-ui/core/IconButton";
 import { Tooltip } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -29,7 +29,7 @@ function HomeLink(props) {
   return (
     <Tooltip
       arrow
-      title={t("OpenDocUrl", { docUrl: props.doc.url })}
+      title={i18n.t("OpenDocUrl", { docUrl: props.doc.url })}
       disableFocusListener
       disableHoverListener
       disableTouchListener
@@ -49,7 +49,7 @@ function HomeLink(props) {
           </div>
         </Tooltip>
         <div>
-          <Tooltip title={t("Remove")}>
+          <Tooltip title={i18n.t("Remove")}>
             <IconButton
               onClick={handleDeleteDocument}
               size="small"

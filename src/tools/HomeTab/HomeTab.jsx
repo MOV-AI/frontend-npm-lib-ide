@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import {
   ALERT_SEVERITIES,
@@ -37,7 +37,7 @@ const HomeTab = props => {
 
       if (doc.isDeleted) {
         alert({
-          message: t(ERROR_MESSAGES.FILE_DOESNT_EXIST, {
+          message: i18n.t(ERROR_MESSAGES.FILE_DOESNT_EXIST, {
             FILE_URL: doc.id
           }),
           severity: ALERT_SEVERITIES.WARNING

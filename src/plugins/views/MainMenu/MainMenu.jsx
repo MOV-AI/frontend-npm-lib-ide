@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import {
   VerticalBar,
@@ -95,7 +95,7 @@ const MainMenu = props => {
           <>
             {AppSettings.APP_PROPS.SHOW_APP_SELECTION && (
               <div className={classes.appsHolder}>
-                <Tooltip title={t("Home")}>
+                <Tooltip title={i18n.t("Home")}>
                   <HomeMenuPopper />
                 </Tooltip>
                 <hr />
@@ -103,7 +103,7 @@ const MainMenu = props => {
             )}
             <ContextMenu
               element={
-                <Tooltip title={t("CreateNewDoc")} placement="right" arrow>
+                <Tooltip title={i18n.t("CreateNewDoc")} placement="right" arrow>
                   <AddBoxIcon
                     id="mainMenuCreateNewDocument"
                     className={classes.icon}

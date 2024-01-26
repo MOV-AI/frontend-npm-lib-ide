@@ -1,4 +1,4 @@
-import i18n from "../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { getSystemBarTools, hasTool } from "../../../../tools";
 import AppSettings from "../../../../App/AppSettings";
 import { parseKeybinds, openLink } from "../../../../utils/Utils";

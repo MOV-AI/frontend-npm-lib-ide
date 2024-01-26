@@ -1,5 +1,5 @@
 import React from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import { MenuItem, Tooltip, Paper, Divider } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -34,7 +34,7 @@ const ShortcutsList = props => {
 
   return (
     <Paper data-testid="section_shortcuts-list" className={classes.paper}>
-      <div className={classes.columnTitle}>{t("Scope")}</div>
+      <div className={classes.columnTitle}>{i18n.t("Scope")}</div>
       <Divider />
       <div className={classes.columnBody}>
         {scopes.map(scope => (

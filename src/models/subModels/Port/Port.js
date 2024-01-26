@@ -1,6 +1,5 @@
 import { Utils } from "@mov-ai/mov-fe-lib-core";
-import Model from "../../Model";
-import Manager from "../../Manager";
+import { Model, Manager } from "../..";
 import schema from "./schema";
 import PortType from "./PortType";
 

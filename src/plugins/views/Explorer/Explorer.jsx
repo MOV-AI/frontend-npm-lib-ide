@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import { Typography } from "@material-ui/core";
 import { withAlerts } from "../../../decorators";
@@ -175,8 +175,8 @@ const Explorer = props => {
     node => {
       const { name, scope } = node;
       call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, {
-        submitText: t("Delete"),
-        title: t("DeleteDocConfirmationTitle"),
+        submitText: i18n.t("Delete"),
+        title: i18n.t("DeleteDocConfirmationTitle"),
         onSubmit: () =>
           call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.DELETE, {
             name,
@@ -185,7 +185,7 @@ const Explorer = props => {
             .then(res => {
               console.warn("Debug document deleted", res);
               alert({
-                message: t(SUCCESS_MESSAGES.DOC_DELETE_SUCCESSFULLY, {
+                message: i18n.t(SUCCESS_MESSAGES.DOC_DELETE_SUCCESSFULLY, {
                   docName: name
                 }),
                 severity: ALERT_SEVERITIES.SUCCESS
@@ -196,7 +196,7 @@ const Explorer = props => {
                 `Could not delete ${name} \n ${error.statusText ?? error}`
               )
             ),
-        message: t("DeleteDocConfirmationMessage", { docName: name })
+        message: i18n.t("DeleteDocConfirmationMessage", { docName: name })
       });
     },
     [call]

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
@@ -29,8 +29,8 @@ const DependencyInfo = props => {
       <CardContent data-testid="input_minify-toggle" onClick={toggleMinify}>
         <h3>
           {minified
-            ? t("MinifiedDependencyInfoTitle")
-            : t("DependencyInfoTitle")}
+            ? i18n.t("MinifiedDependencyInfoTitle")
+            : i18n.t("DependencyInfoTitle")}
           <ArrowDropDownIcon />
         </h3>
         {Object.values(LINK_DEPENDENCY).map(dep => {
@@ -39,7 +39,7 @@ const DependencyInfo = props => {
               key={convertToValidString(dep.LABEL)}
               className={classes.infoContainer}
             >
-              <p>{t(dep.LABEL)}</p>
+              <p>{i18n.t(dep.LABEL)}</p>
               <div
                 className={classes.colorChip}
                 style={{ backgroundColor: dep.COLOR }}

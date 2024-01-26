@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
   FormControl,
   Grid,
@@ -54,7 +54,7 @@ const PropertyItem = ({
    * @returns {string} string to concatenate with label
    */
   const getDefaultText = useCallback(
-    isDefault => (isDefault ? `(${t("Default")})` : ""),
+    isDefault => (isDefault ? `(${i18n.t("Default")})` : ""),
     []
   );
 

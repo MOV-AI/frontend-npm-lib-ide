@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
   Collapse,
   List,
@@ -238,7 +238,7 @@ const Menu = props => {
                 primary={pyLib.name}
               />
               <ListItemSecondaryAction>
-                <Tooltip title={t("RemoveImport")}>
+                <Tooltip title={i18n.t("RemoveImport")}>
                   <IconButton
                     data-testid="input_delete-import"
                     edge="end"
@@ -254,7 +254,7 @@ const Menu = props => {
       })
     ) : (
       <Typography className={`${classes.itemValue} ${classes.disabled}`}>
-        {t("NoImports")}
+        {i18n.t("NoImports")}
       </Typography>
     );
   }, [classes, getImportsList, deleteImport]);
@@ -273,7 +273,7 @@ const Menu = props => {
             primary={data.message}
           />
           <ListItemSecondaryAction>
-            <Tooltip title={t("RemoveMessage")}>
+            <Tooltip title={i18n.t("RemoveMessage")}>
               <IconButton
                 data-testid="input_delete-message"
                 edge="end"
@@ -287,7 +287,7 @@ const Menu = props => {
       </Typography>
     ) : (
       <Typography className={`${classes.itemValue} ${classes.disabled}`}>
-        {t("NoMessageDefined")}
+        {i18n.t("NoMessageDefined")}
       </Typography>
     );
   }, [classes, data.message, handleRemoveMessage]);
@@ -307,7 +307,7 @@ const Menu = props => {
           data-active-item={ACTIVE_ITEM.IMPORTS}
           onClick={handleExpandClick}
         >
-          <ListItemText primary={t("Imports")} />
+          <ListItemText primary={i18n.t("Imports")} />
           <IconButton
             data-testid="add-import"
             disabled={!editable}
@@ -328,7 +328,7 @@ const Menu = props => {
           data-active-item={ACTIVE_ITEM.MESSAGE}
           onClick={handleExpandClick}
         >
-          <ListItemText primary={t("Message")} />
+          <ListItemText primary={i18n.t("Message")} />
           <IconButton
             data-testid="input_edit-message"
             disabled={!editable}

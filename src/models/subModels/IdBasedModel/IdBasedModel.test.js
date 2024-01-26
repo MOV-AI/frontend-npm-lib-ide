@@ -1,4 +1,4 @@
-import IdBased from "./IdBasedModel";
+import IdBased from "./IdBased";
 
 test("Smoke test", () => {
   const obj = new IdBased();

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { t } from "../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
   Typography,
   TextField,
@@ -146,8 +146,8 @@ const EditMessageDialog = props => {
       ></MaterialTree>
     ) : (
       <>
-        <h2>{t(ERROR_MESSAGES.SOMETHING_WENT_WRONG)}</h2>
-        <h3>{t("FailedToLoadMessages")}</h3>
+        <h2>{i18n.t(ERROR_MESSAGES.SOMETHING_WENT_WRONG)}</h2>
+        <h3>{i18n.t("FailedToLoadMessages")}</h3>
       </>
     );
   };
@@ -160,7 +160,7 @@ const EditMessageDialog = props => {
       classes={{ paper: classes.paper }}
     >
       <DialogTitle onClose={onClose} hasCloseButton={true}>
-        {t("EditMessage")}
+        {i18n.t("EditMessage")}
       </DialogTitle>
       <DialogContent>
         <Search onSearch={onSearch} />
@@ -169,7 +169,7 @@ const EditMessageDialog = props => {
         </Typography>
         <TextField
           fullWidth
-          label={t("Message")}
+          label={i18n.t("Message")}
           value={selectedMsg}
           margin="normal"
           disabled
@@ -177,7 +177,7 @@ const EditMessageDialog = props => {
       </DialogContent>
       <DialogActions>
         <Button data-testid="input_cancel" onClick={onClose}>
-          {t("Cancel")}
+          {i18n.t("Cancel")}
         </Button>
         <Button
           data-testid="input_confirm"
@@ -188,7 +188,7 @@ const EditMessageDialog = props => {
           }}
           disabled={!selectedMsg}
         >
-          {t("Submit")}
+          {i18n.t("Submit")}
         </Button>
       </DialogActions>
     </Dialog>

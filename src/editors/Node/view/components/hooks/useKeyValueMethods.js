@@ -1,5 +1,5 @@
 import React from "react";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import InfoLogo from "@material-ui/icons/Info";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
@@ -74,7 +74,7 @@ const useKeyValueMethods = () => {
         render: renderInfoIcon
       },
       {
-        title: t("Name"),
+        title: i18n.t("Name"),
         field: "name",
         width: "45%",
         defaultSort: "asc",
@@ -86,7 +86,7 @@ const useKeyValueMethods = () => {
         render: rowData => <span data-testid="parameters_output_name">{rowData.name}</span>
       },
       {
-        title: t("Value"),
+        title: i18n.t("Value"),
         field: "value",
         width: "45%",
         cellStyle: {

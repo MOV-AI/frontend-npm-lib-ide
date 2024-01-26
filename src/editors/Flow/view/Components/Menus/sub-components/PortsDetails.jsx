@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { Divider, Link, Tooltip, Typography } from "@material-ui/core";
 import { SCOPES } from "../../../../../../utils/Constants";
 import { portStyles } from "../styles";
@@ -69,7 +69,7 @@ const PortsDetails = props => {
           key={`${callback}_${index}`}
           placement={"bottom-start"}
           className={classes.portCallbackLink}
-          title={t("OpenCallbackName", { callbackName: callback })}
+          title={i18n.t("OpenCallbackName", { callbackName: callback })}
         >
           <span>
             <Link
@@ -138,7 +138,7 @@ const PortsDetails = props => {
   return (
     <>
       <Typography component="div" className={classes.detailsSection}>
-        {t("Ports-Colon")}
+        {i18n.t("Ports-Colon")}
       </Typography>
       <Typography component="div" className={classes.detailsContent}>
         <Typography component="div">
@@ -147,7 +147,7 @@ const PortsDetails = props => {
             <>
               <div className={classes.detailRow}>
                 <div className={`icon-in ${classes.portIcon}`}></div>
-                <div className="content">{t("Inputs")}</div>
+                <div className="content">{i18n.t("Inputs")}</div>
               </div>
               {getInternalData(inputPorts)}
             </>
@@ -157,7 +157,7 @@ const PortsDetails = props => {
             <>
               <div className={classes.detailRow}>
                 <div className={`icon-out ${classes.portIcon}`}></div>
-                <div className="content">{t("Outputs")}</div>
+                <div className="content">{i18n.t("Outputs")}</div>
               </div>
               {getInternalData(outputPorts)}
             </>

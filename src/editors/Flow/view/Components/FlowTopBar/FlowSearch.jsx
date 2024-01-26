@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { flowTopBarStyles } from "./styles";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 
 const FlowSearch = props => {
   const { options, onChange, onEnabled, onDisabled, visible } = props;
@@ -75,7 +75,7 @@ const FlowSearch = props => {
         <TextField
           {...params}
           variant="standard"
-          placeholder={t("SearchNode")}
+          placeholder={i18n.t("SearchNode")}
           className={classes.searchInputText}
           autoFocus
           InputProps={{

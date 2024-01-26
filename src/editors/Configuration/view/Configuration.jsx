@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
 import { AppBar, Toolbar } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
@@ -45,7 +45,7 @@ export const Configuration = (props, ref) => {
   const renderRightMenu = useCallback(() => {
     const details = props.data?.details || {};
     const menuName = `${id}-detail-menu`;
-    const menuTitle = t("ConfigurationDetailsMenuTitle");
+    const menuTitle = i18n.t("ConfigurationDetailsMenuTitle");
     // add bookmark
     call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.SET_BOOKMARK, {
       [menuName]: {

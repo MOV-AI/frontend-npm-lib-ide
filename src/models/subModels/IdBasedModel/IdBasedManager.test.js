@@ -1,5 +1,5 @@
 import Manager from "./IdBasedManager";
-import IdBased from "./IdBasedModel";
+import IdBased from "./IdBased";
 
 test("smoke test", () => {
   const obj = new Manager("model", IdBased);
