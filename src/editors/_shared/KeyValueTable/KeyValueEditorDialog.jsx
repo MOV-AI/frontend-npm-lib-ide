@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, memo } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import _isEqual from "lodash/isEqual";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -102,7 +102,7 @@ const KeyValueEditorDialog = props => {
           setValidation({
             component: COMPONENTS.NAME,
             error: !res.result,
-            message: t(res.error)
+            message: i18n.t(res.error)
           });
           // Return validation
           return res.result;
@@ -141,7 +141,7 @@ const KeyValueEditorDialog = props => {
           setValidation({
             component: COMPONENTS.VALUE,
             error: !res.result,
-            message: t(res.error)
+            message: i18n.t(res.error)
           });
         });
       }
@@ -188,7 +188,7 @@ const KeyValueEditorDialog = props => {
         <DialogContent>
           <Typography component="div" className={classes.container}>
             <TextField
-              label={`${t("Name")} *`}
+              label={`${i18n.t("Name")} *`}
               error={
                 getValidationComponent(COMPONENTS.NAME) && validation.error
               }
@@ -205,7 +205,7 @@ const KeyValueEditorDialog = props => {
             {showDescription && (
               <FormControl className={classes.marginTop}>
                 <TextField
-                  label={t("Description")}
+                  label={i18n.t("Description")}
                   value={data.description}
                   className={classes.input}
                   multiline
@@ -218,7 +218,7 @@ const KeyValueEditorDialog = props => {
               </FormControl>
             )}
             {renderCustomContent && renderCustomContent()}
-            <InputLabel className={classes.label}>{t("Value")}</InputLabel>
+            <InputLabel className={classes.label}>{i18n.t("Value")}</InputLabel>
             <FormControl className={classes.marginTop}>
               {renderValueEditor(data.value, {
                 isNew,
@@ -239,7 +239,7 @@ const KeyValueEditorDialog = props => {
                   expandIcon={<ExpandMoreIcon />}
                 >
                   <Typography className={classes.label}>
-                    {t("Default Value")}
+                    {i18n.t("Default Value")}
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails className={classes.noHorizontalPadding}>
@@ -256,7 +256,7 @@ const KeyValueEditorDialog = props => {
         </DialogContent>
         <DialogActions data-testid="section_dialog-actions">
           <Button data-testid="input_close" onClick={onClose}>
-            {t("Cancel")}
+            {i18n.t("Cancel")}
           </Button>
           <Button
             data-testid="input_confirm"
@@ -268,7 +268,7 @@ const KeyValueEditorDialog = props => {
               disabled
             }
           >
-            {t("Save")}
+            {i18n.t("Save")}
           </Button>
         </DialogActions>
       </div>

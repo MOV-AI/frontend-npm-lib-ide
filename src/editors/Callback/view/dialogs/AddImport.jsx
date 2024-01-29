@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { t } from "../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import _debounce from "lodash/debounce";
 import { makeStyles } from "@material-ui/styles";
 import {
@@ -115,8 +115,8 @@ const AddImportDialog = props => {
       ></MaterialTree>
     ) : (
       <>
-        <h2>{t(ERROR_MESSAGES.SOMETHING_WENT_WRONG)}</h2>
-        <h3>{t("FailedToLoadLibraries")}</h3>
+        <h2>{i18n.t(ERROR_MESSAGES.SOMETHING_WENT_WRONG)}</h2>
+        <h3>{i18n.t("FailedToLoadLibraries")}</h3>
       </>
     );
   };
@@ -129,7 +129,7 @@ const AddImportDialog = props => {
       classes={{ paper: classes.paper }}
     >
       <DialogTitle onClose={onClose} hasCloseButton={true}>
-        {t("Add Import")}
+        {i18n.t("Add Import")}
       </DialogTitle>
       <DialogContent>
         <Search onSearch={onSearch} />
@@ -137,7 +137,7 @@ const AddImportDialog = props => {
       </DialogContent>
       <DialogActions>
         <Button data-testid="input_cancel" onClick={onClose}>
-          {t("Cancel")}
+          {i18n.t("Cancel")}
         </Button>
         <Button
           data-testid="input_confirm"
@@ -148,7 +148,7 @@ const AddImportDialog = props => {
           }}
           disabled={!selectedLibs}
         >
-          {t("Add")}
+          {i18n.t("Add")}
         </Button>
       </DialogActions>
     </Dialog>

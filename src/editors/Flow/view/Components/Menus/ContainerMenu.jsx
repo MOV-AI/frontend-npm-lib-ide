@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import { Collapse, Divider, ListItem, ListItemText } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -114,7 +114,7 @@ const ContainerMenu = props => {
    */
   const handleKeyValueDialog = useCallback(
     (keyValueData, varName, viewOnly) => {
-      const paramType = t(DIALOG_TITLE[varName.toUpperCase()]);
+      const paramType = i18n.t(DIALOG_TITLE[varName.toUpperCase()]);
       const obj = {
         ...keyValueData,
         varName: varName,
@@ -125,7 +125,7 @@ const ContainerMenu = props => {
 
       const args = {
         onSubmit: handleSubmitParameter,
-        title: t("EditParamType", { paramType }),
+        title: i18n.t("EditParamType", { paramType }),
         data: obj,
         showDefault: !viewOnly,
         showValueOptions: true,
@@ -157,10 +157,10 @@ const ContainerMenu = props => {
     (item, varName) => {
       const paramName = item.key;
       call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, {
-        submitText: t("Delete"),
-        title: t("DeleteDocConfirmationTitle"),
+        submitText: i18n.t("Delete"),
+        title: i18n.t("DeleteDocConfirmationTitle"),
         onSubmit: () => handleDeleteParameter(paramName, varName),
-        message: t("DeleteKeyConfirmationMessage", { key: paramName })
+        message: i18n.t("DeleteKeyConfirmationMessage", { key: paramName })
       });
     },
     [call, handleDeleteParameter]
@@ -221,7 +221,7 @@ const ContainerMenu = props => {
         button
         onClick={toggleExpanded}
       >
-        <ListItemText primary={t("Parameters")} />
+        <ListItemText primary={i18n.t("Parameters")} />
         {expanded ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={expanded} unmountOnExit>

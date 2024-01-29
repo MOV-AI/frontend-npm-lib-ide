@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { t } from "../../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
   FormControl,
   NativeSelect,
@@ -262,7 +262,7 @@ const useIOConfigColumns = data => {
         width: 50
       },
       {
-        title: t("Name"),
+        title: i18n.t("Name"),
         field: "name",
         defaultSort: "asc",
         render: rowData => (
@@ -271,7 +271,7 @@ const useIOConfigColumns = data => {
         editComponent: getNameEditComponent
       },
       {
-        title: t("TransportProtocol"),
+        title: i18n.t("TransportProtocol"),
         field: "template",
         render: rowData => (
           <span data-testid="output_protocol">
@@ -281,7 +281,7 @@ const useIOConfigColumns = data => {
         editComponent: getTransportEditComponent
       },
       {
-        title: t("Package"),
+        title: i18n.t("Package"),
         field: "msgPackage",
         render: rowData => (
           <span data-testid="output_package">{rowData.msgPackage}</span>
@@ -289,7 +289,7 @@ const useIOConfigColumns = data => {
         editComponent: getPackageEditComponent
       },
       {
-        title: t("Message"),
+        title: i18n.t("Message"),
         field: "message",
         render: rowData => (
           <span data-testid="output_message">{rowData.message}</span>

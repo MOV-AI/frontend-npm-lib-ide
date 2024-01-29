@@ -1,5 +1,5 @@
 import React from "react";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import ParameterLine from "./components/ParameterLine";
@@ -20,10 +20,10 @@ const InvalidParametersWarning = props => {
 
   return (
     <div testid="section_invalid-parameters-warning">
-      <p>{t("InvalidContainersParamMessagePre")}</p>
+      <p>{i18n.t("InvalidContainersParamMessagePre")}</p>
       <div className={classes.invalidParametersHeader}>
-        <Typography variant="h6">{t("InvalidSubFlowParameters")}</Typography>
-        <Typography variant="h6">{t("FlowTemplate")}</Typography>
+        <Typography variant="h6">{i18n.t("InvalidSubFlowParameters")}</Typography>
+        <Typography variant="h6">{i18n.t("FlowTemplate")}</Typography>
       </div>
       <div className={classes.invalidParametersMessageHolder}>
         {invalidContainerParams.map(subFlowInfo => (
@@ -36,7 +36,7 @@ const InvalidParametersWarning = props => {
         ))}
       </div>
       <p className={classes.postMessage}>
-        {t("InvalidContainersParamMessagePost")}
+        {i18n.t("InvalidContainersParamMessagePost")}
       </p>
     </div>
   );

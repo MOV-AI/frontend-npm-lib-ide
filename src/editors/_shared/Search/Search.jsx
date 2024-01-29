@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import SearchIcon from "@material-ui/icons/Search";
 import ClearIcon from "@material-ui/icons/Clear";
 import { TextField, IconButton, Tooltip } from "@material-ui/core";
@@ -128,7 +128,7 @@ const Search = props => {
   return (
     <TextField
       fullWidth
-      placeholder={t("Search")}
+      placeholder={i18n.t("Search")}
       value={searchInput}
       onChange={onChangeSearch}
       inputProps={{ "data-testid": "input_search" }}
@@ -140,11 +140,11 @@ const Search = props => {
             onClick={resetValue}
           >
             {isEmpty() ? (
-              <Tooltip title={t("SearchSomething")}>
+              <Tooltip title={i18n.t("SearchSomething")}>
                 <SearchIcon className={classes.icon} />
               </Tooltip>
             ) : (
-              <Tooltip title={t("ResetSearch")}>
+              <Tooltip title={i18n.t("ResetSearch")}>
                 <ClearIcon className={classes.icon} />
               </Tooltip>
             )}

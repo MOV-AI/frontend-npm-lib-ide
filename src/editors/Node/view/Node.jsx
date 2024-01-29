@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { Typography } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
 import Model from "../model/Node";
@@ -67,10 +67,10 @@ export const Node = (props, ref) => {
       try {
         if (!paramName)
           throw new Error(
-            t(ERROR_MESSAGES.TYPE_NAME_IS_MANDATORY, { typeName })
+            i18n.t(ERROR_MESSAGES.TYPE_NAME_IS_MANDATORY, { typeName })
           );
         else if (!re.test(newName)) {
-          throw new Error(t(ERROR_MESSAGES.INVALID_TYPE_NAME, { typeName }));
+          throw new Error(i18n.t(ERROR_MESSAGES.INVALID_TYPE_NAME, { typeName }));
         }
       } catch (error) {
         return { result: false, error: error.message };
@@ -114,7 +114,7 @@ export const Node = (props, ref) => {
 
       // Check for transport/package/message
       if (!value.template)
-        throw new Error(t(ERROR_MESSAGES.NO_TRANSPORT_PROTOCOL_CHOSEN));
+        throw new Error(i18n.t(ERROR_MESSAGES.NO_TRANSPORT_PROTOCOL_CHOSEN));
       else if (!value.msgPackage)
         throw new Error(ERROR_MESSAGES.NO_PACKAGE_CHOSEN);
       else if (!value.message)
@@ -206,7 +206,7 @@ export const Node = (props, ref) => {
   const renderRightMenu = useCallback(() => {
     const details = props.data?.details ?? {};
     const menuName = `${id}-detail-menu`;
-    const menuTitle = t("NodeDetailsMenuTitle");
+    const menuTitle = i18n.t("NodeDetailsMenuTitle");
     // add bookmark
     call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.SET_BOOKMARK, {
       [menuName]: {
@@ -237,7 +237,7 @@ export const Node = (props, ref) => {
    */
   const handleOpenEditDialog = useCallback(
     (param, dataId) => {
-      const paramType = t(DIALOG_TITLE[param.toUpperCase()]);
+      const paramType = i18n.t(DIALOG_TITLE[param.toUpperCase()]);
       const isNew = !dataId;
       const objData = data[param][dataId] || DEFAULT_KEY_VALUE_DATA;
       const obj = {
@@ -253,7 +253,7 @@ export const Node = (props, ref) => {
         },
         nameValidation: newData =>
           Promise.resolve(validateName(newData, param, obj.name)),
-        title: t("EditParamType", { paramType }),
+        title: i18n.t("EditParamType", { paramType }),
         data: obj,
         preventRenderType: param !== TABLE_KEYS_NAMES.PARAMETERS,
         call
@@ -414,7 +414,7 @@ export const Node = (props, ref) => {
       ></ParametersTable>
       <KeyValueTable
         testId="section_env-vars"
-        title={t("EnvironmentVariables")}
+        title={i18n.t("EnvironmentVariables")}
         editable={editable}
         data={data.envVars}
         columns={defaultColumns}
@@ -424,7 +424,7 @@ export const Node = (props, ref) => {
       ></KeyValueTable>
       <KeyValueTable
         testId="section_command-line"
-        title={t("CommandLine")}
+        title={i18n.t("CommandLine")}
         editable={editable}
         data={data.commands}
         columns={defaultColumns}
@@ -434,7 +434,7 @@ export const Node = (props, ref) => {
       ></KeyValueTable>
       <KeyValueTable
         testId="section_container-configuration"
-        title={t("ContainerConfigurations")}
+        title={i18n.t("ContainerConfigurations")}
         editable={editable}
         data={data.containerConf}
         columns={defaultColumns}

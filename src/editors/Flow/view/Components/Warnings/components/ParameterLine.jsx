@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { t } from "../../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -29,11 +29,11 @@ const ParameterLine = props => {
   const buildTooltipTitle = (template, node, params) => {
     return (
       <>
-        <strong>{t("FlowTemplate-Colon")}</strong> {template}
+        <strong>{i18n.t("FlowTemplate-Colon")}</strong> {template}
         <br />
-        <strong>{t("SubFlow-Colon")}</strong> {node}
+        <strong>{i18n.t("SubFlow-Colon")}</strong> {node}
         <br />
-        <strong>{t("Parameters-Colon")}</strong>
+        <strong>{i18n.t("Parameters-Colon")}</strong>
         <ul className={classes.paramsList}>
           {params.map(param => (
             <li key={`${node}_${param}`}>{param}</li>
@@ -100,7 +100,7 @@ const ParameterLine = props => {
             onClick={handleOpenDocument}
           >
             <Tooltip
-              title={t("CloseModalOpenTemplate", {
+              title={i18n.t("CloseModalOpenTemplate", {
                 templateName: subFlowInfo.containerNode.templateName
               })}
             >

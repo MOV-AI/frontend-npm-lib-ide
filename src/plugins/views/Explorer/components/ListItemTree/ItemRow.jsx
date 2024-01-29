@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import { ContextMenu } from "@mov-ai/mov-fe-lib-react";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -156,21 +156,21 @@ const ItemRow = props => {
                       icon: (
                         <FileCopyIcon className={classes.contextMenuIcon} />
                       ),
-                      element: t("Copy")
+                      element: i18n.t("Copy")
                     },
                     {
                       onClick: () => {
                         props.handleDeleteClick(node);
                       },
                       icon: <DeleteIcon className={classes.contextMenuIcon} />,
-                      element: t("Delete")
+                      element: i18n.t("Delete")
                     }
                     // {
                     //   onClick: () => {
                     //     props.handleCompareClick(node);
                     //   },
                     //   icon: <CompareIcon fontSize="small" />,
-                    //   label: t("Compare")
+                    //   label: i18n.t("Compare")
                     // }
                   ]}
                 />

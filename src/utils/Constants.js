@@ -1,4 +1,4 @@
-import i18n from "../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { TYPES } from "../editors/Flow/view/Constants/constants";
 
 export const APP_DEFAULT_CONFIG = "app-ide-ce";

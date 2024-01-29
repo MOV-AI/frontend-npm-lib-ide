@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -135,8 +135,8 @@ const RecentDocuments = props => {
   return (
     <Paper data-testid="section_recent-documents" className={classes.paper}>
       <div className={`${classes.columnTitle} ${classes.flexTitle}`}>
-        <span>{t("Recent")}</span>
-        <Tooltip title={t("RemoveAll")}>
+        <span>{i18n.t("Recent")}</span>
+        <Tooltip title={i18n.t("RemoveAll")}>
           <span>
             <IconButton
               data-testid="input_clear-recent-documents"

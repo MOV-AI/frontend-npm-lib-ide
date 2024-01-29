@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import AppDialog from "../AppDialog/AppDialog";
 import WarningIcon from "@material-ui/icons/Warning";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -28,7 +28,7 @@ const AlertBeforeAction = props => {
             onClick={() => handleConfirmation(key)}
             color="default"
           >
-            {t(actions[key].label)}
+            {i18n.t(actions[key].label)}
           </Button>
         ))}
       </DialogActions>

@@ -6,7 +6,7 @@ import React, {
   useRef
 } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { filter } from "rxjs/operators";
 import InfoIcon from "@material-ui/icons/Info";
 import Add from "@material-ui/icons/Add";
@@ -200,13 +200,13 @@ export const Flow = (props, ref) => {
           if (!res.success) {
             console.warn(res.error);
             call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
-              message: t(ERROR_MESSAGES.SOMETHING_WENT_WRONG),
+              message: i18n.t(ERROR_MESSAGES.SOMETHING_WENT_WRONG),
               severity: ALERT_SEVERITIES.ERROR
             });
           } else {
             call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
-              message: t(SUCCESS_MESSAGES.NODE_IS_ACTION, {
-                action: t(`ACTION_${action}`)
+              message: i18n.t(SUCCESS_MESSAGES.NODE_IS_ACTION, {
+                action: i18n.t(`ACTION_${action}`)
               }),
               severity: ALERT_SEVERITIES.INFO
             });
@@ -215,7 +215,7 @@ export const Flow = (props, ref) => {
         .catch(err => {
           console.warn(err.toString());
           call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
-            message: t(ERROR_MESSAGES.SOMETHING_WENT_WRONG),
+            message: i18n.t(ERROR_MESSAGES.SOMETHING_WENT_WRONG),
             severity: ALERT_SEVERITIES.ERROR
           });
         });
@@ -347,8 +347,8 @@ export const Flow = (props, ref) => {
           PLUGINS.DIALOG.NAME,
           PLUGINS.DIALOG.CALL.CUSTOM,
           {
-            submitText: t("Fix"),
-            title: t("InvalidLinksFoundTitle"),
+            submitText: i18n.t("Fix"),
+            title: i18n.t("InvalidLinksFoundTitle"),
             onSubmit: () =>
               deleteInvalidLinks(invalidLinks, callback, customInterface),
             invalidLinks
@@ -373,8 +373,8 @@ export const Flow = (props, ref) => {
           PLUGINS.DIALOG.NAME,
           PLUGINS.DIALOG.CALL.CUSTOM,
           {
-            submitText: t("Fix"),
-            title: t("InvalidExposedPortsFound"),
+            submitText: i18n.t("Fix"),
+            title: i18n.t("InvalidExposedPortsFound"),
             onSubmit: () => deleteInvalidExposedPorts(invalidExposedPorts),
             call,
             invalidExposedPorts
@@ -401,7 +401,7 @@ export const Flow = (props, ref) => {
         PLUGINS.DIALOG.NAME,
         PLUGINS.DIALOG.CALL.CUSTOM,
         {
-          title: t("InvalidContainersParamTitle"),
+          title: i18n.t("InvalidContainersParamTitle"),
           invalidContainerParams: invalidContainers,
           call
         },
@@ -422,7 +422,7 @@ export const Flow = (props, ref) => {
       const node = nodeToCopy.node;
       return new Promise(resolve => {
         const args = {
-          title: t("PasteNodeModel", { nodeModel: node.model }),
+          title: i18n.t("PasteNodeModel", { nodeModel: node.model }),
           value: `${node.id}_copy`,
           onClose: () => {
             setFlowsToDefault();
@@ -431,7 +431,7 @@ export const Flow = (props, ref) => {
           onValidation: newName =>
             getMainInterface().graph.validator.validateNodeName(
               newName,
-              t(node.model)
+              i18n.t(node.model)
             ),
           onSubmit: newName =>
             getMainInterface().pasteNode(newName, node, position)
@@ -472,7 +472,7 @@ export const Flow = (props, ref) => {
       return {
         icon: <i className="icon-Nodes" />,
         name: MENUS.current.NODE.NAME,
-        title: t(MENUS.current.NODE.TITLE),
+        title: i18n.t(MENUS.current.NODE.TITLE),
         view: (
           <MenuComponent
             id={id}
@@ -517,7 +517,7 @@ export const Flow = (props, ref) => {
       return {
         icon: <CompareArrowsIcon />,
         name: MENUS.current.LINK.NAME,
-        title: t(MENUS.current.LINK.TITLE),
+        title: i18n.t(MENUS.current.LINK.TITLE),
         view: (
           <LinkMenu
             id={id}
@@ -557,7 +557,7 @@ export const Flow = (props, ref) => {
       [MENUS.current.DETAIL.NAME]: {
         icon: <InfoIcon></InfoIcon>,
         name: MENUS.current.DETAIL.NAME,
-        title: t(MENUS.current.DETAIL.TITLE),
+        title: i18n.t(MENUS.current.DETAIL.TITLE),
         view: (
           <Menu
             id={id}
@@ -577,7 +577,7 @@ export const Flow = (props, ref) => {
       bookmarks[FLOW_EXPLORER_PROFILE.name] = {
         icon: <Add />,
         name: FLOW_EXPLORER_PROFILE.name,
-        title: t(FLOW_EXPLORER_PROFILE.title),
+        title: i18n.t(FLOW_EXPLORER_PROFILE.title),
         view: explorerView.render({
           flowId: id,
           mainInterface: getMainInterface()
@@ -896,13 +896,13 @@ export const Flow = (props, ref) => {
         mainInterface.mode[EVT_NAMES.ADD_NODE].onClick.subscribe(() => {
           const nodeName = getMainInterface().mode.current.props.node.data.name;
           const args = {
-            title: t("AddNode"),
-            submitText: t("Add"),
+            title: i18n.t("AddNode"),
+            submitText: i18n.t("Add"),
             value: nodeName,
             onValidation: newName =>
               getMainInterface().graph.validator.validateNodeName(
                 newName,
-                t("Node")
+                i18n.t("Node")
               ),
             onClose: setFlowsToDefault,
             onSubmit: newName => getMainInterface().addNode(newName)
@@ -916,13 +916,13 @@ export const Flow = (props, ref) => {
         mainInterface.mode[EVT_NAMES.ADD_FLOW].onClick.subscribe(() => {
           const flowName = getMainInterface().mode.current.props.node.data.name;
           const args = {
-            title: t("AddSubFlow"),
-            submitText: t("Add"),
+            title: i18n.t("AddSubFlow"),
+            submitText: i18n.t("Add"),
             value: flowName,
             onValidation: newName =>
               getMainInterface().graph.validator.validateNodeName(
                 newName,
-                t("SubFlow")
+                i18n.t("SubFlow")
               ),
             onClose: setFlowsToDefault,
             onSubmit: newName => getMainInterface().addFlow(newName)
@@ -1140,8 +1140,8 @@ export const Flow = (props, ref) => {
   const handleDelete = useCallback(
     ({ message, callback }) => {
       confirmationAlert({
-        submitText: t("Delete"),
-        title: t("ConfirmDelete"),
+        submitText: i18n.t("Delete"),
+        title: i18n.t("ConfirmDelete"),
         onSubmit: callback,
         onClose: setFlowsToDefault,
         message
@@ -1216,11 +1216,11 @@ export const Flow = (props, ref) => {
       unselectNode();
     };
     // Compose confirmation message
-    const message = t("NodeDeleteConfirmation", {
+    const message = i18n.t("NodeDeleteConfirmation", {
       nodes:
         selectedNodes.length === 1
           ? selectedNodes[0].data.id
-          : t("TheSelectedNodes")
+          : i18n.t("TheSelectedNodes")
     });
     // Show confirmation before delete
     handleDelete({ message, callback });
@@ -1382,7 +1382,7 @@ export const Flow = (props, ref) => {
 
           if (!docData.thisDoc.isDirty) {
             call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
-              message: t(SUCCESS_MESSAGES.SAVED_SUCCESSFULLY),
+              message: i18n.t(SUCCESS_MESSAGES.SAVED_SUCCESSFULLY),
               severity: ALERT_SEVERITIES.SUCCESS
             });
           }

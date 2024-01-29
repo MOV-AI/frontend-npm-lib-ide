@@ -1,5 +1,5 @@
 import React from "react";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
@@ -28,9 +28,9 @@ const InvalidLinksWarning = props => {
   const buildTooltipTitle = (node, port) => {
     return (
       <p>
-        <strong>{t("Node-Colon")}</strong> {node}
+        <strong>{i18n.t("Node-Colon")}</strong> {node}
         <br />
-        <strong>{t("Port-Colon")}</strong> {port}
+        <strong>{i18n.t("Port-Colon")}</strong> {port}
       </p>
     );
   };
@@ -44,8 +44,8 @@ const InvalidLinksWarning = props => {
   return (
     <div testid="section_invalid-links-warning">
       <div className={classes.invalidLinksHeader}>
-        <Typography variant="h6">{t("SourcePort")}</Typography>
-        <Typography variant="h6">{t("TargetPort")}</Typography>
+        <Typography variant="h6">{i18n.t("SourcePort")}</Typography>
+        <Typography variant="h6">{i18n.t("TargetPort")}</Typography>
       </div>
       <div className={classes.invalidLinksMessageHolder}>
         {invalidLinks.map(linkInfo => (
@@ -79,7 +79,7 @@ const InvalidLinksWarning = props => {
           </div>
         ))}
       </div>
-      <p className={classes.fixMessage}>{t("InvalidLinksFoundMessage")}</p>
+      <p className={classes.fixMessage}>{i18n.t("InvalidLinksFoundMessage")}</p>
     </div>
   );
 };

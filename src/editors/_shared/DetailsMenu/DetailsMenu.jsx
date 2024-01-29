@@ -1,5 +1,5 @@
 import React from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
   Divider,
   List,
@@ -19,17 +19,17 @@ const DetailsMenu = ({ name, details }) => {
       <h2 className={classes.detailsName}>{name}</h2>
       <List sx={{ width: "100%", bgcolor: "background.paper" }} component="nav">
         <ListItem>
-          <ListItemText primary={t("Name-Colon")} />
+          <ListItemText primary={i18n.t("Name-Colon")} />
           <Typography>{name}</Typography>
         </ListItem>
         <Divider />
         <ListItem divider>
-          <ListItemText primary={t("LastUpdate-Colon")} />
+          <ListItemText primary={i18n.t("LastUpdate-Colon")} />
           <Typography>{details.date || "N/A"}</Typography>
         </ListItem>
         <Divider />
         <ListItem divider>
-          <ListItemText primary={t("User-Colon")} />
+          <ListItemText primary={i18n.t("User-Colon")} />
           <Typography>{details.user || "N/A"}</Typography>
         </ListItem>
       </List>

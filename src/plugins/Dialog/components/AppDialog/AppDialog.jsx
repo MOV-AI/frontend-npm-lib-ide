@@ -7,7 +7,7 @@ import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
 import PropTypes from "prop-types";
 import React, { useCallback, useState } from "react";
-import { t } from "../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../../themes";
 import { defaultFunction } from "../../../../utils/Utils";
@@ -60,8 +60,8 @@ const AppDialog = props => {
     onSubmit,
     onClose,
     closeOnBackdrop = true,
-    title = t("DefaultDialogTitle"),
-    submitText = t("Submit"),
+    title = i18n.t("DefaultDialogTitle"),
+    submitText = i18n.t("Submit"),
     testId = "section_app-dialog"
   } = props;
   const [open, setOpen] = useState(true);
@@ -99,7 +99,7 @@ const AppDialog = props => {
     return (
       <DialogActions data-testid="section_dialog-actions">
         <Button data-testid="input_close" onClick={handleClose} color="default">
-          {onSubmit ? t("Cancel") : t("Ok")}
+          {onSubmit ? i18n.t("Cancel") : i18n.t("Ok")}
         </Button>
         {onSubmit && (
           <Button

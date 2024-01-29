@@ -1,4 +1,6 @@
-import { Style, withDefaults } from "@mov-ai/mov-fe-lib-react";
+import { Style, withDefaults, Translations as reactTranslations } from "@mov-ai/mov-fe-lib-react";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
+import { Translations as ideTranslations } from "../i18n/i18n";
 import React, { useEffect } from "react";
 // Base App
 import BaseApp, { installEditor, installTool } from "../App/BaseApp";
@@ -22,7 +24,6 @@ import ShortcutsPlugin, {
 } from "../tools/AppShortcuts/AppShortcuts";
 import HomeTabPlugin, { getHomeTab } from "../tools/HomeTab/HomeTab";
 // Utils
-import i18n from "../i18n/i18n";
 import ApplicationTheme from "../themes";
 import * as CONSTANTS from "../utils/Constants";
 // Externals
@@ -31,9 +32,22 @@ import * as CONSTANTS from "../utils/Constants";
 import HomeIcon from "@material-ui/icons/Home";
 import KeyboardIcon from "@material-ui/icons/Keyboard";
 
+i18n.init({
+  resources: {
+    en: { translation: {
+      ...reactTranslations.en,
+      ...ideTranslations.en,
+    } },
+    pt: { translation: {
+      ...reactTranslations.pt,
+      ...ideTranslations.pt,
+    } },
+  },
+  lng: window?.SERVER_DATA?.Language || "en"
+});
+
 const dependencies = {
   "@material-ui/styles": { ThemeProvider, withStyles },
-  i18n
 };
 
 const AppCE = props => {

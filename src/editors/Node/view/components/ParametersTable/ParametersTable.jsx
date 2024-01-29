@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 import _isEqual from "lodash/isEqual";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { defaultFunction } from "../../../../../utils/Utils";
 import ParameterEditorDialog from "../../../../_shared/KeyValueTable/ParametersEditorDialog";
 import KeyValueTable from "../../../../_shared/KeyValueTable/KeyValueTable";
@@ -14,7 +14,7 @@ const ParametersTable = props => {
   const { getLabel } = useDataTypes();
   // Override default columns
   const typeColumn = {
-    title: t("Type"),
+    title: i18n.t("Type"),
     field: "type",
     width: 150,
     tableData: {
@@ -41,7 +41,7 @@ const ParametersTable = props => {
   return (
     <KeyValueTable
       testId="section_parameters"
-      title={t("Parameters")}
+      title={i18n.t("Parameters")}
       varName="parameters"
       editable={editable}
       data={data}

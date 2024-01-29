@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, memo } from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import MaterialTableCore from "@material-table/core";
 import { useTheme } from "@material-ui/styles";
@@ -121,21 +121,21 @@ const MaterialTable = forwardRef((props, ref) => {
           paging: false
         }}
         localization={{
-          toolbar: { searchPlaceholder: t("Search") },
+          toolbar: { searchPlaceholder: i18n.t("Search") },
           pagination: {
             labelDisplayedRows: "{from}-{to} of {count}"
           },
           header: {
-            actions: t("Actions")
+            actions: i18n.t("Actions")
           },
           body: {
-            emptyDataSourceMessage: t("NoRecordsMessage"),
-            deleteTooltip: t("Delete"),
-            editTooltip: t("Edit"),
-            addTooltip: t("Add"),
+            emptyDataSourceMessage: i18n.t("NoRecordsMessage"),
+            deleteTooltip: i18n.t("Delete"),
+            editTooltip: i18n.t("Edit"),
+            addTooltip: i18n.t("Add"),
             editRow: {
-              cancelTooltip: t("Cancel"),
-              saveTooltip: t("Confirm")
+              cancelTooltip: i18n.t("Cancel"),
+              saveTooltip: i18n.t("Confirm")
             }
           }
         }}

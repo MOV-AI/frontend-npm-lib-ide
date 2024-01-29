@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
-import { t } from "../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -30,8 +30,8 @@ const FormDialog = props => {
     maxLength,
     closeOnBackdrop,
     onValidation = DEFAULT_VALIDATION,
-    inputLabel = t("Name"),
-    submitText = t("Submit")
+    inputLabel = i18n.t("Name"),
+    submitText = i18n.t("Submit")
   } = props;
   // State hook
   const [open, setOpen] = useState(true);
@@ -174,7 +174,7 @@ const FormDialog = props => {
             onClick={handleClose}
             color="secondary"
           >
-            {t("Cancel")}
+            {i18n.t("Cancel")}
           </Button>
           <Button
             data-testid="input_confirm"
@@ -200,7 +200,7 @@ const FormDialog = props => {
             error={validation.error}
             helperText={validation.message}
             className={classes.textfield}
-            label={t(inputLabel)}
+            label={i18n.t(inputLabel)}
             InputLabelProps={{ shrink: true }}
             defaultValue={value}
             placeholder={placeholder}

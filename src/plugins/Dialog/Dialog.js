@@ -4,7 +4,7 @@ import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { SelectScopeModal, withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "./../../themes";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
-import i18n from "../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { PLUGINS, SAVE_OUTDATED_DOC_ACTIONS } from "../../utils/Constants";
 import AlertBeforeAction from "./components/AlertDialog/AlertBeforeAction";
 import AlertDialog from "./components/AlertDialog/AlertDialog";

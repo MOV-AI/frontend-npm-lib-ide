@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from "react";
-import { t } from "../../../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import WarningIcon from "@material-ui/icons/Warning";
 import { makeStyles } from "@material-ui/styles";
@@ -121,7 +121,7 @@ const FlowBottomBar = props => {
         className={classes.debugToggle}
         data-testid="section_flow-toggle-debug"
       >
-        <Tooltip title={t("ToggleFlowDebugDescription")}>
+        <Tooltip title={i18n.t("ToggleFlowDebugDescription")}>
           <FormControlLabel
             control={
               <Switch
@@ -132,7 +132,7 @@ const FlowBottomBar = props => {
                 color="primary"
               />
             }
-            label={t("ToggleFlowDebug")}
+            label={i18n.t("ToggleFlowDebug")}
           />
         </Tooltip>
       </Typography>

@@ -1,5 +1,5 @@
 import React from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { LinearProgress } from "@material-ui/core";
 import loader from "../../../Branding/movai-logo-transparent.png";
 
@@ -13,7 +13,7 @@ const Loader = _props => {
     <div className={classes.root}>
       <div id="loader" className={classes.loaderContainer}>
         <div className={classes.loaderImage}>
-          <img src={loader} alt={t("Loading")} width={200}></img>
+          <img src={loader} alt={i18n.t("Loading")} width={200}></img>
           <LinearProgress
             color="secondary"
             className={classes.linearProgress}

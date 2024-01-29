@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import { ContextMenu } from "@mov-ai/mov-fe-lib-react";
 import Paper from "@material-ui/core/Paper";
@@ -74,14 +74,14 @@ const QuickAccess = props => {
 
   return (
     <Paper data-testid="section_quick-access" className={classes.paper}>
-      <div className={classes.columnTitle}>{t("QuickAccess")}</div>
+      <div className={classes.columnTitle}>{i18n.t("QuickAccess")}</div>
       <Divider />
       <div className={classes.columnBody}>
         <ContextMenu
           element={
             <div className={classes.link}>
               <AddIcon className={classes.linkIcon} />
-              {t("CreateNewDoc")}
+              {i18n.t("CreateNewDoc")}
             </div>
           }
           menuList={docTypes.map(docType => ({
@@ -111,7 +111,7 @@ const QuickAccess = props => {
           >
             <ChromeReaderModeIcon className={classes.linkIcon} />
 
-            {t("Documentation")}
+            {i18n.t("Documentation")}
           </a>
         ) : (
           <></>
@@ -119,7 +119,7 @@ const QuickAccess = props => {
 
         {/* <div data-testid="input_app-config" className={classes.link} onClick={handleOpenAppConfig}>
           <BuildIcon className={classes.linkIcon} />
-          {t("App Configuration")}
+          {i18n.t("App Configuration")}
         </div> */}
         {getQuickAccessTools().map(tool => {
           const Icon = tool.icon;

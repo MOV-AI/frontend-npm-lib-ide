@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { t } from "../../../i18n/i18n";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
@@ -24,15 +24,15 @@ const ShortcutsTable = props => {
   function getColumns() {
     return [
       {
-        title: t("Label"),
+        title: i18n.t("Label"),
         field: "label"
       },
       {
-        title: t("Description"),
+        title: i18n.t("Description"),
         field: "description"
       },
       {
-        title: t("Shortcut"),
+        title: i18n.t("Shortcut"),
         field: "shortcut",
         render: rd => parseKeybinds(rd.shortcut, ", ")
       }
@@ -48,7 +48,7 @@ const ShortcutsTable = props => {
   return (
     <Paper className={classes.paper}>
       <div className={classes.columnTitle}>
-        <strong>{scope.label}</strong> - {t("ShortcutsTabTitle")}
+        <strong>{scope.label}</strong> - {i18n.t("ShortcutsTabTitle")}
       </div>
       <Divider />
       <div className={classes.columnBody}>
