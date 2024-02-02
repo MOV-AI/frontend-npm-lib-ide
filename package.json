@@ -19,6 +19,7 @@
   "license": "ISC",
   "homepage": "https://github.com/MOV-AI/frontend-npm-lib-ide/blob/main/README.md",
   "scripts": {
+    "lock": "mv ../../pnpm-workspace.yaml ../../pnpm-workspace.yaml.bak ; pnpm i ; mv ../../pnpm-workspace.yaml.bak ../../pnpm-workspace.yaml",
     "test": "jest",
     "testDev": "jest --watchAll",
     "build": "webpack --mode=production",
