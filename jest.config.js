@@ -14,7 +14,8 @@ module.exports = {
     "@fontsource/.+": "<rootDir>/src/__mocks__/fileMock.js"
   },
   transform: {
-    "^.+\\.(ts|tsx|js|jsx)$": "babel-jest"
+    "^.+\\.(ts|tsx)?$": "ts-jest",
+    "^.+\\.(js|jsx)$": "babel-jest"
   },
   setupFilesAfterEnv: [
     "@testing-library/jest-dom/extend-expect"
