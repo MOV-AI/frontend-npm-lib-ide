@@ -123,13 +123,13 @@ devDependencies:
     version: 4.11.5(@types/react@18.2.51)(react-dom@18.2.0)(react@18.2.0)
   '@mov-ai/mov-fe-lib-code-editor':
     specifier: ^1.1.0-4
-    version: 1.1.0-4(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.0-7)(@mov-ai/mov-fe-lib-react@1.3.0-8)(react-dom@18.2.0)(react@18.2.0)
+    version: 1.1.0-4(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.0-7)(@mov-ai/mov-fe-lib-react@1.3.0-10)(react-dom@18.2.0)(react@18.2.0)
   '@mov-ai/mov-fe-lib-core':
     specifier: ^1.2.0-7
     version: 1.2.0-7
   '@mov-ai/mov-fe-lib-react':
-    specifier: ^1.3.0-8
-    version: 1.3.0-8(@babel/core@7.23.9)(@material-table/core@4.3.46)(@material-ui/core@4.12.4)(@material-ui/icons@4.11.3)(@material-ui/lab@4.0.0-alpha.61)(@material-ui/pickers@3.3.11)(@material-ui/styles@4.11.5)(@mov-ai/mov-fe-lib-core@1.2.0-7)(date-fns@2.30.0)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
+    specifier: ^1.3.0-10
+    version: 1.3.0-10(@babel/core@7.23.9)(@material-table/core@4.3.46)(@material-ui/core@4.12.4)(@material-ui/icons@4.11.3)(@material-ui/lab@4.0.0-alpha.61)(@material-ui/pickers@3.3.11)(@material-ui/styles@4.11.5)(@mov-ai/mov-fe-lib-core@1.2.0-7)(date-fns@2.30.0)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
   '@storybook/addon-actions':
     specifier: ^6.5.12
     version: 6.5.16(react-dom@18.2.0)(react@18.2.0)
@@ -2797,7 +2797,7 @@ packages:
     resolution: {integrity: sha512-H1rQc1ZOHANWBvPcW+JpGwr+juXSxM8Q8YCkm3GhZd8REu1fHR3z99CErO1p9pkcfcxZnMdIZdIsXkOHY0NilA==}
     dev: true
 
-  /@mov-ai/mov-fe-lib-code-editor@1.1.0-4(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.0-7)(@mov-ai/mov-fe-lib-react@1.3.0-8)(react-dom@18.2.0)(react@18.2.0):
+  /@mov-ai/mov-fe-lib-code-editor@1.1.0-4(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.0-7)(@mov-ai/mov-fe-lib-react@1.3.0-10)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-OYUeU/6R4pJVINVOQ9exx5guQv1AbdO8/p37VvN1c8NwM9EwPShQnzv8nKk+ee+EYLXSMfXHbJnfTNFJv9Xrdg==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-code-editor/1.1.0-4/69ba03d4c1744b0154acbe0fbf260e6776a8c7ce}
     peerDependencies:
       '@codingame/monaco-languageclient': ^0.17.3
@@ -2809,7 +2809,7 @@ packages:
       '@codingame/monaco-jsonrpc': 0.3.1
       '@codingame/monaco-languageclient': 0.17.4
       '@mov-ai/mov-fe-lib-core': 1.2.0-7
-      '@mov-ai/mov-fe-lib-react': 1.3.0-8(@babel/core@7.23.9)(@material-table/core@4.3.46)(@material-ui/core@4.12.4)(@material-ui/icons@4.11.3)(@material-ui/lab@4.0.0-alpha.61)(@material-ui/pickers@3.3.11)(@material-ui/styles@4.11.5)(@mov-ai/mov-fe-lib-core@1.2.0-7)(date-fns@2.30.0)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
+      '@mov-ai/mov-fe-lib-react': 1.3.0-10(@babel/core@7.23.9)(@material-table/core@4.3.46)(@material-ui/core@4.12.4)(@material-ui/icons@4.11.3)(@material-ui/lab@4.0.0-alpha.61)(@material-ui/pickers@3.3.11)(@material-ui/styles@4.11.5)(@mov-ai/mov-fe-lib-core@1.2.0-7)(date-fns@2.30.0)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
       monaco-editor: 0.31.1
       monaco-editor-core: 0.31.1
       normalize-url: 7.2.0
@@ -2839,8 +2839,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@mov-ai/mov-fe-lib-react@1.3.0-8(@babel/core@7.23.9)(@material-table/core@4.3.46)(@material-ui/core@4.12.4)(@material-ui/icons@4.11.3)(@material-ui/lab@4.0.0-alpha.61)(@material-ui/pickers@3.3.11)(@material-ui/styles@4.11.5)(@mov-ai/mov-fe-lib-core@1.2.0-7)(date-fns@2.30.0)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-tKMqI+BVKHUxkHp6vG1CxXBVfszdP3GpSQM6qP///ySGXMbcEcKFiHlpf8flp5iCE0KiU60NaqvrS+z9iwGerA==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-react/1.3.0-8/8afe6eec6f748a20c9b82293b00c37e4d7467f18}
+  /@mov-ai/mov-fe-lib-react@1.3.0-10(@babel/core@7.23.9)(@material-table/core@4.3.46)(@material-ui/core@4.12.4)(@material-ui/icons@4.11.3)(@material-ui/lab@4.0.0-alpha.61)(@material-ui/pickers@3.3.11)(@material-ui/styles@4.11.5)(@mov-ai/mov-fe-lib-core@1.2.0-7)(date-fns@2.30.0)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-WX56eZpnKJOPb+cjN2OuO8RwG8VFusQ0dLy21Y/UMbkHVVhIj6Yo2+IAHt90fwwZJFpR+Z5pYOtPJhtQnfJfbw==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-react/1.3.0-10/f9104d45a952c835154d501d468767887c978402}
     peerDependencies:
       '@material-table/core': ^4.3.11
       '@material-ui/core': ^4.12.4
