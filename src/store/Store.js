@@ -51,7 +51,7 @@ class Store extends BaseStore {
    */
   deleteDoc(name) {
     const docUrl = this.data.get(name).getUrl();
-    return new Document.delete({
+    return Document.delete({
       name,
       type: this.scope,
       body: {}
