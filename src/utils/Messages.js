@@ -14,7 +14,9 @@ const MESSAGES = {
     MULTIPLE_ENTRIES_WITH_SAME_NAME: "MultipleInstancesSameName",
     NO_TRANSPORT_PROTOCOL_CHOSEN: "NoTransportProtocolChosen",
     NO_PACKAGE_CHOSEN: "NoPackageChosen",
-    NO_MESSAGE_CHOSEN: "NoMessageChosen"
+    NO_MESSAGE_CHOSEN: "NoMessageChosen",
+    DOC_DELETE: "DocDeleteError",
+    DOC_COPY: "DocCopyError",
   },
   WARNING_MESSAGES: {},
   SUCCESS_MESSAGES: {

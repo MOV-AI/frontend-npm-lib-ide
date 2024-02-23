@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Typography } from "@material-ui/core";
 import { withAlerts } from "../../../decorators";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
-import { SUCCESS_MESSAGES } from "../../../utils/Messages";
+import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "../../../utils/Messages";
 import { PLUGINS, ALERT_SEVERITIES } from "../../../utils/Constants";
 import AppSettings from "../../../App/AppSettings";
 import ListItemsTreeWithSearch, {
@@ -141,27 +141,32 @@ const Explorer = props => {
   const handleCopy = useCallback(
     node => {
       const { name, scope } = node;
-      call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.COPY_DOC, {
+      return call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.COPY_DOC, {
         scope,
         name,
-        onSubmit: newName =>
-          new Promise(resolve => {
-            call(
-              PLUGINS.DOC_MANAGER.NAME,
-              PLUGINS.DOC_MANAGER.CALL.COPY,
-              { name, scope },
-              newName
-            ).then(copiedDoc => {
-              resolve();
-              // Open copied document
-              requestScopeVersions({
-                scope,
-                deepness: 1,
-                name: copiedDoc.getName(),
-                url: copiedDoc.getUrl()
-              });
-            });
-          })
+        onSubmit: newName => call(
+          PLUGINS.DOC_MANAGER.NAME,
+          PLUGINS.DOC_MANAGER.CALL.COPY,
+          { name, scope },
+          newName
+        ).then(copiedDoc => {
+          resolve();
+          // Open copied document
+          requestScopeVersions({
+            scope,
+            deepness: 1,
+            name: copiedDoc.getName(),
+            url: copiedDoc.getUrl()
+          });
+        }).catch(error => {
+          console.warn(`Could not copy ${name} \n ${error.statusText ?? error}`)
+          alert({
+            message: i18n.t(ERROR_MESSAGES.DOC_COPY, {
+              docName: name
+            }) + ": " + (error.statusText ?? error),
+            severity: ALERT_SEVERITIES.ERROR
+          });
+        })
       });
     },
     [call, requestScopeVersions]
@@ -191,11 +196,15 @@ const Explorer = props => {
                 severity: ALERT_SEVERITIES.SUCCESS
               });
             })
-            .catch(error =>
-              console.warn(
-                `Could not delete ${name} \n ${error.statusText ?? error}`
-              )
-            ),
+            .catch(error => {
+              console.warn(`Could not delete ${name} \n ${error.statusText ?? error}`)
+              alert({
+                message: i18n.t(ERROR_MESSAGES.DOC_DELETE, {
+                  docName: name
+                }) + ": " + (error.statusText ?? error),
+                severity: ALERT_SEVERITIES.ERROR
+              });
+            }),
         message: i18n.t("DeleteDocConfirmationMessage", { docName: name })
       });
     },

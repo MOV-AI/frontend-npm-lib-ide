@@ -1,57 +1,11 @@
-# 1.0.0 --installs on--> 2.4 IDE-EE / 3.1 IDE-CE
+# 2.5.0
 
-- [FP-2581 - Fix useCallback issue preventing start/stop nodes on tree view](https://movai.atlassian.net/browse/FP-2581)
-- [FP-2560 - Set default for validation Name to empty to prevent error](https://movai.atlassian.net/browse/FP-2560)
-- [FP-2477 - Added validation to not close drawer](https://movai.atlassian.net/browse/FP-2477)
-- [FP-2539 - Reset bookmarks when we change active tab](https://movai.atlassian.net/browse/FP-2539)
-- [FP-2527 - Preventing the reload of a new doc when it's closed](https://movai.atlassian.net/browse/FP-2527)
-- [FP-2216 - IDE- black screen after changing resolution](https://movai.atlassian.net/browse/FP-2216)
-- [FP-2542 - Removed code that prevented flow validations from running](https://movai.atlassian.net/browse/FP-2542)
-- [FP-2540 - Duplicated code on the new merge request](https://movai.atlassian.net/browse/FP-2540)
-- [FP-2530 - Added ParameterWithType for instances that need to save the type](https://movai.atlassian.net/browse/FP-2530)
-- [FP-2359 - Added a way for the BaseApp keybinds to work](https://movai.atlassian.net/browse/FP-2359)
-- [FP-2438 - No longer saving NodeInstance's Parameter types](https://movai.atlassian.net/browse/FP-2438)
-- [FP-2480 - Added misc shortcuts to help with search node](https://movai.atlassian.net/browse/FP-2480)
-- [FP-2406 - Make menu be able to persist on IDE](https://movai.atlassian.net/browse/FP-2406)
-- [FP-2409 - Added a validation to activateEditor based on the activeTab](https://movai.atlassian.net/browse/FP-2409)
-- [FP-2414 - Fixed an issue where we were always removing the bookmarks, even when not needed](https://movai.atlassian.net/browse/FP-2414)
-- [FP-2250 - Added a debounce and verification for the robot status going offline snackbar](https://movai.atlassian.net/browse/FP-2250)
-- [FP-2319 - Removed all references to forum](https://movai.atlassian.net/browse/FP-2319)
-- [FP-2348 - Added context menu to nodes in tree view](https://movai.atlassian.net/browse/FP-2348)
-- [FP-2365 - Fixed shortcut interaction in flow](https://movai.atlassian.net/browse/FP-2365)
-- [FP-2240 - Add event.preventDefault to save function to not cause the HTML save popup to open](https://movai.atlassian.net/browse/FP-2240)
-- [FP-2241: Now reloading the files after saving a new file](https://movai.atlassian.net/browse/FP-2241)
-- [FP-2329 - Added conditional chaining for context menu](https://movai.atlassian.net/browse/FP-2329)
-- [FP-2261 - Added Open Callback option to Port Context Menu](https://movai.atlassian.net/browse/FP-2261)
-- [FP-2027 - Editor shouldn't require method "renderRightMenu" implementation](https://movai.atlassian.net/browse/FP-2027)
-- [FP-2036 - Fix data type validation](https://movai.atlassian.net/browse/FP-2036)
-  - [Fix Boolean type validation : Accept js boolean](https://github.com/MOV-AI/frontend-npm-lib-ide/commit/0fe2d8e4d121fe702bfcfd9db1a1ac1702d35625)
-  - [Implement ConfigurationSelector for Configuration Data Type](https://github.com/MOV-AI/frontend-npm-lib-ide/commit/0f063cd3c627e1f0ebd5a0d30967be9cc95931a1)
-  - [Fix Configuration Type : Works with parameter syntax and default one](https://github.com/MOV-AI/frontend-npm-lib-ide/commit/4e1502c1724c6ff0d5a8cc327b61fd70f88c77cb)
-- [FP-2031 - Only 1 active selection allowed on Flow Editor](https://movai.atlassian.net/browse/FP-2031)
-- [FP-2073 - When creating a new document, we can't Not save it](https://movai.atlassian.net/browse/FP-2073)
-- [FP-2074 - Fixed a bug that was preventing Containers from triggering the status animation](https://movai.atlassian.net/browse/FP-2074)
-- [FP-2147 - Search nodes in flow not working with strings with low characters](https://movai.atlassian.net/browse/FP-2147)
-- [FP-2152 - Create new editor will close editor window](https://movai.atlassian.net/browse/FP-2152)
-- [FP-2128 - Add container configurations in Node editor](https://movai.atlassian.net/browse/FP-2147)
-- [FP-2186 - Main Menu tools are not showing up](https://movai.atlassian.net/browse/FP-2186)
-- [FP-2221 - Disable the Language server](https://movai.atlassian.net/browse/FP-2221)
-- [FP-2238 - Logout behavior is different in IDE](https://movai.atlassian.net/browse/FP-2238)
-- [FP-2411 - Only save flow nodeInstance parameters when necessary](https://movai.atlassian.net/browse/FP-2411)
-- [FP-2364 - Flows without links to start node should only show "Save"](https://movai.atlassian.net/browse/FP-2364)
-- [FP-2427 - Update node instances when port messages change](https://movai.atlassian.net/browse/FP-2427)
-- [FP-2474 - Search node tool fails for big flows](https://movai.atlassian.net/browse/FP-2474)
-- [FP-2447 - Info tab closes when adding an import](https://movai.atlassian.net/browse/FP-2447)
-- [FP-2465 - Data-testids for IDE](https://movai.atlassian.net/browse/FP-2465)
-- [FP-2481 - Can't start a valid flow in tree view - Start link(s) not found](https://movai.atlassian.net/browse/FP-2481)
-- [FP-2466 - Prevent multiple subscribes in Flow onReady function](https://movai.atlassian.net/browse/FP-2466)
-- [FP-2467 - We are now correctly deleting exposed ports on node deletion](https://movai.atlassian.net/browse/FP-2467)
-- [FP-2277 - Give back focus to Flow Editor after losing focus on some cases](https://movai.atlassian.net/browse/FP-2277)
-- [FP-2473 - IDE Flows appear as running but nodes don't in tree view](https://movai.atlassian.net/browse/FP-2473)
-- [FP-2519 - nodes on tree view show as alive when they are not](https://movai.atlassian.net/browse/FP-2519)
-- [FP-2535 - Fixed issue with deleting subflows from flow](https://movai.atlassian.net/browse/FP-2535)
-- [FP-2449 - Editing a node will corrupt the node](https://movai.atlassian.net/browse/FP-2449)
-- [FP-2604 - Left menu disappears when opening scene in IDE](https://movai.atlassian.net/browse/FP-2604)
-- [FP-2605 - Tabs without bookmarks shouldn't be opened](https://movai.atlassian.net/browse/FP-2605)
-- [FP-2595 - Text too big, can't see full flow name](https://movai.atlassian.net/browse/FP-2595)
-- [FP-2618 - Search for parameters not working](https://movai.atlassian.net/browse/FP-2618)
+- [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit
+- [FP-2633](https://movai.atlassian.net/browse/FP-2633): Configuration Key not found error
+- [FP-2655](https://movai.atlassian.net/browse/FP-2655): SCENE\_EDITOR-Old\_Values\_after\_selecting\_another\_entity
+- [FP-2657](https://movai.atlassian.net/browse/FP-2657): Users with only read permissions can change the scene
+- [FP-2664](https://movai.atlassian.net/browse/FP-2664): Update react in all libs/apps
+- [FP-2557](https://movai.atlassian.net/browse/FP-2557): Removing frontend callbacks from backend
+- [FP-2558](https://movai.atlassian.net/browse/FP-2558): implement log streaming
+- [FP-2685](https://movai.atlassian.net/browse/FP-2685): Annotation that was working in 2.3.1 is breaking in 2.4.0
+- [FP-2680](https://movai.atlassian.net/browse/FP-2680): Frontend response to delete document is incorrect
