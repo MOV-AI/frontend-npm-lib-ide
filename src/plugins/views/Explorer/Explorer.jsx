@@ -150,7 +150,6 @@ const Explorer = props => {
           { name, scope },
           newName
         ).then(copiedDoc => {
-          resolve();
           // Open copied document
           requestScopeVersions({
             scope,
