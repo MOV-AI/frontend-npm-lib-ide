@@ -83,6 +83,11 @@ const Explorer = props => {
    *                                                                                      */
   //========================================================================================
 
+  const filterChildren = useCallback(
+    d => d.isNew && (d => !d.isNew && (d.id !== Utils.getNameFromURL(flowId) || !d.subFlows)),
+    flowId,
+  );
+
   /**
    * Load documents
    * @param {DocManager} docManager
@@ -93,9 +98,7 @@ const Explorer = props => {
         [docManager.getStore("Node"), docManager.getStore("Flow")].map(
           (store, id) => {
             const { name, title } = store;
-            const filteredChildren = store
-              .getDocs()
-              .filter(d => !d.isNew && d.id !== Utils.getNameFromURL(flowId));
+            const filteredChildren = store.getDocs().filter(filterChildren);
             return {
               id,
               name,

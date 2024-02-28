@@ -9,3 +9,4 @@
 - [FP-2558](https://movai.atlassian.net/browse/FP-2558): implement log streaming
 - [FP-2685](https://movai.atlassian.net/browse/FP-2685): Annotation that was working in 2.3.1 is breaking in 2.4.0
 - [FP-2680](https://movai.atlassian.net/browse/FP-2680): Frontend response to delete document is incorrect
+- [FP-2694](https://movai.atlassian.net/browse/FP-2694): New node with same name as flow not showing in list to add
