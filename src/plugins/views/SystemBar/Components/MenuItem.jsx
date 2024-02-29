@@ -1,10 +1,10 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import Button from "@material-ui/core/Button";
-import ListItem from "@material-ui/core/ListItem";
-import Divider from "@material-ui/core/Divider";
-import LinkIcon from "@material-ui/icons/Link";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import Button from "@mui/material/Button";
+import ListItem from "@mui/material/ListItem";
+import Divider from "@mui/material/Divider";
+import LinkIcon from "@mui/icons-material/Link";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 import { systemMenuItemStyles } from "../styles";
 

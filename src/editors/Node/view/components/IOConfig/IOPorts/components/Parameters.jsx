@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
-import Grid from "@material-ui/core/Grid";
-import Circle from "@material-ui/icons/FiberManualRecord";
-import TextField from "@material-ui/core/TextField";
+import Grid from "@mui/material/Grid";
+import Circle from "@mui/icons-material/FiberManualRecord";
+import TextField from "@mui/material/TextField";
 
 import { parametersStyles } from "./styles";
 

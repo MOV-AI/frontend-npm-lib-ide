@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
+import { TextField } from "@mui/material";
 import { DATA_TYPES } from "../../../../../utils/Constants";
 import DataType from "../AbstractDataType";
 import { checkIfDefaultOrDisabled } from "./utils";

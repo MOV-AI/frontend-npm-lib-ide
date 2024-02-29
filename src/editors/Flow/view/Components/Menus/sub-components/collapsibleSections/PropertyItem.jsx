@@ -7,7 +7,7 @@ import {
   InputLabel,
   MenuItem,
   Select
-} from "@material-ui/core";
+} from "@mui/material";
 import { convertToValidString } from "../../../../../../../utils/Utils";
 
 import { propertiesStyles } from "../../styles";

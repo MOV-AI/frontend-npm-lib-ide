@@ -2,10 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import AppDialog from "../AppDialog/AppDialog";
-import WarningIcon from "@material-ui/icons/Warning";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
-import { DialogContentText } from "@material-ui/core";
+import WarningIcon from "@mui/icons-material/Warning";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import { DialogContentText } from "@mui/material";
 
 import { alertBeforeActionStyles } from "./styles";
 

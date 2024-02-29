@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
-import { Collapse, Divider, ListItem, ListItemText } from "@material-ui/core";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
+import { Collapse, Divider, ListItem, ListItemText } from "@mui/material";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import {
   DATA_TYPES,
   PLUGINS,

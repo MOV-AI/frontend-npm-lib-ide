@@ -1,8 +1,8 @@
 import React from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import InfoLogo from "@material-ui/icons/Info";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
+import InfoLogo from "@mui/icons-material/Info";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import { DATA_TYPES } from "../../../../../utils/Constants";
 import { HtmlTooltip } from "../../../../_shared/HtmlTooltip/HtmlTooltip";
 

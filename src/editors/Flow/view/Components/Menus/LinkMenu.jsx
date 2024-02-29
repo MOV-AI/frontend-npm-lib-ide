@@ -13,7 +13,7 @@ import {
   Select,
   Typography,
   Tooltip
-} from "@material-ui/core";
+} from "@mui/material";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
   LINK_DEPENDENCY,

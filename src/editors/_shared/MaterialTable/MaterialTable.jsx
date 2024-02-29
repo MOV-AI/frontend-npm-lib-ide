@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect, useRef, memo } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import MaterialTableCore from "@material-table/core";
-import { useTheme } from "@material-ui/styles";
+import { useTheme } from "@mui/styles";
 
 import { materialTableStyles } from "./styles";
 

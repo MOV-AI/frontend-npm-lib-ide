@@ -5,7 +5,7 @@ import {
   NativeSelect,
   TextField,
   Tooltip
-} from "@material-ui/core";
+} from "@mui/material";
 import useSelectOptions from "./useSelectOptions";
 
 import { configColumnsStyles } from "./styles";

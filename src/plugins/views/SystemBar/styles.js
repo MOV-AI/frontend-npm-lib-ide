@@ -1,10 +1,10 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
 const menuButtonStyles = {
-  margin: "0px",
-  padding: "0px",
-  lineHeight: "26px",
-  textTransform: "none",
+  margin: "0px !important",
+  padding: "0px !important",
+  lineHeight: "26px !important",
+  textTransform: "none !important",
   borderRadius: "0px",
   "& > .MuiTouchRipple-root": { borderRadius: "0px" }
 };
@@ -19,18 +19,18 @@ export const systemBarStyles = debugMode =>
     },
     menuButton: {
       ...menuButtonStyles,
-      padding: "0 10px",
+      padding: "0 10px !important",
       minWidth: "unset",
-      color: theme.palette.grey[200],
+      color: theme.palette.grey[200] + " !important",
       "&:hover": {
-        background: theme.palette.grey[900]
+        background: theme.palette.grey[900] + " !important",
       },
       "&:first-child": {
-        marginLeft: "5px"
+        marginLeft: "5px !important"
       }
     },
     activeMenu: {
-      background: theme.palette.grey[900]
+      background: theme.palette.grey[900] + " !important",
     }
   }));
 
@@ -55,6 +55,14 @@ export const systemMenuStyles = makeStyles(theme => ({
 export const systemMenuItemStyles = makeStyles(theme => ({
   listItem: {
     ...menuButtonStyles,
+    "& > button": {
+      display: "flex",
+      textAlign: "left",
+      color: theme.palette.text.primary,
+      "& > span:first-child": {
+        flexGrow: 1,
+      },
+    },
     "&:last-of-type > button": {
       borderRadius: "0px 0px 5px 5px"
     }

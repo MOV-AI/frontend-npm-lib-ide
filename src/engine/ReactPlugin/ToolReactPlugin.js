@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect } from "react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "@mui/styles";
 import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
 import withAlerts from "../../decorators/withAlerts";
 import withKeyBinds from "../../decorators/withKeyBinds";

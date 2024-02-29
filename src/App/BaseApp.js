@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import hotkeys from "hotkeys-js";
 import { Style } from "@mov-ai/mov-fe-lib-react";
-import { Typography } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
+import { Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import DocManager from "../plugins/DocManager/DocManager";
 import Dialog from "../plugins/Dialog/Dialog";
 import Alerts from "../plugins/Alerts/Alerts";

@@ -1,14 +1,21 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
 export const appStyles = debugMode =>
   makeStyles(theme => ({
     leftPanel: {
+      height: "100%",
       border: debugMode ? "solid 5px red" : "",
       borderRight: debugMode ? "" : `1px solid ${theme.background}`,
       display: "flex",
       position: "relative"
     },
-    mainGrid: { flexGrow: 1 },
+    mainGrid: {
+      height: "calc(100% - 26px)",
+      "& > *": {
+        height: "100%",
+      },
+      flexGrow: 1,
+    },
     sidePanel: { height: "100%" },
     centralPanel: { flexGrow: 1, border: debugMode ? "solid 5px green" : "" },
     rightDrawer: {

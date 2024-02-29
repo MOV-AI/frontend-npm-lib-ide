@@ -9,11 +9,11 @@ import {
   ListItem,
   ListItemText,
   Typography
-} from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import Add from "@material-ui/icons/Add";
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import Add from "@mui/icons-material/Add";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import Model from "../../../model/Flow";
 import useDataSubscriber from "../../../../../plugins/DocManager/useDataSubscriber";
