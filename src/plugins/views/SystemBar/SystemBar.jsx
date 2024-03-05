@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import SystemMenu from "./Components/SystemMenu";
 import buildMenus from "./builder/buildMenus";

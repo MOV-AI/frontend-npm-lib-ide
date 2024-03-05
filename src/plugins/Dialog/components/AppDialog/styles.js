@@ -1,14 +1,17 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
 export const appDialogTitleStyles = makeStyles(theme => ({
   root: {
     margin: 0,
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
+    display: "flex",
+    alignItems: "center",
+    textAlign: "left",
+  },
+  flexGrow: {
+    flexGrow: 1,
   },
   closeButton: {
-    position: "absolute",
-    right: theme.spacing(1),
-    top: theme.spacing(1),
     color: theme.palette.grey[500]
   }
 }));

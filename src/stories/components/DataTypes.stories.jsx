@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Table, snackbar, withNotification } from "@mov-ai/mov-fe-lib-react";
-import { MenuItem, Select } from "@material-ui/core";
+import { MenuItem, Select } from "@mui/material";
 import useDataTypes from "../../editors/_shared/hooks/useDataTypes";
 
 const Component = props => {

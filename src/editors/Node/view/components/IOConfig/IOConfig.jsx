@@ -3,7 +3,7 @@ import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import _isEqual from "lodash/isEqual";
 import { MTableToolbar, MTableEditRow } from "@material-table/core";
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import { PLUGINS } from "../../../../../utils/Constants";
 import MaterialTable from "../../../../_shared/MaterialTable/MaterialTable";
 import CollapsibleHeader from "../../../../_shared/CollapsibleHeader/CollapsibleHeader";

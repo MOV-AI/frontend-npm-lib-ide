@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { ListItem, ListItemText, Typography } from "@material-ui/core";
+import { ListItem, ListItemText, Typography } from "@mui/material";
 import { defaultFunction } from "../../../../../../utils/Utils";
 import NodeLink from "./NodeLink";
 

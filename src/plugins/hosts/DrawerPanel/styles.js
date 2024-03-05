@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@mui/styles";
 
 export const drawerPanelStyles = (isLeft, isOpen) =>
   makeStyles(theme => ({

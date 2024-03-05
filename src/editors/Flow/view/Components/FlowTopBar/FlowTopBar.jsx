@@ -14,16 +14,16 @@ import {
   Tooltip,
   Button,
   CircularProgress
-} from "@material-ui/core";
-import GrainIcon from "@material-ui/icons/Grain";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import StopIcon from "@material-ui/icons/Stop";
-import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+} from "@mui/material";
+import GrainIcon from "@mui/icons-material/Grain";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import StopIcon from "@mui/icons-material/Stop";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import Workspace from "../../../../../utils/Workspace";
 import {
   SCOPES,

@@ -1,13 +1,13 @@
 import React, { useCallback } from "react";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchIcon from "@mui/icons-material/Search";
 import PropTypes from "prop-types";
 import {
   TextField,
   InputAdornment,
   IconButton,
   Popper
-} from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
+} from "@mui/material";
+import { Autocomplete } from "@mui/material";
 import { flowTopBarStyles } from "./styles";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 

@@ -6,7 +6,7 @@ import {
   ListItem,
   ListItemText,
   Typography
-} from "@material-ui/core";
+} from "@mui/material";
 
 import { detailsMenuStyles } from "./styles";
 

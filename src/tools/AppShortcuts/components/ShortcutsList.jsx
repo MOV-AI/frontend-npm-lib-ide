@@ -1,8 +1,8 @@
 import React from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
-import { MenuItem, Tooltip, Paper, Divider } from "@material-ui/core";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import { MenuItem, Tooltip, Paper, Divider } from "@mui/material";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 import { shortcutsListStyles } from "../styles";
 

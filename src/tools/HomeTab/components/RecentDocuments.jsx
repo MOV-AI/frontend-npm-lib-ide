@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
-import Paper from "@material-ui/core/Paper";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
-import Divider from "@material-ui/core/Divider";
-import DeleteIcon from "@material-ui/icons/DeleteForever";
+import Paper from "@mui/material/Paper";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import Divider from "@mui/material/Divider";
+import DeleteIcon from "@mui/icons-material/DeleteForever";
 import { PLUGINS } from "../../../utils/Constants";
 import HomeLink from "./HomeLink";
 

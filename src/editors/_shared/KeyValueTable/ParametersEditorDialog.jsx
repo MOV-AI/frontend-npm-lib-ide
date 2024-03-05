@@ -9,7 +9,7 @@ import {
   InputLabel,
   Radio,
   RadioGroup
-} from "@material-ui/core";
+} from "@mui/material";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../themes";
 import { ERROR_MESSAGES } from "../../../utils/Messages";
