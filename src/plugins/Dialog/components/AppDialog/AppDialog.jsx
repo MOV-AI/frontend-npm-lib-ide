@@ -1,10 +1,10 @@
-import { IconButton, Typography } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import CloseIcon from "@material-ui/icons/Close";
+import { IconButton, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import MuiDialogTitle from "@mui/material/DialogTitle";
+import CloseIcon from "@mui/icons-material/Close";
 import PropTypes from "prop-types";
 import React, { useCallback, useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
@@ -33,7 +33,7 @@ export const DialogTitle = props => {
       disableTypography
       className={classes.root}
     >
-      <Typography variant="h6">{children}</Typography>
+      <Typography variant="h6" className={classes.flexGrow}>{children}</Typography>
       {hasCloseButton ? (
         <IconButton
           data-testid="input_close"

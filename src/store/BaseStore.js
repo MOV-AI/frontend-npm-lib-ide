@@ -24,7 +24,7 @@ class BaseStore extends StorePluginManager {
     this._scope = model.SCOPE;
     this._name = name || "Store";
     this._title = title || "Generic Store";
-    this.pattern = pattern || { Scope: this.scope, Name: "*", Label: "*" };
+    this.pattern = pattern || { Scope: this.scope, Name: "*" };
     this.observer = observer;
     this.docManager = docManager;
     this.protectedDocs = [];

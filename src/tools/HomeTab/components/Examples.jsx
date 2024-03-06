@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
-import Paper from "@material-ui/core/Paper";
-import Divider from "@material-ui/core/Divider";
+import Paper from "@mui/material/Paper";
+import Divider from "@mui/material/Divider";
 import HomeTabCard from "./HomeTabCard";
 
 import { examplesDocumentsStyles } from "../styles";

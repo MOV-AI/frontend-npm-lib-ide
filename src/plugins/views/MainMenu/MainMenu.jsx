@@ -7,10 +7,10 @@ import {
   ContextMenu,
   HomeMenuPopper
 } from "@mov-ai/mov-fe-lib-react";
-import TextSnippetIcon from "@material-ui/icons/Description";
-import AddBoxIcon from "@material-ui/icons/AddBox";
-import { Tooltip } from "@material-ui/core";
-import { useTheme } from "@material-ui/styles";
+import TextSnippetIcon from "@mui/icons-material/Description";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import { Tooltip } from "@mui/material";
+import { useTheme } from "@mui/styles";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { MainContext } from "../../../main-context";
 import AppSettings from "../../../App/AppSettings";

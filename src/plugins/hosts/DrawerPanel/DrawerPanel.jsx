@@ -1,6 +1,6 @@
 import React, { forwardRef, useState } from "react";
 import PropTypes from "prop-types";
-import { Drawer, Typography } from "@material-ui/core";
+import { Drawer, Typography } from "@mui/material";
 import { DRAWER } from "../../../utils/Constants";
 import { withHostReactPlugin } from "../../../engine/ReactPlugin/HostReactPlugin";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
@@ -111,6 +111,8 @@ const DrawerPanel = forwardRef((props, ref) => {
    *                                         Render                                       *
    *                                                                                      */
   //========================================================================================
+  if (!realOpen)
+    return null;
 
   return (
     <Drawer
@@ -118,7 +120,7 @@ const DrawerPanel = forwardRef((props, ref) => {
       open={realOpen}
       anchor={anchor}
       variant="persistent"
-      style={{ ...style }}
+      style={{ ...style, position: "unset" }}
       className={`${classes.drawer} ${className}`}
     >
       <Typography component="div" className={classes.content}>

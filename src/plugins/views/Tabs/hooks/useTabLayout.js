@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { withError } from "@mov-ai/mov-fe-lib-react";
-import { Tooltip } from "@material-ui/core";
+import { Tooltip } from "@mui/material";
 import {
   DEFAULT_LAYOUT,
   DOCK_POSITIONS,

@@ -1,10 +1,9 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-import SvgIcon from "@material-ui/core/SvgIcon";
-import { alpha } from "@material-ui/core/styles";
-import { withStyles } from "@material-ui/styles";
-import TreeView from "@material-ui/lab/TreeView";
-import TreeItem from "@material-ui/lab/TreeItem";
+import SvgIcon from "@mui/material/SvgIcon";
+import { alpha } from "@mui/material/styles";
+import { withStyles } from "@mui/styles";
+import { TreeView, TreeItem } from "@mui/x-tree-view";
 import _isEqual from "lodash/isEqual";
 
 function MinusSquare(props) {

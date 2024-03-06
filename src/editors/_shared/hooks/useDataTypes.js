@@ -1,4 +1,4 @@
-import { useTheme } from "@material-ui/styles";
+import { useTheme } from "@mui/styles";
 import DataTypeManager from "./DataTypes/DataTypeManager";
 
 const useDataTypes = () => {

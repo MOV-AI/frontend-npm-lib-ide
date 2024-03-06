@@ -40,7 +40,7 @@ import ShortcutsPlugin, {
 } from "./src/tools/AppShortcuts/AppShortcuts";
 // Utils
 import ApplicationTheme from "./src/themes";
-import { ThemeProvider } from "@material-ui/styles";
+import { ThemeProvider } from "@mui/styles";
 import * as CONSTANTS from "./src/utils/Constants";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "./src/utils/Messages";
 import Workspace from "./src/utils/Workspace";

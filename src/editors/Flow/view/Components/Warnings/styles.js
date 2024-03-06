@@ -1,5 +1,5 @@
-import { amber, green } from "@material-ui/core/colors";
-import { makeStyles } from "@material-ui/styles";
+import { amber, green } from "@mui/material/colors";
+import { makeStyles } from "@mui/styles";
 
 const commonStyles = {
   display: "flex",
