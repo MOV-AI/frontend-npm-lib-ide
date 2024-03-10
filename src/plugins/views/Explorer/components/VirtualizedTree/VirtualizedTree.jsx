@@ -26,7 +26,7 @@ const VirtualizedTree = props => {
   const defaultRow = rowProps => {
     const { index, style, data } = rowProps;
     return (
-      <div className={classes.listItem} style={style}>
+      <div key={index} className={classes.listItem} style={style}>
         {data[index].label} {index}
       </div>
     );

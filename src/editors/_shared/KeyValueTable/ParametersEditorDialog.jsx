@@ -3,13 +3,13 @@ import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import {
   MenuItem,
-  Select,
+  BaseSelect,
   FormControl,
   FormControlLabel,
   InputLabel,
   Radio,
   RadioGroup
-} from "@mui/material";
+} from "@mov-ai/mov-fe-lib-react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../themes";
 import { ERROR_MESSAGES } from "../../../utils/Messages";
@@ -302,7 +302,7 @@ const ParameterEditorDialog = props => {
     return (
       <FormControl className={classes.marginTop}>
         <InputLabel>{`${i18n.t("Type")} *`}</InputLabel>
-        <Select
+        <BaseSelect
           fullWidth
           value={data.type || DATA_TYPES.ANY}
           onChange={handleTypeChange}
@@ -314,7 +314,7 @@ const ParameterEditorDialog = props => {
               {getLabel(key)}
             </MenuItem>
           ))}
-        </Select>
+        </BaseSelect>
       </FormControl>
     );
   }, [

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { installTool } from "../../../App/BaseApp";
 import AppCE from "../../AppCE";
 import { getLogsToolTab, LOGS_PROFILE } from "./Logs";
-import LogsIcon from "@mui/icons-material/Money";
+import { LogsIcon } from "@mov-ai/mov-fe-lib-react";
 
 const LogsStory = props => {
   useEffect(() => {

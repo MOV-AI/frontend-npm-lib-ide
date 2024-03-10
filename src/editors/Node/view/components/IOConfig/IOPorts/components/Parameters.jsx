@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
-import Grid from "@mui/material/Grid";
-import Circle from "@mui/icons-material/FiberManualRecord";
-import TextField from "@mui/material/TextField";
+import { Grid, TextField } from "@mov-ai/mov-fe-lib-react";
+import { FiberManualRecordIcon } from "@mov-ai/mov-fe-lib-react";
 
 import { parametersStyles } from "./styles";
 
@@ -35,7 +34,7 @@ const Parameters = props => {
   return (
     <Grid className={classes.gridContainer}>
       <Grid item xs={3} className={classes.titleColumn}>
-        <Circle className={classes.circle} />
+        <FiberManualRecordIcon className={classes.circle} />
         {`${param}:`}
       </Grid>
       <Grid item xs={9}>

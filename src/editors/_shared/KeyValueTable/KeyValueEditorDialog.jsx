@@ -2,20 +2,20 @@ import React, { useCallback, useEffect, useState, memo } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import _isEqual from "lodash/isEqual";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
-  Typography,
-  TextField,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  BaseButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
   FormControl,
   InputLabel,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  Button
-} from "@mui/material";
+  TextField,
+  Typography,
+} from "@mov-ai/mov-fe-lib-react";
+import { ExpandMoreIcon } from "@mov-ai/mov-fe-lib-react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../themes";
 import { DialogTitle } from "../../../plugins/Dialog/components/AppDialog/AppDialog";
@@ -257,10 +257,10 @@ const KeyValueEditorDialog = props => {
           </Typography>
         </DialogContent>
         <DialogActions data-testid="section_dialog-actions">
-          <Button data-testid="input_close" onClick={onClose}>
+          <BaseButton data-testid="input_close" onClick={onClose}>
             {i18n.t("Cancel")}
-          </Button>
-          <Button
+          </BaseButton>
+          <BaseButton
             data-testid="input_confirm"
             color="primary"
             onClick={onSave}
@@ -271,7 +271,7 @@ const KeyValueEditorDialog = props => {
             }
           >
             {i18n.t("Save")}
-          </Button>
+          </BaseButton>
         </DialogActions>
       </div>
     </Dialog>

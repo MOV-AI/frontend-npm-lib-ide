@@ -7,10 +7,9 @@ import {
   ContextMenu,
   HomeMenuPopper
 } from "@mov-ai/mov-fe-lib-react";
-import TextSnippetIcon from "@mui/icons-material/Description";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import { Tooltip } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { DescriptionIcon, AddBoxIcon } from "@mov-ai/mov-fe-lib-react";
+import { Tooltip } from "@mov-ai/mov-fe-lib-react";
+import { useTheme } from "@mov-ai/mov-fe-lib-react";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { MainContext } from "../../../main-context";
 import AppSettings from "../../../App/AppSettings";
@@ -40,7 +39,7 @@ const MainMenu = props => {
   const MENUS = [
     {
       name: PLUGINS.EXPLORER.NAME,
-      icon: getIconFn(TextSnippetIcon),
+      icon: getIconFn(DescriptionIcon),
       title: "Explorer",
       isActive: true,
       getOnClick: () => {
@@ -96,7 +95,9 @@ const MainMenu = props => {
             {AppSettings.APP_PROPS.SHOW_APP_SELECTION && (
               <div className={classes.appsHolder}>
                 <Tooltip title={i18n.t("Home")}>
-                  <HomeMenuPopper />
+                  <span>
+                    <HomeMenuPopper />
+                  </span>
                 </Tooltip>
                 <hr />
               </div>
@@ -133,8 +134,8 @@ const MainMenu = props => {
             />
           </>
         }
-        navigationList={MENUS.map(menu => (
-          <Tooltip key={menu.name} title={menu.title} placement="right" arrow>
+        navigationList={MENUS.map((menu, index) => (
+          <Tooltip key={menu.name + index} title={menu.title} placement="right" arrow>
             <span>
               {menu.icon({
                 className: classes.icon,
@@ -146,7 +147,7 @@ const MainMenu = props => {
         lowerElement={[
           <ProfileMenu
             key={"profileMenu"}
-            version={AppSettings.APP_INFORMATION.VERSION}
+            version={globalThis.version ?? AppSettings.APP_INFORMATION.VERSION}
             isDarkTheme={isDarkTheme}
             handleLogout={handleLogOut}
             handleToggleTheme={

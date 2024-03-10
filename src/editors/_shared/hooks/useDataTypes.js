@@ -1,4 +1,4 @@
-import { useTheme } from "@mui/styles";
+import { useTheme } from "@mov-ai/mov-fe-lib-react";
 import DataTypeManager from "./DataTypes/DataTypeManager";
 
 const useDataTypes = () => {

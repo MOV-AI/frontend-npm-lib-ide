@@ -2,18 +2,20 @@ import React, { useCallback, useState } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
-  Collapse,
+  BaseCollapse,
   Divider,
   IconButton,
   List,
   ListItem,
   ListItemText,
   Typography
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import Add from "@mui/icons-material/Add";
+} from "@mov-ai/mov-fe-lib-react";
+import {
+  AddIcon,
+  EditIcon,
+  ExpandLessIcon,
+  ExpandMoreIcon,
+} from "@mov-ai/mov-fe-lib-react";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import Model from "../../../model/Flow";
 import useDataSubscriber from "../../../../../plugins/DocManager/useDataSubscriber";
@@ -325,15 +327,15 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
             <EditIcon />
           </IconButton>
           {activeItem === ACTIVE_ITEM.description ? (
-            <ExpandLess />
+            <ExpandLessIcon />
           ) : (
-            <ExpandMore />
+            <ExpandMoreIcon />
           )}
         </ListItem>
-        <Collapse in={activeItem === ACTIVE_ITEM.description} unmountOnExit>
+        <BaseCollapse in={activeItem === ACTIVE_ITEM.description} unmountOnExit>
           {renderDescription()}
           <Divider />
-        </Collapse>
+        </BaseCollapse>
         {/* ============ PARAMETERS ============ */}
         <ListItem
           data-testid="input_parameters-expand"
@@ -347,22 +349,22 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
             disabled={!editable}
             onClick={handleAddParameter}
           >
-            <Add />
+            <AddIcon />
           </IconButton>
           {activeItem === ACTIVE_ITEM.parameters ? (
-            <ExpandLess />
+            <ExpandLessIcon />
           ) : (
-            <ExpandMore />
+            <ExpandMoreIcon />
           )}
         </ListItem>
-        <Collapse
+        <BaseCollapse
           data-testid="section_parameters-table"
           in={activeItem === ACTIVE_ITEM.parameters}
           unmountOnExit
         >
           {renderParameters()}
           <Divider />
-        </Collapse>
+        </BaseCollapse>
       </List>
     </Typography>
   );

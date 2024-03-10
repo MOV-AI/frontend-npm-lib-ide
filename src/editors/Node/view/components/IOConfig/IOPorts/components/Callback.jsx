@@ -1,10 +1,12 @@
 import React, { useCallback } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import FolderOpenIcon from "@mui/icons-material/FolderOpen";
-import Grid from "@mui/material/Grid";
-import Circle from "@mui/icons-material/FiberManualRecord";
-import { IconButton, Tooltip, Typography } from "@mui/material";
-import { Edit, AddBox } from "@mui/icons-material";
+import {
+  FolderOpenIcon,
+  EditIcon,
+  AddBoxIcon,
+  FiberManualRecordIcon,
+} from "@mov-ai/mov-fe-lib-react";
+import { Grid, IconButton, Tooltip, Typography } from "@mov-ai/mov-fe-lib-react";
 import { SCOPES } from "../../../../../../../utils/Constants";
 import { callbackStyles } from "./styles";
 
@@ -69,7 +71,7 @@ const Callback = props => {
   return (
     <Grid className={classes.gridContainer}>
       <Grid item xs={3} className={classes.titleColumn}>
-        <Circle className={classes.circle} />
+        <FiberManualRecordIcon className={classes.circle} />
         {i18n.t("Callback")}:
       </Grid>
       <Grid className={classes.gridContainer} item xs={6}>
@@ -102,7 +104,7 @@ const Callback = props => {
               component="button"
               onClick={openCallback}
             >
-              <Edit />
+              <EditIcon />
             </IconButton>
           </>
         </Tooltip>
@@ -116,7 +118,7 @@ const Callback = props => {
               component="button"
               onClick={createNewCallback}
             >
-              <AddBox />
+              <AddBoxIcon />
             </IconButton>
           </Tooltip>
         )}

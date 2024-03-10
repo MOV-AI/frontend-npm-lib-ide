@@ -6,8 +6,8 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  Select
-} from "@mui/material";
+  BaseSelect
+} from "@mov-ai/mov-fe-lib-react";
 import { convertToValidString } from "../../../../../../../utils/Utils";
 
 import { propertiesStyles } from "../../styles";
@@ -62,7 +62,7 @@ const PropertyItem = ({
     <Grid item xs={12} className={classes.gridAlign}>
       <FormControl fullWidth={true}>
         <InputLabel>{title}</InputLabel>
-        <Select
+        <BaseSelect
           value={value ?? templateValue}
           onChange={handleOnChange}
           disabled={!editable}
@@ -80,7 +80,7 @@ const PropertyItem = ({
               )}`}
             </MenuItem>
           ))}
-        </Select>
+        </BaseSelect>
       </FormControl>
     </Grid>
   );

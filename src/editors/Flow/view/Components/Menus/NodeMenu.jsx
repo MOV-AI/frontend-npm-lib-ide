@@ -2,15 +2,14 @@ import React, { useCallback, useEffect, useState, memo } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
-  Collapse,
+  BaseCollapse,
   Divider,
   Grid,
   ListItem,
   ListItemText,
   Typography
-} from "@mui/material";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
+} from "@mov-ai/mov-fe-lib-react";
+import { ExpandLessIcon, ExpandMoreIcon } from "@mov-ai/mov-fe-lib-react";
 import {
   DATA_TYPES,
   TABLE_KEYS_NAMES,
@@ -278,7 +277,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
    */
   const renderExpandIcon = useCallback(
     thisItem => {
-      return activeItem === thisItem ? <ExpandLess /> : <ExpandMore />;
+      return activeItem === thisItem ? <ExpandLessIcon /> : <ExpandMoreIcon />;
     },
     [activeItem]
   );
@@ -315,7 +314,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
             <ListItemText primary={i18n.t("Properties")} />
             {renderExpandIcon(ACTIVE_ITEM.PROPERTIES)}
           </ListItem>
-          <Collapse in={activeItem === ACTIVE_ITEM.PROPERTIES} unmountOnExit>
+          <BaseCollapse in={activeItem === ACTIVE_ITEM.PROPERTIES} unmountOnExit>
             <Grid container className={classes.gridContainer}>
               <PropertiesSection
                 editable={editable}
@@ -325,7 +324,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
               />
             </Grid>
             <Divider />
-          </Collapse>
+          </BaseCollapse>
           {/* =========================== PARAMETERS =========================== */}
           <ListItem
             data-testid="input_parameters-expand"
@@ -336,7 +335,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
             <ListItemText primary={i18n.t("Parameters")} />
             {renderExpandIcon(ACTIVE_ITEM.PARAMETERS)}
           </ListItem>
-          <Collapse in={activeItem === ACTIVE_ITEM.PARAMETERS} unmountOnExit>
+          <BaseCollapse in={activeItem === ACTIVE_ITEM.PARAMETERS} unmountOnExit>
             <KeyValuesSection
               editable={editable}
               varName={TABLE_KEYS_NAMES.PARAMETERS}
@@ -346,7 +345,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
               handleTableKeyDelete={handleKeyValueDelete}
             />
             <Divider />
-          </Collapse>
+          </BaseCollapse>
           {/* =========================== ENV. VARIABLES =========================== */}
           <ListItem
             data-testid="input_env-var-expand"
@@ -357,7 +356,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
             <ListItemText primary={i18n.t("EnvVars")} />
             {renderExpandIcon(ACTIVE_ITEM.ENVVARS)}
           </ListItem>
-          <Collapse in={activeItem === ACTIVE_ITEM.ENVVARS} unmountOnExit>
+          <BaseCollapse in={activeItem === ACTIVE_ITEM.ENVVARS} unmountOnExit>
             <KeyValuesSection
               editable={editable}
               varName={TABLE_KEYS_NAMES.ENVVARS}
@@ -367,7 +366,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
               handleTableKeyDelete={handleKeyValueDelete}
             />
             <Divider />
-          </Collapse>
+          </BaseCollapse>
           {/* =========================== COMMAND LINES =========================== */}
           <ListItem
             data-testid="input_cmd-line-expand"
@@ -378,7 +377,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
             <ListItemText primary={i18n.t("CommandLine")} />
             {renderExpandIcon(ACTIVE_ITEM.CMDLINE)}
           </ListItem>
-          <Collapse in={activeItem === ACTIVE_ITEM.CMDLINE} unmountOnExit>
+          <BaseCollapse in={activeItem === ACTIVE_ITEM.CMDLINE} unmountOnExit>
             <KeyValuesSection
               editable={editable}
               varName={TABLE_KEYS_NAMES.CMDLINE}
@@ -388,7 +387,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
               handleTableKeyDelete={handleKeyValueDelete}
             />
             <Divider />
-          </Collapse>
+          </BaseCollapse>
         </>
       )}
     </Typography>

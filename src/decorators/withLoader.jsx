@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { Typography } from "@mov-ai/mov-fe-lib-react";
 import { getRefComponent } from "../utils/Utils";
 import Loader from "../editors/_shared/Loader/Loader";
 

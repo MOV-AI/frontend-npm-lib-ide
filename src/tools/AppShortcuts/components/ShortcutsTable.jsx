@@ -1,8 +1,7 @@
 import React, { useRef } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
-import Paper from "@mui/material/Paper";
-import Divider from "@mui/material/Divider";
+import { Paper, Divider } from "@mov-ai/mov-fe-lib-react";
 
 import { shortcutsTableStyles } from "../styles";
 import MaterialTable from "../../../editors/_shared/MaterialTable/MaterialTable";

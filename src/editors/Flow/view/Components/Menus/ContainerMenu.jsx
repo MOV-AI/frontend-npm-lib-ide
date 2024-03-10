@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
-import { Collapse, Divider, ListItem, ListItemText } from "@mui/material";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
+import { BaseCollapse, Divider, ListItem, ListItemText } from "@mov-ai/mov-fe-lib-react";
+import { ExpandLessIcon, ExpandMoreIcon } from "@mov-ai/mov-fe-lib-react";
 import {
   DATA_TYPES,
   PLUGINS,
@@ -222,9 +221,9 @@ const ContainerMenu = props => {
         onClick={toggleExpanded}
       >
         <ListItemText primary={i18n.t("Parameters")} />
-        {expanded ? <ExpandLess /> : <ExpandMore />}
+        {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
       </ListItem>
-      <Collapse in={expanded} unmountOnExit>
+      <BaseCollapse in={expanded} unmountOnExit>
         <KeyValuesSection
           editable={editable}
           varName={TABLE_KEYS_NAMES.PARAMETERS}
@@ -234,7 +233,7 @@ const ContainerMenu = props => {
           handleTableKeyDelete={handleKeyValueDelete}
         />
         <Divider />
-      </Collapse>
+      </BaseCollapse>
     </div>
   );
 };

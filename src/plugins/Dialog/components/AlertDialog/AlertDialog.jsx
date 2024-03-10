@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import DialogContentText from "@mui/material/DialogContentText";
+import { DialogContentText } from "@mov-ai/mov-fe-lib-react";
 import AppDialog from "../AppDialog/AppDialog";
 
 import { alertDialogStyles } from "./styles";

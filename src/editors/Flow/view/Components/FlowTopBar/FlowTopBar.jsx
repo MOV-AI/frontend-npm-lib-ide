@@ -10,20 +10,23 @@ import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { RobotManager, CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import {
-  Typography,
+  AppBar,
+  BaseButton,
+  CircularProgress,
+  FormControl,
+  MenuItem,
+  BaseSelect,
+  ToggleButton,
+  ToggleButtonGroup,
+  Toolbar,
   Tooltip,
-  Button,
-  CircularProgress
-} from "@mui/material";
-import GrainIcon from "@mui/icons-material/Grain";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import StopIcon from "@mui/icons-material/Stop";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+  Typography,
+} from "@mov-ai/mov-fe-lib-react";
+import {
+  GrainIcon,
+  PlayArrowIcon,
+  StopIcon,
+} from "@mov-ai/mov-fe-lib-react";
 import Workspace from "../../../../../utils/Workspace";
 import {
   SCOPES,
@@ -46,7 +49,7 @@ const ButtonTopBar = forwardRef((props, ref) => {
   const { disabled, onClick, children, testId = "input_top-bar" } = props;
   const classes = buttonStyles();
   return (
-    <Button
+    <BaseButton
       data-testid={testId}
       ref={ref}
       size="small"
@@ -57,7 +60,7 @@ const ButtonTopBar = forwardRef((props, ref) => {
       onClick={onClick}
     >
       {children}
-    </Button>
+    </BaseButton>
   );
 });
 
@@ -491,7 +494,7 @@ const FlowTopBar = props => {
       <Toolbar variant="dense">
         <Typography component="div" className={classes.grow}>
           <FormControl className={classes.formControl}>
-            <Select
+            <BaseSelect
               inputProps={{ "data-testid": "input_change-robot" }}
               id="robot-selector"
               value={robotSelected}
@@ -510,7 +513,7 @@ const FlowTopBar = props => {
                   </MenuItem>
                 );
               })}
-            </Select>
+            </BaseSelect>
           </FormControl>
           {getFlowPath() === robotStatus.activeFlow ? (
             <ButtonTopBar

@@ -1,8 +1,8 @@
 import React, { forwardRef, useEffect, useRef, memo } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
-import MaterialTableCore from "@material-table/core";
-import { useTheme } from "@mui/styles";
+import { MaterialTable as BaseMaterialTable } from "@mov-ai/mov-fe-lib-react";
+import { useTheme } from "@mov-ai/mov-fe-lib-react";
 
 import { materialTableStyles } from "./styles";
 
@@ -97,7 +97,7 @@ const MaterialTable = forwardRef((props, ref) => {
 
   return (
     <div className={classes.tableContainer}>
-      <MaterialTableCore
+      <BaseMaterialTable
         tableRef={tableRef}
         title={title}
         detailPanel={detailPanel}

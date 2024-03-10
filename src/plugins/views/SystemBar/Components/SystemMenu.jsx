@@ -1,10 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
-import Popper from "@mui/material/Popper";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import Paper from "@mui/material/Paper";
+import {
+  ClickAwayListener,
+  Divider,
+  List,
+  Paper,
+  Popper,
+} from "@mov-ai/mov-fe-lib-react";
 import MenuItem from "./MenuItem";
 
 import { systemMenuStyles } from "../styles";
