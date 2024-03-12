@@ -26,11 +26,8 @@ import HomeTabPlugin, { getHomeTab } from "../tools/HomeTab/HomeTab";
 // Utils
 import ApplicationTheme from "../themes";
 import * as CONSTANTS from "../utils/Constants";
-// Externals
-// import { ThemeProvider, withStyles } from "@mui/styles";
 // Icons
-import HomeIcon from "@mui/icons-material/Home";
-import KeyboardIcon from "@mui/icons-material/Keyboard";
+import { HomeIcon, KeyboardIcon } from "@mov-ai/mov-fe-lib-react";
 
 i18n.init({
   resources: {
@@ -45,10 +42,6 @@ i18n.init({
   },
   lng: window?.SERVER_DATA?.Language || "en"
 });
-
-const dependencies = {
-  "@mui/styles": { ThemeProvider, withStyles },
-};
 
 const AppCE = props => {
   //========================================================================================
@@ -113,7 +106,7 @@ const AppCE = props => {
   return (
     <div style={{ height: "100vh", margin: "-1rem" }}>
       <Style />
-      <BaseApp {...props} dependencies={dependencies} />
+      <BaseApp {...props} />
     </div>
   );
 };

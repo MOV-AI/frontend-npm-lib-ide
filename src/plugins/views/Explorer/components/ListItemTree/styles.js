@@ -1,4 +1,4 @@
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 import { DEFAULT_EXPLORER_ROW_HEIGHT } from "../../../../../utils/Constants";
 
 export const listItemsTreeWithSearchStyles = makeStyles(_theme => ({

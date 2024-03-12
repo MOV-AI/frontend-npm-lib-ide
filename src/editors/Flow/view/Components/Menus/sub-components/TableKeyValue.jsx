@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Typography } from "@mui/material";
+import { Typography } from "@mov-ai/mov-fe-lib-react";
 import { convertToValidString } from "../../../../../../utils/Utils";
 import Search, { filter } from "../../../../../_shared/Search/Search";
 import RowKeyValue from "./RowKeyValue";

@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme } from "@mui/styles";
+import { useTheme } from "@mov-ai/mov-fe-lib-react";
 
 const NotInstalled = props => {
   const { name } = props;

@@ -1,6 +1,6 @@
 import React, { forwardRef, useState } from "react";
 import PropTypes from "prop-types";
-import { Drawer, Typography } from "@mui/material";
+import { BaseDrawer, Typography } from "@mov-ai/mov-fe-lib-react";
 import { DRAWER } from "../../../utils/Constants";
 import { withHostReactPlugin } from "../../../engine/ReactPlugin/HostReactPlugin";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
@@ -115,7 +115,7 @@ const DrawerPanel = forwardRef((props, ref) => {
     return null;
 
   return (
-    <Drawer
+    <BaseDrawer
       id={hostName}
       open={realOpen}
       anchor={anchor}
@@ -126,7 +126,7 @@ const DrawerPanel = forwardRef((props, ref) => {
       <Typography component="div" className={classes.content}>
         {activeView === DRAWER.VIEWS.PLUGIN ? viewPlugins : bookmarkView}
       </Typography>
-    </Drawer>
+    </BaseDrawer>
   );
 });
 

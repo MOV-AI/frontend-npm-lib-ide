@@ -2,8 +2,7 @@ import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import _isEqual from "lodash/isEqual";
-import AddBox from "@mui/icons-material/AddBox";
-import Edit from "@mui/icons-material/Edit";
+import { AddBoxIcon, EditIcon } from "@mov-ai/mov-fe-lib-react";
 import CollapsibleHeader from "../CollapsibleHeader/CollapsibleHeader";
 import MaterialTable from "../MaterialTable/MaterialTable";
 
@@ -60,7 +59,7 @@ const KeyValueTable = props => {
   const getActions = () => {
     const actions = [
       rowData => ({
-        icon: () => <Edit></Edit>,
+        icon: () => <EditIcon />,
         disabled: !editable,
         tooltip: i18n.t("Edit"),
         onClick: () => openEditDialog(varName, rowData.name)
@@ -69,7 +68,7 @@ const KeyValueTable = props => {
     // Add row button if editable
     if (editable)
       actions.push({
-        icon: () => <AddBox></AddBox>,
+        icon: () => <AddBoxIcon />,
         tooltip: i18n.t("AddAction", { actionTitle: title }),
         isFreeAction: true,
         onClick: () => openEditDialog(varName)

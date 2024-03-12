@@ -1,10 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import SnackbarContent from "@mui/material/SnackbarContent";
-import WarningIcon from "@mui/icons-material/Warning";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ErrorIcon from "@mui/icons-material/Error";
-import InfoIcon from "@mui/icons-material/Info";
+import { SnackbarContent } from "@mov-ai/mov-fe-lib-react";
+import { WarningIcon, CheckCircleIcon, ErrorIcon, InfoIcon } from "@mov-ai/mov-fe-lib-react";
 
 import { warningsStyles } from "./styles";
 

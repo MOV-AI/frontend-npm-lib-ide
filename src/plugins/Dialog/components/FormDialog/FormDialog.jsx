@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContentText from "@mui/material/DialogContentText";
-import { CircularProgress } from "@mui/material";
+import {
+  BaseButton,
+  CircularProgress,
+  DialogActions,
+  DialogContentText,
+  TextField,
+} from "@mov-ai/mov-fe-lib-react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../../themes";
 import AppDialog from "../AppDialog/AppDialog";
@@ -46,26 +48,6 @@ const FormDialog = props => {
   // Ref
   const inputRef = useRef();
 
-  //========================================================================================
-  /*                                                                                      *
-   *                                    React Lifecycle                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  // Trigger input focus in first render
-  useEffect(() => {
-    validateValue(defaultValue);
-    setTimeout(() => {
-      inputRef.current?.querySelector("input")?.focus();
-    });
-  }, [defaultValue, validateValue]);
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                    Private Methods                                   *
-   *                                                                                      */
-  //========================================================================================
-
   /**
    * Validate value
    * @param {String} _value : New value
@@ -88,11 +70,13 @@ const FormDialog = props => {
     [onPostValidation, onValidation]
   );
 
-  //========================================================================================
-  /*                                                                                      *
-   *                                       Handlers                                       *
-   *                                                                                      */
-  //========================================================================================
+  // Trigger input focus in first render
+  useEffect(() => {
+    validateValue(defaultValue);
+    setTimeout(() => {
+      inputRef.current?.querySelector("input")?.focus();
+    });
+  }, [defaultValue, validateValue]);
 
   /**
    * Handle dialog close
@@ -169,21 +153,21 @@ const FormDialog = props => {
       title={loadingMessage && isLoading ? loadingMessage : title}
       actions={
         <DialogActions data-testid="section_dialog-actions">
-          <Button
+          <BaseButton
             data-testid="input_close"
             onClick={handleClose}
             color="secondary"
           >
             {i18n.t("Cancel")}
-          </Button>
-          <Button
+          </BaseButton>
+          <BaseButton
             data-testid="input_confirm"
             onClick={handleSubmit}
             disabled={validation.error}
             color="primary"
           >
             {submitText}
-          </Button>
+          </BaseButton>
         </DialogActions>
       }
     >

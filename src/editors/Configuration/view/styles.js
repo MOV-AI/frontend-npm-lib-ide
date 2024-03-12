@@ -1,4 +1,4 @@
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 
 const container = {
   display: "flex",
@@ -16,7 +16,7 @@ export const configurationStyles = makeStyles(theme => ({
     maxHeight: "calc(100% - 48px)"
   },
   appBar: {
-    background: theme.palette.background.default,
+    background: theme.palette.background.secondary + " !important",
     color: theme.palette.text.primary,
     "& button span": {
       color: theme.palette.text.primary

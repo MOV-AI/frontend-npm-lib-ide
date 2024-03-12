@@ -1,6 +1,6 @@
 import React from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { LinearProgress } from "@mui/material";
+import { LinearProgress } from "@mov-ai/mov-fe-lib-react";
 import loader from "../../../Branding/movai-logo-transparent.png";
 
 import { loaderStyles } from "./styles";

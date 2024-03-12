@@ -1,7 +1,10 @@
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 
 export const appStyles = debugMode =>
   makeStyles(theme => ({
+    app: {
+      height: "100%",
+    },
     leftPanel: {
       height: "100%",
       border: debugMode ? "solid 5px red" : "",

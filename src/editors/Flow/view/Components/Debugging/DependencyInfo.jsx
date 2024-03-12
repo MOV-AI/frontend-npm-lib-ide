@@ -1,8 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { Card, CardContent } from "@mov-ai/mov-fe-lib-react";
+import { ArrowDropDownIcon } from "@mov-ai/mov-fe-lib-react";
 import { LINK_DEPENDENCY } from "../../../../../utils/Constants";
 import { convertToValidString } from "../../../../../utils/Utils";
 

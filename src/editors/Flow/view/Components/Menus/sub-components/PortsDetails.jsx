@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { Divider, Link, Tooltip, Typography } from "@mui/material";
+import { Divider, Link, Tooltip, Typography } from "@mov-ai/mov-fe-lib-react";
 import { SCOPES } from "../../../../../../utils/Constants";
 import { portStyles } from "../styles";
 

@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { Typography } from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
+import { Typography } from "@mov-ai/mov-fe-lib-react";
+import { InfoIcon } from "@mov-ai/mov-fe-lib-react";
 import Model from "../model/Node";
 import CallbackModel from "../../Callback/model/Callback";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
