@@ -1,10 +1,13 @@
-import { IconButton, Typography } from "@mui/material";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import MuiDialogTitle from "@mui/material/DialogTitle";
-import CloseIcon from "@mui/icons-material/Close";
+import {
+  IconButton,
+  Typography,
+  BaseButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle as MuiDialogTitle,
+} from "@mov-ai/mov-fe-lib-react";
+import { CloseIcon } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import React, { useCallback, useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
@@ -98,17 +101,17 @@ const AppDialog = props => {
   const getDefaultActions = () => {
     return (
       <DialogActions data-testid="section_dialog-actions">
-        <Button data-testid="input_close" onClick={handleClose} color="default">
+        <BaseButton data-testid="input_close" onClick={handleClose} color="default">
           {onSubmit ? i18n.t("Cancel") : i18n.t("Ok")}
-        </Button>
+        </BaseButton>
         {onSubmit && (
-          <Button
+          <BaseButton
             data-testid="input_confirm"
             onClick={handleSubmit}
             color="primary"
           >
             {submitText}
-          </Button>
+          </BaseButton>
         )}
       </DialogActions>
     );

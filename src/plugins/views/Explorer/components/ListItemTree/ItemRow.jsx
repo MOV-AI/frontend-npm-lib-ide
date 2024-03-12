@@ -2,15 +2,14 @@ import React, { useEffect, useState, useRef } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import { ContextMenu } from "@mov-ai/mov-fe-lib-react";
-import Tooltip from "@mui/material/Tooltip";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import DeleteIcon from "@mui/icons-material/DeleteOutline";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import IconButton from "@mui/material/IconButton";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
+import { Tooltip, IconButton, Box, Grid } from "@mov-ai/mov-fe-lib-react";
+import { 
+  MoreHorizIcon,
+  DeleteIcon,
+  FileCopyIcon,
+  ExpandMoreIcon,
+  ChevronRightIcon,
+} from "@mov-ai/mov-fe-lib-react";
 import { stopPropagation } from "../../../../../utils/Utils";
 
 import { itemRowStyles } from "./styles";

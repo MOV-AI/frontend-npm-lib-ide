@@ -1,10 +1,7 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import Edit from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutline";
-import IconButton from "@mui/material/IconButton";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import { Typography } from "@mui/material";
+import { EditIcon, DeleteIcon, VisibilityIcon } from "@mov-ai/mov-fe-lib-react";
+import { IconButton, Typography } from "@mov-ai/mov-fe-lib-react";
 import {
   DATA_TYPES,
   DEFAULT_VALUE,
@@ -122,7 +119,7 @@ const RowKeyValue = ({
           onClick={handleKeyValueEditModal}
           size="small"
         >
-          {viewOnly ? <VisibilityIcon /> : <Edit />}
+          {viewOnly ? <VisibilityIcon /> : <EditIcon />}
         </IconButton>
       )}
       {allowDelete && (

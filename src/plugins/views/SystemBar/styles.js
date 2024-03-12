@@ -1,4 +1,4 @@
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 
 const menuButtonStyles = {
   margin: "0px !important",

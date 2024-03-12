@@ -8,9 +8,7 @@ import React, {
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { filter } from "rxjs/operators";
-import InfoIcon from "@mui/icons-material/Info";
-import Add from "@mui/icons-material/Add";
-import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
+import { InfoIcon, AddIcon, CompareArrowsIcon } from "@mov-ai/mov-fe-lib-react";
 import { Rest } from "@mov-ai/mov-fe-lib-core";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
@@ -152,32 +150,6 @@ export const Flow = (props, ref) => {
   }, [flowDebugging, updateLinkStroke]);
 
   /**
-   * Start node
-   * @param {Object} target : Node to be started
-   */
-  const startNode = useCallback(
-    node => {
-      commandNode("RUN", node, robotSelected).then(() => {
-        node.statusLoading = true;
-      });
-    },
-    [robotSelected, commandNode]
-  );
-
-  /**
-   * Stop node
-   * @param {Object} target : Node to be stopped
-   */
-  const stopNode = useCallback(
-    node => {
-      commandNode("KILL", node, robotSelected).then(() => {
-        node.statusLoading = true;
-      });
-    },
-    [robotSelected, commandNode]
-  );
-
-  /**
    * Execute command action to node to start or stop
    *
    * @param {String} action : One of values "RUN" or "KILL"
@@ -221,6 +193,32 @@ export const Flow = (props, ref) => {
         });
     },
     [call]
+  );
+
+  /**
+   * Start node
+   * @param {Object} target : Node to be started
+   */
+  const startNode = useCallback(
+    node => {
+      commandNode("RUN", node, robotSelected).then(() => {
+        node.statusLoading = true;
+      });
+    },
+    [robotSelected, commandNode]
+  );
+
+  /**
+   * Stop node
+   * @param {Object} target : Node to be stopped
+   */
+  const stopNode = useCallback(
+    node => {
+      commandNode("KILL", node, robotSelected).then(() => {
+        node.statusLoading = true;
+      });
+    },
+    [robotSelected, commandNode]
   );
 
   //========================================================================================
@@ -411,6 +409,8 @@ export const Flow = (props, ref) => {
     [call]
   );
 
+  let setFlowsToDefault = null;
+
   /**
    * Open Dialog to Enter Paste Node name
    * @param {*} position : x and y position in canvas
@@ -575,7 +575,7 @@ export const Flow = (props, ref) => {
       const explorerView = new Explorer(FLOW_EXPLORER_PROFILE);
 
       bookmarks[FLOW_EXPLORER_PROFILE.name] = {
-        icon: <Add />,
+        icon: <AddIcon />,
         name: FLOW_EXPLORER_PROFILE.name,
         title: i18n.t(FLOW_EXPLORER_PROFILE.title),
         view: explorerView.render({
@@ -694,31 +694,6 @@ export const Flow = (props, ref) => {
   }, [call, selectedNodeRef]);
 
   /**
-   * On Node Selected
-   * @param {*} node
-   */
-  const onNodeSelected = useCallback(
-    node => {
-      clearTimeout(debounceSelection.current);
-      contextArgs.current = node;
-      debounceSelection.current = setTimeout(() => {
-        if (!node) {
-          unselectNode();
-        } else {
-          // We only want 1 selection at the time.
-          // So let's unselect links if any is selected
-          if (selectedLinkRef.current) onLinkSelected(null);
-
-          selectedNodeRef.current = node;
-          activeBookmark = MENUS.current.NODE.NAME;
-          addNodeMenu(node, true);
-        }
-      }, 300);
-    },
-    [addNodeMenu, unselectNode, onLinkSelected]
-  );
-
-  /**
    * On Link selected
    * @param {BaseLink} link : Link instance
    */
@@ -762,6 +737,31 @@ export const Flow = (props, ref) => {
   );
 
   /**
+   * On Node Selected
+   * @param {*} node
+   */
+  const onNodeSelected = useCallback(
+    node => {
+      clearTimeout(debounceSelection.current);
+      contextArgs.current = node;
+      debounceSelection.current = setTimeout(() => {
+        if (!node) {
+          unselectNode();
+        } else {
+          // We only want 1 selection at the time.
+          // So let's unselect links if any is selected
+          if (selectedLinkRef.current) onLinkSelected(null);
+
+          selectedNodeRef.current = node;
+          activeBookmark = MENUS.current.NODE.NAME;
+          addNodeMenu(node, true);
+        }
+      }, 300);
+    },
+    [addNodeMenu, unselectNode, onLinkSelected]
+  );
+
+  /**
    * Close context menu
    */
   const handleContextClose = useCallback(() => {
@@ -773,7 +773,7 @@ export const Flow = (props, ref) => {
   /**
    * Call broadcast method to emit event to all open flows
    */
-  const setFlowsToDefault = useCallback(() => {
+  setFlowsToDefault = useCallback(() => {
     activateEditor();
     // Remove selected node and link bookmark
     onNodeSelected(null);
@@ -787,6 +787,60 @@ export const Flow = (props, ref) => {
       { action: "setMode", value: EVT_NAMES.DEFAULT }
     );
   }, [call, activateEditor, onLinkSelected, onNodeSelected]);
+
+  const getContextOptions = useCallback(
+    (mode, data, args) => {
+      const baseContextOptions = getBaseContextOptions(mode, data, args);
+      const contextOpts = contextOptions?.(baseContextOptions)?.[mode]?.(data);
+
+      return contextOpts ?? baseContextOptions;
+    },
+    [contextOptions]
+  );
+
+  let handleCopyNode = null;
+  let handleDeleteNode = null;
+  let handlePasteNodes = null;
+
+  /**
+   * Handle delete link
+   */
+  const handleDeleteLink = useCallback(() => {
+    const link = selectedLinkRef.current ?? contextArgs.current;
+    link.id && getMainInterface().deleteLink(link.id);
+  }, []);
+
+  /**
+   * Toggle exposed port
+   */
+  const handleToggleExposedPort = useCallback(() => {
+    const port = contextArgs.current;
+    getMainInterface().toggleExposedPort(port);
+  }, []);
+
+  /**
+   * Open Callback
+   * @param {string} callbackName : Callback name
+   */
+  const handleOpenCallback = useCallback(
+    callbackName => {
+      // If no callback name is passed -> returns
+      if (!callbackName) return;
+      // Open existing callback
+      const scope = CallbackModel.SCOPE;
+      call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.READ, {
+        scope,
+        name: callbackName
+      }).then(doc => {
+        call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
+          id: doc.getUrl(),
+          name: doc.getName(),
+          scope
+        });
+      });
+    },
+    [call]
+  );
 
   /**
    * Subscribe to mainInterface and canvas events
@@ -1153,7 +1207,7 @@ export const Flow = (props, ref) => {
   /**
    * Handle copy node
    */
-  const handleCopyNode = useCallback(
+  handleCopyNode = useCallback(
     evt => {
       evt?.preventDefault?.();
       const selectedNodes = getSelectedNodes();
@@ -1177,7 +1231,7 @@ export const Flow = (props, ref) => {
   /**
    * Handle paste nodes in canvas
    */
-  const handlePasteNodes = useCallback(
+  handlePasteNodes = useCallback(
     async evt => {
       evt?.preventDefault?.();
       const position = (contextArgs.current =
@@ -1205,7 +1259,7 @@ export const Flow = (props, ref) => {
   /**
    * Handle delete node
    */
-  const handleDeleteNode = useCallback(() => {
+  handleDeleteNode = useCallback(() => {
     const selectedNodes = getSelectedNodes();
     if (!selectedNodes.length) return;
     // Callback to delete all nodes
@@ -1227,14 +1281,6 @@ export const Flow = (props, ref) => {
   }, [handleDelete, unselectNode, getSelectedNodes]);
 
   /**
-   * Handle delete link
-   */
-  const handleDeleteLink = useCallback(() => {
-    const link = selectedLinkRef.current ?? contextArgs.current;
-    link.id && getMainInterface().deleteLink(link.id);
-  }, []);
-
-  /**
    * Triggers the correct deletion
    * (if a link is selected delete link, else delete nodes)
    */
@@ -1242,38 +1288,6 @@ export const Flow = (props, ref) => {
     if (selectedLinkRef.current) handleDeleteLink();
     else handleDeleteNode();
   }, [handleDeleteLink, handleDeleteNode]);
-
-  /**
-   * Toggle exposed port
-   */
-  const handleToggleExposedPort = useCallback(() => {
-    const port = contextArgs.current;
-    getMainInterface().toggleExposedPort(port);
-  }, []);
-
-  /**
-   * Open Callback
-   * @param {string} callbackName : Callback name
-   */
-  const handleOpenCallback = useCallback(
-    callbackName => {
-      // If no callback name is passed -> returns
-      if (!callbackName) return;
-      // Open existing callback
-      const scope = CallbackModel.SCOPE;
-      call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.READ, {
-        scope,
-        name: callbackName
-      }).then(doc => {
-        call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
-          id: doc.getUrl(),
-          name: doc.getName(),
-          scope
-        });
-      });
-    },
-    [call]
-  );
 
   /**
    * Handle zoom reset
@@ -1317,16 +1331,6 @@ export const Flow = (props, ref) => {
     setSearchVisible(false);
     activateKeyBind();
   }, [activateKeyBind]);
-
-  const getContextOptions = useCallback(
-    (mode, data, args) => {
-      const baseContextOptions = getBaseContextOptions(mode, data, args);
-      const contextOpts = contextOptions?.(baseContextOptions)?.[mode]?.(data);
-
-      return contextOpts ?? baseContextOptions;
-    },
-    [contextOptions]
-  );
 
   //========================================================================================
   /*                                                                                      *

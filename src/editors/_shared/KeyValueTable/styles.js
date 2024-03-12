@@ -1,4 +1,4 @@
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 
 export const parametersDialogStyles = makeStyles(_theme => ({
   marginTop: { marginTop: "15px" },

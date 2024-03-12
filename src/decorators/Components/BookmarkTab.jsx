@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
+import { Tooltip, IconButton } from "@mov-ai/mov-fe-lib-react";
 
 const BookmarkTab = props => {
   const { active, bookmark, classes, selectBookmark } = props;

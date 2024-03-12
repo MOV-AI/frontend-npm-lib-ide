@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import _debounce from "lodash/debounce";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 import {
   Dialog,
   DialogContent,
-  Button,
+  BaseButton,
   DialogActions
-} from "@mui/material";
+} from "@mov-ai/mov-fe-lib-react";
 import { PLUGINS } from "../../../../utils/Constants";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../../themes";
@@ -136,10 +136,10 @@ const AddImportDialog = props => {
         {renderTree()}
       </DialogContent>
       <DialogActions>
-        <Button data-testid="input_cancel" onClick={onClose}>
+        <BaseButton data-testid="input_cancel" onClick={onClose}>
           {i18n.t("Cancel")}
-        </Button>
-        <Button
+        </BaseButton>
+        <BaseButton
           data-testid="input_confirm"
           color="primary"
           onClick={() => {
@@ -149,7 +149,7 @@ const AddImportDialog = props => {
           disabled={!selectedLibs}
         >
           {i18n.t("Add")}
-        </Button>
+        </BaseButton>
       </DialogActions>
     </Dialog>
   );

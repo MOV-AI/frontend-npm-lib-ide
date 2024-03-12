@@ -1,8 +1,7 @@
 import React from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import InfoLogo from "@mui/icons-material/Info";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+import { InfoIcon } from "@mov-ai/mov-fe-lib-react";
+import { IconButton, Typography } from "@mov-ai/mov-fe-lib-react";
 import { DATA_TYPES } from "../../../../../utils/Constants";
 import { HtmlTooltip } from "../../../../_shared/HtmlTooltip/HtmlTooltip";
 
@@ -31,7 +30,7 @@ const useKeyValueMethods = () => {
         }
       >
         <IconButton className={classes.logo}>
-          <InfoLogo />
+          <InfoIcon />
         </IconButton>
       </HtmlTooltip>
     );

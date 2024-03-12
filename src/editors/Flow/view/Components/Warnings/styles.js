@@ -1,5 +1,5 @@
-import { amber, green } from "@mui/material/colors";
-import { makeStyles } from "@mui/styles";
+import { amber, green } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 
 const commonStyles = {
   display: "flex",

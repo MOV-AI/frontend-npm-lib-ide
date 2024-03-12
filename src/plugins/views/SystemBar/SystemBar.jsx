@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import Button from "@mui/material/Button";
+import { BaseButton } from "@mov-ai/mov-fe-lib-react";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import SystemMenu from "./Components/SystemMenu";
 import buildMenus from "./builder/buildMenus";
@@ -96,7 +96,7 @@ const SystemBar = props => {
             const activeButtonClass =
               openedMenuId === menu.id ? classes.activeMenu : "";
             return (
-              <Button
+              <BaseButton
                 data-testid="input_menu-item"
                 key={menu.id}
                 className={`${classes.menuButton} ${activeButtonClass}`}
@@ -104,7 +104,7 @@ const SystemBar = props => {
                 data-menu-id={menu.id}
               >
                 {i18n.t(menu.title)}
-              </Button>
+              </BaseButton>
             );
           })}
           {menuOpen && openedMenuId && (

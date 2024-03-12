@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
-  Collapse,
+  BaseCollapse,
   List,
   ListItem,
   ListItemText,
@@ -10,12 +10,14 @@ import {
   Typography,
   Tooltip,
   Divider
-} from "@mui/material";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+} from "@mov-ai/mov-fe-lib-react";
+import {
+  ExpandLessIcon,
+  ExpandMoreIcon,
+  AddIcon,
+  EditIcon,
+  DeleteIcon,
+} from "@mov-ai/mov-fe-lib-react";
 import Model from "../model/Callback";
 import { PLUGINS } from "../../../utils/Constants";
 import { withDataHandler } from "../../../plugins/DocManager/DataHandler";
@@ -315,12 +317,12 @@ const Menu = props => {
           >
             <AddIcon />
           </IconButton>
-          {isActive(ACTIVE_ITEM.IMPORTS) ? <ExpandLess /> : <ExpandMore />}
+          {isActive(ACTIVE_ITEM.IMPORTS) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </ListItem>
-        <Collapse in={isActive(ACTIVE_ITEM.IMPORTS)} unmountOnExit>
+        <BaseCollapse in={isActive(ACTIVE_ITEM.IMPORTS)} unmountOnExit>
           {getImports()}
           <Divider />
-        </Collapse>
+        </BaseCollapse>
         {/* ============ MESSAGE ============ */}
         <ListItem
           data-testid="input_message-expand"
@@ -336,12 +338,12 @@ const Menu = props => {
           >
             <EditIcon />
           </IconButton>
-          {isActive(ACTIVE_ITEM.MESSAGE) ? <ExpandLess /> : <ExpandMore />}
+          {isActive(ACTIVE_ITEM.MESSAGE) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </ListItem>
-        <Collapse in={isActive(ACTIVE_ITEM.MESSAGE)} unmountOnExit>
+        <BaseCollapse in={isActive(ACTIVE_ITEM.MESSAGE)} unmountOnExit>
           {getMessage()}
           <Divider />
-        </Collapse>
+        </BaseCollapse>
       </List>
     </div>
   );

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import SearchIcon from "@mui/icons-material/Search";
-import ClearIcon from "@mui/icons-material/Clear";
-import { TextField, IconButton, Tooltip } from "@mui/material";
+import { SearchIcon, ClearIcon } from "@mov-ai/mov-fe-lib-react";
+import { TextField, IconButton, Tooltip } from "@mov-ai/mov-fe-lib-react";
 import { DATA_TYPES } from "../../../utils/Constants";
 
 import { searchStyles } from "./styles";

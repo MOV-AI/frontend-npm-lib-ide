@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField } from "@mui/material";
+import { TextField } from "@mov-ai/mov-fe-lib-react";
 import { DATA_TYPES } from "../../../../../utils/Constants";
 import DataType from "../AbstractDataType";
 import { checkIfDefaultOrDisabled } from "./utils";

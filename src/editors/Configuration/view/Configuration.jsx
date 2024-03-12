@@ -2,10 +2,16 @@ import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
-import { AppBar, Toolbar } from "@mui/material";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { useTheme } from "@mui/styles";
-import InfoIcon from "@mui/icons-material/Info";
+import {
+  AppBar,
+  Toolbar,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mov-ai/mov-fe-lib-react";
+import {
+  InfoIcon,
+} from "@mov-ai/mov-fe-lib-react";
+import { useTheme } from "@mov-ai/mov-fe-lib-react";
 import Model from "../model/Configuration";
 import { defaultFunction } from "../../../utils/Utils";
 import { PLUGINS } from "../../../utils/Constants";
