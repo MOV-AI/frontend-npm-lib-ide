@@ -21,17 +21,12 @@ export const systemBarStyles = debugMode =>
       ...menuButtonStyles,
       padding: "0 10px !important",
       minWidth: "unset",
-      color: theme.palette.grey[200] + " !important",
-      "&:hover": {
-        background: theme.palette.grey[900] + " !important",
-      },
+      borderRadius: "0px !important",
+      color: theme.palette.text.primary + " !important",
       "&:first-child": {
         marginLeft: "5px !important"
       }
     },
-    activeMenu: {
-      background: theme.palette.grey[900] + " !important",
-    }
   }));
 
 export const systemMenuStyles = makeStyles(theme => ({
@@ -74,10 +69,9 @@ export const systemMenuItemStyles = makeStyles(theme => ({
     fontSize: "0.875rem",
     width: "100%",
     justifyContent: "space-between",
-    color: theme.palette.grey[200],
+    color: theme.palette.text.primary + " !important",
     "& > .MuiButton-label": { paddingLeft: "10px" },
     "&:hover": {
-      background: theme.palette.grey[900],
       "& > .MuiButton-label > ul": {
         opacity: "1",
         maxWidth: "500px"
@@ -107,7 +101,8 @@ export const systemMenuItemStyles = makeStyles(theme => ({
     boxShadow: "1px 1px 2px 1px #333",
     margin: "0",
     padding: "0",
-    background: theme.topBarColor,
+    color: theme.palette.text.primary + " !important",
+    background: theme.topBarColor + " !important",
     transform: "translate(99%)",
     transition: "opacity .3s, max-width .3s"
   }

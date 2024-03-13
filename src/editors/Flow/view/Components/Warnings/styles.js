@@ -46,28 +46,37 @@ export const warningsStyles = makeStyles(theme => ({
   root: {
     position: "absolute",
     top: "20px",
-    right: "50px"
+    right: "50px",
   },
   snackbar: {
     margin: "5px",
     minWidth: "200px"
   },
   success: {
-    backgroundColor: green[600]
+    "&.MuiPaper-root": {
+      backgroundColor: green[600] + " !important",
+    },
   },
   error: {
-    backgroundColor: theme.palette?.error.dark
+    "&.MuiPaper-root": {
+      backgroundColor: theme.palette?.error.dark + " !important",
+    },
   },
   info: {
-    backgroundColor: theme.palette?.primary.main
+    "&.MuiPaper-root": {
+      backgroundColor: theme.palette?.primary.main + " !important",
+    },
   },
   warning: {
-    backgroundColor: amber[700]
+    "&.MuiPaper-root": {
+      backgroundColor: amber[700] + " !important",
+    },
   },
   clickableSnack: {
     border: "2px solid #666",
     cursor: "pointer",
     transition: "border-color .5s",
+    color: theme.palette?.text.primary + " !important",
     "&:hover": {
       borderColor: "#000"
     }

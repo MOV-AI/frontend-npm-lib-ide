@@ -25,7 +25,7 @@ export const bookmarkStyles = (side, oppositeSide) =>
       }
     },
     unselectedBookmark: {
-      color: "white"
+      color: theme.palette.text.primary,
     }
   }));
 
