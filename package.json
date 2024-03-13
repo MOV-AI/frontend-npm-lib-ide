@@ -59,17 +59,17 @@
     "web-vitals": "^1.1.2"
   },
   "peerDependencies": {
-    "@mov-ai/mov-fe-lib-code-editor": "^1.1.2-2",
-    "@mov-ai/mov-fe-lib-core": "^1.2.1-2",
-    "@mov-ai/mov-fe-lib-react": "^1.3.2-1",
+    "@mov-ai/mov-fe-lib-code-editor": "^1.1.2-3",
+    "@mov-ai/mov-fe-lib-core": "^1.2.1-3",
+    "@mov-ai/mov-fe-lib-react": "^1.3.2-2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@codingame/monaco-languageclient": "^0.17.4",
-    "@mov-ai/mov-fe-lib-code-editor": "^1.1.2-2",
-    "@mov-ai/mov-fe-lib-core": "^1.2.1-2",
-    "@mov-ai/mov-fe-lib-react": "^1.3.2-1",
+    "@mov-ai/mov-fe-lib-code-editor": "^1.1.2-3",
+    "@mov-ai/mov-fe-lib-core": "^1.2.1-3",
+    "@mov-ai/mov-fe-lib-react": "^1.3.2-2",
     "@storybook/addon-actions": "^6.5.12",
     "@storybook/addon-essentials": "^6.5.12",
     "@storybook/addon-interactions": "^6.5.12",
@@ -78,7 +78,7 @@
     "@storybook/manager-webpack5": "^6.5.12",
     "@storybook/react": "^6.5.12",
     "@storybook/testing-library": "^0.0.13",
-    "@tty-pt/scripts": "^0.5.7",
+    "@tty-pt/scripts": "^0.5.9",
     "eslint": "^8.43.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",

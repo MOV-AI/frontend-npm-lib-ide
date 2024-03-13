@@ -62,7 +62,6 @@ export const itemRowStyles = makeStyles(theme => ({
     }
   },
   contextMenuIcon: {
-    color: "white",
     fontSize: 18
   }
 }));
