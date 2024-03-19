@@ -1,9 +1,13 @@
 {
   "name": "@mov-ai/mov-fe-lib-ide",
-  "version": "1.1.2-2",
-  "main": "dist/mov-ide.umd.js",
+  "version": "1.1.2-3",
+  "main": "dist/mov-ide.cjs.js",
+  "browser": "dist/mov-ide.web.js",
+  "module": "dist/mov-ide.js",
+  "types": "dist/mov-ide.d.ts",
   "entry": "./index.js",
   "library": "MovaiIDE",
+  "sideEffects": true,
   "resolve": {
     "react": "umd/react.production.min.js",
     "vscode": "@codingame/monaco-languageclient/lib/vscode-compatibility"
@@ -59,17 +63,17 @@
     "web-vitals": "^1.1.2"
   },
   "peerDependencies": {
-    "@mov-ai/mov-fe-lib-code-editor": "^1.1.2-3",
-    "@mov-ai/mov-fe-lib-core": "^1.2.1-3",
-    "@mov-ai/mov-fe-lib-react": "^1.3.2-2",
+    "@mov-ai/mov-fe-lib-code-editor": "^1.1.2-5",
+    "@mov-ai/mov-fe-lib-core": "^1.2.1-4",
+    "@mov-ai/mov-fe-lib-react": "^1.3.2-4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@codingame/monaco-languageclient": "^0.17.4",
-    "@mov-ai/mov-fe-lib-code-editor": "^1.1.2-3",
-    "@mov-ai/mov-fe-lib-core": "^1.2.1-3",
-    "@mov-ai/mov-fe-lib-react": "^1.3.2-2",
+    "@mov-ai/mov-fe-lib-code-editor": "^1.1.2-5",
+    "@mov-ai/mov-fe-lib-core": "^1.2.1-4",
+    "@mov-ai/mov-fe-lib-react": "^1.3.2-4",
     "@storybook/addon-actions": "^6.5.12",
     "@storybook/addon-essentials": "^6.5.12",
     "@storybook/addon-interactions": "^6.5.12",
@@ -78,7 +82,7 @@
     "@storybook/manager-webpack5": "^6.5.12",
     "@storybook/react": "^6.5.12",
     "@storybook/testing-library": "^0.0.13",
-    "@tty-pt/scripts": "^0.5.9",
+    "@tty-pt/scripts": "^0.6.0-9",
     "eslint": "^8.43.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",

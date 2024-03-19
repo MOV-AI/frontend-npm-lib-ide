@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { installTool } from "../../../App/BaseApp";
 import AppCE from "../../AppCE";
 import { getLogsToolTab, LOGS_PROFILE } from "./Logs";
-import { LogsIcon } from "@mov-ai/mov-fe-lib-react";
+import { MoneyIcon } from "@mov-ai/mov-fe-lib-react";
 
 const LogsStory = props => {
   useEffect(() => {
@@ -12,7 +12,7 @@ const LogsStory = props => {
       profile: LOGS_PROFILE,
       Plugin: LOGS_PROFILE.plugin,
       tabData: getLogsToolTab(),
-      icon: LogsIcon,
+      icon: MoneyIcon,
       mainMenu: true,
       toolBar: true,
       quickAccess: true
