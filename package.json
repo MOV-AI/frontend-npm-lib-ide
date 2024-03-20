@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-ide",
-  "version": "1.1.2-3",
+  "version": "1.1.2-4",
   "main": "dist/mov-ide.cjs.js",
   "browser": "dist/mov-ide.web.js",
   "module": "dist/mov-ide.js",
