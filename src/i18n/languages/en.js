@@ -1,4 +1,4 @@
-{
+export default {
   "About": "About",
   "Actions": "Actions",
   "ACTION_KILL": "Stopping",
@@ -275,4 +275,4 @@
   "ValidationMethodNotImplemented": "Validation method not implemented",
   "Version-Colon": "Version",
   "Yes": "Yes"
-}
+};

@@ -3,8 +3,8 @@ import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 export const baseFlowStyles = makeStyles(theme => ({
   backdrop: {
     zIndex: theme.zIndex.drawer - 1,
-    color: theme.backdrop?.color,
-    backgroundColor: theme.backdrop?.background,
+    color: theme.textColor,
+    backgroundColor: theme.palette.background.secondary,
     position: "absolute",
     height: "100%",
     width: "100%",
