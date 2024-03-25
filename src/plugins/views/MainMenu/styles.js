@@ -12,7 +12,7 @@ export const mainMenuStyles = makeStyles(theme => ({
       }
     },
     "& hr": {
-      borderColor: theme.palette.grey[200],
+      borderColor: theme.border,
       borderRadius: "2px",
       margin: "15px 0"
     }

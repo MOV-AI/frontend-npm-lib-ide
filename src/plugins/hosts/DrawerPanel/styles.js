@@ -4,7 +4,7 @@ export const drawerPanelStyles = (isLeft, isOpen) =>
   makeStyles(theme => ({
     content: {
       background: theme.palette.background.primary,
-      color: theme.backdrop?.color,
+      color: theme.textColor,
       height: "100%",
       display: "flex",
       flexDirection: "column"
