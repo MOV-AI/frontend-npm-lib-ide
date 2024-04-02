@@ -1,4 +1,4 @@
-import { Style, withDefaults, Translations as reactTranslations } from "@mov-ai/mov-fe-lib-react";
+import { withDefaults, Translations as reactTranslations } from "@mov-ai/mov-fe-lib-react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { Translations as ideTranslations } from "../i18n/i18n";
 import React, { useEffect } from "react";
@@ -105,7 +105,6 @@ const AppCE = props => {
 
   return (
     <div style={{ height: "100vh", margin: "-1rem" }}>
-      <Style />
       <BaseApp {...props} />
     </div>
   );

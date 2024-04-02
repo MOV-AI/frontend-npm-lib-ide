@@ -40,7 +40,6 @@ import ShortcutsPlugin, {
 } from "./src/tools/AppShortcuts/AppShortcuts";
 // Utils
 import ApplicationTheme from "./src/themes";
-import { ThemeProvider } from "@mov-ai/mov-fe-lib-react";
 import * as CONSTANTS from "./src/utils/Constants";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "./src/utils/Messages";
 import Workspace from "./src/utils/Workspace";
@@ -82,7 +81,7 @@ export { Workspace, LocalStorage, Utils };
 export { HomeTabPlugin, getHomeTab };
 export { ShortcutsPlugin, getShortcutsTab };
 export { FlowExplorer };
-export { ThemeProvider, ApplicationTheme };
+export { ApplicationTheme };
 export { useDataTypes, useDataSubscriber, usePluginMethods };
 export { openTool };
 

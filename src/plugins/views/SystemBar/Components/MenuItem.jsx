@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import {
-  BaseButton,
+  Button as BaseButton,
   ListItem,
   Divider,
 } from "@mov-ai/mov-fe-lib-react";
