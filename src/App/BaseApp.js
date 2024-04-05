@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import hotkeys from "hotkeys-js";
-import { Style } from "@mov-ai/mov-fe-lib-react";
 import { Typography, Grid } from "@mov-ai/mov-fe-lib-react";
 import DocManager from "../plugins/DocManager/DocManager";
 import Dialog from "../plugins/Dialog/Dialog";
@@ -148,7 +147,6 @@ function BaseApp(props) {
 
   return (
     <MainContext.Provider value={mainContextMemo}>
-      <Style />
       <div className={"App " + classes.app} onContextMenu={onContextMenu}>
         {getHostedPlugins(classes)}
       </div>
