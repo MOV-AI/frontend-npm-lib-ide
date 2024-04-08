@@ -57,13 +57,13 @@ devDependencies:
     version: 0.17.4
   '@mov-ai/mov-fe-lib-code-editor':
     specifier: ^1.1.2-11
-    version: 1.1.2-11(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mov-ai/mov-fe-lib-react@1.3.2-12)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)
+    version: 1.1.2-11(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mov-ai/mov-fe-lib-react@1.3.2-13)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)
   '@mov-ai/mov-fe-lib-core':
     specifier: ^1.2.1-10
     version: 1.2.1-10
   '@mov-ai/mov-fe-lib-react':
-    specifier: ^1.3.2-12
-    version: 1.3.2-12(@material-table/core@6.3.2)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/styles@5.15.12)(@mui/x-date-pickers@6.19.6)(@mui/x-tree-view@6.17.0)(csstype@3.1.3)(lodash@4.17.21)(react-dom@18.2.0)(react-mui-dropzone@4.0.7)(react@18.2.0)
+    specifier: ^1.3.2-13
+    version: 1.3.2-13(@material-table/core@6.3.2)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/styles@5.15.12)(@mui/x-date-pickers@6.19.6)(@mui/x-tree-view@6.17.0)(csstype@3.1.3)(lodash@4.17.21)(react-dom@18.2.0)(react-mui-dropzone@4.0.7)(react@18.2.0)
   '@tty-pt/scripts':
     specifier: ^0.6.0-29
     version: 0.6.0-29(@swc/core@1.4.6)(@types/node@20.12.3)(@types/react-dom@18.2.18)(@types/react@18.2.51)(@types/testing-library__jest-dom@5.14.9)(canvas@2.11.2)
@@ -2473,7 +2473,7 @@ packages:
       - react-native
     dev: true
 
-  /@mov-ai/mov-fe-lib-code-editor@1.1.2-11(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mov-ai/mov-fe-lib-react@1.3.2-12)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0):
+  /@mov-ai/mov-fe-lib-code-editor@1.1.2-11(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mov-ai/mov-fe-lib-react@1.3.2-13)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-SJ8zE/wy/jg2fDt9UmvF2kUGmNGZoiPrZ0ypBmqSmah1RnQj4Pmz1U5+Gp8dswUhpj/mcj1H2CMl4fndmh2Blg==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-code-editor/1.1.2-11/4aba9bce424ec9dcbfeba39d649fbe10dc704176}
     peerDependencies:
       '@codingame/monaco-languageclient': ^0.17.3
@@ -2486,7 +2486,7 @@ packages:
       '@codingame/monaco-jsonrpc': 0.4.1
       '@codingame/monaco-languageclient': 0.17.4
       '@mov-ai/mov-fe-lib-core': 1.2.1-10
-      '@mov-ai/mov-fe-lib-react': 1.3.2-12(@material-table/core@6.3.2)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/styles@5.15.12)(@mui/x-date-pickers@6.19.6)(@mui/x-tree-view@6.17.0)(csstype@3.1.3)(lodash@4.17.21)(react-dom@18.2.0)(react-mui-dropzone@4.0.7)(react@18.2.0)
+      '@mov-ai/mov-fe-lib-react': 1.3.2-13(@material-table/core@6.3.2)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/styles@5.15.12)(@mui/x-date-pickers@6.19.6)(@mui/x-tree-view@6.17.0)(csstype@3.1.3)(lodash@4.17.21)(react-dom@18.2.0)(react-mui-dropzone@4.0.7)(react@18.2.0)
       lodash: 4.17.21
       monaco-editor: 0.36.1
       monaco-editor-core: 0.36.1
@@ -2515,8 +2515,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@mov-ai/mov-fe-lib-react@1.3.2-12(@material-table/core@6.3.2)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/styles@5.15.12)(@mui/x-date-pickers@6.19.6)(@mui/x-tree-view@6.17.0)(csstype@3.1.3)(lodash@4.17.21)(react-dom@18.2.0)(react-mui-dropzone@4.0.7)(react@18.2.0):
-    resolution: {integrity: sha512-k8XI0kg0B59Ygi/OFSdD9ng3y2LgIexx66++alLUBzLc3c9SQTjNkS6IEz4bvbqtH8ExOHE8nRrujVXWW7enOA==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-react/1.3.2-12/55737a11d4716608c643879463eaed23fb1f515b}
+  /@mov-ai/mov-fe-lib-react@1.3.2-13(@material-table/core@6.3.2)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/styles@5.15.12)(@mui/x-date-pickers@6.19.6)(@mui/x-tree-view@6.17.0)(csstype@3.1.3)(lodash@4.17.21)(react-dom@18.2.0)(react-mui-dropzone@4.0.7)(react@18.2.0):
+    resolution: {integrity: sha512-rwTzHUuzzvlhwY2uqgnosfkIofNaY46tq3cbhFoUxhe3Rhs6TGYvAWM3niiB2UtLNs+IxPvytYzSWk81X3RNZA==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-react/1.3.2-13/e63422360a091c79522ceb88adcf1ad7f1607548}
     peerDependencies:
       '@material-table/core': ^6.3.2
       '@mov-ai/mov-fe-lib-core': ^1.2.1-10
