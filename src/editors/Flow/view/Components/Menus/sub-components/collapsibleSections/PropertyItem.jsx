@@ -36,7 +36,7 @@ const PropertyItem = ({
    */
   const handleOnChange = useCallback(
     evt => {
-      const prop = evt.currentTarget.dataset.prop;
+      const prop = evt.explicitOriginalTarget.dataset.prop;
       onChangeProperties(prop, evt.target.value);
     },
     [onChangeProperties]
