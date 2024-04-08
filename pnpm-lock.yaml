@@ -56,8 +56,8 @@ devDependencies:
     specifier: ^0.17.4
     version: 0.17.4
   '@mov-ai/mov-fe-lib-code-editor':
-    specifier: ^1.1.2-10
-    version: 1.1.2-10(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mov-ai/mov-fe-lib-react@1.3.2-12)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^1.1.2-11
+    version: 1.1.2-11(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mov-ai/mov-fe-lib-react@1.3.2-12)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)
   '@mov-ai/mov-fe-lib-core':
     specifier: ^1.2.1-10
     version: 1.2.1-10
@@ -2473,8 +2473,8 @@ packages:
       - react-native
     dev: true
 
-  /@mov-ai/mov-fe-lib-code-editor@1.1.2-10(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mov-ai/mov-fe-lib-react@1.3.2-12)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-0VskoFNe1BNILWjY79VTE+lQOoH6c71a+wQDU4763SFB1USIhsqvdupUxvFmFhQYoc3xLMGnw/9GOGCivTEIRQ==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-code-editor/1.1.2-10/ad4fdbed3361cf4231991e6d51324f5c851305a6}
+  /@mov-ai/mov-fe-lib-code-editor@1.1.2-11(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mov-ai/mov-fe-lib-react@1.3.2-12)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-SJ8zE/wy/jg2fDt9UmvF2kUGmNGZoiPrZ0ypBmqSmah1RnQj4Pmz1U5+Gp8dswUhpj/mcj1H2CMl4fndmh2Blg==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-code-editor/1.1.2-11/4aba9bce424ec9dcbfeba39d649fbe10dc704176}
     peerDependencies:
       '@codingame/monaco-languageclient': ^0.17.3
       '@mov-ai/mov-fe-lib-core': ^1.2.1-10
@@ -2488,8 +2488,8 @@ packages:
       '@mov-ai/mov-fe-lib-core': 1.2.1-10
       '@mov-ai/mov-fe-lib-react': 1.3.2-12(@material-table/core@6.3.2)(@mov-ai/mov-fe-lib-core@1.2.1-10)(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/styles@5.15.12)(@mui/x-date-pickers@6.19.6)(@mui/x-tree-view@6.17.0)(csstype@3.1.3)(lodash@4.17.21)(react-dom@18.2.0)(react-mui-dropzone@4.0.7)(react@18.2.0)
       lodash: 4.17.21
-      monaco-editor: 0.47.0
-      monaco-editor-core: 0.47.0
+      monaco-editor: 0.36.1
+      monaco-editor-core: 0.36.1
       normalize-url: 8.0.1
       prop-types: 15.8.1
       react: 18.2.0
@@ -10079,12 +10079,12 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  /monaco-editor-core@0.47.0:
-    resolution: {integrity: sha512-xho7dsmSYOIek6bkMKQApWHVyoOBQ1eaBIE6CIlER40paTN0r0efrig6Q9QkCacfzIuNNxNjyb1uMVoMpi8gcA==}
+  /monaco-editor-core@0.36.1:
+    resolution: {integrity: sha512-r2XIW2N/uVDa0WhJSnK5hI3ghJADfbX7KqbVEvZGt6kNkKCC1+6evQdpY/6zCehZt8g1C/jTvFMLXvWrLXUxDA==}
     dev: true
 
-  /monaco-editor@0.47.0:
-    resolution: {integrity: sha512-VabVvHvQ9QmMwXu4du008ZDuyLnHs9j7ThVFsiJoXSOQk18+LF89N4ADzPbFenm0W4V2bGHnFBztIRQTgBfxzw==}
+  /monaco-editor@0.36.1:
+    resolution: {integrity: sha512-/CaclMHKQ3A6rnzBzOADfwdSJ25BFoFT0Emxsc4zYVyav5SkK9iA6lEtIeuN/oRYbwPgviJT+t3l+sjFa28jYg==}
     dev: true
 
   /monet@0.9.3:
