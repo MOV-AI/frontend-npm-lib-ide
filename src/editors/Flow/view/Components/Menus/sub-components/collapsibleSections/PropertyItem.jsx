@@ -36,8 +36,8 @@ const PropertyItem = ({
    */
   const handleOnChange = useCallback(
     evt => {
-      const prop = evt.explicitOriginalTarget.dataset.prop;
-      onChangeProperties(prop, evt.target.value);
+      const prop = evt.target.dataset.prop;
+      onChangeProperties(prop, evt.target.dataset.value);
     },
     [onChangeProperties]
   );
@@ -64,11 +64,11 @@ const PropertyItem = ({
         <InputLabel>{title}</InputLabel>
         <BaseSelect
           value={value ?? templateValue}
-          onChange={handleOnChange}
           disabled={!editable}
         >
           {options.map(option => (
             <MenuItem
+              onClick={handleOnChange}
               key={`properties-options-${convertToValidString(
                 option.text
               )}_${convertToValidString(option.value)}`}
