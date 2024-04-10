@@ -11,6 +11,7 @@
   "exports": {
     ".": {
       "import": "./esm/mov-ide.js",
+      "types": "./types/mov-ide.d.ts",
       "default": "./cjs/mov-ide.js"
     }
   },
@@ -69,7 +70,7 @@
   },
   "peerDependencies": {
     "@mov-ai/mov-fe-lib-code-editor": "^1.1.2-11",
-    "@mov-ai/mov-fe-lib-core": "^1.2.1-10",
+    "@mov-ai/mov-fe-lib-core": "^1.2.1-11",
     "@mov-ai/mov-fe-lib-react": "^1.3.2-15",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
@@ -78,7 +79,7 @@
   "devDependencies": {
     "@codingame/monaco-languageclient": "^0.17.4",
     "@mov-ai/mov-fe-lib-code-editor": "^1.1.2-11",
-    "@mov-ai/mov-fe-lib-core": "^1.2.1-10",
+    "@mov-ai/mov-fe-lib-core": "^1.2.1-11",
     "@mov-ai/mov-fe-lib-react": "^1.3.2-15",
     "@tty-pt/scripts": "^0.6.0-34",
     "@types/node": "^20.12.7",
