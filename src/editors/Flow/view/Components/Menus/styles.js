@@ -69,9 +69,9 @@ export const menuDetailsStyles = makeStyles(_theme => ({
 export const nodeMenuStyles = makeStyles(_theme => ({
   root: {
     width: "100%",
-    rowGap: "16px"
   },
   gridContainer: {
+    rowGap: "16px",
     padding: "10px 20px 20px"
   }
 }));
