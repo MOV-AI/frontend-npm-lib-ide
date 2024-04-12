@@ -1,6 +1,7 @@
 # v1.2.5
 
 - [FP-2879](https://movai.atlassian.net/browse/FP-2879): Closing last tab keeps bookmarks
+- [FP-2739](https://movai.atlassian.net/browse/FP-2739): Port properties of the node templates are turning to strings after editing them
 - [FP-2882](https://movai.atlassian.net/browse/FP-2882): Clicking in the bar under the documents loses context, not easy to get back
 
 # v1.2.4
