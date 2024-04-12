@@ -87,6 +87,7 @@ export const Node = (props, ref) => {
   //========================================================================================
 
   const updateDescription = useCallback(value => {
+    console.log("Updated description!!")
     if (instance.current) instance.current.setDescription(value);
   }, []);
 
