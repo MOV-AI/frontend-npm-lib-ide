@@ -50,9 +50,14 @@ export const systemMenuStyles = makeStyles(theme => ({
 export const systemMenuItemStyles = makeStyles(theme => ({
   listItem: {
     ...menuButtonStyles,
+    "& > button:hover": {
+      boxShadow: "none",
+    },
     "& > button": {
       display: "flex",
       textAlign: "left",
+      background: "transparent",
+      boxShadow: "none",
       color: theme.palette.text.primary,
       "& > span:first-child": {
         flexGrow: 1,
