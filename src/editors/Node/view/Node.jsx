@@ -87,7 +87,6 @@ export const Node = (props, ref) => {
   //========================================================================================
 
   const updateDescription = useCallback(value => {
-    console.log("Updated description!!")
     if (instance.current) instance.current.setDescription(value);
   }, []);
 
@@ -150,7 +149,16 @@ export const Node = (props, ref) => {
   );
 
   const updateIOPortInputs = useCallback(
-    (value, ioConfigName, direction, ioPortKey, paramName) => {
+    (target, ioConfigName, direction, ioPortKey, paramName) => {
+      // Can be either a checkbox event or a text/number change event
+      let value = target.type === "checkbox" ? target.checked : target.value;
+
+      // Make sure if the input is a number, we save a number to Redis
+      // TO improve: backend can do this type validation
+      if (target.type === "number") {
+        value = parseFloat(value);
+      }
+
       instance.current.setPortParameter(
         ioConfigName,
         direction,
