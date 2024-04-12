@@ -541,9 +541,10 @@ export const Flow = (props, ref) => {
   const renderRightMenu = useCallback(() => {
     const details = props.data?.details || {};
 
+    drawerSub.suffix = "right";
     drawerSub.add(MENUS.current.DETAIL.NAME, {
       icon: <InfoIcon></InfoIcon>,
-      title: t(MENUS.current.DETAIL.TITLE),
+      title: i18n.t(MENUS.current.DETAIL.TITLE),
       view: (
         <Menu
           id={id}
@@ -558,8 +559,8 @@ export const Flow = (props, ref) => {
 
     if (isEditableComponentRef.current)
       drawerSub.add(FLOW_EXPLORER_PROFILE.name, {
-        icon: <Add />,
-        title: t(FLOW_EXPLORER_PROFILE.title),
+        icon: <AddIcon />,
+        title: i18n.t(FLOW_EXPLORER_PROFILE.title),
         view: (new Explorer(FLOW_EXPLORER_PROFILE)).render({
           flowId: id,
           mainInterface: getMainInterface()
@@ -652,15 +653,31 @@ export const Flow = (props, ref) => {
   //========================================================================================
 
   /**
+   * Remove Link Bookmark and set selectedLink to null
+   */
+  const unselectLink = useCallback(() => {
+    drawerSub.active = selectedNodeRef.current
+      ? selectedNodeRef.current.data.id + "-" + MENUS.current.NODE.NAME
+      : MENUS.current.DETAIL.NAME;
+    if (selectedLinkRef.current)
+      drawerSub.remove(
+        selectedLinkRef.current.data.id + "-" + MENUS.current.LINK.NAME,
+        activeBookmark
+      );
+  }, [call, selectedLinkRef]);
+
+  /**
    * Remove Node Bookmark and set selectedNode to null
    */
   const unselectNode = useCallback(() => {
-    call(
-      PLUGINS.RIGHT_DRAWER.NAME,
-      PLUGINS.RIGHT_DRAWER.CALL.REMOVE_BOOKMARK,
-      MENUS.current.NODE.NAME,
-      MENUS.current.DETAIL.NAME
-    );
+    drawerSub.active = selectedLinkRef.current
+      ? selectedLinkRef.current.data.id + "-" + MENUS.current.LINK.NAME
+      : MENUS.current.DETAIL.NAME;
+    if (selectedNodeRef.current)
+      drawerSub.remove(
+        selectedNodeRef.current.data.id + "-" + MENUS.current.NODE.NAME,
+        activeBookmark
+      );
     selectedNodeRef.current = null;
   }, [call, selectedNodeRef]);
 
@@ -671,13 +688,8 @@ export const Flow = (props, ref) => {
   const onLinkSelected = useCallback(
     link => {
       activateEditor();
-      if (selectedLinkRef.current)
-        drawerSub.remove(
-          selectedLinkRef.current.data.id + "-" + MENUS.current.LINK.NAME,
-          activeBookmark
-        );
-      selectedLinkRef.current = link;
       getMainInterface().selectedLink = link;
+      unselectLink();
       if (link) {
         const currentMode = getMainInterface().mode.mode;
         // We only want 1 selection at the time.
@@ -696,13 +708,14 @@ export const Flow = (props, ref) => {
         }
 
         // Remove node menu
-        selectedNodeRef.current = null;
+        unselectNode();
 
         activeBookmark = MENUS.current.LINK.NAME;
         addLinkMenu(link, true);
       }
+      selectedLinkRef.current = link;
     },
-    [activateEditor, call, addLinkMenu]
+    [activateEditor, call, unselectNode, unselectLink, addLinkMenu]
   );
 
   /**
@@ -720,7 +733,7 @@ export const Flow = (props, ref) => {
             activeBookmark
           );
         if (!node) {
-          selectedNodeRef.current = null;
+          unselectNode();
         } else {
           // We only want 1 selection at the time.
           // So let's unselect links if any is selected
@@ -1241,7 +1254,7 @@ export const Flow = (props, ref) => {
       selectedNodes.forEach(node => {
         getMainInterface().deleteNode(node.data);
       });
-      selectedNodeRef.current = null;
+      unselectNode();
     };
     // Compose confirmation message
     const message = i18n.t("NodeDeleteConfirmation", {

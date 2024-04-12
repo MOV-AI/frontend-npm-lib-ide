@@ -10,7 +10,7 @@ import { activateKeyBind } from "../../../utils/Utils";
 import { withHostReactPlugin } from "../../../engine/ReactPlugin/HostReactPlugin";
 import { bookmarkStyles } from "./../../../decorators/styles";
 import { drawerPanelStyles } from "./styles";
-import { Sub } from "@tty-pt/sub";
+import { Sub } from "@mov-ai/mov-fe-lib-sub";
 
 class DrawerSub extends Sub {
   shared = true;
