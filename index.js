@@ -49,6 +49,7 @@ import LocalStorage from "./src/utils/LocalStorage";
 // Hooks
 import useDataTypes from "./src/editors/_shared/hooks/useDataTypes";
 import useDataSubscriber from "./src/plugins/DocManager/useDataSubscriber";
+export * from "./src/plugins/hosts/DrawerPanel/DrawerPanel";
 import PluginManagerIDE from "./src/engine/PluginManagerIDE/PluginManagerIDE";
 import { usePluginMethods } from "./src/engine/ReactPlugin/ViewReactPlugin";
 import { openTool } from "./src/utils/generalFunctions";

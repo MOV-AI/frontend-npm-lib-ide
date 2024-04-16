@@ -14,10 +14,10 @@ import {
 import { useTheme } from "@mov-ai/mov-fe-lib-react";
 import Model from "../model/Configuration";
 import { defaultFunction } from "../../../utils/Utils";
-import { PLUGINS } from "../../../utils/Constants";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
 import useDataSubscriber from "../../../plugins/DocManager/useDataSubscriber";
+import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import Menu from "./Menu";
 
 import { configurationStyles } from "./styles";
@@ -26,7 +26,6 @@ export const Configuration = (props, ref) => {
   const {
     id,
     name,
-    call,
     instance,
     activateEditor = () => defaultFunction("activateEditor"),
     saveDocument = () => defaultFunction("saveDocument"),
@@ -53,17 +52,15 @@ export const Configuration = (props, ref) => {
     const menuName = `${id}-detail-menu`;
     const menuTitle = i18n.t("ConfigurationDetailsMenuTitle");
     // add bookmark
-    call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.SET_BOOKMARK, {
-      [menuName]: {
-        icon: <InfoIcon></InfoIcon>,
-        name: menuName,
-        title: menuTitle,
-        view: (
-          <Menu id={id} name={name} details={details} model={instance}></Menu>
-        )
-      }
+    drawerSub.add(menuName, {
+      icon: <InfoIcon></InfoIcon>,
+      name: menuName,
+      title: menuTitle,
+      view: (
+        <Menu id={id} name={name} details={details} model={instance}></Menu>
+      ),
     });
-  }, [call, id, name, instance, props.data]);
+  }, [id, name, instance, props.data]);
 
   usePluginMethods(ref, {
     renderRightMenu
@@ -178,7 +175,6 @@ Configuration.scope = "Configuration";
 Configuration.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  call: PropTypes.func.isRequired,
   instance: PropTypes.object,
   data: PropTypes.object,
   editable: PropTypes.bool,

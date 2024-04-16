@@ -16,6 +16,7 @@ import {
 } from "../../../../utils/Constants";
 import { getIconByScope } from "../../../../utils/Utils";
 import PluginManagerIDE from "../../../../engine/PluginManagerIDE/PluginManagerIDE";
+import { drawerSub } from "../../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import Workspace from "../../../../utils/Workspace";
 import { getToolTabData } from "../../../../tools";
 import useTabStack from "./useTabStack";
@@ -23,7 +24,7 @@ import useTabStack from "./useTabStack";
 const useTabLayout = (props, dockRef) => {
   const { dependencies, emit, call, on, off } = props;
   const workspaceManager = useMemo(() => new Workspace(), []);
-  const activeTabId = useRef(null);
+  const activeTabId = useRef();
   const firstLoad = useRef(true);
   const preventReloadNewDoc = useRef(false);
   const tabsById = useRef(new Map());
@@ -56,6 +57,7 @@ const useTabLayout = (props, dockRef) => {
 
       // Set current active tab id after extra tabs update
       activeTabId.current = currentActiveTabId;
+      drawerSub.url = currentActiveTabId;
       emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: currentActiveTabId });
     },
     [emit, workspaceManager, addTabToStack, dockRef]
@@ -132,12 +134,14 @@ const useTabLayout = (props, dockRef) => {
         );
       }
       activeTabId.current = layoutActiveId;
+      drawerSub.url = layoutActiveId;
 
       if (!tabExists && layoutActiveId) {
         const newActiveTabId = getNextTabFromStack();
         if (maxboxChildren) maxboxChildren.activeId = newActiveTabId;
         else _layout.dockbox.children[0].activeId = newActiveTabId;
         activeTabId.current = newActiveTabId;
+        drawerSub.url = newActiveTabId;
       }
     },
     [getNextTabFromStack]
@@ -543,6 +547,7 @@ const useTabLayout = (props, dockRef) => {
 
       // Update new open tab id
       activeTabId.current = tabData.id;
+      drawerSub.url = tabData.id;
       // Set new layout
       setLayout(prevState => {
         const newState = { ...prevState };
@@ -714,6 +719,7 @@ const useTabLayout = (props, dockRef) => {
       _getTabData(newTabData).then(tabData => {
         // Update new open tab id
         activeTabId.current = tabData.id;
+        drawerSub.url = tabData.id;
         // Set new layout
         setLayout(prevState => {
           // look for tab in windowbox

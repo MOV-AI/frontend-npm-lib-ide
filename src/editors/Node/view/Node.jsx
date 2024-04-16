@@ -7,6 +7,7 @@ import Model from "../model/Node";
 import CallbackModel from "../../Callback/model/Callback";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
+import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import {
   DEFAULT_KEY_VALUE_DATA,
   TABLE_KEYS_NAMES,
@@ -203,25 +204,22 @@ export const Node = (props, ref) => {
    *                                                                                      */
   //========================================================================================
 
-  const renderRightMenu = useCallback(() => {
+  useEffect(() => {
     const details = props.data?.details ?? {};
     const menuName = `${id}-detail-menu`;
     const menuTitle = i18n.t("NodeDetailsMenuTitle");
     // add bookmark
-    call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.SET_BOOKMARK, {
-      [menuName]: {
-        icon: <InfoIcon></InfoIcon>,
-        name: menuName,
-        title: menuTitle,
-        view: (
-          <Menu id={id} name={name} details={details} model={instance}></Menu>
-        )
-      }
+    drawerSub.add(menuName, {
+      icon: <InfoIcon></InfoIcon>,
+      title: menuTitle,
+      view: (
+        <Menu id={id} name={name} details={details} model={instance}></Menu>
+      )
     });
-  }, [call, id, name, props.data, instance]);
+  }, [id, name, props.data, instance]);
 
   usePluginMethods(ref, {
-    renderRightMenu
+    renderRightMenu: () => {},
   });
 
   //========================================================================================
