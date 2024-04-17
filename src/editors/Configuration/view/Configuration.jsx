@@ -52,6 +52,7 @@ export const Configuration = (props, ref) => {
     const menuName = `${id}-detail-menu`;
     const menuTitle = i18n.t("ConfigurationDetailsMenuTitle");
     // add bookmark
+    drawerSub.suffix = "right";
     drawerSub.add(menuName, {
       icon: <InfoIcon></InfoIcon>,
       name: menuName,
