@@ -46,6 +46,7 @@ export const Callback = (props, ref) => {
     const menuName = `${id}-detail-menu`;
     const menuTitle = i18n.t("CallbackDetailsMenuTitle");
     // add bookmark
+    drawerSub.suffix = "right";
     drawerSub.add(menuName, {
       icon: <InfoIcon />,
       name: menuName,
