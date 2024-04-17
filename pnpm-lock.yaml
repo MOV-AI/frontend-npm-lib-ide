@@ -53,14 +53,14 @@ devDependencies:
     specifier: ^0.17.4
     version: 0.17.4
   '@mov-ai/mov-fe-lib-code-editor':
-    specifier: ^1.1.2-12
-    version: 1.1.2-12(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.1-12)(@mov-ai/mov-fe-lib-react@1.3.2-16)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^1.1.2-13
+    version: 1.1.2-13(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.1-12)(@mov-ai/mov-fe-lib-react@1.3.2-17)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0)
   '@mov-ai/mov-fe-lib-core':
     specifier: ^1.2.1-12
     version: 1.2.1-12
   '@mov-ai/mov-fe-lib-react':
-    specifier: ^1.3.2-16
-    version: 1.3.2-16(@material-table/core@6.3.2)(@mov-ai/mov-fe-lib-core@1.2.1-12)(@mov-ai/mov-fe-lib-sub@2.2.31-1)(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/styles@5.15.12)(@mui/x-date-pickers@6.19.6)(@mui/x-tree-view@6.17.0)(csstype@3.1.3)(lodash@4.17.21)(react-dom@18.2.0)(react-mui-dropzone@4.0.7)(react@18.2.0)
+    specifier: ^1.3.2-17
+    version: 1.3.2-17(@material-table/core@6.3.2)(@mov-ai/mov-fe-lib-core@1.2.1-12)(@mov-ai/mov-fe-lib-sub@2.2.31-1)(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/styles@5.15.12)(@mui/x-date-pickers@6.19.6)(@mui/x-tree-view@6.17.0)(csstype@3.1.3)(lodash@4.17.21)(react-dom@18.2.0)(react-mui-dropzone@4.0.7)(react@18.2.0)
   '@mov-ai/mov-fe-lib-scripts':
     specifier: ^0.6.0-39
     version: 0.6.0-39(@types/node@20.12.7)(@types/react-dom@18.2.18)(@types/react@18.2.75)(@types/testing-library__jest-dom@5.14.9)
@@ -2462,12 +2462,12 @@ packages:
       - react-native
     dev: true
 
-  /@mov-ai/mov-fe-lib-code-editor@1.1.2-12(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.1-12)(@mov-ai/mov-fe-lib-react@1.3.2-16)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-BsdcANSsEpZdkbRA7om1yeX6OvVkf+e2n3c52T9tVy0Aoo6g/zjpt+2ClmDBzK7DVA3aAK31SxyXBYvEZjDWQA==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-code-editor/1.1.2-12/8b58c5019a222157f90b09e5c3ebef4436c58d31}
+  /@mov-ai/mov-fe-lib-code-editor@1.1.2-13(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@1.2.1-12)(@mov-ai/mov-fe-lib-react@1.3.2-17)(lodash@4.17.21)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-sbWIsWM6ncydBL+d9VoomMpCTB7IWFFXyzu/J9gf6DfALnZTtBAM/a4qUun6VdVgifw5uBp2IFOomnGqHCWP0A==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-code-editor/1.1.2-13/a6383ac0b9fa358f05d78178782f51e7a2c41234}
     peerDependencies:
       '@codingame/monaco-languageclient': ^0.17.3
       '@mov-ai/mov-fe-lib-core': ^1.2.1-12
-      '@mov-ai/mov-fe-lib-react': ^1.3.2-16
+      '@mov-ai/mov-fe-lib-react': ^1.3.2-17
       lodash: ^4.17.21
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -2475,7 +2475,7 @@ packages:
       '@codingame/monaco-jsonrpc': 0.4.1
       '@codingame/monaco-languageclient': 0.17.4
       '@mov-ai/mov-fe-lib-core': 1.2.1-12
-      '@mov-ai/mov-fe-lib-react': 1.3.2-16(@material-table/core@6.3.2)(@mov-ai/mov-fe-lib-core@1.2.1-12)(@mov-ai/mov-fe-lib-sub@2.2.31-1)(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/styles@5.15.12)(@mui/x-date-pickers@6.19.6)(@mui/x-tree-view@6.17.0)(csstype@3.1.3)(lodash@4.17.21)(react-dom@18.2.0)(react-mui-dropzone@4.0.7)(react@18.2.0)
+      '@mov-ai/mov-fe-lib-react': 1.3.2-17(@material-table/core@6.3.2)(@mov-ai/mov-fe-lib-core@1.2.1-12)(@mov-ai/mov-fe-lib-sub@2.2.31-1)(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/styles@5.15.12)(@mui/x-date-pickers@6.19.6)(@mui/x-tree-view@6.17.0)(csstype@3.1.3)(lodash@4.17.21)(react-dom@18.2.0)(react-mui-dropzone@4.0.7)(react@18.2.0)
       lodash: 4.17.21
       monaco-editor: 0.36.1
       monaco-editor-core: 0.36.1
@@ -2504,8 +2504,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@mov-ai/mov-fe-lib-react@1.3.2-16(@material-table/core@6.3.2)(@mov-ai/mov-fe-lib-core@1.2.1-12)(@mov-ai/mov-fe-lib-sub@2.2.31-1)(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/styles@5.15.12)(@mui/x-date-pickers@6.19.6)(@mui/x-tree-view@6.17.0)(csstype@3.1.3)(lodash@4.17.21)(react-dom@18.2.0)(react-mui-dropzone@4.0.7)(react@18.2.0):
-    resolution: {integrity: sha512-Echmj9K1kuzuaMrUZSbA86vF34fkjhz1pt7XaADyShojo+uUSwVMfHGhRbt4xMeGbLOUdqyzZhybZJehKUd+Lg==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-react/1.3.2-16/07eb5c9ff417638333f171ff35cb41080be2b625}
+  /@mov-ai/mov-fe-lib-react@1.3.2-17(@material-table/core@6.3.2)(@mov-ai/mov-fe-lib-core@1.2.1-12)(@mov-ai/mov-fe-lib-sub@2.2.31-1)(@mui/icons-material@5.15.12)(@mui/material@5.15.12)(@mui/styles@5.15.12)(@mui/x-date-pickers@6.19.6)(@mui/x-tree-view@6.17.0)(csstype@3.1.3)(lodash@4.17.21)(react-dom@18.2.0)(react-mui-dropzone@4.0.7)(react@18.2.0):
+    resolution: {integrity: sha512-wVYZidSrCypsTVXs6SMxx6BFSFZYNQIY+Eh2CRZInZeRMLjGSn/sMTZd/ugdfNdInsCL3KXt+7tGiSoebEdhtg==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-react/1.3.2-17/f947cd1a5810a304e201acc551f180e2ddc7bcb7}
     peerDependencies:
       '@material-table/core': ^6.3.2
       '@mov-ai/mov-fe-lib-core': ^1.2.1-12

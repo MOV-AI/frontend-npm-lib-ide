@@ -358,7 +358,9 @@ const useTabLayout = (props, dockRef) => {
         const dock = getDockFromTabId(tabId);
         removeTabFromStack(tabId, dock);
         applyLayout(newLayout);
-        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: getNextTabFromStack() });
+        const newId = getNextTabFromStack();
+        drawerSub.url = newId;
+        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newId });
       }
     },
     [

@@ -864,7 +864,10 @@ export const Flow = (props, ref) => {
         setWarnings(persistentWarns);
       });
 
-      mainInterface.onLoad = () => setLoading(false);
+      mainInterface.onLoad = () => {
+        setLoading(false);
+        renderRightMenu();
+      }
 
       // subscribe to on enter default mode
       // When enter default mode remove other node/sub-flow bookmarks
@@ -1145,6 +1148,7 @@ export const Flow = (props, ref) => {
       getContextOptions,
       handleCopyNode,
       handleDeleteNode,
+      renderRightMenu,
       startNode,
       stopNode,
       handleDeleteLink,
