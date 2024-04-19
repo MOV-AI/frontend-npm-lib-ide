@@ -24,7 +24,6 @@ import useTabStack from "./useTabStack";
 const useTabLayout = (props, dockRef) => {
   const { dependencies, emit, call, on, off } = props;
   const workspaceManager = useMemo(() => new Workspace(), []);
-  const activeTabId = useRef();
   const firstLoad = useRef(true);
   const preventReloadNewDoc = useRef(false);
   const tabsById = useRef(new Map());
@@ -41,7 +40,7 @@ const useTabLayout = (props, dockRef) => {
   const openNonEditorTabs = useCallback(
     lastTabs => {
       // Save current active tab id
-      const currentActiveTabId = activeTabId.current;
+      const currentActiveTabId = drawerSub.url;
 
       // Load tools tab data
       lastTabs.forEach(tab => {
@@ -56,7 +55,6 @@ const useTabLayout = (props, dockRef) => {
       });
 
       // Set current active tab id after extra tabs update
-      activeTabId.current = currentActiveTabId;
       drawerSub.url = currentActiveTabId;
       emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: currentActiveTabId });
     },
@@ -133,16 +131,14 @@ const useTabLayout = (props, dockRef) => {
           t => t.id === layoutActiveId
         );
       }
-      activeTabId.current = layoutActiveId;
-      drawerSub.url = layoutActiveId;
 
       if (!tabExists && layoutActiveId) {
         const newActiveTabId = getNextTabFromStack();
         if (maxboxChildren) maxboxChildren.activeId = newActiveTabId;
         else _layout.dockbox.children[0].activeId = newActiveTabId;
-        activeTabId.current = newActiveTabId;
         drawerSub.url = newActiveTabId;
-      }
+      } else
+        drawerSub.url = layoutActiveId;
     },
     [getNextTabFromStack]
   );
@@ -337,7 +333,7 @@ const useTabLayout = (props, dockRef) => {
    */
   const _onLayoutRemoveTab = useCallback(
     (newLayout, tabId, forceClose) => {
-      const { name, scope, isNew, isDirty } = tabsById.current.get(tabId);
+      const { name, scope, isNew, isDirty } = tabsById.current.get(tabId) ?? {};
 
       if (isDirty && !forceClose) {
         const document = { id: tabId, name, scope, isNew };
@@ -548,7 +544,6 @@ const useTabLayout = (props, dockRef) => {
       }
 
       // Update new open tab id
-      activeTabId.current = tabData.id;
       drawerSub.url = tabData.id;
       // Set new layout
       setLayout(prevState => {
@@ -697,7 +692,7 @@ const useTabLayout = (props, dockRef) => {
       // Emit new active tab id
       if (!tabId) return;
 
-      activeTabId.current = newActiveTabId;
+      drawerSub.url = newActiveTabId;
       emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
     },
     [
@@ -720,7 +715,6 @@ const useTabLayout = (props, dockRef) => {
     (prevTabId, newTabData) => {
       _getTabData(newTabData).then(tabData => {
         // Update new open tab id
-        activeTabId.current = tabData.id;
         drawerSub.url = tabData.id;
         // Set new layout
         setLayout(prevState => {
@@ -742,14 +736,14 @@ const useTabLayout = (props, dockRef) => {
    * @returns {string} active tab id
    */
   const getActiveTab = useCallback(() => {
-    return tabsById.current.get(activeTabId.current);
+    return tabsById.current.get(drawerSub.url);
   }, []);
 
   /**
    * Focus on active tab
    */
   const focusActiveTab = useCallback(() => {
-    focusExistingTab(activeTabId.current);
+    focusExistingTab(drawerSub.url);
   }, [focusExistingTab]);
 
   //========================================================================================
