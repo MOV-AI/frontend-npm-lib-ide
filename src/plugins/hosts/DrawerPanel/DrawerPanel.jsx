@@ -24,6 +24,10 @@ class DrawerSub extends Sub {
     return suffix === "left" || suffix === "right";
   }
 
+  get plugin(){
+    return this.get("$url.plugin");
+  }
+
   set plugin(value) {
     this.update(value, "$url.plugin");
   }
@@ -59,7 +63,7 @@ class DrawerSub extends Sub {
     name = name.replace(".", "/");
     this.open = this.open || open;
     if (this.open) {
-      this.plugin = false;
+      this.plugin = false;  
       this.active = name;
     }
     return this.update({
