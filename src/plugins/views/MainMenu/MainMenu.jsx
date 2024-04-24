@@ -43,7 +43,16 @@ const MainMenu = props => {
       icon: getIconFn(DescriptionIcon),
       title: "Explorer",
       isActive: true,
-      getOnClick: () => { drawerSub.suffix = "left"; drawerSub.plugin = true; drawerSub.open = true; },
+      getOnClick: () => { 
+        drawerSub.suffix = "left"; 
+        if (drawerSub.plugin) {
+          drawerSub.open = !drawerSub.open;
+        } else {
+          drawerSub.plugin = true; 
+          drawerSub.open = true; 
+        }
+       
+      },
     },
     ...getMainMenuTools().map(tool => {
       return {
