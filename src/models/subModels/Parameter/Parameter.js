@@ -49,10 +49,7 @@ class Parameter extends Model {
    * @returns {string}
    */
   getType() {
-    // If we later want to go back to saving the type
-    // Ticket where this changed: https://movai.atlassian.net/browse/FP-2438
-    // return this.type;
-    return undefined;
+    return this.type;
   }
 
   /**
