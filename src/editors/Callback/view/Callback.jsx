@@ -26,11 +26,13 @@ export const Callback = (props, ref) => {
     call,
     scope,
     instance,
-    data,
+    data = {},
     saveDocument,
     editable = true,
     useLanguageServer=false
   } = props;
+
+  const { pyLibs = {} } = data;
 
   // Style Hooks
   const classes = useStyles();
@@ -43,16 +45,17 @@ export const Callback = (props, ref) => {
   //========================================================================================
 
   const renderRightMenu = useCallback(() => {
-    const menuName = `${id}-detail-menu`;
+    const menuName = `detail-menu`;
     const menuTitle = i18n.t("CallbackDetailsMenuTitle");
     // add bookmark
-    drawerSub.suffix = "right";
     drawerSub.add(menuName, {
       icon: <InfoIcon />,
       name: menuName,
+      url: "global/Callback/" + name,
+      suffix: "right",
       title: menuTitle,
       view: <Menu id={id} call={call} name={name} scope={scope} />
-    });
+    }, [name]);
   }, [call, id, name, scope]);
 
   usePluginMethods(ref, {
@@ -90,7 +93,7 @@ export const Callback = (props, ref) => {
         onSave={saveDocument}
         onLoad={onEditorLoad}
         useLanguageServer={useLanguageServer}
-        builtins={Object.values(data.pyLibs).map(libs => libs.name)}
+        builtins={Object.values(pyLibs).map(libs => libs.name)}
       />
     </div>
   );

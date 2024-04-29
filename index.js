@@ -7,7 +7,6 @@ import { Store, DBSubscriber } from "./src/store";
 import { Model, Manager } from "./src/models";
 import {
   withAlerts,
-  withKeyBinds,
   withMenuHandler
 } from "./src/decorators";
 import { withEditorPlugin, withViewPlugin, withToolPlugin } from "./src/engine";
@@ -59,7 +58,7 @@ export { BaseApp, installEditor, installTool };
 export { PluginManagerIDE };
 export { Store, DBSubscriber };
 export { Model, Manager };
-export { withAlerts, withKeyBinds, withMenuHandler };
+export { withAlerts, withMenuHandler };
 export { withEditorPlugin, withViewPlugin, withToolPlugin };
 export { CallbackModel, CallbackStore, CallbackEditor, Callback };
 export {

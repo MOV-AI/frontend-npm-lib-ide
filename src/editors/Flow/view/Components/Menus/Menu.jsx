@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
@@ -38,9 +38,10 @@ const ACTIVE_ITEM = {
   parameters: 2
 };
 
-const Menu = ({ name, model, details: detailsProp, editable, call }) => {
+const Menu = ({ name, model: instance, details: detailsProp, editable, call }) => {
   // State hook
   const [activeItem, setActiveItem] = useState(0);
+  const model = useRef(instance.current);
   const { data } = useDataSubscriber({
     instance: model,
     propsData: detailsProp,
@@ -137,7 +138,7 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
         );
       }
     },
-    [model]
+    [model, data]
   );
 
   /**
@@ -197,11 +198,13 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
       title: i18n.t("EditDescription"),
       inputLabel: i18n.t("Description"),
       value: model.current.getDescription(),
-      onSubmit: description => model.current.setDescription(description)
+      onSubmit: description => {
+        model.current.setDescription(description);
+      }
     };
 
     call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.FORM_DIALOG, args);
-  }, [model, call]);
+  }, [call, model]);
 
   /**
    * Handle Add new Parameter

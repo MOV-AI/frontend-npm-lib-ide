@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import { BaseDrawer, Typography, Tooltip, IconButton } from "@mov-ai/mov-fe-lib-react";
 import { DRAWER, PLUGINS } from "../../../utils/Constants";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
-import { activateKeyBind } from "../../../utils/Utils";
 import { withHostReactPlugin } from "../../../engine/ReactPlugin/HostReactPlugin";
 import { bookmarkStyles } from "./../../../decorators/styles";
 import { drawerPanelStyles } from "./styles";
@@ -44,7 +43,7 @@ class DrawerSub extends Sub {
     }
     this.update({
       ...this._value,
-      [this.index]: { ...this._value[this.index] ?? {}, open: value },
+      [this.index]: { ...this._value[this.index] ?? {}, open: this.shared ? value : undefined },
       [this._suffix]: value,
       url: this._url,
     }, "$url.open", true);
@@ -54,28 +53,67 @@ class DrawerSub extends Sub {
     return this.shared ? this._value[this._suffix] : this._value[this.index]?.open;
   }
 
-  add(name = "", value, open = false, props = {}) {
-    const bookmarks = this.get("$url.bookmarks");
-    if (bookmarks?.[name] && !(Object.entries(props)).filter(
+  add(name = "", value, props = {}) {
+    const url = value.url ?? this.url;
+    const suffix = value.suffix ?? this.suffix;
+    const path = url + "/" + suffix + ".bookmarks";
+    const bookmarks = this.get(path);
+
+    if (!value.force && bookmarks?.[name] && !(Object.entries(props)).filter(
       ([key, value]) => value !== bookmarks[name].props[key]
     ).length)
-      return this.update(bookmarks, "$url.bookmarks");
+      return this.update(bookmarks, path);
+
     name = name.replace(".", "/");
-    this.open = this.open || open;
-    if (this.open) {
+
+    const lastSuffix = this._suffix;
+    this._url = url;
+    this._suffix = suffix;
+    if (value.select) {
       this.plugin = false;  
       this.active = name;
     }
+    this._url = this.url;
+    this._suffix = lastSuffix;
+
     return this.update({
       ...(bookmarks ?? {}),
       [name]: { ...value, props },
-    }, "$url.bookmarks");
+    }, path);
   }
 
-  remove(name) {
-    let bookmarks = { ...this.get("$url.bookmarks") };
+  get keybinds() {
+    return {
+      ...this.get("$url.keybinds"),
+      ...this.get("keybinds"),
+    };
+  }
+
+  addKeyBind(keys, callback, scope, options = {}) {
+    const url = options.url ?? this._url;
+    const path = options.global ? "keybinds" : url + ".keybinds";
+    let keybinds = { ...this.get(path) };
+    for (const name of Array.isArray(keys) ? keys : [keys])
+      keybinds[name] = { callback, scope };
+    return this.update(keybinds, path);
+  }
+
+  removeKeyBind(keys, options = {}) {
+    const url = options.url ?? this._url;
+    const path = options.global ? "keybinds" : url + ".keybinds";
+    let keybinds = { ...this.get(path) };
+    for (const name of Array.isArray(keys) ? keys : [keys])
+      delete keybinds[name];
+    return this.update(keybinds, path);
+  }
+
+  remove(name, options = {}) {
+    const url = options.url ?? this.url;
+    const suffix = options.suffix ?? this.suffix;
+    const path = url + "/" + suffix + ".bookmarks";
+    let bookmarks = { ...this.get(path) };
     delete bookmarks[name];
-    return this.update(bookmarks, "$url.bookmarks");
+    return this.update(bookmarks, path);
   }
 }
 
@@ -91,6 +129,30 @@ window.drawer = drawerSub;
 drawerSub._suffix = "left";
 drawerSub.open = true;
 drawerSub._suffix = "right";
+
+globalThis.addEventListener("keydown", (evt) => {
+  const kbs = drawerSub.keybinds;
+
+  if (evt.key === "Control" || evt.key === "Alt")
+    return;
+
+  let toCall = [];
+
+  for (const key of Object.keys(kbs)) {
+    const splits = key.split("+").reduce((a, i) => ({
+      ...a,
+      [i]: true,
+    }), {});
+
+    if (!splits[evt.key]
+      || (splits.Control && !evt.ctrlKey)
+      || (splits.Alt && !evt.altKey)
+    ) continue;
+
+    toCall.push([key, kbs[key]]);
+    kbs[key].callback(evt);
+  }
+});
 
 function BookmarkTab(props) {
   const { active, name, bookmark, anchor, classes } = props;
@@ -122,7 +184,6 @@ function DrawerPanel(props) {
   const {
     anchor,
     emit,
-    call,
     viewPlugins,
     hostName,
     style,
@@ -139,23 +200,14 @@ function DrawerPanel(props) {
   } = side;
   const active = side.active ?? Object.keys(bookmarks)[0];
   const renderedView = bookmarks[active]?.view ?? <></>;
-  const realOpen = open && (plugin || bookmarks?.[active]);
+  const realOpen = (open || open === undefined) && (plugin || bookmarks?.[active]);
   drawerSub.echo("DrawerPanel", cur, sharedOpen, realOpen);
   const oppositeSide = anchor === "left" ? "right" : "left";
   const classes = bookmarkStyles(anchor, oppositeSide)();
   const drawerClasses = drawerPanelStyles(anchor === "left", realOpen)();
 
-  const activateActiveTabEditor = async () => {
-    const tab = await call(
-      PLUGINS.TABS.NAME,
-      PLUGINS.TABS.CALL.GET_ACTIVE_TAB
-    );
-    activateKeyBind(tab.id);
-  };
-
   const selectBookmarkCallback = useCallback(
     name => {
-      activateActiveTabEditor();
       selectBookmark(anchor, name);
     },
     [anchor, active, emit]

@@ -60,15 +60,14 @@ export const Flow = (props, ref) => {
     instance,
     data,
     alert,
-    addKeyBind,
-    removeKeyBind,
-    activateEditor,
-    activateKeyBind,
     confirmationAlert,
     contextOptions,
     on,
     off
   } = props;
+  const kbOptions = useMemo(() => ({
+    url: "global/Flow/" + name,
+  }), [name]);
   // Global consts
   const MENUS = useRef(
     Object.freeze({
@@ -474,6 +473,9 @@ export const Flow = (props, ref) => {
         icon: <i className="icon-Nodes" />,
         name: MENUS.current.NODE.NAME,
         title: i18n.t(MENUS.current.NODE.TITLE),
+        url: "global/Flow/" + name,
+        suffix: "right",
+        select: true,
         view: (
           <MenuComponent
             id={id}
@@ -486,7 +488,7 @@ export const Flow = (props, ref) => {
         )
       };
     },
-    [call, id, instance, openDoc, getMenuComponent]
+    [call, name, id, instance, openDoc, getMenuComponent]
   );
 
   /**
@@ -496,7 +498,7 @@ export const Flow = (props, ref) => {
     (node, nodeSelection) => {
       const MenuComponent = getMenuComponent(node?.data?.model);
       if (!node || !MenuComponent) return;
-      drawerSub.add(node.data.id + "-" + MENUS.current.NODE.NAME, getNodeMenuToAdd(node), true);
+      drawerSub.add(node.data.id + "-" + MENUS.current.NODE.NAME, getNodeMenuToAdd(node));
     },
     [call, getMenuComponent, getNodeMenuToAdd]
   );
@@ -512,6 +514,8 @@ export const Flow = (props, ref) => {
         icon: <CompareArrowsIcon />,
         name: MENUS.current.LINK.NAME,
         title: i18n.t(MENUS.current.LINK.TITLE),
+        select: true,
+        suffix: "right",
         view: (
           <LinkMenu
             id={id}
@@ -533,7 +537,7 @@ export const Flow = (props, ref) => {
   const addLinkMenu = useCallback(
     (link, _linkSelection) => {
       if (!link) return;
-      drawerSub.add(link.data.id + "-" + MENUS.current.LINK.NAME, getLinkMenuToAdd(link), true);
+      drawerSub.add(link.data.id + "-" + MENUS.current.LINK.NAME, getLinkMenuToAdd(link));
     },
     [getLinkMenuToAdd]
   );
@@ -541,10 +545,13 @@ export const Flow = (props, ref) => {
   const renderRightMenu = useCallback(() => {
     const details = props.data?.details || {};
 
-    drawerSub.suffix = "right";
     drawerSub.add(MENUS.current.DETAIL.NAME, {
       icon: <InfoIcon></InfoIcon>,
       title: i18n.t(MENUS.current.DETAIL.TITLE),
+      url: "global/Flow/" + name,
+      suffix: "right",
+      select: true,
+      force: true,
       view: (
         <Menu
           id={id}
@@ -555,29 +562,31 @@ export const Flow = (props, ref) => {
           editable={true}
         ></Menu>
       )
-    }, true);
+    });
 
     if (isEditableComponentRef.current)
       drawerSub.add(FLOW_EXPLORER_PROFILE.name, {
         icon: <AddIcon />,
         title: i18n.t(FLOW_EXPLORER_PROFILE.title),
+        url: "global/Flow/" + name,
+        suffix: "right",
         view: (new Explorer(FLOW_EXPLORER_PROFILE)).render({
           flowId: id,
           mainInterface: getMainInterface()
         })
-      }, false, []);
+      }, []);
 
     // Add node menu if any is selected
     if (selectedNodeRef.current)
       drawerSub.add(selectedNodeRef.current.data.id + "-" + MENUS.current.NODE.NAME, getNodeMenuToAdd(
         selectedNodeRef.current
-      ), true);
+      ));
 
     // Add link menu if any is selected
     if (selectedLinkRef.current)
       drawerSub.add(selectedLinkRef.current.data.id + "-" + MENUS.current.LINK.NAME, getLinkMenuToAdd(
         selectedLinkRef.current
-      ), true);
+      ));
   }, [
     id,
     name,
@@ -607,7 +616,7 @@ export const Flow = (props, ref) => {
   }, []);
 
   function hasNodesToStart() {
-    for (const entry of instance.current.links.data)
+    for (const entry of instance.current?.links?.data ?? [])
       if (entry[1].from === "start/start/start") return true;
 
     return false;
@@ -687,7 +696,6 @@ export const Flow = (props, ref) => {
    */
   const onLinkSelected = useCallback(
     link => {
-      activateEditor();
       getMainInterface().selectedLink = link;
       unselectLink();
       if (link) {
@@ -715,7 +723,7 @@ export const Flow = (props, ref) => {
       }
       selectedLinkRef.current = link;
     },
-    [activateEditor, call, unselectNode, unselectLink, addLinkMenu]
+    [call, unselectNode, unselectLink, addLinkMenu]
   );
 
   /**
@@ -761,7 +769,6 @@ export const Flow = (props, ref) => {
    * Call broadcast method to emit event to all open flows
    */
   setFlowsToDefault = useCallback(() => {
-    activateEditor();
     // Remove selected node and link bookmark
     onNodeSelected(null);
     onLinkSelected(null);
@@ -773,7 +780,7 @@ export const Flow = (props, ref) => {
       PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR,
       { action: "setMode", value: EVT_NAMES.DEFAULT }
     );
-  }, [call, activateEditor, onLinkSelected, onNodeSelected]);
+  }, [call, onLinkSelected, onNodeSelected]);
 
   const getContextOptions = useCallback(
     (mode, data, args) => {
@@ -866,7 +873,6 @@ export const Flow = (props, ref) => {
 
       mainInterface.onLoad = () => {
         setLoading(false);
-        renderRightMenu();
       }
 
       // subscribe to on enter default mode
@@ -1173,9 +1179,8 @@ export const Flow = (props, ref) => {
     e => {
       workspaceManager.setFlowIsDebugging(e.target.checked);
       setFlowDebugging(e.target.checked);
-      activateKeyBind();
     },
-    [activateKeyBind, workspaceManager]
+    [workspaceManager]
   );
 
   /**
@@ -1320,8 +1325,7 @@ export const Flow = (props, ref) => {
 
   const handleSearchDisabled = useCallback(() => {
     setSearchVisible(false);
-    activateKeyBind();
-  }, [activateKeyBind]);
+  }, [setSearchVisible]);
 
   //========================================================================================
   /*                                                                                      *
@@ -1405,57 +1409,106 @@ export const Flow = (props, ref) => {
   }, [name, scope, viewMode, on, off, call]);
 
   useEffect(() => {
-    addKeyBind(
+    drawerSub.addKeyBind(
       KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SHORTCUTS,
       evt => {
         evt.preventDefault();
       },
-      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SCOPE
+      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SCOPE,
+      kbOptions,
     );
-    addKeyBind(
+    drawerSub.addKeyBind(
       KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SHORTCUTS,
       evt => {
         evt.preventDefault();
         handleSearchDisabled();
       },
-      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SCOPE
+      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SCOPE,
+      kbOptions,
     );
-    addKeyBind(KEYBINDINGS.FLOW.KEYBINDS.COPY_NODE.SHORTCUTS, handleCopyNode);
-    addKeyBind(
+    drawerSub.addKeyBind(
+      KEYBINDINGS.FLOW.KEYBINDS.COPY_NODE.SHORTCUTS,
+      handleCopyNode,
+      undefined,
+      kbOptions,
+    );
+    drawerSub.addKeyBind(
       KEYBINDINGS.FLOW.KEYBINDS.PASTE_NODE.SHORTCUTS,
-      handlePasteNodes
+      handlePasteNodes,
+      undefined,
+      kbOptions,
     );
-    addKeyBind(KEYBINDINGS.FLOW.KEYBINDS.MOVE_NODE.SHORTCUTS, handleMoveNode);
-    addKeyBind(
+    drawerSub.addKeyBind(
+      KEYBINDINGS.FLOW.KEYBINDS.MOVE_NODE.SHORTCUTS,
+      handleMoveNode,
+      undefined,
+      kbOptions,
+    );
+    drawerSub.addKeyBind(
       KEYBINDINGS.FLOW.KEYBINDS.SEARCH_NODE.SHORTCUTS,
-      handleSearchEnable
+      handleSearchEnable,
+      undefined,
+      kbOptions,
     );
-    addKeyBind(KEYBINDINGS.FLOW.KEYBINDS.RESET_ZOOM.SHORTCUTS, handleResetZoom);
-    addKeyBind(
+    drawerSub.addKeyBind(
+      KEYBINDINGS.FLOW.KEYBINDS.RESET_ZOOM.SHORTCUTS,
+      handleResetZoom,
+      undefined,
+      kbOptions,
+    );
+    drawerSub.addKeyBind(
       KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.CANCEL.SHORTCUTS,
-      setFlowsToDefault
+      setFlowsToDefault,
+      undefined,
+      kbOptions,
     );
-    addKeyBind(
+    drawerSub.addKeyBind(
       KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.DELETE.SHORTCUTS,
-      handleShortcutDelete
+      handleShortcutDelete,
+      undefined,
+      kbOptions,
     );
     // remove keyBind on unmount
     return () => {
-      removeKeyBind(
-        KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SHORTCUTS
+      drawerSub.removeKeyBind(
+        KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SHORTCUTS,
+        kbOptions,
       );
-      removeKeyBind(KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SHORTCUTS);
-      removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.COPY_NODE.SHORTCUTS);
-      removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.PASTE_NODE.SHORTCUTS);
-      removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.MOVE_NODE.SHORTCUTS);
-      removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.SEARCH_NODE.SHORTCUTS);
-      removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.RESET_ZOOM.SHORTCUTS);
-      removeKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.CANCEL.SHORTCUTS);
-      removeKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.DELETE.SHORTCUTS);
+      drawerSub.removeKeyBind(
+        KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SHORTCUTS,
+        kbOptions,
+      );
+      drawerSub.removeKeyBind(
+        KEYBINDINGS.FLOW.KEYBINDS.COPY_NODE.SHORTCUTS,
+        kbOptions,
+      );
+      drawerSub.removeKeyBind(
+        KEYBINDINGS.FLOW.KEYBINDS.PASTE_NODE.SHORTCUTS,
+        kbOptions,
+      );
+      drawerSub.removeKeyBind(
+        KEYBINDINGS.FLOW.KEYBINDS.MOVE_NODE.SHORTCUTS,
+        kbOptions,
+      );
+      drawerSub.removeKeyBind(
+        KEYBINDINGS.FLOW.KEYBINDS.SEARCH_NODE.SHORTCUTS,
+        kbOptions,
+      );
+      drawerSub.removeKeyBind(
+        KEYBINDINGS.FLOW.KEYBINDS.RESET_ZOOM.SHORTCUTS,
+        kbOptions,
+      );
+      drawerSub.removeKeyBind(
+        KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.CANCEL.SHORTCUTS,
+        kbOptions,
+      );
+      drawerSub.removeKeyBind(
+        KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.DELETE.SHORTCUTS,
+        kbOptions,
+      );
     };
   }, [
-    addKeyBind,
-    removeKeyBind,
+    kbOptions,
     setFlowsToDefault,
     handleCopyNode,
     handlePasteNodes,
@@ -1466,15 +1519,6 @@ export const Flow = (props, ref) => {
     handleShortcutDelete,
     handleSearchDisabled
   ]);
-
-  useEffect(() => {
-    if (searchVisible) {
-      return activateKeyBind(
-        KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SCOPE
-      );
-    }
-    activateKeyBind();
-  }, [searchVisible, activateKeyBind]);
 
   //========================================================================================
   /*                                                                                      *
@@ -1548,8 +1592,6 @@ Flow.propTypes = {
   instance: PropTypes.object,
   editable: PropTypes.bool,
   alert: PropTypes.func,
-  addKeyBind: PropTypes.func,
-  removeKeyBind: PropTypes.func,
   confirmationAlert: PropTypes.func,
   saveDocument: PropTypes.func
 };

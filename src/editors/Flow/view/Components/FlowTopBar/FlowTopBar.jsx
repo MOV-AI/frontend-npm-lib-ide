@@ -126,8 +126,7 @@ const FlowTopBar = props => {
       PLUGINS.DOC_MANAGER.CALL.GET_STORE,
       scope
     ).then(store => {
-      helperRef.current = store.helper;
-      return store.helper;
+      return helperRef.current = store?.helper;
     });
   }, [call, scope]);
 
@@ -167,6 +166,8 @@ const FlowTopBar = props => {
       if (currentRobot) initSelectedRobot(currentRobot);
       // Call callback to get default robot
       const helper = helperRef.current;
+      if (!helper)
+        return;
       helper
         .getDefaultRobot()
         .then(robotId => {

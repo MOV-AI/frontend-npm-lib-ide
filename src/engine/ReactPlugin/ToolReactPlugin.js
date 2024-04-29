@@ -3,7 +3,6 @@ import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 import { drawerSub } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
 import withAlerts from "../../decorators/withAlerts";
-import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
 import { PLUGINS } from "../../utils/Constants";
 import { composeDecorators } from "../../utils/Utils";
@@ -53,7 +52,6 @@ export function withToolPlugin(ReactComponent, methods = []) {
   const DecoratedToolComponent = composeDecorators(ToolComponent, [
     withTheme,
     withAlerts,
-    withKeyBinds,
     withMenuHandler
   ]);
 

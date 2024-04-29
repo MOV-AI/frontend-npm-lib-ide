@@ -373,7 +373,7 @@ const ParameterEditorDialog = props => {
    */
   const renderValueEditor = useCallback(
     (defaultValue, options) => {
-      const editComponent = getEditComponent(data.type);
+      const editComponent = getEditComponent(data.type ?? "any");
       if (!editComponent) return <></>;
       return (
         <>
