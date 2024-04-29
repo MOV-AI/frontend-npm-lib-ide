@@ -68,7 +68,7 @@ const BookmarkManager = props => {
       title: `Random ${id} Bookmark`,
       view: <h2>{id}</h2>
     };
-    drawerSub.add(id, bookmark, true);
+    drawerSub.add(id, bookmark);
   };
 
   //========================================================================================

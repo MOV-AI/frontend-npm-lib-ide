@@ -1,7 +1,5 @@
-import React, { forwardRef, useCallback, useEffect, useRef } from "react";
-import { Utils } from "@mov-ai/mov-fe-lib-core";
+import React, { forwardRef, useEffect, useRef } from "react";
 import withAlerts from "../../decorators/withAlerts";
-import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
 import withLoader from "../../decorators/withLoader";
 import { withDataHandler } from "../../plugins/DocManager/DataHandler";
@@ -30,61 +28,22 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       off,
       call,
       scope,
-      addKeyBind,
-      removeKeyBind,
       save,
       updateRightMenu,
-      activateKeyBind,
-      deactivateKeyBind
     } = props;
 
     const editorContainer = useRef();
 
     /**
-     * Activate editor : activate editor's keybinds and update right menu
-     */
-    const activateEditor = useCallback(() => {
-      activateKeyBind();
-    }, [activateKeyBind]);
-
-    /**
-     * Activate editor : activate editor's keybinds and update right menu
-     */
-    const deactivateEditor = useCallback(() => {
-      deactivateKeyBind();
-    }, [deactivateKeyBind]);
-
-    /**
-     * Triggers activateEditor if is this editor
-     */
-    const activateThisEditor = useCallback(
-      (data = {}) => {
-        const { instance } = data;
-
-        if (data.id === id || instance?.id === Utils.getNameFromURL(id))
-          activateEditor();
-      },
-      [id, activateEditor]
-    );
-
-    /**
-     * Triggers activateEditor if is this editor
-     */
-    const deactivateThisEditor = useCallback(
-      (data = {}) => {
-        const { instance } = data;
-
-        if (data.id !== id || instance?.id !== Utils.getNameFromURL(id))
-          deactivateEditor();
-      },
-      [id, deactivateEditor]
-    );
-
-    /**
      * Component did mount
      */
     useEffect(() => {
-      addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
+      drawerSub.addKeyBind(
+        KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS,
+        save,
+        undefined,
+        { global: true }
+      );
 
       on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async data => {
         const validTab = await call(
@@ -96,47 +55,34 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         if (validTab && data.id === id) {
           drawerSub.url = id;
           updateRightMenu();
-          activateEditor();
         }
       });
 
-      on(
-        PLUGINS.DOC_MANAGER.NAME,
-        PLUGINS.DOC_MANAGER.ON.UPDATE_DOC_DIRTY,
-        activateThisEditor
-      );
-
       // Remove key bind on component unmount
       return () => {
-        removeKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS);
+        drawerSub.removeKeyBind(
+          KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS,
+          { global: true },
+        );
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
-        off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.UPDATE_DOC_DIRTY);
       };
     }, [
       id,
-      addKeyBind,
-      removeKeyBind,
       on,
       off,
       save,
       call,
       updateRightMenu,
-      activateThisEditor,
-      activateEditor
     ]);
 
     return (
       <div
         tabIndex="-1"
         ref={editorContainer}
-        onFocus={activateThisEditor}
-        onBlur={deactivateKeyBind}
         className={`container-${scope}`}
       >
         <RefComponent
           {...props}
-          activateEditor={activateThisEditor}
-          deactivateEditor={deactivateThisEditor}
           saveDocument={save}
           ref={ref}
         />
@@ -148,7 +94,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
   const DecoratedEditorComponent = composeDecorators(EditorComponent, [
     withAlerts,
     withLoader,
-    withKeyBinds,
     withDataHandler,
     withMenuHandler
   ]);

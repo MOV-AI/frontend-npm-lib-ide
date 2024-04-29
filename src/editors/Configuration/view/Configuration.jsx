@@ -27,7 +27,6 @@ export const Configuration = (props, ref) => {
     id,
     name,
     instance,
-    activateEditor = () => defaultFunction("activateEditor"),
     saveDocument = () => defaultFunction("saveDocument"),
     editable = true
   } = props;
@@ -49,13 +48,14 @@ export const Configuration = (props, ref) => {
 
   const renderRightMenu = useCallback(() => {
     const details = props.data?.details || {};
-    const menuName = `${id}-detail-menu`;
+    const menuName = `detail-menu`;
     const menuTitle = i18n.t("ConfigurationDetailsMenuTitle");
     // add bookmark
-    drawerSub.suffix = "right";
     drawerSub.add(menuName, {
       icon: <InfoIcon></InfoIcon>,
       name: menuName,
+      suffix: "right",
+      url: "global/Configuration/" + name,
       title: menuTitle,
       view: (
         <Menu id={id} name={name} details={details} model={instance}></Menu>
@@ -87,8 +87,9 @@ export const Configuration = (props, ref) => {
    * @returns
    */
   const updateConfigCode = value => {
-    if (value === instance.current.getCode()) return;
-    if (instance.current) instance.current.setCode(value);
+    if (!instance.current || value === instance.current.getCode())
+      return;
+    instance.current.setCode(value);
   };
 
   //========================================================================================
@@ -153,7 +154,6 @@ export const Configuration = (props, ref) => {
         <Toolbar
           data-testid="input-toolbar"
           variant="dense"
-          onClick={activateEditor}
         >
           <ToggleButtonGroup
             size="small"
@@ -180,7 +180,6 @@ Configuration.propTypes = {
   data: PropTypes.object,
   editable: PropTypes.bool,
   saveDocument: PropTypes.func,
-  activateEditor: PropTypes.func
 };
 
 export default withEditorPlugin(Configuration);
