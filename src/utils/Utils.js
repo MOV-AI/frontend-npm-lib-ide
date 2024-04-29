@@ -1,5 +1,4 @@
 import { forwardRef } from "react";
-// import hotkeys from "hotkeys-js";
 import {
   AccountTreeIcon,
   BuildIcon,

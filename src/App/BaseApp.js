@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import hotkeys from "hotkeys-js";
 import { Typography, Grid } from "@mov-ai/mov-fe-lib-react";
 import DocManager from "../plugins/DocManager/DocManager";
 import Dialog from "../plugins/Dialog/Dialog";
@@ -115,7 +114,6 @@ function BaseApp(props) {
     addAppKeybinds();
     // Write log in consle
     writeMovaiLogo();
-    hotkeys.setScope(KEYBIND_SCOPES.APP);
   }, [dependencies]);
 
   // Set app settings
