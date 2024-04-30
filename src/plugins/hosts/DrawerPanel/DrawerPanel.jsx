@@ -84,7 +84,7 @@ class DrawerSub extends Sub {
 
   get keybinds() {
     return {
-      ...this.get("$url.keybinds"),
+      ...this.get(this._url + ".keybinds"),
       ...this.get("keybinds"),
     };
   }

@@ -21,9 +21,9 @@ const MenuDetails = props => {
 
   return (
     <>
-      <Typography component="h2" variant="h2" className={classes.header}>
+      <h2 className={classes.header}>
         {name ?? id}
-      </Typography>
+      </h2>
       <ListItem divider>
         <ListItemText primary={i18n.t(label)} className={classes.label} />
         <NodeLink

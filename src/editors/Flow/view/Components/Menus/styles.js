@@ -57,7 +57,6 @@ export const menuDetailsStyles = makeStyles(_theme => ({
     textAlign: "center",
     padding: "16px",
     wordWrap: "break-word",
-    fontSize: "2rem",
     fontWeight: "500"
   },
   label: {
