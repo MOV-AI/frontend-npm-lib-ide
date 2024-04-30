@@ -32,6 +32,10 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       updateRightMenu,
     } = props;
 
+    useEffect(() => {
+      updateRightMenu();
+    }, []);
+
     const editorContainer = useRef();
 
     /**
@@ -53,7 +57,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         );
 
         if (validTab && data.id === id) {
-          drawerSub.url = id;
           updateRightMenu();
         }
       });
