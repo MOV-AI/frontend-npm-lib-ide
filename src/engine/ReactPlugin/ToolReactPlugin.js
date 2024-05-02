@@ -24,27 +24,6 @@ export function withToolPlugin(ReactComponent, methods = []) {
   const RefComponent = forwardRef((props, ref) => ReactComponent(props, ref));
 
   const ToolComponent = forwardRef((props, ref) => {
-    const { on, off, profile } = props;
-
-    /**
-     * Component did mount
-     */
-    useEffect(() => {
-      drawerSub.url = profile.name;
-      on(
-        PLUGINS.TABS.NAME,
-        PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE,
-        async ({ id }) => {
-          if (profile.name === id)
-            drawerSub.url = profile.name;
-        }
-      );
-
-      return () => {
-        off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
-      };
-    }, [profile.name]);
-
     return <RefComponent {...props} ref={ref} />;
   });
 

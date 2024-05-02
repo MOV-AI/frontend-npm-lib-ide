@@ -28,6 +28,12 @@ const useTabLayout = (props, dockRef) => {
   const preventReloadNewDoc = useRef(false);
   const tabsById = useRef(new Map());
   const [layout, setLayout] = useState({ ...DEFAULT_LAYOUT });
+  const activeId = useMemo(
+    () => {
+      return drawerSub.url = layout.dockbox.children[0].activeId;
+    },
+    [layout.dockbox.children[0].activeId]
+  );
   const { addTabToStack, removeTabFromStack, getNextTabFromStack } =
     useTabStack(workspaceManager);
 
@@ -40,7 +46,7 @@ const useTabLayout = (props, dockRef) => {
   const openNonEditorTabs = useCallback(
     lastTabs => {
       // Save current active tab id
-      const currentActiveTabId = drawerSub.url;
+      const currentActiveTabId = activeId;
 
       // Load tools tab data
       lastTabs.forEach(tab => {
@@ -55,7 +61,6 @@ const useTabLayout = (props, dockRef) => {
       });
 
       // Set current active tab id after extra tabs update
-      drawerSub.url = currentActiveTabId;
       emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: currentActiveTabId });
     },
     [emit, workspaceManager, addTabToStack, dockRef]
@@ -136,9 +141,7 @@ const useTabLayout = (props, dockRef) => {
         const newActiveTabId = getNextTabFromStack();
         if (maxboxChildren) maxboxChildren.activeId = newActiveTabId;
         else _layout.dockbox.children[0].activeId = newActiveTabId;
-        drawerSub.url = newActiveTabId;
-      } else
-        drawerSub.url = layoutActiveId;
+      }
     },
     [getNextTabFromStack]
   );
@@ -355,7 +358,6 @@ const useTabLayout = (props, dockRef) => {
         removeTabFromStack(tabId, dock);
         applyLayout(newLayout);
         const newId = getNextTabFromStack();
-        drawerSub.url = newId;
         emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newId });
       }
     },
@@ -543,8 +545,6 @@ const useTabLayout = (props, dockRef) => {
         return;
       }
 
-      // Update new open tab id
-      drawerSub.url = tabData.id;
       // Set new layout
       setLayout(prevState => {
         const newState = { ...prevState };
@@ -692,7 +692,6 @@ const useTabLayout = (props, dockRef) => {
       // Emit new active tab id
       if (!tabId) return;
 
-      drawerSub.url = newActiveTabId;
       emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
     },
     [
@@ -714,8 +713,6 @@ const useTabLayout = (props, dockRef) => {
   const updateTabId = useCallback(
     (prevTabId, newTabData) => {
       _getTabData(newTabData).then(tabData => {
-        // Update new open tab id
-        drawerSub.url = tabData.id;
         // Set new layout
         setLayout(prevState => {
           // look for tab in windowbox
@@ -736,14 +733,14 @@ const useTabLayout = (props, dockRef) => {
    * @returns {string} active tab id
    */
   const getActiveTab = useCallback(() => {
-    return tabsById.current.get(drawerSub.url);
+    return tabsById.current.get(activeId);
   }, []);
 
   /**
    * Focus on active tab
    */
   const focusActiveTab = useCallback(() => {
-    focusExistingTab(drawerSub.url);
+    focusExistingTab(activeId);
   }, [focusExistingTab]);
 
   //========================================================================================
