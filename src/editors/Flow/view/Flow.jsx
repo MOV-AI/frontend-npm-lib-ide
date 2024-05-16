@@ -665,30 +665,43 @@ export const Flow = (props, ref) => {
    * Remove Link Bookmark and set selectedLink to null
    */
   const unselectLink = useCallback(() => {
-    drawerSub.active = selectedNodeRef.current
+    drawerSub.setActive(selectedNodeRef.current
       ? selectedNodeRef.current.data.id + "-" + MENUS.current.NODE.NAME
-      : MENUS.current.DETAIL.NAME;
+      : MENUS.current.DETAIL.NAME, {
+        url: "global/Flow/" + name,
+        suffix: "right",
+      });
     if (selectedLinkRef.current)
       drawerSub.remove(
         selectedLinkRef.current.data.id + "-" + MENUS.current.LINK.NAME,
-        activeBookmark
+        activeBookmark, {
+          url: "global/Flow/" + name,
+          suffix: "right",
+        }
       );
-  }, [call, selectedLinkRef]);
+  }, [call, selectedLinkRef, name]);
 
   /**
    * Remove Node Bookmark and set selectedNode to null
    */
   const unselectNode = useCallback(() => {
-    drawerSub.active = selectedLinkRef.current
+    drawerSub.setActive(selectedLinkRef.current
       ? selectedLinkRef.current.data.id + "-" + MENUS.current.LINK.NAME
-      : MENUS.current.DETAIL.NAME;
+      : MENUS.current.DETAIL.NAME, {
+        url: "global/Flow/" + name,
+        suffix: "right",
+      }
+    );
     if (selectedNodeRef.current)
       drawerSub.remove(
         selectedNodeRef.current.data.id + "-" + MENUS.current.NODE.NAME,
-        activeBookmark
+        activeBookmark, {
+          url: "global/Flow/" + name,
+          suffix: "right",
+        }
       );
     selectedNodeRef.current = null;
-  }, [call, selectedNodeRef]);
+  }, [call, selectedNodeRef, name]);
 
   /**
    * On Link selected
@@ -738,7 +751,10 @@ export const Flow = (props, ref) => {
         if (selectedNodeRef.current)
           drawerSub.remove(
             selectedNodeRef.current.data.id + "-" + MENUS.current.NODE.NAME,
-            activeBookmark
+            activeBookmark, {
+              url: "global/Flow/" + name,
+              suffix: "right",
+            }
           );
         if (!node) {
           unselectNode();

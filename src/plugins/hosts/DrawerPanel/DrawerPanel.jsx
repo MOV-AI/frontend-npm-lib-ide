@@ -36,6 +36,15 @@ class DrawerSub extends Sub {
     this.update(active, "$url.active");
   }
 
+  setActive(active, options = {}) {
+    const { suffix = this.suffix, url = this._url } = options;
+    this.update({
+      ...this.get(url + "/" + suffix),
+      active,
+      plugin: false,
+    }, url + "/" + suffix);
+  }
+
   set open(value) {
     if (value === this.open) {
       this._target = this._value;
@@ -66,15 +75,8 @@ class DrawerSub extends Sub {
 
     name = name.replace(".", "/");
 
-    const lastSuffix = this._suffix;
-    this._url = url;
-    this._suffix = suffix;
-    if (value.select) {
-      this.plugin = false;  
-      this.active = name;
-    }
-    this._url = this.url;
-    this._suffix = lastSuffix;
+    if (value.select)
+      this.setActive(name, value);
 
     return this.update({
       ...(bookmarks ?? {}),
@@ -117,10 +119,10 @@ class DrawerSub extends Sub {
   }
 }
 
-function selectBookmark(anchor, name) {
-  drawerSub.suffix = anchor;
+function selectBookmark(suffix, name) {
+  drawerSub.suffix = suffix;
   drawerSub.open = name !== drawerSub._value[drawerSub.index]?.active ? true : !drawerSub.open;
-  drawerSub.active = name;
+  drawerSub.setActive(name, { suffix });
 }
 
 export
