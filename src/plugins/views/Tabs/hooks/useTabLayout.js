@@ -28,12 +28,15 @@ const useTabLayout = (props, dockRef) => {
   const preventReloadNewDoc = useRef(false);
   const tabsById = useRef(new Map());
   const [layout, setLayout] = useState({ ...DEFAULT_LAYOUT });
-  const activeId = useMemo(
-    () => {
-      return drawerSub.url = layout.dockbox.children[0].activeId;
-    },
-    [layout.dockbox.children[0].activeId]
-  );
+  const [activeId, baseSetActiveId] = useState("initial");
+  const setActiveId = useCallback(id => {
+    baseSetActiveId(id);
+    drawerSub.url = id;
+  }, [baseSetActiveId]);
+  useEffect(() => {
+    if (activeId === "initial")
+      setActiveId(layout.dockbox.children[0].activeId);
+  }, [layout, setActiveId]);
   const { addTabToStack, removeTabFromStack, getNextTabFromStack } =
     useTabStack(workspaceManager);
 
@@ -62,6 +65,7 @@ const useTabLayout = (props, dockRef) => {
 
       // Set current active tab id after extra tabs update
       emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: currentActiveTabId });
+      setActiveId(currentActiveTabId);
     },
     [emit, workspaceManager, addTabToStack, dockRef]
   );
@@ -88,6 +92,7 @@ const useTabLayout = (props, dockRef) => {
     tabId => {
       const maxboxChildren = dockRef.current.state.layout.maxbox.children;
       dockRef.current.updateTab(tabId, null);
+      setActiveId(tabId);
 
       if (
         maxboxChildren.length &&
@@ -152,11 +157,11 @@ const useTabLayout = (props, dockRef) => {
    */
   const applyLayout = useCallback(
     _layout => {
-      layoutActiveIdIsValid(_layout);
+      // layoutActiveIdIsValid(_layout);
       setLayout(_layout);
       workspaceManager.setLayout(_layout);
     },
-    [workspaceManager, layoutActiveIdIsValid]
+    [workspaceManager]
   );
 
   /**
@@ -359,6 +364,7 @@ const useTabLayout = (props, dockRef) => {
         applyLayout(newLayout);
         const newId = getNextTabFromStack();
         emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newId });
+        setActiveId(newId);
       }
     },
     [
@@ -546,8 +552,7 @@ const useTabLayout = (props, dockRef) => {
       }
 
       // Set new layout
-      setLayout(prevState => {
-        const newState = { ...prevState };
+        const newState = { ...layout };
         if (newState[tabPosition].children.length === 0) {
           newState[tabPosition].children = [{ ...position, tabs: [tabData] }];
 
@@ -567,8 +572,8 @@ const useTabLayout = (props, dockRef) => {
         }
 
         workspaceManager.setLayout(newState);
-        return { ...newState };
-      });
+      setLayout({ ...newState });
+      setActiveId(tabData.id);
     },
     [
       workspaceManager,
@@ -577,6 +582,7 @@ const useTabLayout = (props, dockRef) => {
       focusExistingTab,
       addTabToStack,
       findTab,
+      layout,
       emit
     ]
   );
@@ -693,6 +699,7 @@ const useTabLayout = (props, dockRef) => {
       if (!tabId) return;
 
       emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
+      setActiveId(newActiveTabId);
     },
     [
       getDockFromTabId,
@@ -714,18 +721,18 @@ const useTabLayout = (props, dockRef) => {
     (prevTabId, newTabData) => {
       _getTabData(newTabData).then(tabData => {
         // Set new layout
-        setLayout(prevState => {
           // look for tab in windowbox
           const locations = Object.values(DOCK_POSITIONS);
           for (const location of locations) {
-            const f = _setTabInLayout(prevState, prevTabId, location, tabData);
-            if (f.box) return f.newLayout;
+            const f = _setTabInLayout(layout, prevTabId, location, tabData);
+            if (f.box) {
+              setLayout(f.newLayout);
+              return;
+            }
           }
-          return prevState;
-        });
       });
     },
-    [_getTabData, _setTabInLayout]
+    [_getTabData, layout, _setTabInLayout]
   );
 
   /**
@@ -807,7 +814,7 @@ const useTabLayout = (props, dockRef) => {
     const [lastLayout, lastTabs] = workspaceManager.getLayoutAndTabs();
     const tabs = [];
 
-    layoutActiveIdIsValid(lastLayout);
+    // layoutActiveIdIsValid(lastLayout);
 
     tabsById.current = lastTabs;
     // Install current tabs plugins
@@ -834,7 +841,7 @@ const useTabLayout = (props, dockRef) => {
     dockRef,
     workspaceManager,
     _getTabData,
-    layoutActiveIdIsValid,
+    // layoutActiveIdIsValid,
     openNonEditorTabs
   ]);
 

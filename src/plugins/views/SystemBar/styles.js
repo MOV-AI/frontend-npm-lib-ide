@@ -50,6 +50,7 @@ export const systemMenuStyles = makeStyles(theme => ({
 export const systemMenuItemStyles = makeStyles(theme => ({
   listItem: {
     ...menuButtonStyles,
+    paddingLeft: "10px !important",
     "& > button:hover": {
       boxShadow: "none",
     },
