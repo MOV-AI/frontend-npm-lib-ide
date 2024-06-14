@@ -1,4 +1,4 @@
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles } from "@material-ui/styles";
 import { DEFAULT_EXPLORER_ROW_HEIGHT } from "../../../../../utils/Constants";
 
 export const listItemsTreeWithSearchStyles = makeStyles(_theme => ({
@@ -62,6 +62,7 @@ export const itemRowStyles = makeStyles(theme => ({
     }
   },
   contextMenuIcon: {
+    color: "white",
     fontSize: 18
   }
 }));

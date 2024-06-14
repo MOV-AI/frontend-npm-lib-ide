@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, memo } from "react";
 import PropTypes from "prop-types";
-import { Backdrop } from "@mov-ai/mov-fe-lib-react";
+import Backdrop from "@material-ui/core/Backdrop";
 import { PLUGINS, SCOPES } from "../../../../utils/Constants";
 import { generateContainerId } from "../Constants/constants";
 import { EVT_NAMES } from "../events";
@@ -25,6 +25,7 @@ const BaseFlow = props => {
     warnings,
     warningsVisibility,
     onReady,
+    activateKeyBind,
     flowDebugging,
     viewMode,
     graphClass,
@@ -107,7 +108,7 @@ const BaseFlow = props => {
           <Warnings warnings={warnings} isVisible={warningsVisibility} />
         )}
       </div>
-      {flowDebugging && <DependencyInfo />}
+      {flowDebugging && <DependencyInfo activateKeyBind={activateKeyBind} />}
     </div>
   );
 };

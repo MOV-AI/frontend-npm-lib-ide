@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
-import { Grid, TextField, Checkbox } from "@mov-ai/mov-fe-lib-react";
-import { FiberManualRecordIcon } from "@mov-ai/mov-fe-lib-react";
+import Grid from "@material-ui/core/Grid";
+import Circle from "@material-ui/icons/FiberManualRecord";
+import TextField from "@material-ui/core/TextField";
 
 import { parametersStyles } from "./styles";
 
@@ -21,7 +22,7 @@ const Parameters = props => {
   const handleOnChange = useCallback(
     evt => {
       handleIOPortsInputs(
-        evt.target,
+        evt.target.value,
         rowDataName,
         direction,
         ioPort,
@@ -31,39 +32,20 @@ const Parameters = props => {
     [rowDataName, direction, ioPort, param, handleIOPortsInputs]
   );
 
-  // This is a temporary patch, actually Ports data should provide which type the frontend should render
-  // and not this harcoded string. And the backend should have a type validation as well
-  const inputType = () => {
-    if (["latch", "Oneshot"].includes(param)) {
-      return <Checkbox
-        type={"checkbox"}
-        defaultChecked={paramValue}
-        // className={classes.input}
-        onChange={handleOnChange}
-      />;
-    }
-    else {
-      // To improve: MUI has an experimental <NumberInput>
-      return <TextField
-        type={["Frequency", "queue_size"].includes(param) ? "number" : "text"}
-        inputProps={{ "data-testid": "input_parameter" }}
-        disabled={!editable}
-        defaultValue={paramValue}
-        className={classes.input}
-        onChange={handleOnChange}
-      />;
-    }
-
-  }
-
   return (
     <Grid className={classes.gridContainer}>
       <Grid item xs={3} className={classes.titleColumn}>
-        <FiberManualRecordIcon className={classes.circle} />
+        <Circle className={classes.circle} />
         {`${param}:`}
       </Grid>
       <Grid item xs={9}>
-        {inputType()}
+        <TextField
+          inputProps={{ "data-testid": "input_parameter" }}
+          disabled={!editable}
+          defaultValue={paramValue}
+          className={classes.input}
+          onChange={handleOnChange}
+        />
       </Grid>
     </Grid>
   );

@@ -1,4 +1,4 @@
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles } from "@material-ui/styles";
 
 export const mainMenuStyles = makeStyles(theme => ({
   mainMenuHolder: {
@@ -12,7 +12,7 @@ export const mainMenuStyles = makeStyles(theme => ({
       }
     },
     "& hr": {
-      borderColor: theme.border,
+      borderColor: theme.palette.grey[200],
       borderRadius: "2px",
       margin: "15px 0"
     }

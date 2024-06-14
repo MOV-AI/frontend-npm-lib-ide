@@ -61,7 +61,6 @@ const Tabs = (props, ref) => {
       onClick={focusActivePanelTab}
     >
       <DockLayout
-        mode="horizontal"
         ref={dockRef}
         layout={layout}
         loadTab={loadTab}

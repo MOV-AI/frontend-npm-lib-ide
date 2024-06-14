@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
-import { withStyles } from "@mov-ai/mov-fe-lib-react";
-import { Card, CardContent, Typography, Grid } from "@mov-ai/mov-fe-lib-react";
+import { withStyles } from "@material-ui/styles";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
 
 const styles = theme => ({
   root: {

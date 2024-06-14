@@ -6,8 +6,8 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  BaseSelect
-} from "@mov-ai/mov-fe-lib-react";
+  Select
+} from "@material-ui/core";
 import { convertToValidString } from "../../../../../../../utils/Utils";
 
 import { propertiesStyles } from "../../styles";
@@ -36,8 +36,8 @@ const PropertyItem = ({
    */
   const handleOnChange = useCallback(
     evt => {
-      const prop = evt.target.dataset.prop;
-      onChangeProperties(prop, evt.target.dataset.value);
+      const prop = evt.currentTarget.dataset.prop;
+      onChangeProperties(prop, evt.target.value);
     },
     [onChangeProperties]
   );
@@ -62,13 +62,13 @@ const PropertyItem = ({
     <Grid item xs={12} className={classes.gridAlign}>
       <FormControl fullWidth={true}>
         <InputLabel>{title}</InputLabel>
-        <BaseSelect
+        <Select
           value={value ?? templateValue}
+          onChange={handleOnChange}
           disabled={!editable}
         >
           {options.map(option => (
             <MenuItem
-              onClick={handleOnChange}
               key={`properties-options-${convertToValidString(
                 option.text
               )}_${convertToValidString(option.value)}`}
@@ -80,7 +80,7 @@ const PropertyItem = ({
               )}`}
             </MenuItem>
           ))}
-        </BaseSelect>
+        </Select>
       </FormControl>
     </Grid>
   );

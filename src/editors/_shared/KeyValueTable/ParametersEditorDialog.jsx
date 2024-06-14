@@ -3,13 +3,13 @@ import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import {
   MenuItem,
-  BaseSelect,
+  Select,
   FormControl,
   FormControlLabel,
   InputLabel,
   Radio,
   RadioGroup
-} from "@mov-ai/mov-fe-lib-react";
+} from "@material-ui/core";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../themes";
 import { ERROR_MESSAGES } from "../../../utils/Messages";
@@ -302,7 +302,7 @@ const ParameterEditorDialog = props => {
     return (
       <FormControl className={classes.marginTop}>
         <InputLabel>{`${i18n.t("Type")} *`}</InputLabel>
-        <BaseSelect
+        <Select
           fullWidth
           value={data.type || DATA_TYPES.ANY}
           onChange={handleTypeChange}
@@ -314,7 +314,7 @@ const ParameterEditorDialog = props => {
               {getLabel(key)}
             </MenuItem>
           ))}
-        </BaseSelect>
+        </Select>
       </FormControl>
     );
   }, [
@@ -373,7 +373,7 @@ const ParameterEditorDialog = props => {
    */
   const renderValueEditor = useCallback(
     (defaultValue, options) => {
-      const editComponent = getEditComponent(data.type ?? "any");
+      const editComponent = getEditComponent(data.type);
       if (!editComponent) return <></>;
       return (
         <>

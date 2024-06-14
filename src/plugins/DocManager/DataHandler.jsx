@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import { getRefComponent } from "../../utils/Utils";
 import { PLUGINS } from "../../utils/Constants";
-import { drawerSub } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
 
 const DataHandler = props => {
   const { children, call, scope, name } = props;
@@ -20,7 +19,6 @@ const DataHandler = props => {
    * @param {String} newName : Document name (used to set document name when creating a new document)
    */
   const save = event => {
-    const [ _workspace, scope, name ] = drawerSub._value.url.split("/");
     event.preventDefault();
     call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.SAVE, {
       scope,

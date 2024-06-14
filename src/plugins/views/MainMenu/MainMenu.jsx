@@ -7,15 +7,15 @@ import {
   ContextMenu,
   HomeMenuPopper
 } from "@mov-ai/mov-fe-lib-react";
-import { DescriptionIcon, AddBoxIcon } from "@mov-ai/mov-fe-lib-react";
-import { Tooltip } from "@mov-ai/mov-fe-lib-react";
-import { useTheme } from "@mov-ai/mov-fe-lib-react";
+import TextSnippetIcon from "@material-ui/icons/Description";
+import AddBoxIcon from "@material-ui/icons/AddBox";
+import { Tooltip } from "@material-ui/core";
+import { useTheme } from "@material-ui/styles";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
-import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import { MainContext } from "../../../main-context";
 import AppSettings from "../../../App/AppSettings";
 import { getMainMenuTools } from "../../../tools";
-import { PLUGINS } from "../../../utils/Constants";
+import { PLUGINS, HOSTS } from "../../../utils/Constants";
 import { getIconByScope, getIconFn } from "../../../utils/Utils";
 import { openTool } from "../../../utils/generalFunctions";
 import movaiIcon from "../../../Branding/movai-logo-transparent.png";
@@ -40,19 +40,16 @@ const MainMenu = props => {
   const MENUS = [
     {
       name: PLUGINS.EXPLORER.NAME,
-      icon: getIconFn(DescriptionIcon),
+      icon: getIconFn(TextSnippetIcon),
       title: "Explorer",
       isActive: true,
-      getOnClick: () => { 
-        drawerSub.suffix = "left"; 
-        if (drawerSub.plugin) {
-          drawerSub.open = !drawerSub.open;
-        } else {
-          drawerSub.plugin = true; 
-          drawerSub.open = true; 
-        }
-       
-      },
+      getOnClick: () => {
+        // Toggle left drawer
+        call(
+          HOSTS.LEFT_DRAWER.NAME,
+          HOSTS.LEFT_DRAWER.CALL.ACTIVATE_PLUGIN_VIEW
+        );
+      }
     },
     ...getMainMenuTools().map(tool => {
       return {
@@ -98,7 +95,9 @@ const MainMenu = props => {
           <>
             {AppSettings.APP_PROPS.SHOW_APP_SELECTION && (
               <div className={classes.appsHolder}>
-                <HomeMenuPopper />
+                <Tooltip title={i18n.t("Home")}>
+                  <HomeMenuPopper />
+                </Tooltip>
                 <hr />
               </div>
             )}
@@ -134,8 +133,8 @@ const MainMenu = props => {
             />
           </>
         }
-        navigationList={MENUS.map((menu, index) => (
-          <Tooltip key={menu.name + index} title={menu.title} placement="right" arrow>
+        navigationList={MENUS.map(menu => (
+          <Tooltip key={menu.name} title={menu.title} placement="right" arrow>
             <span>
               {menu.icon({
                 className: classes.icon,
@@ -147,7 +146,7 @@ const MainMenu = props => {
         lowerElement={[
           <ProfileMenu
             key={"profileMenu"}
-            version={globalThis.version ?? AppSettings.APP_INFORMATION.VERSION}
+            version={AppSettings.APP_INFORMATION.VERSION}
             isDarkTheme={isDarkTheme}
             handleLogout={handleLogOut}
             handleToggleTheme={

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
-  BaseCollapse,
+  Collapse,
   List,
   ListItem,
   ListItemText,
@@ -10,14 +10,12 @@ import {
   Typography,
   Tooltip,
   Divider
-} from "@mov-ai/mov-fe-lib-react";
-import {
-  ExpandLessIcon,
-  ExpandMoreIcon,
-  AddIcon,
-  EditIcon,
-  DeleteIcon,
-} from "@mov-ai/mov-fe-lib-react";
+} from "@material-ui/core";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 import Model from "../model/Callback";
 import { PLUGINS } from "../../../utils/Constants";
 import { withDataHandler } from "../../../plugins/DocManager/DataHandler";
@@ -317,12 +315,12 @@ const Menu = props => {
           >
             <AddIcon />
           </IconButton>
-          {isActive(ACTIVE_ITEM.IMPORTS) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          {isActive(ACTIVE_ITEM.IMPORTS) ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <BaseCollapse in={isActive(ACTIVE_ITEM.IMPORTS)} unmountOnExit>
+        <Collapse in={isActive(ACTIVE_ITEM.IMPORTS)} unmountOnExit>
           {getImports()}
           <Divider />
-        </BaseCollapse>
+        </Collapse>
         {/* ============ MESSAGE ============ */}
         <ListItem
           data-testid="input_message-expand"
@@ -338,12 +336,12 @@ const Menu = props => {
           >
             <EditIcon />
           </IconButton>
-          {isActive(ACTIVE_ITEM.MESSAGE) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          {isActive(ACTIVE_ITEM.MESSAGE) ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <BaseCollapse in={isActive(ACTIVE_ITEM.MESSAGE)} unmountOnExit>
+        <Collapse in={isActive(ACTIVE_ITEM.MESSAGE)} unmountOnExit>
           {getMessage()}
           <Divider />
-        </BaseCollapse>
+        </Collapse>
       </List>
     </div>
   );

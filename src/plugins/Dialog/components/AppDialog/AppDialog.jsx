@@ -1,13 +1,10 @@
-import {
-  IconButton,
-  Typography,
-  BaseButton,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle as MuiDialogTitle,
-} from "@mov-ai/mov-fe-lib-react";
-import { CloseIcon } from "@mov-ai/mov-fe-lib-react";
+import { IconButton, Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import CloseIcon from "@material-ui/icons/Close";
 import PropTypes from "prop-types";
 import React, { useCallback, useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
@@ -36,7 +33,7 @@ export const DialogTitle = props => {
       disableTypography
       className={classes.root}
     >
-      <Typography variant="h6" className={classes.flexGrow}>{children}</Typography>
+      <Typography variant="h6">{children}</Typography>
       {hasCloseButton ? (
         <IconButton
           data-testid="input_close"
@@ -101,17 +98,17 @@ const AppDialog = props => {
   const getDefaultActions = () => {
     return (
       <DialogActions data-testid="section_dialog-actions">
-        <BaseButton data-testid="input_close" onClick={handleClose} color="default">
+        <Button data-testid="input_close" onClick={handleClose} color="default">
           {onSubmit ? i18n.t("Cancel") : i18n.t("Ok")}
-        </BaseButton>
+        </Button>
         {onSubmit && (
-          <BaseButton
+          <Button
             data-testid="input_confirm"
             onClick={handleSubmit}
             color="primary"
           >
             {submitText}
-          </BaseButton>
+          </Button>
         )}
       </DialogActions>
     );

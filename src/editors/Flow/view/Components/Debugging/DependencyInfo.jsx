@@ -1,20 +1,24 @@
 import React, { useCallback, useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { Card, CardContent } from "@mov-ai/mov-fe-lib-react";
-import { ArrowDropDownIcon } from "@mov-ai/mov-fe-lib-react";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { LINK_DEPENDENCY } from "../../../../../utils/Constants";
 import { convertToValidString } from "../../../../../utils/Utils";
 
 import { dependencyInfoStyles } from "./styles";
 
-const DependencyInfo = _props => {
+const DependencyInfo = props => {
   const [minified, setMinified] = useState(false);
+
+  const { activateKeyBind } = props;
 
   // Style hook
   const classes = dependencyInfoStyles();
 
   const toggleMinify = useCallback(() => {
     setMinified(prevState => !prevState);
+    activateKeyBind();
   }, []);
 
   return (

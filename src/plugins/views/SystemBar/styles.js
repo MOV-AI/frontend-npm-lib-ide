@@ -1,10 +1,10 @@
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles } from "@material-ui/styles";
 
 const menuButtonStyles = {
-  margin: "0px !important",
-  padding: "0px !important",
-  lineHeight: "26px !important",
-  textTransform: "none !important",
+  margin: "0px",
+  padding: "0px",
+  lineHeight: "26px",
+  textTransform: "none",
   borderRadius: "0px",
   "& > .MuiTouchRipple-root": { borderRadius: "0px" }
 };
@@ -19,14 +19,19 @@ export const systemBarStyles = debugMode =>
     },
     menuButton: {
       ...menuButtonStyles,
-      padding: "0 10px !important",
+      padding: "0 10px",
       minWidth: "unset",
-      borderRadius: "0px !important",
-      color: theme.palette.text.primary + " !important",
+      color: theme.palette.grey[200],
+      "&:hover": {
+        background: theme.palette.grey[900]
+      },
       "&:first-child": {
-        marginLeft: "5px !important"
+        marginLeft: "5px"
       }
     },
+    activeMenu: {
+      background: theme.palette.grey[900]
+    }
   }));
 
 export const systemMenuStyles = makeStyles(theme => ({
@@ -50,19 +55,6 @@ export const systemMenuStyles = makeStyles(theme => ({
 export const systemMenuItemStyles = makeStyles(theme => ({
   listItem: {
     ...menuButtonStyles,
-    "& > button:hover": {
-      boxShadow: "none",
-    },
-    "& > button": {
-      display: "flex",
-      textAlign: "left",
-      background: "transparent",
-      boxShadow: "none",
-      color: theme.palette.text.primary,
-      "& > span:first-child": {
-        flexGrow: 1,
-      },
-    },
     "&:last-of-type > button": {
       borderRadius: "0px 0px 5px 5px"
     }
@@ -74,9 +66,10 @@ export const systemMenuItemStyles = makeStyles(theme => ({
     fontSize: "0.875rem",
     width: "100%",
     justifyContent: "space-between",
-    color: theme.palette.text.primary + " !important",
+    color: theme.palette.grey[200],
     "& > .MuiButton-label": { paddingLeft: "10px" },
     "&:hover": {
+      background: theme.palette.grey[900],
       "& > .MuiButton-label > ul": {
         opacity: "1",
         maxWidth: "500px"
@@ -106,8 +99,7 @@ export const systemMenuItemStyles = makeStyles(theme => ({
     boxShadow: "1px 1px 2px 1px #333",
     margin: "0",
     padding: "0",
-    color: theme.palette.text.primary + " !important",
-    background: theme.topBarColor + " !important",
+    background: theme.topBarColor,
     transform: "translate(99%)",
     transition: "opacity .3s, max-width .3s"
   }

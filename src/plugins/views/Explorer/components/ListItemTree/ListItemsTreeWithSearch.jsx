@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Divider, List, ListItem } from "@mov-ai/mov-fe-lib-react";
+import { Divider, List, ListItem } from "@material-ui/core";
 import Search from "../../../../../utils/components/Search/Search";
 import VirtualizedTree from "../VirtualizedTree/VirtualizedTree";
 
@@ -154,7 +154,7 @@ const ListItemsTreeWithSearch = props => {
     const { index, style, data: rowData } = rowProps;
     const node = rowData[index];
 
-    return <ItemRow key={index} node={node} {...props} style={style} />;
+    return <ItemRow node={node} {...props} style={style} />;
   };
 
   return (

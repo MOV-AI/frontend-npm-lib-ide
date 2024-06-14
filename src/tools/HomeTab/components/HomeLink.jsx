@@ -1,7 +1,8 @@
 import React, { useCallback } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { IconButton, Tooltip } from "@mov-ai/mov-fe-lib-react";
-import { DeleteIcon }from "@mov-ai/mov-fe-lib-react";
+import IconButton from "@material-ui/core/IconButton";
+import { Tooltip } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 import { getIconByScope } from "../../../utils/Utils";
 
 import { homeTabLinkStyles } from "../styles";

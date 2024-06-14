@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { Typography } from "@mov-ai/mov-fe-lib-react";
-import { InfoIcon } from "@mov-ai/mov-fe-lib-react";
+import { Typography } from "@material-ui/core";
+import InfoIcon from "@material-ui/icons/Info";
 import Model from "../model/Node";
 import CallbackModel from "../../Callback/model/Callback";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
-import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import {
   DEFAULT_KEY_VALUE_DATA,
   TABLE_KEYS_NAMES,
@@ -150,16 +149,7 @@ export const Node = (props, ref) => {
   );
 
   const updateIOPortInputs = useCallback(
-    (target, ioConfigName, direction, ioPortKey, paramName) => {
-      // Can be either a checkbox event or a text/number change event
-      let value = target.type === "checkbox" ? target.checked : target.value;
-
-      // Make sure if the input is a number, we save a number to Redis
-      // TO improve: backend can do this type validation
-      if (target.type === "number") {
-        value = parseFloat(value);
-      }
-
+    (value, ioConfigName, direction, ioPortKey, paramName) => {
       instance.current.setPortParameter(
         ioConfigName,
         direction,
@@ -213,24 +203,25 @@ export const Node = (props, ref) => {
    *                                                                                      */
   //========================================================================================
 
-  useEffect(() => {
+  const renderRightMenu = useCallback(() => {
     const details = props.data?.details ?? {};
     const menuName = `${id}-detail-menu`;
     const menuTitle = i18n.t("NodeDetailsMenuTitle");
     // add bookmark
-    drawerSub.add(menuName, {
-      icon: <InfoIcon></InfoIcon>,
-      title: menuTitle,
-      suffix: "right",
-      url: "global/Node/" + name,
-      view: (
-        <Menu id={id} name={name} details={details} model={instance}></Menu>
-      )
+    call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.SET_BOOKMARK, {
+      [menuName]: {
+        icon: <InfoIcon></InfoIcon>,
+        name: menuName,
+        title: menuTitle,
+        view: (
+          <Menu id={id} name={name} details={details} model={instance}></Menu>
+        )
+      }
     });
-  }, [id, name, props.data, instance]);
+  }, [call, id, name, props.data, instance]);
 
   usePluginMethods(ref, {
-    renderRightMenu: () => {},
+    renderRightMenu
   });
 
   //========================================================================================

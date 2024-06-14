@@ -1,4 +1,4 @@
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles } from "@material-ui/styles";
 
 const common = {
   itemValue: {
@@ -57,6 +57,7 @@ export const menuDetailsStyles = makeStyles(_theme => ({
     textAlign: "center",
     padding: "16px",
     wordWrap: "break-word",
+    fontSize: "2rem",
     fontWeight: "500"
   },
   label: {
@@ -67,10 +68,9 @@ export const menuDetailsStyles = makeStyles(_theme => ({
 
 export const nodeMenuStyles = makeStyles(_theme => ({
   root: {
-    width: "100%",
+    width: "100%"
   },
   gridContainer: {
-    rowGap: "16px",
     padding: "10px 20px 20px"
   }
 }));

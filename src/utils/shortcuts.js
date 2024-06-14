@@ -10,21 +10,21 @@ export const KEYBINDINGS = {
         NAME: "openWelcomeTab",
         LABEL: i18n.t("HomeTabTitle"),
         DESCRIPTION: i18n.t("HomeTabKeybindDescription"),
-        SHORTCUTS: "Control+Alt+Home",
+        SHORTCUTS: "ctrl+alt+home",
         DEFAULT_CALLBACK: "openWelcomeTab"
       },
       OPEN_SHORTCUTS_TAB: {
         NAME: "openShortcutsTab",
         LABEL: i18n.t("ShortcutsTabTitle"),
         DESCRIPTION: i18n.t("ShortcutsTabKeybindDescription"),
-        SHORTCUTS: "Control+Alt+k",
+        SHORTCUTS: "ctrl+alt+k",
         DEFAULT_CALLBACK: "openShortcutsTab"
       },
       SAVE_ALL: {
         NAME: "saveAll",
         LABEL: i18n.t("SaveAllDocs"),
         DESCRIPTION: i18n.t("SaveAllDocsKeybindDescription"),
-        SHORTCUTS: "Control+Alt+s",
+        SHORTCUTS: "ctrl+alt+s",
         DEFAULT_CALLBACK: "saveAllDocument"
       }
     }
@@ -38,44 +38,44 @@ export const KEYBINDINGS = {
         NAME: "save",
         LABEL: i18n.t("SaveDoc"),
         DESCRIPTION: i18n.t("SaveDocKeybindDescription"),
-        SHORTCUTS: "Control+s"
+        SHORTCUTS: "ctrl+s"
       },
       // TODO Add later when we have a working UNDO / REDO engine
       // UNDO: {
       //   NAME: "undo",
       //   LABEL: i18n.t("Undo"),
       //   DESCRIPTION: i18n.t("UndoKeybindDescription"),
-      //   SHORTCUTS: "Control+z"
+      //   SHORTCUTS: "ctrl+z"
       // },
       // REDO: {
       //   NAME: "redo",
       //   LABEL: i18n.t("Redo"),
       //   DESCRIPTION: i18n.t("RedoKeybindDescription"),
-      //   SHORTCUTS: ["Control+shift+z", "Control+y"]
+      //   SHORTCUTS: ["ctrl+shift+z", "ctrl+y"]
       // },
       // COPY: {
       //   NAME: "copy",
       //   LABEL: i18n.t("Copy"),
       //   DESCRIPTION: i18n.t("CopyKeybindDescription"),
-      //   SHORTCUTS: "Control+c"
+      //   SHORTCUTS: "ctrl+c"
       // },
       // PASTE: {
       //   NAME: "paste",
       //   LABEL: i18n.t("Paste"),
       //   DESCRIPTION: i18n.t("PasteKeybindDescription"),
-      //   SHORTCUTS: "Control+v"
+      //   SHORTCUTS: "ctrl+v"
       // },
       CANCEL: {
         NAME: "cancel",
         LABEL: i18n.t("Cancel"),
         DESCRIPTION: i18n.t("CancelKeybindDescription"),
-        SHORTCUTS: "Escape"
+        SHORTCUTS: "esc"
       },
       DELETE: {
         NAME: "delete",
         LABEL: i18n.t("Delete"),
         DESCRIPTION: i18n.t("DeleteKeybindDescription"),
-        SHORTCUTS: ["Delete", "Backspace"]
+        SHORTCUTS: ["del", "backspace"]
       }
     }
   },
@@ -88,7 +88,7 @@ export const KEYBINDINGS = {
         NAME: "changeAllOcurrences",
         LABEL: i18n.t("ChangeAllOcurrencesKeybindLabel"),
         DESCRIPTION: i18n.t("ChangeAllOcurrencesKeybindDescription"),
-        SHORTCUTS: "Control+F2"
+        SHORTCUTS: "ctrl+F2"
       },
       COMMAND_PALETTE: {
         NAME: "commandPalette",
@@ -100,31 +100,31 @@ export const KEYBINDINGS = {
         NAME: "undo",
         LABEL: i18n.t("Undo"),
         DESCRIPTION: i18n.t("UndoKeybindDescription"),
-        SHORTCUTS: "Control+z"
+        SHORTCUTS: "ctrl+z"
       },
       REDO: {
         NAME: "redo",
         LABEL: i18n.t("Redo"),
         DESCRIPTION: i18n.t("RedoKeybindDescription"),
-        SHORTCUTS: ["Control+shift+z", "Control+y"]
+        SHORTCUTS: ["ctrl+shift+z", "ctrl+y"]
       },
       CUT: {
         NAME: "monacoEditorCutCode",
         LABEL: i18n.t("CutCode"),
         DESCRIPTION: i18n.t("CutCodeKeybindDescription"),
-        SHORTCUTS: "Control+x"
+        SHORTCUTS: "ctrl+x"
       },
       COPY: {
         NAME: "monacoEditorCopyCode",
         LABEL: i18n.t("CopyCode"),
         DESCRIPTION: i18n.t("CopyCodeKeybindDescription"),
-        SHORTCUTS: "Control+c"
+        SHORTCUTS: "ctrl+c"
       },
       PASTE: {
         NAME: "monacoEditorPasteCode",
         LABEL: i18n.t("PasteCode"),
         DESCRIPTION: i18n.t("PasteCodeKeybindDescription"),
-        SHORTCUTS: "Control+v"
+        SHORTCUTS: "ctrl+v"
       }
     }
   },
@@ -137,31 +137,31 @@ export const KEYBINDINGS = {
         NAME: "copyNode",
         LABEL: i18n.t("CopyNode"),
         DESCRIPTION: i18n.t("CopyNodeKeybindDescription"),
-        SHORTCUTS: "Control+c"
+        SHORTCUTS: "ctrl+c"
       },
       PASTE_NODE: {
         NAME: "pasteNode",
         LABEL: i18n.t("PasteNode"),
         DESCRIPTION: i18n.t("PasteNodeKeybindDescription"),
-        SHORTCUTS: "Control+v"
+        SHORTCUTS: "ctrl+v"
       },
       MOVE_NODE: {
         NAME: "moveNode",
         LABEL: i18n.t("MoveNode"),
         DESCRIPTION: i18n.t("MoveNodeKeybindDescription"),
-        SHORTCUTS: ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"]
+        SHORTCUTS: ["left", "right", "up", "down"]
       },
       SEARCH_NODE: {
         NAME: "searchNode",
         LABEL: i18n.t("SearchNode"),
         DESCRIPTION: i18n.t("SearchNodeKeybindDescription"),
-        SHORTCUTS: "Control+f"
+        SHORTCUTS: "ctrl+f"
       },
       RESET_ZOOM: {
         NAME: "resetZoom",
         LABEL: i18n.t("ResetZoom"),
         DESCRIPTION: i18n.t("ResetZoomKeybindDescription"),
-        SHORTCUTS: "Control+i"
+        SHORTCUTS: "ctrl+i"
       }
     }
   },
@@ -174,13 +174,13 @@ export const KEYBINDINGS = {
         NAME: "cancel",
         LABEL: i18n.t("Cancel"),
         DESCRIPTION: i18n.t("CancelKeybindDescription"),
-        SHORTCUTS: "Escape"
+        SHORTCUTS: "esc"
       },
       CONFIRM: {
         NAME: "confirm",
         LABEL: i18n.t("Confirm"),
         DESCRIPTION: i18n.t("ConfirmKeybindDescription"),
-        SHORTCUTS: "Enter"
+        SHORTCUTS: "enter"
       }
     }
   },
@@ -194,14 +194,14 @@ export const KEYBINDINGS = {
         SCOPE: "flowSearchInput",
         LABEL: i18n.t("SearchInputPreventSearch"),
         DESCRIPTION: i18n.t("SearchInputPreventSearchKeybindDescription"),
-        SHORTCUTS: "Control+f"
+        SHORTCUTS: "ctrl+f"
       },
       SEARCH_INPUT_CLOSE: {
         NAME: "searchInputClose",
         SCOPE: "flowSearchInput",
         LABEL: i18n.t("SearchInputClose"),
         DESCRIPTION: i18n.t("SearchInputCloseKeybindDescription"),
-        SHORTCUTS: "Escape"
+        SHORTCUTS: "esc"
       }
     }
   }

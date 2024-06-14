@@ -5,7 +5,7 @@ import {
   NativeSelect,
   TextField,
   Tooltip
-} from "@mov-ai/mov-fe-lib-react";
+} from "@material-ui/core";
 import useSelectOptions from "./useSelectOptions";
 
 import { configColumnsStyles } from "./styles";
