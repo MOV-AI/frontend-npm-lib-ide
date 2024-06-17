@@ -2,7 +2,7 @@
 
 - [FP-2802](https://movai.atlassian.net/browse/FP-2802): Revert lib-ide to the version before the MUI / tty changes
 
-# 2.5.0
+# 1.1.2
 
 - [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit
 - [FP-2633](https://movai.atlassian.net/browse/FP-2633): Configuration Key not found error
