@@ -1,6 +1,6 @@
 # 1.1.3
 
-- [FP-2802 - Revert lib-ide to the version before the MUI / tty changes](https://movai.atlassian.net/browse/FP-2802)
+- [FP-2802](https://movai.atlassian.net/browse/FP-2802): Revert lib-ide to the version before the MUI / tty changes
 
 # 2.5.0
 
