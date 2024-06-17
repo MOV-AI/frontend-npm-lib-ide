@@ -25,6 +25,10 @@ const overrideTheme = {
     dockLayout: {
       background: commonColors.white
     },
+    backdrop: {
+      color: Themes.dark.textColor,
+      background: Themes.dark.palette.background.secondary
+    },
     saveBar: { backgroundColor: Themes.dark.palette.background.secondary },
     nodeEditor: { backgroundColor: "#292929", stripeColor: "#3b3b3b" },
     robotDetails: {
@@ -100,9 +104,6 @@ const overrideTheme = {
       }
     },
     codeEditor: { theme: "light" }
-  },
-  indigo: {
-    codeEditor: { theme: "vs-dark" },
   }
 };
 

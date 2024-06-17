@@ -1,4 +1,4 @@
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles } from "@material-ui/styles";
 
 export const bookmarkStyles = (side, oppositeSide) =>
   makeStyles(theme => ({
@@ -10,7 +10,7 @@ export const bookmarkStyles = (side, oppositeSide) =>
       background: "#fff0",
       top: "60px",
       width: "40px",
-      zIndex: "1",
+      zIndex: theme.zIndex?.drawer
     },
     bookmark: {
       width: "40px",
@@ -25,7 +25,7 @@ export const bookmarkStyles = (side, oppositeSide) =>
       }
     },
     unselectedBookmark: {
-      color: theme.palette.text.primary,
+      color: "white"
     }
   }));
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Table, snackbar, withNotification } from "@mov-ai/mov-fe-lib-react";
-import { MenuItem, BaseSelect } from "@mov-ai/mov-fe-lib-react";
+import { MenuItem, Select } from "@material-ui/core";
 import useDataTypes from "../../editors/_shared/hooks/useDataTypes";
 
 const Component = props => {
@@ -68,7 +68,7 @@ const Component = props => {
       field: "type",
       render: rowData => getLabel(rowData.type),
       editComponent: _props => (
-        <BaseSelect
+        <Select
           value={_props.rowData.type || ""}
           onChange={async evt => {
             const _data = { ..._props.rowData };
@@ -82,7 +82,7 @@ const Component = props => {
               {getLabel(key)}
             </MenuItem>
           ))}
-        </BaseSelect>
+        </Select>
       )
     },
     {

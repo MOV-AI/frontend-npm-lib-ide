@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { withError } from "@mov-ai/mov-fe-lib-react";
-import { Tooltip } from "@mov-ai/mov-fe-lib-react";
+import { Tooltip } from "@material-ui/core";
 import {
   DEFAULT_LAYOUT,
   DOCK_POSITIONS,
@@ -253,8 +253,6 @@ const useTabLayout = (props, dockRef) => {
     },
     [_onTabMouseDown]
   );
-
-  let close = null;
 
   /**
    * Save document and apply layout
@@ -609,7 +607,7 @@ const useTabLayout = (props, dockRef) => {
   /**
    * Close Tab
    */
-  close = useCallback(
+  const close = useCallback(
     data => {
       const { tabId } = data;
       // Close tab dynamically

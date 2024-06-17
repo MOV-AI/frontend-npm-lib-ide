@@ -1,6 +1,9 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { Menu, MenuItem, ListItemIcon, ListItemText } from "@mov-ai/mov-fe-lib-react";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 import {
   defaultFunction,
   convertToValidString

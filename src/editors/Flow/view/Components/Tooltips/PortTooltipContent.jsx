@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { ListItem, ListItemText } from "@mov-ai/mov-fe-lib-react";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 
 import { portTooltipContentStyles } from "./styles";
 

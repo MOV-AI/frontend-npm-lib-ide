@@ -1,11 +1,9 @@
 import React from "react";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Divider,
-} from "@mov-ai/mov-fe-lib-react";
-import { ExpandMoreIcon } from "@mov-ai/mov-fe-lib-react";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Divider from "@material-ui/core/Divider";
 import Callback from "./components/Callback";
 import Parameters from "./components/Parameters";
 

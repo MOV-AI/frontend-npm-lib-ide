@@ -1,13 +1,11 @@
 import { forwardRef } from "react";
 import hotkeys from "hotkeys-js";
-import {
-  AccountTreeIcon,
-  BuildIcon,
-  CodeIcon,
-  DescriptionIcon,
-  DeviceHubIcon,
-  KeyboardIcon,
-} from "@mov-ai/mov-fe-lib-react";
+import AccountTreeIcon from "@material-ui/icons/AccountTree";
+import BuildIcon from "@material-ui/icons/Build";
+import CodeIcon from "@material-ui/icons/Code";
+import DescriptionIcon from "@material-ui/icons/Description";
+import DeviceHubIcon from "@material-ui/icons/DeviceHub";
+import KeyboardIcon from "@material-ui/icons/Keyboard";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import movaiIcon from "../Branding/movai-logo-white.png";
 import { ERROR_MESSAGES } from "./Messages";

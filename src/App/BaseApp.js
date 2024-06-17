@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import hotkeys from "hotkeys-js";
 import { Style } from "@mov-ai/mov-fe-lib-react";
-import { Typography, Grid } from "@mov-ai/mov-fe-lib-react";
+import { Typography } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
 import DocManager from "../plugins/DocManager/DocManager";
 import Dialog from "../plugins/Dialog/Dialog";
 import Alerts from "../plugins/Alerts/Alerts";
@@ -149,7 +150,7 @@ function BaseApp(props) {
   return (
     <MainContext.Provider value={mainContextMemo}>
       <Style />
-      <div className={"App " + classes.app} onContextMenu={onContextMenu}>
+      <div className="App" onContextMenu={onContextMenu}>
         {getHostedPlugins(classes)}
       </div>
     </MainContext.Provider>
@@ -251,7 +252,7 @@ function installViewPlugins(dependencies) {
 
 function getHostedPlugins(classes) {
   return (
-    <Grid container direction="column" wrap="nowrap" className={classes.app}>
+    <Grid container direction="column" wrap="nowrap">
       <AbstractHost hostName={HOSTS.ABSTRACT_HOST.NAME}></AbstractHost>
       <Grid container alignItems="flex-start">
         <TopBar hostName={HOSTS.TOP_BAR.NAME} debugMode={DEBUG_MODE}></TopBar>

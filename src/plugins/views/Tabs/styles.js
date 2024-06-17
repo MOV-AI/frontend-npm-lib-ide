@@ -1,4 +1,4 @@
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles } from "@material-ui/styles";
 
 export const tabsStyles = makeStyles(theme => ({
   "@global": {
@@ -33,8 +33,8 @@ export const tabsStyles = makeStyles(theme => ({
           "& .dock-tab": {
             borderTopLeftRadius: "5px",
             borderTopRightRadius: "5px",
-            background: theme.palette.background.secondary,
-            color: theme.textColor,
+            background: theme.backdrop?.background,
+            color: theme.backdrop?.color,
             padding: "0 10px",
             "& .dock-tab-close-btn": {
               right: "1px"
@@ -49,8 +49,8 @@ export const tabsStyles = makeStyles(theme => ({
         },
         "& .dock-drop-layer .dock-drop-square": {
           background: theme.palette.background.primary,
-          color: theme.textColor,
-          borderColor: `${theme.textColor}95`
+          color: theme.backdrop?.color,
+          borderColor: `${theme.backdrop?.color}95`
         }
       },
       "& .dock-style-place-holder": {

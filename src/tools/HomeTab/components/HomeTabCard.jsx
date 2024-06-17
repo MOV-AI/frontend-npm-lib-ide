@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
-import { CallMadeIcon } from "@mov-ai/mov-fe-lib-react";
-import { BaseButton } from "@mov-ai/mov-fe-lib-react";
+import CallMadeIcon from "@material-ui/icons/CallMade";
+import Button from "@material-ui/core/Button";
 import { stopPropagation } from "../../../utils/Utils";
 
 import { homeTabCardStyles } from "../styles";
@@ -31,7 +31,7 @@ function HomeTabCard(props) {
         </div>
         {example.externalLink && (
           <div className={classes.cardFooter}>
-            <BaseButton
+            <Button
               className={classes.externalLinkButton}
               variant="outlined"
               endIcon={<CallMadeIcon />}
@@ -46,7 +46,7 @@ function HomeTabCard(props) {
               >
                 {example.externalLinkLabel || example.externalLink}
               </a>
-            </BaseButton>
+            </Button>
           </div>
         )}
       </div>

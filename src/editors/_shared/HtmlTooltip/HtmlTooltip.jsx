@@ -1,5 +1,5 @@
-import { Tooltip } from "@mov-ai/mov-fe-lib-react";
-import { withStyles } from "@mov-ai/mov-fe-lib-react";
+import Tooltip from "@material-ui/core/Tooltip";
+import { withStyles } from "@material-ui/styles";
 
 export const HtmlTooltip = withStyles(theme => ({
   tooltip: {

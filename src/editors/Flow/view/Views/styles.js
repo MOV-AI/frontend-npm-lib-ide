@@ -1,10 +1,10 @@
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles } from "@material-ui/styles";
 
 export const baseFlowStyles = makeStyles(theme => ({
   backdrop: {
     zIndex: theme.zIndex.drawer - 1,
-    color: theme.textColor,
-    backgroundColor: theme.palette.background.secondary,
+    color: theme.backdrop?.color,
+    backgroundColor: theme.backdrop?.background,
     position: "absolute",
     height: "100%",
     width: "100%",

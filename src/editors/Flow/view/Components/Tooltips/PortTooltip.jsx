@@ -1,15 +1,13 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles } from "@material-ui/styles";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import {
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-} from "@mov-ai/mov-fe-lib-react";
+import { Divider } from "@material-ui/core";
 import PortTooltipContent from "./PortTooltipContent";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Paper from "@material-ui/core/Paper";
 
 const ITEMS_INDEX = "tooltip-fragment-row";
 

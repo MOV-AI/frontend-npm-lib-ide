@@ -1,5 +1,5 @@
-import { amber, green } from "@mov-ai/mov-fe-lib-react";
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+import { amber, green } from "@material-ui/core/colors";
+import { makeStyles } from "@material-ui/styles";
 
 const commonStyles = {
   display: "flex",
@@ -46,37 +46,28 @@ export const warningsStyles = makeStyles(theme => ({
   root: {
     position: "absolute",
     top: "20px",
-    right: "50px",
+    right: "50px"
   },
   snackbar: {
     margin: "5px",
     minWidth: "200px"
   },
   success: {
-    "&.MuiPaper-root": {
-      backgroundColor: green[600] + " !important",
-    },
+    backgroundColor: green[600]
   },
   error: {
-    "&.MuiPaper-root": {
-      backgroundColor: theme.palette?.error.dark + " !important",
-    },
+    backgroundColor: theme.palette?.error.dark
   },
   info: {
-    "&.MuiPaper-root": {
-      backgroundColor: theme.palette?.primary.main + " !important",
-    },
+    backgroundColor: theme.palette?.primary.main
   },
   warning: {
-    "&.MuiPaper-root": {
-      backgroundColor: amber[700] + " !important",
-    },
+    backgroundColor: amber[700]
   },
   clickableSnack: {
     border: "2px solid #666",
     cursor: "pointer",
     transition: "border-color .5s",
-    color: theme.palette?.text.primary + " !important",
     "&:hover": {
       borderColor: "#000"
     }

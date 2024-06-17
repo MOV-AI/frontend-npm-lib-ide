@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
-import { Typography } from "@mov-ai/mov-fe-lib-react";
+import { Typography } from "@material-ui/core";
 import { withAlerts } from "../../../decorators";
 import { withViewPlugin } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "../../../utils/Messages";

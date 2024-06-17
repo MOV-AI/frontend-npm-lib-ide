@@ -1,11 +1,10 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import {
-  BaseButton,
-  ListItem,
-  Divider,
-} from "@mov-ai/mov-fe-lib-react";
-import { LinkIcon, ArrowRightIcon } from "@mov-ai/mov-fe-lib-react";
+import Button from "@material-ui/core/Button";
+import ListItem from "@material-ui/core/ListItem";
+import Divider from "@material-ui/core/Divider";
+import LinkIcon from "@material-ui/icons/Link";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 import { systemMenuItemStyles } from "../styles";
 
@@ -71,7 +70,7 @@ const MenuItem = ({ item, closeMenu }) => {
           </span>
         </div>
       ) : (
-        <BaseButton
+        <Button
           data-testid="input_menu-item"
           className={classes.menuButton}
           onClick={handleOptionClick}
@@ -82,7 +81,7 @@ const MenuItem = ({ item, closeMenu }) => {
           </span>
           {keybind && <span className={classes.keybind}>{keybind}</span>}
           {externalLink && <LinkIcon className={classes.keybind}></LinkIcon>}
-        </BaseButton>
+        </Button>
       )}
     </ListItem>
   );

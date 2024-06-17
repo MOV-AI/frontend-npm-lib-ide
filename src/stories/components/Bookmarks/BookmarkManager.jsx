@@ -1,20 +1,19 @@
 import React from "react";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { Button } from "@mov-ai/mov-fe-lib-react";
-import { useTheme } from "@mov-ai/mov-fe-lib-react";
+import { useTheme } from "@material-ui/styles";
 import { PLUGINS } from "../../../utils/Constants";
 import { withToolPlugin } from "../../../engine";
 // Icons
-import {
-  AccessAlarmIcon,
-  AccessibilityIcon,
-  AccountBalanceIcon,
-  AcUnitIcon,
-  AdbIcon,
-  AddIcCallIcon,
-  AirplanemodeActiveIcon,
-  AssignmentIndIcon,
-} from "@mov-ai/mov-fe-lib-react";
+import AccessAlarmIcon from "@material-ui/icons/AccessAlarm";
+import AccessibilityIcon from "@material-ui/icons/Accessibility";
+import AccessibleForwardIcon from "@material-ui/icons/AccessibleForward";
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import AcUnitIcon from "@material-ui/icons/AcUnit";
+import AdbIcon from "@material-ui/icons/Adb";
+import AddIcCallIcon from "@material-ui/icons/AddIcCall";
+import AirplanemodeActiveIcon from "@material-ui/icons/AirplanemodeActive";
+import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 
 export const BOOKMARKS_PROFILE = {
   name: "BookmarkManager",
