@@ -1,12 +1,12 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { makeStyles, useTheme } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles, useTheme } from "@material-ui/styles";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
+import { PLUGINS } from "./../../../utils/Constants";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
-import { InfoIcon } from "@mov-ai/mov-fe-lib-react";
-import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
+import InfoIcon from "@material-ui/icons/Info";
 import Menu from "./Menu";
 
 const useStyles = makeStyles(_theme => ({
@@ -26,13 +26,11 @@ export const Callback = (props, ref) => {
     call,
     scope,
     instance,
-    data = {},
+    data,
     saveDocument,
     editable = true,
     useLanguageServer=false
   } = props;
-
-  const { pyLibs = {} } = data;
 
   // Style Hooks
   const classes = useStyles();
@@ -45,17 +43,17 @@ export const Callback = (props, ref) => {
   //========================================================================================
 
   const renderRightMenu = useCallback(() => {
-    const menuName = `detail-menu`;
+    const menuName = `${id}-detail-menu`;
     const menuTitle = i18n.t("CallbackDetailsMenuTitle");
     // add bookmark
-    drawerSub.add(menuName, {
-      icon: <InfoIcon />,
-      name: menuName,
-      url: "global/Callback/" + name,
-      suffix: "right",
-      title: menuTitle,
-      view: <Menu id={id} call={call} name={name} scope={scope} />
-    }, [name]);
+    call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.SET_BOOKMARK, {
+      [menuName]: {
+        icon: <InfoIcon />,
+        name: menuName,
+        title: menuTitle,
+        view: <Menu id={id} call={call} name={name} scope={scope} />
+      }
+    });
   }, [call, id, name, scope]);
 
   usePluginMethods(ref, {
@@ -93,7 +91,7 @@ export const Callback = (props, ref) => {
         onSave={saveDocument}
         onLoad={onEditorLoad}
         useLanguageServer={useLanguageServer}
-        builtins={Object.values(pyLibs).map(libs => libs.name)}
+        builtins={Object.values(data.pyLibs).map(libs => libs.name)}
       />
     </div>
   );

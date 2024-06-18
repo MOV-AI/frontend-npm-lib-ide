@@ -6,7 +6,7 @@ import {
   ListItem,
   ListItemText,
   Typography
-} from "@mov-ai/mov-fe-lib-react";
+} from "@material-ui/core";
 
 import { detailsMenuStyles } from "./styles";
 

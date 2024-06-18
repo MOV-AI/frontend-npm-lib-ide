@@ -1,7 +1,8 @@
 import React from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
-import { Tooltip, Typography } from "@mov-ai/mov-fe-lib-react";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
 
 import { invalidLinksWarningStyles } from "./styles";
 

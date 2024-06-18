@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import { Typography, Grid } from "@mov-ai/mov-fe-lib-react";
+import hotkeys from "hotkeys-js";
+import { Style } from "@mov-ai/mov-fe-lib-react";
+import { Typography } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
 import DocManager from "../plugins/DocManager/DocManager";
 import Dialog from "../plugins/Dialog/Dialog";
 import Alerts from "../plugins/Alerts/Alerts";
@@ -13,7 +16,6 @@ import SystemBar from "../plugins/views/SystemBar/SystemBar";
 import AlertPanel from "../plugins/hosts/AlertPanel/AlertPanel";
 import Explorer from "../plugins/views/Explorer/Explorer";
 import MainMenu from "../plugins/views/MainMenu/MainMenu";
-import { drawerSub } from "../plugins/hosts/DrawerPanel/DrawerPanel";
 import Tabs from "../plugins/views/Tabs/Tabs";
 import PluginManagerIDE from "../engine/PluginManagerIDE/PluginManagerIDE";
 import Placeholder from "../plugins/views/Placeholder/Placeholder";
@@ -21,7 +23,7 @@ import { PLUGINS, HOSTS, KEYBIND_SCOPES } from "../utils/Constants";
 import { MainContext } from "../main-context";
 import { addEditor } from "../plugins/DocManager/factory";
 import { addTool } from "../tools";
-import { defaultFunction } from "../utils/Utils";
+import { addKeyBind, defaultFunction } from "../utils/Utils";
 import * as genFunctions from "../utils/generalFunctions";
 import { KEYBINDINGS } from "../utils/shortcuts";
 import {
@@ -87,10 +89,10 @@ function BaseApp(props) {
     Object.values(KEYBINDINGS.GENERAL.KEYBINDS).forEach(shortcut => {
       const callback =
         genFunctions[shortcut.DEFAULT_CALLBACK] ?? defaultFunction;
-      drawerSub.addKeyBind(shortcut.SHORTCUTS, () => {
+      addKeyBind(shortcut.SHORTCUTS, () => {
         const call = PluginManagerIDE.getInstance().manager.call;
         callback(call);
-      }, undefined, { global: true });
+      });
     });
   };
 
@@ -114,6 +116,7 @@ function BaseApp(props) {
     addAppKeybinds();
     // Write log in consle
     writeMovaiLogo();
+    hotkeys.setScope(KEYBIND_SCOPES.APP);
   }, [dependencies]);
 
   // Set app settings
@@ -146,7 +149,8 @@ function BaseApp(props) {
 
   return (
     <MainContext.Provider value={mainContextMemo}>
-      <div className={"App " + classes.app} onContextMenu={onContextMenu}>
+      <Style />
+      <div className="App" onContextMenu={onContextMenu}>
         {getHostedPlugins(classes)}
       </div>
     </MainContext.Provider>
@@ -248,7 +252,7 @@ function installViewPlugins(dependencies) {
 
 function getHostedPlugins(classes) {
   return (
-    <Grid container direction="column" wrap="nowrap" className={classes.app}>
+    <Grid container direction="column" wrap="nowrap">
       <AbstractHost hostName={HOSTS.ABSTRACT_HOST.NAME}></AbstractHost>
       <Grid container alignItems="flex-start">
         <TopBar hostName={HOSTS.TOP_BAR.NAME} debugMode={DEBUG_MODE}></TopBar>

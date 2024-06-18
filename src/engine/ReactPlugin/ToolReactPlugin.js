@@ -1,8 +1,9 @@
 import React, { forwardRef, useEffect } from "react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
-import { drawerSub } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
+import { makeStyles } from "@material-ui/core";
+import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
 import withAlerts from "../../decorators/withAlerts";
+import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
 import { PLUGINS } from "../../utils/Constants";
 import { composeDecorators } from "../../utils/Utils";
@@ -24,6 +25,26 @@ export function withToolPlugin(ReactComponent, methods = []) {
   const RefComponent = forwardRef((props, ref) => ReactComponent(props, ref));
 
   const ToolComponent = forwardRef((props, ref) => {
+    const { on, off, profile } = props;
+
+    /**
+     * Component did mount
+     */
+    useEffect(() => {
+      PluginManagerIDE.resetBookmarks();
+      on(
+        PLUGINS.TABS.NAME,
+        PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE,
+        async ({ id }) => {
+          if (profile.name === id) PluginManagerIDE.resetBookmarks();
+        }
+      );
+
+      return () => {
+        off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
+      };
+    }, [off, on, profile.name]);
+
     return <RefComponent {...props} ref={ref} />;
   });
 
@@ -31,6 +52,7 @@ export function withToolPlugin(ReactComponent, methods = []) {
   const DecoratedToolComponent = composeDecorators(ToolComponent, [
     withTheme,
     withAlerts,
+    withKeyBinds,
     withMenuHandler
   ]);
 

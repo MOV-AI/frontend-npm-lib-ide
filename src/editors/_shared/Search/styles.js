@@ -1,4 +1,4 @@
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles } from "@material-ui/styles";
 
 export const searchStyles = makeStyles(theme => ({
   root: {
@@ -11,7 +11,7 @@ export const searchStyles = makeStyles(theme => ({
     marginLeft: 10,
     flex: 1,
     "& input::placeholder": {
-      color: theme.textColor,
+      color: theme.backdrop?.color
     }
   },
   iconButton: { padding: 10 },

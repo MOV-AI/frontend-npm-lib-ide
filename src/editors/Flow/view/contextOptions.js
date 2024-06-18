@@ -1,12 +1,10 @@
-import {
-  DeleteOutlineIcon,
-  ToggleOnIcon,
-  FileCopyIcon,
-  NoteAddIcon,
-  OpenInNewIcon,
-  PlayCircleOutlineIcon,
-  PauseCircleOutlineIcon,
-} from "@mov-ai/mov-fe-lib-react";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import ToggleOnIcon from "@material-ui/icons/ToggleOn";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
+import NoteAddIcon from "@material-ui/icons/NoteAdd";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
+import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
 import { FLOW_CONTEXT_MODES } from "../../../utils/Constants";
 import { FLOW_VIEW_MODE } from "./Constants/constants";
 import { insertIf } from "../../../utils/Utils";

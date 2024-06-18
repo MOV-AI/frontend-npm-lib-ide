@@ -7,6 +7,7 @@ import { Store, DBSubscriber } from "./src/store";
 import { Model, Manager } from "./src/models";
 import {
   withAlerts,
+  withKeyBinds,
   withMenuHandler
 } from "./src/decorators";
 import { withEditorPlugin, withViewPlugin, withToolPlugin } from "./src/engine";
@@ -39,6 +40,7 @@ import ShortcutsPlugin, {
 } from "./src/tools/AppShortcuts/AppShortcuts";
 // Utils
 import ApplicationTheme from "./src/themes";
+import { ThemeProvider } from "@material-ui/styles";
 import * as CONSTANTS from "./src/utils/Constants";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "./src/utils/Messages";
 import Workspace from "./src/utils/Workspace";
@@ -48,7 +50,6 @@ import LocalStorage from "./src/utils/LocalStorage";
 // Hooks
 import useDataTypes from "./src/editors/_shared/hooks/useDataTypes";
 import useDataSubscriber from "./src/plugins/DocManager/useDataSubscriber";
-export * from "./src/plugins/hosts/DrawerPanel/DrawerPanel";
 import PluginManagerIDE from "./src/engine/PluginManagerIDE/PluginManagerIDE";
 import { usePluginMethods } from "./src/engine/ReactPlugin/ViewReactPlugin";
 import { openTool } from "./src/utils/generalFunctions";
@@ -58,7 +59,7 @@ export { BaseApp, installEditor, installTool };
 export { PluginManagerIDE };
 export { Store, DBSubscriber };
 export { Model, Manager };
-export { withAlerts, withMenuHandler };
+export { withAlerts, withKeyBinds, withMenuHandler };
 export { withEditorPlugin, withViewPlugin, withToolPlugin };
 export { CallbackModel, CallbackStore, CallbackEditor, Callback };
 export {
@@ -81,7 +82,7 @@ export { Workspace, LocalStorage, Utils };
 export { HomeTabPlugin, getHomeTab };
 export { ShortcutsPlugin, getShortcutsTab };
 export { FlowExplorer };
-export { ApplicationTheme };
+export { ThemeProvider, ApplicationTheme };
 export { useDataTypes, useDataSubscriber, usePluginMethods };
 export { openTool };
 

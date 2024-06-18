@@ -2,7 +2,8 @@ import React, { useCallback } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
-import { Tooltip, BaseButton } from "@mov-ai/mov-fe-lib-react";
+import Tooltip from "@material-ui/core/Tooltip";
+import Button from "@material-ui/core/Button";
 import { SCOPES, PLUGINS } from "../../../../../../utils/Constants";
 
 import { parameterLineStyles } from "../styles";
@@ -93,7 +94,7 @@ const ParameterLine = props => {
           </ul>
         </div>
         <div>
-          <BaseButton
+          <Button
             data-testid="input_open-template"
             className={classes.linkButton}
             onClick={handleOpenDocument}
@@ -105,7 +106,7 @@ const ParameterLine = props => {
             >
               <strong>{subFlowInfo.containerNode.templateName}</strong>
             </Tooltip>
-          </BaseButton>
+          </Button>
         </div>
       </div>
     </Tooltip>

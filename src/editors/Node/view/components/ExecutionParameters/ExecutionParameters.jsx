@@ -1,17 +1,13 @@
 import React, { useCallback, useState, memo } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import {
-  Checkbox,
-  ClickAwayListener,
-  FormControlLabel,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mov-ai/mov-fe-lib-react";
-import {
-  InfoIcon,
-} from "@mov-ai/mov-fe-lib-react";
+import Typography from "@material-ui/core/Typography";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import IconButton from "@material-ui/core/IconButton";
+import InfoLogo from "@material-ui/icons/Info";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import TextField from "@material-ui/core/TextField";
 import _isEqual from "lodash/isEqual";
 import CollapsibleHeader from "../../../../_shared/CollapsibleHeader/CollapsibleHeader";
 import { HtmlTooltip } from "../../../../_shared/HtmlTooltip/HtmlTooltip";
@@ -116,7 +112,7 @@ const ExecutionParameters = props => {
               className={classes.logo}
               onClick={() => handleTooltipToggle(tooltip.id)}
             >
-              <InfoIcon className="tooltipIcon" />
+              <InfoLogo className="tooltipIcon" />
             </IconButton>
           </HtmlTooltip>
         </Typography>

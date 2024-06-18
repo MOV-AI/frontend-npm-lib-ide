@@ -1,14 +1,14 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
-import { WarningIcon } from "@mov-ai/mov-fe-lib-react";
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+import WarningIcon from "@material-ui/icons/Warning";
+import { makeStyles } from "@material-ui/styles";
 import {
   Typography,
   Tooltip,
   FormControlLabel,
   Switch
-} from "@mov-ai/mov-fe-lib-react";
+} from "@material-ui/core";
 import { RobotManager, Document } from "@mov-ai/mov-fe-lib-core";
 import { defaultFunction } from "../../../../../utils/Utils";
 import styles from "./styles";

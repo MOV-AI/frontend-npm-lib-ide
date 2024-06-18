@@ -1,13 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Typography,
-  Divider,
-} from "@mov-ai/mov-fe-lib-react";
-import { ExpandMoreIcon } from "@mov-ai/mov-fe-lib-react";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import Typography from "@material-ui/core/Typography";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Divider from "@material-ui/core/Divider";
 
 import { collapsibleHeaderStyles } from "./styles";
 

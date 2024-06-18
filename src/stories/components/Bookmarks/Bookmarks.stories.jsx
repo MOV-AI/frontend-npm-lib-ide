@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import AppCE from "../../AppCE";
 import { installTool } from "../../../App/BaseApp";
-import { BookmarkIcon } from "@mov-ai/mov-fe-lib-react";
+import BookmarkIcon from "@material-ui/icons/Bookmark";
 import BookmarkManager, {
   BOOKMARKS_PROFILE,
   getTabData

@@ -2,8 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import AppDialog from "../AppDialog/AppDialog";
-import { WarningIcon }  from "@mov-ai/mov-fe-lib-react";
-import { DialogActions, BaseButton, DialogContentText } from "@mov-ai/mov-fe-lib-react";
+import WarningIcon from "@material-ui/icons/Warning";
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
+import { DialogContentText } from "@material-ui/core";
 
 import { alertBeforeActionStyles } from "./styles";
 
@@ -20,14 +22,14 @@ const AlertBeforeAction = props => {
     return (
       <DialogActions data-testid="section_dialog-actions">
         {Object.keys(actions).map(key => (
-          <BaseButton
+          <Button
             data-testid={actions[key].testId ?? "input_confirm"}
             key={key}
             onClick={() => handleConfirmation(key)}
             color="default"
           >
             {i18n.t(actions[key].label)}
-          </BaseButton>
+          </Button>
         ))}
       </DialogActions>
     );

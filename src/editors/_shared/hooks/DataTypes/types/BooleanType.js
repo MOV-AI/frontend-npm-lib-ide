@@ -1,5 +1,5 @@
 import React from "react";
-import { Checkbox } from "@mov-ai/mov-fe-lib-react";
+import { Checkbox } from "@material-ui/core";
 import { DATA_TYPES } from "../../../../../utils/Constants";
 import { pythonToBool, boolToPython } from "../../../../../utils/Utils";
 import DataType from "../AbstractDataType";

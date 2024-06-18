@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
-  BaseCollapse,
+  Collapse,
   Divider,
   FormControl,
   FormHelperText,
@@ -10,10 +10,10 @@ import {
   ListItem,
   ListItemText,
   MenuItem,
-  BaseSelect,
+  Select,
   Typography,
   Tooltip
-} from "@mov-ai/mov-fe-lib-react";
+} from "@material-ui/core";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
   LINK_DEPENDENCY,
@@ -95,7 +95,7 @@ const LinkMenu = props => {
         <ListItem>
           <ListItemText primary={i18n.t("From")} />
         </ListItem>
-        <BaseCollapse in>
+        <Collapse in>
           <Divider />
           <Typography component="div" className={classes.directionContainer}>
             <ListItem>
@@ -112,12 +112,12 @@ const LinkMenu = props => {
               </Tooltip>
             </ListItem>
           </Typography>
-        </BaseCollapse>
+        </Collapse>
         <Divider />
         <ListItem>
           <ListItemText primary={i18n.t("To")} />
         </ListItem>
-        <BaseCollapse in>
+        <Collapse in>
           <Divider />
           <Typography component="div" className={classes.directionContainer}>
             <ListItem>
@@ -134,21 +134,21 @@ const LinkMenu = props => {
               </Tooltip>
             </ListItem>
           </Typography>
-        </BaseCollapse>
+        </Collapse>
         {sourceMessage !== MOVAI_FLOW_TYPES.LINKS.TRANSITION && (
           <>
             <Divider />
             <ListItem>
               <ListItemText primary={i18n.t("LinkDependencies")} />
             </ListItem>
-            <BaseCollapse in>
+            <Collapse in>
               <Typography
                 component="div"
                 className={classes.dependencyContainer}
               >
                 <FormControl fullWidth={true}>
                   <InputLabel>{i18n.t("DependenciesLevel")}</InputLabel>
-                  <BaseSelect
+                  <Select
                     value={dependencyLevel}
                     onChange={onChangeDependency}
                     disabled={!editable}
@@ -169,13 +169,13 @@ const LinkMenu = props => {
                         </MenuItem>
                       );
                     })}
-                  </BaseSelect>
+                  </Select>
                   <FormHelperText>
                     {i18n.t("LinkDependenciesHelperText")}
                   </FormHelperText>
                 </FormControl>
               </Typography>
-            </BaseCollapse>
+            </Collapse>
           </>
         )}
       </List>

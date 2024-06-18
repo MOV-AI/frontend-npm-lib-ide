@@ -1,17 +1,14 @@
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles } from "@material-ui/styles";
 
 export const appDialogTitleStyles = makeStyles(theme => ({
   root: {
     margin: 0,
-    padding: theme.spacing(2),
-    display: "flex",
-    alignItems: "center",
-    textAlign: "left",
-  },
-  flexGrow: {
-    flexGrow: 1,
+    padding: theme.spacing(2)
   },
   closeButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
     color: theme.palette.grey[500]
   }
 }));

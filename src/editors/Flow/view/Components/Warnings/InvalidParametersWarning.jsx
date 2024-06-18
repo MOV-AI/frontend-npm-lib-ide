@@ -1,7 +1,7 @@
 import React from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
-import { Typography } from "@mov-ai/mov-fe-lib-react";
+import Typography from "@material-ui/core/Typography";
 import ParameterLine from "./components/ParameterLine";
 
 import { invalidParametersWarningStyles } from "./styles";

@@ -1,9 +1,11 @@
-import React, { forwardRef, useEffect, useRef } from "react";
+import React, { forwardRef, useCallback, useEffect, useRef } from "react";
+import { Utils } from "@mov-ai/mov-fe-lib-core";
+import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
 import withAlerts from "../../decorators/withAlerts";
+import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
 import withLoader from "../../decorators/withLoader";
 import { withDataHandler } from "../../plugins/DocManager/DataHandler";
-import { drawerSub } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
 import { KEYBINDINGS } from "../../utils/shortcuts";
 import { PLUGINS } from "../../utils/Constants";
 import { composeDecorators } from "../../utils/Utils";
@@ -28,26 +30,61 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       off,
       call,
       scope,
+      addKeyBind,
+      removeKeyBind,
       save,
       updateRightMenu,
+      activateKeyBind,
+      deactivateKeyBind
     } = props;
 
-    useEffect(() => {
-      updateRightMenu();
-    }, []);
-
     const editorContainer = useRef();
+
+    /**
+     * Activate editor : activate editor's keybinds and update right menu
+     */
+    const activateEditor = useCallback(() => {
+      activateKeyBind();
+    }, [activateKeyBind]);
+
+    /**
+     * Activate editor : activate editor's keybinds and update right menu
+     */
+    const deactivateEditor = useCallback(() => {
+      deactivateKeyBind();
+    }, [deactivateKeyBind]);
+
+    /**
+     * Triggers activateEditor if is this editor
+     */
+    const activateThisEditor = useCallback(
+      (data = {}) => {
+        const { instance } = data;
+
+        if (data.id === id || instance?.id === Utils.getNameFromURL(id))
+          activateEditor();
+      },
+      [id, activateEditor]
+    );
+
+    /**
+     * Triggers activateEditor if is this editor
+     */
+    const deactivateThisEditor = useCallback(
+      (data = {}) => {
+        const { instance } = data;
+
+        if (data.id !== id || instance?.id !== Utils.getNameFromURL(id))
+          deactivateEditor();
+      },
+      [id, deactivateEditor]
+    );
 
     /**
      * Component did mount
      */
     useEffect(() => {
-      drawerSub.addKeyBind(
-        KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS,
-        save,
-        undefined,
-        { global: true }
-      );
+      addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
 
       on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async data => {
         const validTab = await call(
@@ -57,35 +94,50 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         );
 
         if (validTab && data.id === id) {
+          // We should reset bookmarks when changing tabs. Right? And Left too :D
+          PluginManagerIDE.resetBookmarks();
           updateRightMenu();
+          activateEditor();
         }
       });
 
+      on(
+        PLUGINS.DOC_MANAGER.NAME,
+        PLUGINS.DOC_MANAGER.ON.UPDATE_DOC_DIRTY,
+        activateThisEditor
+      );
+
       // Remove key bind on component unmount
       return () => {
-        drawerSub.removeKeyBind(
-          KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS,
-          { global: true },
-        );
+        removeKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS);
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
+        off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.UPDATE_DOC_DIRTY);
       };
     }, [
       id,
+      addKeyBind,
+      removeKeyBind,
       on,
       off,
       save,
       call,
       updateRightMenu,
+      activateThisEditor,
+      activateEditor
     ]);
 
     return (
       <div
         tabIndex="-1"
         ref={editorContainer}
+        onFocus={activateThisEditor}
+        onBlur={deactivateKeyBind}
         className={`container-${scope}`}
       >
         <RefComponent
           {...props}
+          activateEditor={activateThisEditor}
+          deactivateEditor={deactivateThisEditor}
           saveDocument={save}
           ref={ref}
         />
@@ -97,6 +149,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
   const DecoratedEditorComponent = composeDecorators(EditorComponent, [
     withAlerts,
     withLoader,
+    withKeyBinds,
     withDataHandler,
     withMenuHandler
   ]);

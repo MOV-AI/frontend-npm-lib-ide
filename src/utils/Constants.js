@@ -125,9 +125,6 @@ export const PLUGINS = {
     CALL: {
       ...BOOKMARK_METHODS,
       ...DRAWER.METHODS
-    },
-    ON: {
-      CHANGE_BOOKMARK: "changeBookmark"
     }
   },
   RIGHT_DRAWER: {

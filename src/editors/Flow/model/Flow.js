@@ -489,7 +489,6 @@ class Flow extends Model {
   static OBSERVABLE_KEYS = {
     NAME: "name",
     DETAILS: "details",
-    PARAMETERS: "parameters",
     DESCRIPTION: "description"
   };
 }

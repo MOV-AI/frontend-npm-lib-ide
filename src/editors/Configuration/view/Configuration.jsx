@@ -2,22 +2,16 @@ import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
-import {
-  AppBar,
-  Toolbar,
-  ToggleButton,
-  ToggleButtonGroup,
-} from "@mov-ai/mov-fe-lib-react";
-import {
-  InfoIcon,
-} from "@mov-ai/mov-fe-lib-react";
-import { useTheme } from "@mov-ai/mov-fe-lib-react";
+import { AppBar, Toolbar } from "@material-ui/core";
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import { useTheme } from "@material-ui/styles";
+import InfoIcon from "@material-ui/icons/Info";
 import Model from "../model/Configuration";
 import { defaultFunction } from "../../../utils/Utils";
+import { PLUGINS } from "../../../utils/Constants";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import { withEditorPlugin } from "../../../engine/ReactPlugin/EditorReactPlugin";
 import useDataSubscriber from "../../../plugins/DocManager/useDataSubscriber";
-import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import Menu from "./Menu";
 
 import { configurationStyles } from "./styles";
@@ -26,7 +20,9 @@ export const Configuration = (props, ref) => {
   const {
     id,
     name,
+    call,
     instance,
+    activateEditor = () => defaultFunction("activateEditor"),
     saveDocument = () => defaultFunction("saveDocument"),
     editable = true
   } = props;
@@ -48,20 +44,20 @@ export const Configuration = (props, ref) => {
 
   const renderRightMenu = useCallback(() => {
     const details = props.data?.details || {};
-    const menuName = `detail-menu`;
+    const menuName = `${id}-detail-menu`;
     const menuTitle = i18n.t("ConfigurationDetailsMenuTitle");
     // add bookmark
-    drawerSub.add(menuName, {
-      icon: <InfoIcon></InfoIcon>,
-      name: menuName,
-      suffix: "right",
-      url: "global/Configuration/" + name,
-      title: menuTitle,
-      view: (
-        <Menu id={id} name={name} details={details} model={instance}></Menu>
-      ),
+    call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.SET_BOOKMARK, {
+      [menuName]: {
+        icon: <InfoIcon></InfoIcon>,
+        name: menuName,
+        title: menuTitle,
+        view: (
+          <Menu id={id} name={name} details={details} model={instance}></Menu>
+        )
+      }
     });
-  }, [id, name, instance, props.data]);
+  }, [call, id, name, instance, props.data]);
 
   usePluginMethods(ref, {
     renderRightMenu
@@ -87,9 +83,8 @@ export const Configuration = (props, ref) => {
    * @returns
    */
   const updateConfigCode = value => {
-    if (!instance.current || value === instance.current.getCode())
-      return;
-    instance.current.setCode(value);
+    if (value === instance.current.getCode()) return;
+    if (instance.current) instance.current.setCode(value);
   };
 
   //========================================================================================
@@ -154,6 +149,7 @@ export const Configuration = (props, ref) => {
         <Toolbar
           data-testid="input-toolbar"
           variant="dense"
+          onClick={activateEditor}
         >
           <ToggleButtonGroup
             size="small"
@@ -176,10 +172,12 @@ Configuration.scope = "Configuration";
 Configuration.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  call: PropTypes.func.isRequired,
   instance: PropTypes.object,
   data: PropTypes.object,
   editable: PropTypes.bool,
   saveDocument: PropTypes.func,
+  activateEditor: PropTypes.func
 };
 
 export default withEditorPlugin(Configuration);

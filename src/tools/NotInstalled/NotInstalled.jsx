@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme } from "@mov-ai/mov-fe-lib-react";
+import { useTheme } from "@material-ui/styles";
 
 const NotInstalled = props => {
   const { name } = props;

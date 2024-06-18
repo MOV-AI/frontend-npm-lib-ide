@@ -1,10 +1,10 @@
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles } from "@material-ui/styles";
 
 export const drawerPanelStyles = (isLeft, isOpen) =>
   makeStyles(theme => ({
     content: {
       background: theme.palette.background.primary,
-      color: theme.textColor,
+      color: theme.backdrop?.color,
       height: "100%",
       display: "flex",
       flexDirection: "column"

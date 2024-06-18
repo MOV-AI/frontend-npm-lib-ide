@@ -5,10 +5,10 @@ import {
   TextField,
   Dialog,
   DialogContent,
-  BaseButton,
+  Button,
   DialogActions
-} from "@mov-ai/mov-fe-lib-react";
-import { makeStyles } from "@mov-ai/mov-fe-lib-react";
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 import { PLUGINS } from "../../../../utils/Constants";
 import { ERROR_MESSAGES } from "../../../../utils/Messages";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
@@ -176,10 +176,10 @@ const EditMessageDialog = props => {
         />
       </DialogContent>
       <DialogActions>
-        <BaseButton data-testid="input_cancel" onClick={onClose}>
+        <Button data-testid="input_cancel" onClick={onClose}>
           {i18n.t("Cancel")}
-        </BaseButton>
-        <BaseButton
+        </Button>
+        <Button
           data-testid="input_confirm"
           color="primary"
           onClick={() => {
@@ -189,7 +189,7 @@ const EditMessageDialog = props => {
           disabled={!selectedMsg}
         >
           {i18n.t("Submit")}
-        </BaseButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );
