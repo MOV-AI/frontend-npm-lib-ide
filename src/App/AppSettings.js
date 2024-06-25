@@ -1,5 +1,6 @@
 import { KEYBINDINGS } from "../utils/shortcuts";
 import Logo from "../Branding/movai-flow-logo-red.png";
+import packageJson from "./../../package.json";
 
 const APPLICATION_DATA = window.SERVER_DATA?.Application;
 const BRANDING = { NAME: "MOV.AI Flow™" };
@@ -16,7 +17,7 @@ const AppSettings = {
     SHOW_TOGGLE_THEME: true
   },
   APP_INFORMATION: {
-    VERSION: APPLICATION_DATA?.Version || "0.0.1",
+    VERSION: packageJson.version,
     LAST_UPDATE: APPLICATION_DATA?.LastUpdate || "-",
     CONFIGURATION_FILE: APPLICATION_DATA?.Configuration || "-",
     CUSTOM_CONFIGURATION_FILE: APPLICATION_DATA?.CustomConfiguration || "-",
