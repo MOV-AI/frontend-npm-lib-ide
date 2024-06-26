@@ -1,7 +1,10 @@
+# Version to be assigned
+
+- [FP-2713](https://movai.atlassian.net/browse/FP-2713): App version is not defined
+
 # 1.2.1
 
 - [FP-2802](https://movai.atlassian.net/browse/FP-2802): Revert lib-ide to the version before the MUI / tty changes
-- [FP-2713](https://movai.atlassian.net/browse/FP-2713): App version is not defined
 
 # 1.1.2
 
