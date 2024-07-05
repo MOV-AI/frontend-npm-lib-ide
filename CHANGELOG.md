@@ -2,6 +2,7 @@
 
 - [FP-2713](https://movai.atlassian.net/browse/FP-2713): App version is not defined
 - [QAP-3963](https://movai.atlassian.net/browse/QAP-3963): Review devcontainer configuration for lib-ide
+- [FP-2840](https://movai.atlassian.net/browse/FP-2840): Update ReadMe's on all apps
 
 # 1.2.1
 
