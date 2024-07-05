@@ -144,7 +144,7 @@ To install `pnpm`, follow these steps:
 
 1. - Install package:
  ```bash
- "pnpm install @mov-ai/mov-fe-lib-core"
+ "pnpm install @mov-ai/mov-fe-lib-ide"
  ```
 
 ## How to Link this library locally to an App
@@ -155,13 +155,13 @@ Here's how it can be done:
 1. In the app, identify this library in the `package.json`:
 
     ```
-    "@mov-ai/mov-fe-lib-core": "^x.x.x-X",
+    "@mov-ai/mov-fe-lib-ide": "^x.x.x-X",
     ```
 
 2. Replace the library version with the path of this local library:
 
     ```
-   "@mov-ai/mov-fe-lib-core": "file:/home/username/path/to/library/frontend-npm-lib-core"
+   "@mov-ai/mov-fe-lib-ide": "file:/home/username/path/to/library/frontend-npm-lib-ide"
     ```
 
 3. Build this local library:
