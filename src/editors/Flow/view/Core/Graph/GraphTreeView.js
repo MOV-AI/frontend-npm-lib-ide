@@ -281,8 +281,7 @@ export default class GraphTreeView extends GraphBase {
    * @param {obj} data node's data that has changed
    */
   updateNode = (_event, _nodeId, _data, _type = TYPES.NODE) => {
-    // TODO: Handle changes in nodes from main flow
-    return;
+    this.addNode(_node, _type, _nodeId);
   };
 
   //========================================================================================

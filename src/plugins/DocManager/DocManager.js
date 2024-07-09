@@ -283,14 +283,17 @@ class DocManager extends IDEPlugin {
     } catch (error) {
       returnMessage.message = error;
       console.warn("failed to save document", error);
-
+      
       this.call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
         message: i18n.t(ERROR_MESSAGES.FAILED_TO_SAVE),
         severity: ALERT_SEVERITIES.ERROR
       });
     }
 
-    callback?.(returnMessage);
+    // callback is false when we try to save in TreeView mode
+    if (typeof(callback) === "function") {
+      callback?.(returnMessage);
+    }
     this.saveStack.delete(`${name}_${scope}`);
     return returnMessage;
   }
