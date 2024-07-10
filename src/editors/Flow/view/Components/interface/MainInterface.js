@@ -272,7 +272,6 @@ export default class MainInterface {
     const nodePos = this.canvas.getPositionInBoundaries(position.x, position.y);
     // Build node data
     const node = {
-      ...nodeData,
       // the following line exists because nodeData is outdated.
       // which results in props and params not getting copied properly
       // it has to do with Proxy / original instance inconsistencies
