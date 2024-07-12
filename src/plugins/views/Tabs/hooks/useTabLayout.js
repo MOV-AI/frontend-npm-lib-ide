@@ -627,6 +627,7 @@ const useTabLayout = (props, dockRef) => {
       if (!tabFromMemory && !data.content) return;
       const {
         id,
+        rid,
         content,
         scope,
         name,
@@ -638,6 +639,7 @@ const useTabLayout = (props, dockRef) => {
       } = tabFromMemory ?? data;
       tabsById.current.set(id, {
         id,
+        rid,
         scope,
         name,
         tabTitle,
@@ -647,9 +649,10 @@ const useTabLayout = (props, dockRef) => {
         isDirty,
         tabProps
       });
-      const tabData = { id, scope, name, tabTitle, extension };
+      const tabData = { id, rid, scope, name, tabTitle, extension };
       return {
         id: id,
+        rid: rid,
         title: _getCustomTab(tabData, _closeTab, isDirty),
         content: content,
         closable: true

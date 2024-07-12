@@ -10,11 +10,12 @@ export const addTool = (name, tool) => {
 
 export const getToolTabData = (tab, props = {}) => {
   const { id, name } = tab;
+  const { rid = id } = tab;
   const notInstalledTab = getTabData(id, name);
-  const data = id in APP_TOOLS ? APP_TOOLS[id].tabData : notInstalledTab;
+  const data = rid in APP_TOOLS ? APP_TOOLS[rid].tabData : notInstalledTab;
   // Sanitize tab data to avoid TypeError: Converting circular structure to JSON
   if (!data.content) {
-    const plugin = PluginManagerIDE.getPlugin(id);
+    const plugin = PluginManagerIDE.getPlugin(rid);
     data.content = plugin.render(props) || notInstalledTab.content;
   }
   if (props.tabTitle) data.name = props.tabTitle;
@@ -24,7 +25,7 @@ export const getToolTabData = (tab, props = {}) => {
     data.content = React.cloneElement(data.content, mergedProps);
   }
 
-  return data;
+  return { ...data, ...tab };
 };
 
 export const hasTool = name => {
