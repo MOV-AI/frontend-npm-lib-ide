@@ -1,4 +1,4 @@
-# TBD
+# 1.2.2
 
 - [FP-2713](https://movai.atlassian.net/browse/FP-2713): App version is not defined
 - [QAP-3963](https://movai.atlassian.net/browse/QAP-3963): Review devcontainer configuration for lib-ide
