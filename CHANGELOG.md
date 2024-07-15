@@ -1,8 +1,9 @@
-# TBD
+# 1.2.2
 
 - [FP-2713](https://movai.atlassian.net/browse/FP-2713): App version is not defined
 - [QAP-3963](https://movai.atlassian.net/browse/QAP-3963): Review devcontainer configuration for lib-ide
 - [FP-2840](https://movai.atlassian.net/browse/FP-2840): Update ReadMe's on all apps
+- [FP-2744](https://movai.atlassian.net/browse/FP-2744): Copying nodes in the flow does not copy the modified parameters
 
 # 1.2.1
 
