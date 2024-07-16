@@ -283,17 +283,13 @@ class DocManager extends IDEPlugin {
     } catch (error) {
       returnMessage.message = error;
       console.warn("failed to save document", error);
-      
       this.call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
         message: i18n.t(ERROR_MESSAGES.FAILED_TO_SAVE),
         severity: ALERT_SEVERITIES.ERROR
       });
     }
 
-    // callback is false when we try to save in TreeView mode
-    if (typeof(callback) === "function") {
-      callback?.(returnMessage);
-    }
+    callback?.(returnMessage);
     this.saveStack.delete(`${name}_${scope}`);
     return returnMessage;
   }
@@ -303,7 +299,7 @@ class DocManager extends IDEPlugin {
    */
   saveActiveEditor() {
     this.call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.GET_ACTIVE_TAB).then(tab =>
-      this.save({ name: tab.name, scope: tab.scope }, tab.isNew)
+      this.save({ name: tab.name, scope: tab.scope })
     );
   }
 
