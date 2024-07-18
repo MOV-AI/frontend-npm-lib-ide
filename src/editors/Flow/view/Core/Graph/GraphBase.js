@@ -270,26 +270,33 @@ export default class GraphBase {
    * @param {*} data
    */
   onFlowUpdate = data => {
-    // Add missing nodes and update existing
-    this.updateNodes(data.NodeInst, NODE_TYPES.NODE);
-    this.updateNodes(data.Container, NODE_TYPES.CONTAINER);
-    // Get nodes to remove on update
-    const flowNodes = { ...data.NodeInst, ...data.Container };
-    [...this.nodes.keys()].forEach(nodeId => {
-      if (
-        !Object.prototype.hasOwnProperty.call(flowNodes, nodeId) &&
-        nodeId !== "start"
-      ) {
-        this.deleteNode(nodeId);
-      }
-    });
-    // Update links
-    this.updateLinks(data.Links || {});
-    this.nodeStatusUpdated();
-    // Update exposed ports
-    this.loadExposedPorts(data.ExposedPorts || {}, true);
-    // Let's re-validate the flow
-    this.validateFlow();
+    if (this.viewMode === FLOW_VIEW_MODE.default) {
+      // Add missing nodes and update existing
+      this.updateNodes(data.NodeInst, NODE_TYPES.NODE);
+      this.updateNodes(data.Container, NODE_TYPES.CONTAINER);
+      
+      // Get nodes to remove on update
+      const flowNodes = { ...data.NodeInst, ...data.Container };
+      [...this.nodes.keys()].forEach(nodeId => {
+        if (
+          !Object.prototype.hasOwnProperty.call(flowNodes, nodeId) &&
+          nodeId !== "start"
+        ) {
+          this.deleteNode(nodeId);
+        }
+      });
+  
+      // Update links
+      this.updateLinks(data.Links || {});
+      this.nodeStatusUpdated();
+      // Update exposed ports
+      this.loadExposedPorts(data.ExposedPorts || {}, true);
+      // Let's re-validate the flow
+      this.validateFlow();
+    } else {
+      // TODO: Update the TreeView a flow is saved
+      return;
+    }
   };
 
   /**

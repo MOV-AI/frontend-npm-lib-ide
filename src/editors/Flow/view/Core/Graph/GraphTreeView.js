@@ -232,7 +232,7 @@ export default class GraphTreeView extends GraphBase {
   addLink = (link, parent) => {
     // link already exists, update
     const _link = this.links.get(link.name);
-
+    
     if (_link) {
       link.updateData({ Dependency: link.Dependency });
       return;
@@ -281,7 +281,7 @@ export default class GraphTreeView extends GraphBase {
    * @param {obj} data node's data that has changed
    */
   updateNode = (_event, _nodeId, _data, _type = TYPES.NODE) => {
-    this.addNode(_node, _type, _nodeId);
+    return;
   };
 
   //========================================================================================
