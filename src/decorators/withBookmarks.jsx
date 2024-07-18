@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, useRef } from "react";
+import React, { useCallback, useState, useMemo, useEffect, useRef } from "react";
 import { DRAWER, PLUGINS } from "../utils/Constants";
 import { activateKeyBind } from "../utils/Utils";
 import { usePluginMethods } from "../engine/ReactPlugin/ViewReactPlugin";
@@ -34,8 +34,12 @@ const withBookmarks = Component => {
     const { anchor, emit, call } = props;
     // React state hooks
     const [bookmarks, setBookmarks] = useState({});
+    const firstKey = useMemo(() => Object.keys(bookmarks)[0] ?? false, [bookmarks]);
     const [active, setActive] = useState();
-    const [renderedView, setRenderedView] = useState(<></>);
+    const renderedView = useMemo(
+      () => bookmarks[active || firstKey]?.view || [],
+      [active, bookmarks, firstKey]
+    );
     // Refs
     const drawerRef = useRef();
     const oppositeSide = getOpositeSide(anchor);
@@ -133,8 +137,8 @@ const withBookmarks = Component => {
      * Reset bookmarks (remove all)
      */
     const resetBookmarks = useCallback(() => {
+      setActive(true);
       setBookmarks({});
-      setRenderedView([]);
       // It turns out that we shouldn't close the drawer on reset,
       // If it comes back that we need to close the drawer on tab change
       // This needs to be revisited.
@@ -166,7 +170,6 @@ const withBookmarks = Component => {
     useEffect(() => {
       if (bookmarks[active]) {
         const view = bookmarks[active].view;
-        setRenderedView(view);
         drawerRef.current.activateBookmarkView();
       }
     }, [active, bookmarks]);

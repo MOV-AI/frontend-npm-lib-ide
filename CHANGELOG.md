@@ -1,5 +1,6 @@
 # 1.2.2
 
+- [FP-2773](https://movai.atlassian.net/browse/FP-2773): Scene - opening a scene the info tab on the right is open and empty
 - [FP-2713](https://movai.atlassian.net/browse/FP-2713): App version is not defined
 - [QAP-3963](https://movai.atlassian.net/browse/QAP-3963): Review devcontainer configuration for lib-ide
 - [FP-2840](https://movai.atlassian.net/browse/FP-2840): Update ReadMe's on all apps
