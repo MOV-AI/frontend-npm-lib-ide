@@ -34,12 +34,11 @@ const withBookmarks = Component => {
     const { anchor, emit, call } = props;
     // React state hooks
     const [bookmarks, setBookmarks] = useState({});
-    const firstKey = useMemo(() => Object.keys(bookmarks)[0] ?? false, [bookmarks]);
     const [active, setActive] = useState();
-    const renderedView = useMemo(
-      () => bookmarks[active || firstKey]?.view || [],
-      [active, bookmarks, firstKey]
-    );
+    const renderedView = useMemo(() => {
+      const firstKey = Object.keys(bookmarks)[0] ?? false;
+      return bookmarks[active || firstKey]?.view || [];
+    }, [active, bookmarks, firstKey]);
     // Refs
     const drawerRef = useRef();
     const oppositeSide = getOpositeSide(anchor);
