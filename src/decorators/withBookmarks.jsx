@@ -38,7 +38,7 @@ const withBookmarks = Component => {
     const renderedView = useMemo(() => {
       const firstKey = Object.keys(bookmarks)[0] ?? false;
       return bookmarks[active || firstKey]?.view || [];
-    }, [active, bookmarks, firstKey]);
+    }, [active, bookmarks]);
     // Refs
     const drawerRef = useRef();
     const oppositeSide = getOpositeSide(anchor);
