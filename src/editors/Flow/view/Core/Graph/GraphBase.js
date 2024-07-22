@@ -294,7 +294,12 @@ export default class GraphBase {
       // Let's re-validate the flow
       this.validateFlow();
     } else {
-      // TODO: Update the TreeView a flow is saved
+      // TODO: Update the TreeView when a flow is saved. This function is triggered with onTempladeUpdate
+      // which was designed for when a node template is updated we should update the node instances on the flow.
+      // A line was added to update the Flow when we save a flow. When we have 2 users working on the same flow
+      // this is useful. But if we were on treeView mode, this.deleteNode(nodeId) was deleting all the nodes in the
+      // tree view. So I added this if to prevent that. In the future, updateNodes(), deleteNode(), updateLinks(), etc..
+      // should be generic for either default view or tree view. 
       return;
     }
   };
