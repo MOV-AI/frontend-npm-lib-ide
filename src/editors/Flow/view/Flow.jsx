@@ -658,6 +658,10 @@ export const Flow = (props, ref) => {
       // Temporary fix to show loading (even though UI still freezes)
       setTimeout(() => {
         setViewMode(newViewMode);
+        addKeyBind(
+          KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS,
+          ()=>{}
+        );
       }, 100);
     },
     [viewMode, setMode]
@@ -1380,13 +1384,6 @@ export const Flow = (props, ref) => {
         if (viewMode === FLOW_VIEW_MODE.treeView && docData.doc.name === name) {
           const subFlows = mainInterfaceRef.current.graph.subFlows;
 
-          if (!docData.thisDoc.isDirty) {
-            call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
-              message: i18n.t(SUCCESS_MESSAGES.SAVED_SUCCESSFULLY),
-              severity: ALERT_SEVERITIES.SUCCESS
-            });
-          }
-
           for (let i = 0, n = subFlows.length; i < n; i++) {
             await call(
               PLUGINS.DOC_MANAGER.NAME,
@@ -1457,6 +1454,7 @@ export const Flow = (props, ref) => {
       removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.RESET_ZOOM.SHORTCUTS);
       removeKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.CANCEL.SHORTCUTS);
       removeKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.DELETE.SHORTCUTS);
+      removeKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS);
     };
   }, [
     addKeyBind,

@@ -1,8 +1,11 @@
 # TBD
 
+- [FP-2754](https://movai.atlassian.net/browse/FP-2754): Control + S doesn't save flow
+- [FP-2653](https://movai.atlassian.net/browse/FP-2653): Nodes disappear after updating a flow parameter in tree view mode
+- [FP-2773](https://movai.atlassian.net/browse/FP-2773): Scene - opening a scene the info tab on the right is open and empty
+
 # 1.2.2
 
-- [FP-2773](https://movai.atlassian.net/browse/FP-2773): Scene - opening a scene the info tab on the right is open and empty
 - [FP-2713](https://movai.atlassian.net/browse/FP-2713): App version is not defined
 - [QAP-3963](https://movai.atlassian.net/browse/QAP-3963): Review devcontainer configuration for lib-ide
 - [FP-2840](https://movai.atlassian.net/browse/FP-2840): Update ReadMe's on all apps

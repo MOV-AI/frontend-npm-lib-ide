@@ -270,26 +270,38 @@ export default class GraphBase {
    * @param {*} data
    */
   onFlowUpdate = data => {
-    // Add missing nodes and update existing
-    this.updateNodes(data.NodeInst, NODE_TYPES.NODE);
-    this.updateNodes(data.Container, NODE_TYPES.CONTAINER);
-    // Get nodes to remove on update
-    const flowNodes = { ...data.NodeInst, ...data.Container };
-    [...this.nodes.keys()].forEach(nodeId => {
-      if (
-        !Object.prototype.hasOwnProperty.call(flowNodes, nodeId) &&
-        nodeId !== "start"
-      ) {
-        this.deleteNode(nodeId);
-      }
-    });
-    // Update links
-    this.updateLinks(data.Links || {});
-    this.nodeStatusUpdated();
-    // Update exposed ports
-    this.loadExposedPorts(data.ExposedPorts || {}, true);
-    // Let's re-validate the flow
-    this.validateFlow();
+    if (this.viewMode === FLOW_VIEW_MODE.default) {
+      // Add missing nodes and update existing
+      this.updateNodes(data.NodeInst, NODE_TYPES.NODE);
+      this.updateNodes(data.Container, NODE_TYPES.CONTAINER);
+      
+      // Get nodes to remove on update
+      const flowNodes = { ...data.NodeInst, ...data.Container };
+      [...this.nodes.keys()].forEach(nodeId => {
+        if (
+          !Object.prototype.hasOwnProperty.call(flowNodes, nodeId) &&
+          nodeId !== "start"
+        ) {
+          this.deleteNode(nodeId);
+        }
+      });
+  
+      // Update links
+      this.updateLinks(data.Links || {});
+      this.nodeStatusUpdated();
+      // Update exposed ports
+      this.loadExposedPorts(data.ExposedPorts || {}, true);
+      // Let's re-validate the flow
+      this.validateFlow();
+    } else {
+      // TODO: Update the TreeView when a flow is saved. This function is triggered with onTempladeUpdate
+      // which was designed for when a node template is updated we should update the node instances on the flow.
+      // A line was added to update the Flow when we save a flow. When we have 2 users working on the same flow
+      // this is useful. But if we were on treeView mode, this.deleteNode(nodeId) was deleting all the nodes in the
+      // tree view. So I added this if to prevent that. In the future, updateNodes(), deleteNode(), updateLinks(), etc..
+      // should be generic for either default view or tree view. 
+      return;
+    }
   };
 
   /**
