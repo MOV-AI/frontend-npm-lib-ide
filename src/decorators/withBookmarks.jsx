@@ -36,8 +36,8 @@ const withBookmarks = Component => {
     const [bookmarks, setBookmarks] = useState({});
     const [active, setActive] = useState();
     const renderedView = useMemo(() => {
-      const firstKey = Object.keys(bookmarks)[0] ?? false;
-      return bookmarks[active || firstKey]?.view || [];
+      const firstKey = Object.keys(bookmarks)[0];
+      return bookmarks[active || firstKey]?.view || null;
     }, [active, bookmarks]);
     // Refs
     const drawerRef = useRef();
@@ -136,7 +136,7 @@ const withBookmarks = Component => {
      * Reset bookmarks (remove all)
      */
     const resetBookmarks = useCallback(() => {
-      setActive(true);
+      setActive("non-existent");
       setBookmarks({});
       // It turns out that we shouldn't close the drawer on reset,
       // If it comes back that we need to close the drawer on tab change
