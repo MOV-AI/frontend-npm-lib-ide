@@ -1,10 +1,5 @@
 import * as d3 from 'd3';
-import { defaultFunction } from "../../../../../utils/Utils";
-import { EVT_NAMES } from "../../events";
-import { LINK_DEPENDENCY, MOVAI_FLOW_TYPES } from "../../../../../utils/Constants";
-import { isLinkeable } from "../Nodes/BaseNode/PortValidator";
 import { generatePathPoints } from "./generatePathPoints";
-import { baseLinkStyles } from "./styles";
 import BaseLink from './BaseLink';
 
 // Mock the dependencies
