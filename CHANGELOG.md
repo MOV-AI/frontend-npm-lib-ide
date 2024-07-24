@@ -2,6 +2,7 @@
 
 - [FP-2754](https://movai.atlassian.net/browse/FP-2754): Control + S doesn't save flow
 - [FP-2653](https://movai.atlassian.net/browse/FP-2653): Nodes disappear after updating a flow parameter in tree view mode
+- [FP-2529](https://movai.atlassian.net/browse/FP-2529): Add data-testid to links. Added unit testing to BaseLink
 
 # 1.2.2
 

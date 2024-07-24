@@ -134,10 +134,12 @@ export default class BaseLink extends BaseLinkStruct {
    * @returns {BaseLink}
    */
   renderPath = () => {
-    const { pathPoints } = this;
+    const { pathPoints, data: linkData } = this;
+
     this.object = d3
       .create("svg")
-      .attr("id", `path-${this.canvas.containerId}-${this.data.id}`)
+      .attr("id", `path-${this.canvas.containerId}-${linkData.id}`)
+      .attr("data-testid", `link-from-${linkData.sourceNode}-port-${linkData.sourcePort}-to-${linkData.targetNode}-port-${linkData.targetPort}`)
       .attr("x", 0)
       .attr("y", 0)
       .attr("width", this.maxMovingPixels)
@@ -146,7 +148,7 @@ export default class BaseLink extends BaseLinkStruct {
     this.object
       .append("svg:defs")
       .append("filter")
-      .attr("id", `link-shadow-${this.canvas.containerId}-${this.data.id}`)
+      .attr("id", `link-shadow-${this.canvas.containerId}-${linkData.id}`)
       .append("feDropShadow")
       .attr("dx", "1")
       .attr("dy", "1")
