@@ -1,8 +1,11 @@
+# TBD
+
+- [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit - active tab change is being wrongfully triggered
+
 # 1.2.3
 
 - [FP-2754](https://movai.atlassian.net/browse/FP-2754): Control + S doesn't save flow
 - [FP-2653](https://movai.atlassian.net/browse/FP-2653): Nodes disappear after updating a flow parameter in tree view mode
-- [FP-2603](https://movai.atlassian.net/browse/FP-2603): Fixed issue where active tab change was being wrongfully triggered
 
 # 1.2.2
 
