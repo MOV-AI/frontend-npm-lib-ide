@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit - active tab change is being wrongfully triggered
+
 # 1.2.3
 
 - [FP-2754](https://movai.atlassian.net/browse/FP-2754): Control + S doesn't save flow
