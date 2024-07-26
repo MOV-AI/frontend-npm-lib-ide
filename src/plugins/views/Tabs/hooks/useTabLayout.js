@@ -29,7 +29,7 @@ const useTabLayout = (props, dockRef) => {
   const tabsById = useRef(new Map());
   const [layout, setLayout] = useState({ ...DEFAULT_LAYOUT });
   const { addTabToStack, removeTabFromStack, getNextTabFromStack } =
-    useTabStack(workspaceManager);
+    useTabStack(workspaceManager, layout);
 
   //========================================================================================
   /*                                                                                      *
@@ -687,7 +687,7 @@ const useTabLayout = (props, dockRef) => {
       }
       // Emit new active tab id
       if (!tabId) return;
-
+      
       activeTabId.current = newActiveTabId;
       emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
     },

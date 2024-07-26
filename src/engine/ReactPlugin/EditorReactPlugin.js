@@ -93,7 +93,8 @@ export function withEditorPlugin(ReactComponent, methods = []) {
           data.id
         );
 
-        if (validTab && data.id === id) {
+
+        if (!validTab || (validTab && data.id === id)) {
           // We should reset bookmarks when changing tabs. Right? And Left too :D
           PluginManagerIDE.resetBookmarks();
           updateRightMenu();

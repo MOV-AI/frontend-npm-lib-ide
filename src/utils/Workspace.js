@@ -118,7 +118,8 @@ class Workspace {
     const tabStack = this.storage.get(this.TAB_STACK_KEY) ?? defaultTabStack;
     // Convert tabStack to new format
     for (const dock in tabStack) {
-      tabStack[dock] = tabStack[dock].map(tab => ({
+      // Added filter because sometimes we had null values?!
+      tabStack[dock] = tabStack[dock].filter(x => x).map(tab => ({
         id: tab.id || tab,
         isNew: tab.isNew
       }));
