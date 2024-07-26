@@ -34,28 +34,12 @@ const useTabStack = (workspaceManager, layout) => {
    */
   const sanitizeStackTabs = useCallback(() => {
     if(!layout) return;
-    // const dockboxTabs = layout.dockbox.children[0]?.tabs;
-    // const floatboxTabs = layout.floatbox.children[0]?.tabs;
-    // const maxboxTabs = layout.maxbox.children[0]?.tabs;
-    // const windowboxTabs = layout.windowbox.children[0]?.tabs;
 
     Object.keys(tabStack.current).forEach(key => {
       tabStack.current[key] = layout[key].children[0]?.tabs.map(actualTab => {
         tabStack.current[key].find(stackTab => stackTab.id === actualTab.id);
       })
-    })
-    // tabStack.current.dockbox = dockboxTabs?.map(actualTab => 
-    //   tabStack.current.dockbox.find(stackTab => stackTab.id === actualTab.id)
-    // );
-    // tabStack.current.floatbox = floatboxTabs?.map(actualTab => 
-    //   tabStack.current.floatbox.find(stackTab => stackTab.id === actualTab.id)
-    // );
-    // tabStack.current.maxbox = maxboxTabs?.map(actualTab => 
-    //   tabStack.current.maxbox.find(stackTab => stackTab.id === actualTab.id)
-    // );
-    // tabStack.current.windowbox = windowboxTabs?.map(actualTab => 
-    //   tabStack.current.windowbox.find(stackTab => stackTab.id === actualTab.id)
-    // );
+    });
 
   }, [layout])
 
