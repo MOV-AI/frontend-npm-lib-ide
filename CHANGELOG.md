@@ -1,9 +1,19 @@
 # TBD
 
+- [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit - active tab change is being wrongfully triggered
+- [FP-2787](https://movai.atlassian.net/browse/FP-2787): IDE - Topics - Can't open multiple Topics tabs
+
+# 1.2.3
+
+- [FP-2754](https://movai.atlassian.net/browse/FP-2754): Control + S doesn't save flow
+- [FP-2653](https://movai.atlassian.net/browse/FP-2653): Nodes disappear after updating a flow parameter in tree view mode
+
+# 1.2.2
+
 - [FP-2713](https://movai.atlassian.net/browse/FP-2713): App version is not defined
 - [QAP-3963](https://movai.atlassian.net/browse/QAP-3963): Review devcontainer configuration for lib-ide
 - [FP-2840](https://movai.atlassian.net/browse/FP-2840): Update ReadMe's on all apps
-- [FP-2787](https://movai.atlassian.net/browse/FP-2787): IDE - Topics - Can't open multiple Topics tabs
+- [FP-2744](https://movai.atlassian.net/browse/FP-2744): Copying nodes in the flow does not copy the modified parameters
 
 # 1.2.1
 

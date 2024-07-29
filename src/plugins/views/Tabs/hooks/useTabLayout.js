@@ -669,6 +669,7 @@ const useTabLayout = (props, dockRef) => {
    */
   const onLayoutChange = useCallback(
     (newLayout, tabId, direction) => {
+      const isActuallyTabChange = activeTabId.current !== tabId;
       const dock = getDockFromTabId(tabId);
       const tabData = tabsById.current.get(tabId);
       let newActiveTabId = tabId;
@@ -691,8 +692,10 @@ const useTabLayout = (props, dockRef) => {
       // Emit new active tab id
       if (!tabId) return;
 
-      activeTabId.current = newActiveTabId;
-      emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
+      if(isActuallyTabChange){
+        activeTabId.current = newActiveTabId;
+        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
+      }
     },
     [
       getDockFromTabId,
