@@ -26,7 +26,7 @@ import { addTool } from "../tools";
 import { addKeyBind, defaultFunction } from "../utils/Utils";
 import * as genFunctions from "../utils/generalFunctions";
 import { KEYBINDINGS } from "../utils/shortcuts";
-import {
+import AppSettings, {
   setLogo,
   setName,
   setLinks,
@@ -50,7 +50,8 @@ function BaseApp(props) {
     shortcuts,
     handleLogOut,
     handleToggleTheme,
-    dependencies
+    dependencies,
+    version
   } = props;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -140,6 +141,10 @@ function BaseApp(props) {
   useEffect(() => {
     if (appProps) setAppProps(appProps);
   }, [appProps]);
+
+  useEffect(() => {
+    AppSettings.APP_INFORMATION.VERSION = version;
+  }, [version])
 
   //========================================================================================
   /*                                                                                      *
