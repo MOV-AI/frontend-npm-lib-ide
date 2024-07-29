@@ -76,11 +76,14 @@ const toolIds = JSON.parse(globalThis.localStorage.getItem("toolIds") ?? "{}");
  */
 export function openTool(call, toolName = getHomeTab().id, props = {}) {
   const id = toolIds[toolName] = (toolIds[toolName] || 0) + 1;
-  const tabData = { ...getToolTabData({ rid: toolName, id: toolName + id }, props, id) };
+  const tabData = { ...getToolTabData({ rid: toolName, id: toolName + id }, props) };
   tabData.rid = toolName;
-  tabData.id += id;
-  tabData.name += id;
-  tabData.title += id;
+  if (tabData.multiple) {
+    tabData.id += id;
+    tabData.name += id;
+    tabData.title += id;
+  } else
+    tabData.id = toolName;
   call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN, tabData);
   globalThis.localStorage.setItem("toolIds", JSON.stringify(toolIds))
 }

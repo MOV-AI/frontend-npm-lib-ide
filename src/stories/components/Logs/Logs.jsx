@@ -68,6 +68,7 @@ export const getLogsToolTab = () => {
     name: LOGS_PROFILE.title,
     tabTitle: LOGS_PROFILE.title,
     scope: LOGS_PROFILE.name,
+    multiple: true,
     extension: ""
   };
 };
