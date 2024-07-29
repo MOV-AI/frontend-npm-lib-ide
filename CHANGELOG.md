@@ -1,6 +1,7 @@
 # TBD
 
 - [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit - active tab change is being wrongfully triggered
+- [FP-2874](https://movai.atlassian.net/browse/FP-2874): IDE app version not correct
 
 # 1.2.3
 
