@@ -2,7 +2,7 @@
 
 - [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit - active tab change is being wrongfully triggered
 - [QAP-4055](https://movai.atlassian.net/browse/QAP-4055): Forward test coverage for lib-ide
-- [FP-2879](https://movai.atlassian.net/browse/FP-2879): Also resetBoomarks when we have an invalidTab
+- [FP-2879](https://movai.atlassian.net/browse/FP-2879): Closing last tab keeps bookmarks
 
 # 1.2.3
 
