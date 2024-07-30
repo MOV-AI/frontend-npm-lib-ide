@@ -2,12 +2,12 @@
 
 - [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit - active tab change is being wrongfully triggered
 - [QAP-4055](https://movai.atlassian.net/browse/QAP-4055): Forward test coverage for lib-ide
+- [FP-2879](https://movai.atlassian.net/browse/FP-2879): Also resetBoomarks when we have an invalidTab
 
 # 1.2.3
 
 - [FP-2754](https://movai.atlassian.net/browse/FP-2754): Control + S doesn't save flow
 - [FP-2653](https://movai.atlassian.net/browse/FP-2653): Nodes disappear after updating a flow parameter in tree view mode
-- [FP-2879](https://movai.atlassian.net/browse/FP-2879): Also resetBoomarks when we have an invalidTab
 
 # 1.2.2
 
