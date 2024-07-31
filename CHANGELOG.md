@@ -3,6 +3,7 @@
 - [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit - active tab change is being wrongfully triggered
 - [QAP-4055](https://movai.atlassian.net/browse/QAP-4055): Forward test coverage for lib-ide
 - [FP-2529](https://movai.atlassian.net/browse/FP-2529): Add data-testid to links. Added unit testing to BaseLink
+- [FP-2882](https://movai.atlassian.net/browse/FP-2882): Clicking in the bar under the documents loses context, not easy to get back
 
 # 1.2.3
 
