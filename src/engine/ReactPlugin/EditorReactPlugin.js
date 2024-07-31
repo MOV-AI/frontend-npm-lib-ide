@@ -58,12 +58,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
      * Triggers activateEditor if is this editor
      */
     const activateThisEditor = useCallback(
-      (data = {}) => {
-        const { instance } = data;
-
-        if (data.id === id || instance?.id === Utils.getNameFromURL(id))
-          activateEditor();
-      },
+      () => activateEditor(),
       [id, activateEditor]
     );
 
