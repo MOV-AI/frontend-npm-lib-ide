@@ -80,7 +80,6 @@ class BasePort extends BasePortStruct {
 
   render() {
     const css = this.css.default();
-    const [name, type] = this.data.name.split("/");
     this.object = d3
       .create("svg:circle")
       .attr("cx", this.cx)
@@ -88,7 +87,7 @@ class BasePort extends BasePortStruct {
       .attr("r", this.radius)
       .attr("stroke-width", 0)
       .attr("class", css)
-      .attr("data-testid", type + "-" + name);
+      .attr("data-testid", this.data.name);
 
     return this;
   }
