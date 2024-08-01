@@ -21,6 +21,34 @@ export const defaultFunction = (name, logToConsole = true) => {
 };
 
 /**
+ * Creates an unique id v4
+ */
+export const uuidv4 = () => {
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+    (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+  );
+}
+
+/**
+ * Tries to find the next increment on an array of numbers
+ * @param {Number[]} numArray 
+ */
+export const findNextIncrement = (numArray) => {
+  if(!numArray || numArray.length < 2) return numArray[0] ? numArray[0] + 1 : 1;
+
+  const max = Math.max(...numArray);
+  const min = Math.min(...numArray);
+
+  for(let i=min; i<= max; i++) {
+    if(!numArray.includes(i)) {
+      return i; 
+    }
+  }
+
+  return max + 1;
+}
+
+/**
  * Returns a given icon with props in a method
  * @param {SvgIcon} Icon
  * @returns {function} Icon with props
