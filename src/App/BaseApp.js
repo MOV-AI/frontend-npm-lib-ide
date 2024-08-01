@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
+import PropTypes from "prop-types";
 import hotkeys from "hotkeys-js";
 import { Style } from "@mov-ai/mov-fe-lib-react";
 import { Typography } from "@material-ui/core";
@@ -306,5 +307,18 @@ const MOVAI_LOGO = `
 ██║╚██╔╝██║ ██║   ██║  █║  ██╔╝ ╚════╝ ██╔══██║██║
 ██║ ╚═╝ ██║ ╚██████═╝   ╚███═╝         ██║  ██║██║
 `;
+
+BaseApp.propTypes = {
+  logo: PropTypes.string,
+  theme: PropTypes.string,
+  links: PropTypes.any,
+  appName: PropTypes.string,
+  appProps: PropTypes.object,
+  shortcuts: PropTypes.object,
+  handleLogOut: PropTypes.func,
+  handleToggleTheme: PropTypes.func,
+  dependencies: PropTypes.object,
+  version: PropTypes.string,
+};
 
 export default BaseApp;
