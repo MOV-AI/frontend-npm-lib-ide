@@ -5,6 +5,7 @@ import movaiIconWhite from "../Branding/movai-logo-white.png";
 import { getHomeTab } from "../tools/HomeTab/HomeTab";
 import { getShortcutsTab } from "../tools/AppShortcuts/AppShortcuts";
 import { getToolTabData } from "../tools";
+import Workspace from "./../utils/Workspace";
 
 //========================================================================================
 /*                                                                                      *
@@ -67,25 +68,27 @@ export function aboutPopup(call, classes = {}) {
   });
 }
 
-const toolIds = JSON.parse(globalThis.localStorage.getItem("toolIds") ?? "{}");
-
 /**
  * Open Tool tab
  * @param {function} call : Plugin call method
  * @param {string} toolName : Tool Unique Name
  */
 export function openTool(call, toolName = getHomeTab().id, props = {}) {
-  const id = toolIds[toolName] = (toolIds[toolName] || 0) + 1;
-  const tabData = { ...getToolTabData({ rid: toolName, id: toolName + id }, props) };
-  tabData.rid = toolName;
+  const workspace = new Workspace();
+  const tabsMap = workspace.getTabs();
+  const toolIds = tabsMap.get("toolIds") ?? {};
+  const toolIdData = toolIds[toolName] ?? { last: 0, free: [] };
+  const id = toolIdData.free.shift() || toolIdData.last++;
+  const tabData = { ...getToolTabData({ scope: toolName, id: toolName + "-" + id }, props) };
   if (tabData.multiple) {
-    tabData.id += id;
-    tabData.name += id;
-    tabData.title += id;
+    tabData.name += "-" + id;
+    tabData.title += "-" + id;
   } else
     tabData.id = toolName;
   call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN, tabData);
-  globalThis.localStorage.setItem("toolIds", JSON.stringify(toolIds))
+
+  tabsMap.set("toolIds", { ...toolIds, [toolName]: toolIdData });
+  workspace.setTabs(tabsMap);
 }
 
 /**

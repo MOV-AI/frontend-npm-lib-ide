@@ -9,13 +9,12 @@ export const addTool = (name, tool) => {
 };
 
 export const getToolTabData = (tab, props = {}) => {
-  const { id, name } = tab;
-  const { rid = id } = tab;
-  const notInstalledTab = getTabData(id, name);
-  const data = rid in APP_TOOLS ? APP_TOOLS[rid].tabData : notInstalledTab;
+  const { id, name, scope } = tab;
+  const notInstalledTab = getTabData(scope, name);
+  const data = scope in APP_TOOLS ? APP_TOOLS[scope].tabData : notInstalledTab;
   // Sanitize tab data to avoid TypeError: Converting circular structure to JSON
   if (!data.content) {
-    const plugin = PluginManagerIDE.getPlugin(rid);
+    const plugin = PluginManagerIDE.getPlugin(scope);
     data.content = plugin.render(props) || notInstalledTab.content;
   }
   if (props.tabTitle) data.name = props.tabTitle;
