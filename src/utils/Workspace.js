@@ -21,11 +21,11 @@ class Workspace {
     this.layoutAndTabs = this.getLayoutAndTabs();
     this.layout = this.layoutAndTabs[0];
     this.tabs = this.layoutAndTabs[1];
-    this.tabStack = this.getTabStack();
     this.defaultTabStack = Object.values(DOCK_POSITIONS).reduce(
       (a, k) => ({ ...a, [k]: [] }),
       {}
     );
+    this.tabStack = this.getTabStack();
     this.recentDocuments = this.getRecentDocuments();
     this.selectedRobot = this.getSelectedRobot();
     this.defaultRecentDocuments = [];
@@ -114,12 +114,12 @@ class Workspace {
    * Get information about current open tab stack from local storage
    * @returns {Object} tabStack
    */
-  getTabStack(defaultTabStack = this.defaultTabStack) {
-    const tabStack = this.storage.get(this.TAB_STACK_KEY) ?? defaultTabStack;
+  getTabStack() {
+    const tabStack = this.storage.get(this.TAB_STACK_KEY) ?? this.defaultTabStack;
+    
     // Convert tabStack to new format
     for (const dock in tabStack) {
-      // Added filter because sometimes we had null values?!
-      tabStack[dock] = tabStack[dock].filter(x => x).map(tab => ({
+      tabStack[dock] = tabStack[dock].map(tab => ({
         id: tab.id || tab,
         isNew: tab.isNew
       }));

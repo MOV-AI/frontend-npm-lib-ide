@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { DOCK_POSITIONS } from "../../../../utils/Constants";
 import { runBeforeUnload } from "../../../../utils/Utils";
 
-const useTabStack = (workspaceManager, layout) => {
+const useTabStack = (workspaceManager) => {
   const tabStack = useRef({});
 
   //========================================================================================
@@ -19,29 +19,10 @@ const useTabStack = (workspaceManager, layout) => {
     const newStack = {};
     for (const dock in thisStack) {
       const dockStack = thisStack[dock];
-      newStack[dock] = dockStack.filter(tab => !tab?.isNew);
+      newStack[dock] = dockStack.filter(tab => !tab.isNew);
     }
     workspaceManager.setTabStack(newStack);
   }, [workspaceManager]);
-
-  /**
-   * @private Sanitizes all tabs in docks 
-   * (What would happen sometimes is: For some reason
-   * You could have multiple tabs in the tab stack 
-   * that didn't actually exist in the layout,
-   * This way, on mount we will always sanitize the tabStack
-   * to only have the same tabs that exist in the layout)
-   */
-  const sanitizeStackTabs = useCallback(() => {
-    if(!layout) return;
-
-    Object.keys(tabStack.current).forEach(key => {
-      tabStack.current[key] = layout[key].children[0]?.tabs.map(actualTab => {
-        tabStack.current[key].find(stackTab => stackTab.id === actualTab.id);
-      })
-    });
-
-  }, [layout])
 
   //========================================================================================
   /*                                                                                      *
@@ -57,7 +38,7 @@ const useTabStack = (workspaceManager, layout) => {
   const removeTabFromStack = useCallback(
     (tabId, dock = DOCK_POSITIONS.DOCK) => {
       const thisStack = tabStack.current[dock] || [];
-      const newStack = thisStack.filter(tab => tab?.id !== tabId);
+      const newStack = thisStack.filter(tab => tab.id !== tabId);
       tabStack.current[dock] = newStack;
       workspaceManager.setTabStack(tabStack.current);
     },
@@ -97,9 +78,8 @@ const useTabStack = (workspaceManager, layout) => {
   //========================================================================================
 
   useEffect(() => {
+    if(!workspaceManager) return;
     tabStack.current = workspaceManager.getTabStack();
-    // Let's sanitize the stacktabs on mount 
-    sanitizeStackTabs();
     // Before unload app, remove all "untitled" tabs from stack
     runBeforeUnload(removeNewTabsFromStack);
   }, [workspaceManager, removeNewTabsFromStack]);

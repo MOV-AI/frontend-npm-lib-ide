@@ -29,7 +29,7 @@ const useTabLayout = (props, dockRef) => {
   const tabsById = useRef(new Map());
   const [layout, setLayout] = useState({ ...DEFAULT_LAYOUT });
   const { addTabToStack, removeTabFromStack, getNextTabFromStack } =
-    useTabStack(workspaceManager, layout);
+    useTabStack(workspaceManager);
 
   //========================================================================================
   /*                                                                                      *
