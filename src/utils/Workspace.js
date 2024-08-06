@@ -25,6 +25,9 @@ class Workspace {
       (a, k) => ({ ...a, [k]: [] }),
       {}
     );
+    // Since we are always setting the DEFAULT_TABS
+    // It makes sense to add them to the tabStack as well.
+    this.defaultTabStack[DOCK_POSITIONS.DOCK] = [...DEFAULT_TABS.values()];
     this.tabStack = this.getTabStack();
     this.recentDocuments = this.getRecentDocuments();
     this.selectedRobot = this.getSelectedRobot();
@@ -116,7 +119,7 @@ class Workspace {
    */
   getTabStack() {
     const tabStack = this.storage.get(this.TAB_STACK_KEY) ?? this.defaultTabStack;
-    
+
     // Convert tabStack to new format
     for (const dock in tabStack) {
       tabStack[dock] = tabStack[dock].map(tab => ({

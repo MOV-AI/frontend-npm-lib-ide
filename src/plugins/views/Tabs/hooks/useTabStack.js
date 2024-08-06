@@ -4,7 +4,7 @@ import { runBeforeUnload } from "../../../../utils/Utils";
 
 const useTabStack = (workspaceManager) => {
   const tabStack = useRef({});
-
+  
   //========================================================================================
   /*                                                                                      *
    *                                    Private Methods                                   *
