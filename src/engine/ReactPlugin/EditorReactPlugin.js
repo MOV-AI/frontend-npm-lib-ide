@@ -39,7 +39,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
     } = props;
 
     const editorContainer = useRef();
-    const lastFocusTabId = useRef('');
 
     /**
      * Activate editor : activate editor's keybinds and update right menu
@@ -62,8 +61,11 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       (data = {}) => {
         const { instance } = data;
 
-        if (lastFocusTabId.current === id || instance?.id === Utils.getNameFromURL(id))
+        console.log("Activate for ", data, " and ", id)
+
+        if (data.id === id) {
           activateEditor();
+        }
       },
       [id, activateEditor]
     );
@@ -75,8 +77,9 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       (data = {}) => {
         const { instance } = data;
 
-        if (lastFocusTabId.current !== id || instance?.id !== Utils.getNameFromURL(id))
+        if (data.id !== id) {
           deactivateEditor();
+        }
       },
       [id, deactivateEditor]
     );
@@ -94,8 +97,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
           data.id
         );
 
-        lastFocusTabId.current = data.id;
-
         // This check goes through every open tab checking it's id
         // towards data.id (which comes from the ACTIVE_TAB_CHANGE broadcast)
         // When we find the tab with the id that we want to reset, we reset it
@@ -107,6 +108,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         }
       });
 
+      // This is needed when editing documents using modals
       on(
         PLUGINS.DOC_MANAGER.NAME,
         PLUGINS.DOC_MANAGER.ON.UPDATE_DOC_DIRTY,
@@ -136,14 +138,12 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       <div
         tabIndex="-1"
         ref={editorContainer}
-        onFocus={activateThisEditor}
-        onBlur={deactivateKeyBind}
+        onFocus={activateEditor}
+        onBlur={deactivateEditor}
         className={`container-${scope}`}
       >
         <RefComponent
           {...props}
-          activateEditor={activateThisEditor}
-          deactivateEditor={deactivateThisEditor}
           saveDocument={save}
           ref={ref}
         />
