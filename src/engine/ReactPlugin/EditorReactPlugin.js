@@ -59,13 +59,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
      */
     const activateThisEditor = useCallback(
       (data = {}) => {
-        const { instance } = data;
-
-        console.log("Activate for ", data, " and ", id)
-
-        if (data.id === id) {
-          activateEditor();
-        }
+        if (data.id === id) activateEditor();
       },
       [id, activateEditor]
     );
@@ -75,11 +69,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
      */
     const deactivateThisEditor = useCallback(
       (data = {}) => {
-        const { instance } = data;
-
-        if (data.id !== id) {
-          deactivateEditor();
-        }
+        if (data.id !== id) deactivateEditor();
       },
       [id, deactivateEditor]
     );
@@ -138,12 +128,12 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       <div
         tabIndex="-1"
         ref={editorContainer}
-        onFocus={activateEditor}
-        onBlur={deactivateEditor}
         className={`container-${scope}`}
       >
         <RefComponent
           {...props}
+          onFocus={activateEditor}
+          onBlur={deactivateEditor}
           saveDocument={save}
           ref={ref}
         />
