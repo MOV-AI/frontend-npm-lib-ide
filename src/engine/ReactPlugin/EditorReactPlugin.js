@@ -39,6 +39,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
     } = props;
 
     const editorContainer = useRef();
+    const lastFocusTabId = useRef('');
 
     /**
      * Activate editor : activate editor's keybinds and update right menu
@@ -58,7 +59,12 @@ export function withEditorPlugin(ReactComponent, methods = []) {
      * Triggers activateEditor if is this editor
      */
     const activateThisEditor = useCallback(
-      () => activateEditor(),
+      (data = {}) => {
+        const { instance } = data;
+
+        if (lastFocusTabId.current === id || instance?.id === Utils.getNameFromURL(id))
+          activateEditor();
+      },
       [id, activateEditor]
     );
 
@@ -69,7 +75,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       (data = {}) => {
         const { instance } = data;
 
-        if (data.id !== id || instance?.id !== Utils.getNameFromURL(id))
+        if (lastFocusTabId.current !== id || instance?.id !== Utils.getNameFromURL(id))
           deactivateEditor();
       },
       [id, deactivateEditor]
@@ -87,6 +93,8 @@ export function withEditorPlugin(ReactComponent, methods = []) {
           PLUGINS.TABS.CALL.FIND_TAB,
           data.id
         );
+
+        lastFocusTabId.current = data.id;
 
         // This check goes through every open tab checking it's id
         // towards data.id (which comes from the ACTIVE_TAB_CHANGE broadcast)
