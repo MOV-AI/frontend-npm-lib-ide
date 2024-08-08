@@ -63,7 +63,6 @@ export const Flow = (props, ref) => {
     alert,
     addKeyBind,
     removeKeyBind,
-    activateEditor,
     activateKeyBind,
     confirmationAlert,
     contextOptions,
@@ -728,7 +727,6 @@ export const Flow = (props, ref) => {
    */
   const onLinkSelected = useCallback(
     link => {
-      activateEditor();
       selectedLinkRef.current = link;
       getMainInterface().selectedLink = link;
       if (!link) {
@@ -762,7 +760,7 @@ export const Flow = (props, ref) => {
         addLinkMenu(link, true);
       }
     },
-    [activateEditor, call, unselectNode, addLinkMenu]
+    [call, unselectNode, addLinkMenu]
   );
 
   /**
@@ -778,7 +776,6 @@ export const Flow = (props, ref) => {
    * Call broadcast method to emit event to all open flows
    */
   const setFlowsToDefault = useCallback(() => {
-    activateEditor();
     // Remove selected node and link bookmark
     onNodeSelected(null);
     onLinkSelected(null);
@@ -790,7 +787,7 @@ export const Flow = (props, ref) => {
       PLUGINS.DOC_MANAGER.ON.FLOW_EDITOR,
       { action: "setMode", value: EVT_NAMES.DEFAULT }
     );
-  }, [call, activateEditor, onLinkSelected, onNodeSelected]);
+  }, [call, onLinkSelected, onNodeSelected]);
 
   /**
    * Subscribe to mainInterface and canvas events
