@@ -14,7 +14,7 @@ import {
   DOCK_MODES,
   PLUGINS
 } from "../../../../utils/Constants";
-import { getIconByScope } from "../../../../utils/Utils";
+import { getIconByScope, findNextIncrement } from "../../../../utils/Utils";
 import PluginManagerIDE from "../../../../engine/PluginManagerIDE/PluginManagerIDE";
 import Workspace from "../../../../utils/Workspace";
 import { getToolTabData } from "../../../../tools";
@@ -527,8 +527,9 @@ const useTabLayout = (props, dockRef) => {
    */
   const open = useCallback(
     tabData => {
-      const tabPosition = tabData.dockPosition ?? getDefaultTabPosition();
-      const position = tabData.position ?? {
+      let newTabData = {...tabData};
+      const tabPosition = newTabData.dockPosition ?? getDefaultTabPosition();
+      const position = newTabData.position ?? {
         h: 500,
         w: 600,
         x: 145,
@@ -536,24 +537,40 @@ const useTabLayout = (props, dockRef) => {
         z: 1
       };
 
-      emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: tabData.id });
-      addTabToStack(tabData, tabPosition);
-      tabsById.current.set(tabData.id, tabData);
+      if(Object.hasOwn(newTabData, 'multiple')){
+        const thisTabIds = [...tabsById.current.values()]
+          .filter(tab => tab.scope === newTabData.scope)
+          .map(tab => tab.multiple);
+
+        const currentIncrement = findNextIncrement(thisTabIds);
+        newTabData.multiple = currentIncrement;
+    
+        if(currentIncrement > 1) {
+          newTabData.id = `${newTabData.scope}_${currentIncrement}`;
+          newTabData.name = `${newTabData.name} ${currentIncrement}`;
+          newTabData.tabTitle = `${newTabData.tabTitle} ${currentIncrement}`;
+        }
+      }
+
+      emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newTabData.id });
+      addTabToStack(newTabData, tabPosition);
+      tabsById.current.set(newTabData.id, newTabData);
       workspaceManager.setTabs(tabsById.current);
 
-      const existingTab = findTab(tabData.id);
+      const existingTab = findTab(newTabData.id);
+
       if (existingTab) {
-        focusExistingTab(tabData.id);
+        focusExistingTab(newTabData.id);
         return;
       }
 
       // Update new open tab id
-      activeTabId.current = tabData.id;
+      activeTabId.current = newTabData.id;
       // Set new layout
       setLayout(prevState => {
         const newState = { ...prevState };
         if (newState[tabPosition].children.length === 0) {
-          newState[tabPosition].children = [{ ...position, tabs: [tabData] }];
+          newState[tabPosition].children = [{ ...position, tabs: [newTabData] }];
 
           workspaceManager.setLayout(newState);
           return { ...newState };
@@ -562,12 +579,12 @@ const useTabLayout = (props, dockRef) => {
         if (tabPosition === DOCK_POSITIONS.FLOAT) {
           newState[tabPosition].children.push({
             ...position,
-            tabs: [tabData]
+            tabs: [newTabData]
           });
         } else {
           const firstContainer = _getFirstContainer(newState[tabPosition]);
-          firstContainer.tabs.push(tabData);
-          firstContainer.activeId = tabData.id;
+          firstContainer.tabs.push(newTabData);
+          firstContainer.activeId = newTabData.id;
         }
 
         workspaceManager.setLayout(newState);
@@ -633,6 +650,7 @@ const useTabLayout = (props, dockRef) => {
     data => {
       const tabFromMemory = tabsById.current.get(data.id);
       if (!tabFromMemory && !data.content) return;
+
       const {
         id,
         content,
@@ -642,8 +660,10 @@ const useTabLayout = (props, dockRef) => {
         extension,
         isDirty,
         isNew,
+        multiple,
         tabProps
       } = tabFromMemory ?? data;
+
       tabsById.current.set(id, {
         id,
         scope,
@@ -653,11 +673,19 @@ const useTabLayout = (props, dockRef) => {
         extension,
         isNew,
         isDirty,
+        multiple,
         tabProps
       });
-      const tabData = { id, scope, name, tabTitle, extension };
+      const tabData = { 
+        id, 
+        scope, 
+        name, 
+        tabTitle, 
+        extension 
+      };
       return {
         id: id,
+        multiple,
         title: _getCustomTab(tabData, _closeTab, isDirty),
         content: content,
         closable: true

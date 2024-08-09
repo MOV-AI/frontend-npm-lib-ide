@@ -95,7 +95,6 @@ export const getHomeTab = () => {
     name: HOMETAB_PROFILE.title,
     tabTitle: HOMETAB_PROFILE.title,
     scope: HOMETAB_PROFILE.name,
-    extension: "",
-    isTool: true
+    extension: ""
   };
 };

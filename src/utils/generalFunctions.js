@@ -70,10 +70,10 @@ export function aboutPopup(call, classes = {}) {
 /**
  * Open Tool tab
  * @param {function} call : Plugin call method
- * @param {string} toolName : Tool Unique Name
+ * @param {string} scope : Tool Unique Name
  */
-export function openTool(call, toolName = getHomeTab().id, props = {}) {
-  const tabData = getToolTabData({ id: toolName }, props);
+export function openTool(call, scope = getHomeTab().scope, props = {}) {
+  const tabData = getToolTabData({ scope }, props);
   call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN, tabData);
 }
 
