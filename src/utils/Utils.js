@@ -175,7 +175,7 @@ export function runBeforeUnload(callback, ...args) {
   const onAppUnload = window.onbeforeunload;
   // Set new beforeunload method with given callback
   window.onbeforeunload = event => {
-    callback?.(...args, event);
+    callback?.(event, ...args);
     return onAppUnload(event);
   };
 }
