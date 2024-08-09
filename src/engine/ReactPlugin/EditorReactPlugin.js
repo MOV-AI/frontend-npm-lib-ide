@@ -90,7 +90,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         // This check goes through every open tab checking it's id
         // towards data.id (which comes from the ACTIVE_TAB_CHANGE broadcast)
         // When we find the tab with the id that we want to reset, we reset it
-        if (validTab && data.id === id) {
+        if (!validTab || (validTab && data.id === id)) {
           // We should reset bookmarks when changing tabs. Right? And Left too :D
           PluginManagerIDE.resetBookmarks();
           updateRightMenu();
