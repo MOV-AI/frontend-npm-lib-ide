@@ -22,7 +22,6 @@ export const Configuration = (props, ref) => {
     name,
     call,
     instance,
-    activateEditor = () => defaultFunction("activateEditor"),
     saveDocument = () => defaultFunction("saveDocument"),
     editable = true
   } = props;
@@ -149,7 +148,6 @@ export const Configuration = (props, ref) => {
         <Toolbar
           data-testid="input-toolbar"
           variant="dense"
-          onClick={activateEditor}
         >
           <ToggleButtonGroup
             size="small"
@@ -176,8 +174,7 @@ Configuration.propTypes = {
   instance: PropTypes.object,
   data: PropTypes.object,
   editable: PropTypes.bool,
-  saveDocument: PropTypes.func,
-  activateEditor: PropTypes.func
+  saveDocument: PropTypes.func
 };
 
 export default withEditorPlugin(Configuration);

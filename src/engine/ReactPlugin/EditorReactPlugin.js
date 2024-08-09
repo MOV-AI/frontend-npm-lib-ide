@@ -59,10 +59,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
      */
     const activateThisEditor = useCallback(
       (data = {}) => {
-        const { instance } = data;
-
-        if (data.id === id || instance?.id === Utils.getNameFromURL(id))
-          activateEditor();
+        if (data.id === id) activateEditor();
       },
       [id, activateEditor]
     );
@@ -72,10 +69,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
      */
     const deactivateThisEditor = useCallback(
       (data = {}) => {
-        const { instance } = data;
-
-        if (data.id !== id || instance?.id !== Utils.getNameFromURL(id))
-          deactivateEditor();
+        if (data.id !== id) deactivateEditor();
       },
       [id, deactivateEditor]
     );
@@ -104,6 +98,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         }
       });
 
+      // This is needed when editing documents using modals
       on(
         PLUGINS.DOC_MANAGER.NAME,
         PLUGINS.DOC_MANAGER.ON.UPDATE_DOC_DIRTY,
@@ -133,14 +128,12 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       <div
         tabIndex="-1"
         ref={editorContainer}
-        onFocus={activateThisEditor}
-        onBlur={deactivateKeyBind}
         className={`container-${scope}`}
       >
         <RefComponent
           {...props}
-          activateEditor={activateThisEditor}
-          deactivateEditor={deactivateThisEditor}
+          onFocus={activateEditor}
+          onBlur={deactivateEditor}
           saveDocument={save}
           ref={ref}
         />
