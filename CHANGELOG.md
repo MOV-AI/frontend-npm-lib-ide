@@ -1,6 +1,7 @@
 # TBD
 
 - [FP-2879](https://movai.atlassian.net/browse/FP-2879): Closing last tab keeps bookmarks
+- [FP-2773](https://movai.atlassian.net/browse/FP-2773): Scene - opening a scene the info tab on the right is open and empty
 - [FP-2882](https://movai.atlassian.net/browse/FP-2882): Clicking in the bar under the documents loses context, not easy to get back
 
 # v1.2.4
@@ -14,7 +15,6 @@
 
 - [FP-2754](https://movai.atlassian.net/browse/FP-2754): Control + S doesn't save flow
 - [FP-2653](https://movai.atlassian.net/browse/FP-2653): Nodes disappear after updating a flow parameter in tree view mode
-- [FP-2773](https://movai.atlassian.net/browse/FP-2773): Scene - opening a scene the info tab on the right is open and empty
 
 # v1.2.2
 
