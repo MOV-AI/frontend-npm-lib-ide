@@ -170,12 +170,12 @@ export function simulateMouseClick(element) {
  * Trigger callback before unload app
  * @param {function} callback
  */
-export function runBeforeUnload(callback) {
+export function runBeforeUnload(callback, ...args) {
   // Previous beforeunload method
   const onAppUnload = window.onbeforeunload;
   // Set new beforeunload method with given callback
   window.onbeforeunload = event => {
-    callback?.(event);
+    callback?.(event, ...args);
     return onAppUnload(event);
   };
 }

@@ -395,8 +395,9 @@ class DocManager extends IDEPlugin {
    * @param {model} instance : Document model instance
    * @param {boolean} value : Document Dirty state
    */
-  onDocumentDirty(_, instance, value) {
+  onDocumentDirty(store, instance, value) {
     this.emit(PLUGINS.DOC_MANAGER.ON.UPDATE_DOC_DIRTY, {
+      id: `${CONSTANTS.GLOBAL_WORKSPACE}/${store}/${instance.id}`,
       instance,
       value
     });
