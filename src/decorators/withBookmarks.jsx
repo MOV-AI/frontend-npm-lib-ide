@@ -84,21 +84,17 @@ const withBookmarks = Component => {
      *    {String} name : Title
      *    {Element} view : Element to be rendered in menu container
      *  }
-     *  @param {Boolean} isDefault : Set bookmark as active if true
      *  @param {string} activeBookmark : bookmark to make active
+     *  @param {Boolean} isDefault : Set bookmark as active if true
+     *  @param {Boolean} shouldOpen : Opens the drawer if true
      */
     const addBookmark = useCallback(
       (data, activeBookmark, isDefault = false, shouldOpen = false) => {
-        const name = data.name;
-        let newActive = isDefault && name;
         setBookmarks(prevState => {
-          const newBookmarks = { ...prevState, [name]: data };
-          newActive = getValidBookmark(newBookmarks, activeBookmark);
-
-          return { ...prevState, [name]: data };
+          return { ...prevState, [data.name]: data };
         });
 
-        setActive(newActive);
+        if (isDefault) setActive(activeBookmark);
         if (shouldOpen) drawerRef.current.openDrawer();
       },
       []
