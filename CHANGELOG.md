@@ -1,4 +1,4 @@
-# TBD
+# v1.2.5
 
 - [FP-2879](https://movai.atlassian.net/browse/FP-2879): Closing last tab keeps bookmarks
 - [FP-2882](https://movai.atlassian.net/browse/FP-2882): Clicking in the bar under the documents loses context, not easy to get back
