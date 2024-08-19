@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
+import PropTypes from "prop-types";
 import hotkeys from "hotkeys-js";
 import { Style } from "@mov-ai/mov-fe-lib-react";
 import { Typography } from "@material-ui/core";
@@ -26,7 +27,7 @@ import { addTool } from "../tools";
 import { addKeyBind, defaultFunction } from "../utils/Utils";
 import * as genFunctions from "../utils/generalFunctions";
 import { KEYBINDINGS } from "../utils/shortcuts";
-import {
+import AppSettings, {
   setLogo,
   setName,
   setLinks,
@@ -50,7 +51,8 @@ function BaseApp(props) {
     shortcuts,
     handleLogOut,
     handleToggleTheme,
-    dependencies
+    dependencies,
+    version
   } = props;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -140,6 +142,10 @@ function BaseApp(props) {
   useEffect(() => {
     if (appProps) setAppProps(appProps);
   }, [appProps]);
+
+  useEffect(() => {
+    AppSettings.APP_INFORMATION.VERSION = version;
+  }, [version])
 
   //========================================================================================
   /*                                                                                      *
@@ -301,5 +307,18 @@ const MOVAI_LOGO = `
 ██║╚██╔╝██║ ██║   ██║  █║  ██╔╝ ╚════╝ ██╔══██║██║
 ██║ ╚═╝ ██║ ╚██████═╝   ╚███═╝         ██║  ██║██║
 `;
+
+BaseApp.propTypes = {
+  logo: PropTypes.string,
+  theme: PropTypes.string,
+  links: PropTypes.any,
+  appName: PropTypes.string,
+  appProps: PropTypes.object,
+  shortcuts: PropTypes.object,
+  handleLogOut: PropTypes.func,
+  handleToggleTheme: PropTypes.func,
+  dependencies: PropTypes.object,
+  version: PropTypes.string,
+};
 
 export default BaseApp;

@@ -49,7 +49,15 @@ const useTabLayout = (props, dockRef) => {
           const tabData = getToolTabData(tab, tab.tabProps);
           tabsById.current.set(tabData.id, tabData);
           workspaceManager.setTabs(tabsById.current);
-          addTabToStack(tabData, DOCK_POSITIONS.DOCK);
+
+          // This fixes an issue where on first load a non editor tab
+          // was being added to the tabStack (HomeTab) and that meant
+          // that the last tab to enter tabStack would always be
+          // HomeTab, instead of the correct last tab
+          if(!firstLoad.current){
+            addTabToStack(tabData, DOCK_POSITIONS.DOCK);
+          }
+
           dockRef.current?.updateTab?.(toolName, tabData, false);
         }
       });
