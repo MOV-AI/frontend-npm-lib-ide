@@ -6,8 +6,7 @@
 
 # v1.2.4
 
-- [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit - active tab chang
-e is being wrongfully triggered
+- [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit - active tab change is being wrongfully triggered
 - [FP-2874](https://movai.atlassian.net/browse/FP-2874): IDE app version not correct
 - [QAP-4055](https://movai.atlassian.net/browse/QAP-4055): Forward test coverage for lib-ide
 - [FP-2529](https://movai.atlassian.net/browse/FP-2529): Add data-testid to links. Added unit testing to BaseLink
