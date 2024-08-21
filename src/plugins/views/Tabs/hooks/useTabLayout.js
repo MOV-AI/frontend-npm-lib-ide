@@ -15,6 +15,7 @@ import {
   PLUGINS
 } from "../../../../utils/Constants";
 import { getIconByScope } from "../../../../utils/Utils";
+import { freeToolId } from "../../../../utils/generalFunctions";
 import PluginManagerIDE from "../../../../engine/PluginManagerIDE/PluginManagerIDE";
 import Workspace from "../../../../utils/Workspace";
 import { getToolTabData } from "../../../../tools";
@@ -356,16 +357,7 @@ const useTabLayout = (props, dockRef) => {
 
         // Remove tab and apply new layout
         tabsByIdRef.current.delete(tabId);
-        const numberId = new Number(tabId.substring(tabId.lastIndexOf("-") + 1));
-        if (!isNaN(numberId)) {
-          const toolIds = tabsByIdRef.current.get("toolIds");
-          const toolIdData = toolIds[scope];
-          toolIdData.free.unshift(numberId);
-          tabsByIdRef.current.set("toolIds", { ...toolIds, [scope]: {
-            last: toolIdData.last,
-            free: toolIdData.free,
-          } });
-        }
+        freeToolId(tabId);
         workspaceManager.setTabs(tabsByIdRef.current);
         const dock = getDockFromTabId(tabId);
         removeTabFromStack(tabId, dock);

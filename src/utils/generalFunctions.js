@@ -68,17 +68,67 @@ export function aboutPopup(call, classes = {}) {
   });
 }
 
+function breakToolId(tabId) {
+  const index = tabId.search(/\d/);
+  const alpha = tabId.substring(0, index - 1);
+
+  if (index < 0)
+    return [alpha];
+
+  const number = new Number(tabId.substring(index));
+
+  return [alpha, number];
+}
+
+function computeIds(tabsMap) {
+  const res = {};
+
+  for (const [tabId] of tabsMap) {
+    const [alpha, number] = breakToolId(tabId);
+    const index = tabId.search(/\d/);
+    if (index < 0)
+      continue;
+    const specific = res[alpha] ?? { last: 0, busy: {}, free: [] };
+    specific.busy[number] = 1;
+    if (number > specific.last)
+      specific.last = number;
+    res[alpha] = specific;
+  }
+
+  for (const toolName in res) {
+    const specific = res[toolName];
+    for (let j = 0; j < specific.last; j++)
+      if (!specific.busy[j])
+        specific.free.push(j);
+    delete specific.busy;
+    specific.last++;
+  }
+
+  return res;
+}
+
+const workspace = new Workspace();
+const tabsMap = workspace.getTabs();
+const toolIds = computeIds(tabsMap);
+
+export function freeToolId(tabId) {
+  const [alpha, number] = breakToolId(tabId);
+
+  if (!number)
+    return;
+
+  const toolIdData = toolIds[alpha];
+  toolIdData.free.unshift(number);
+}
+
 /**
  * Open Tool tab
  * @param {function} call : Plugin call method
  * @param {string} toolName : Tool Unique Name
  */
 export function openTool(call, toolName = getHomeTab().id, props = {}) {
-  const workspace = new Workspace();
-  const tabsMap = workspace.getTabs();
-  const toolIds = tabsMap.get("toolIds") ?? {};
   const toolIdData = toolIds[toolName] ?? { last: 0, free: [] };
-  const id = toolIdData.free.shift() || toolIdData.last++;
+  const id = toolIdData.free.shift() ?? toolIdData.last++;
   const tabData = { ...getToolTabData({ scope: toolName, id: toolName + "-" + id }, props) };
   if (tabData.multiple) {
     tabData.name += "-" + id;
@@ -87,8 +137,7 @@ export function openTool(call, toolName = getHomeTab().id, props = {}) {
     tabData.id = toolName;
   call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN, tabData);
 
-  tabsMap.set("toolIds", { ...toolIds, [toolName]: toolIdData });
-  workspace.setTabs(tabsMap);
+  toolIds[toolName] = toolIdData;
 }
 
 /**
