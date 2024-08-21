@@ -9,7 +9,7 @@ export const addTool = (name, tool) => {
 };
 
 export const getToolTabData = (tab, props = {}) => {
-  const { id, name, scope } = tab;
+  const { name, scope } = tab;
   const notInstalledTab = getTabData(scope, name);
   const data = scope in APP_TOOLS ? APP_TOOLS[scope].tabData : notInstalledTab;
   // Sanitize tab data to avoid TypeError: Converting circular structure to JSON
