@@ -118,15 +118,15 @@ class AbstractDataType {
    */
   stringEditComponent(props, placeholder, parsedValue) {
     const value = parsedValue !== undefined ? parsedValue : props.rowData.value;
-    const wasObject = typeof value === "object";
+    const convert = typeof value === "object" || Array.isArray(value);
     return (
       <TextField
         inputProps={{ "data-testid": "input_value" }}
         fullWidth
         placeholder={placeholder}
-        defaultValue={(wasObject ? JSON.stringify(value) : value) || ""}
+        defaultValue={(convert ? JSON.stringify(value) : value) || ""}
         onChange={evt => {
-          if (!wasObject)
+          if (!convert)
             return props.onChange(evt.target.value);
 
           try {
