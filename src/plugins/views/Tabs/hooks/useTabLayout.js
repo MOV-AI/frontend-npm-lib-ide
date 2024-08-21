@@ -356,11 +356,11 @@ const useTabLayout = (props, dockRef) => {
 
         // Remove tab and apply new layout
         tabsById.current.delete(tabId);
-        const nid = new Number(tabId.substring(tabId.lastIndexOf("-") + 1));
-        if (!isNaN(nid)) {
+        const numberId = new Number(tabId.substring(tabId.lastIndexOf("-") + 1));
+        if (!isNaN(numberId)) {
           const toolIds = tabsById.current.get("toolIds");
           const toolIdData = toolIds[scope];
-          toolIdData.free.unshift(nid);
+          toolIdData.free.unshift(numberId);
           tabsById.current.set("toolIds", { ...toolIds, [scope]: {
             last: toolIdData.last,
             free: toolIdData.free,
