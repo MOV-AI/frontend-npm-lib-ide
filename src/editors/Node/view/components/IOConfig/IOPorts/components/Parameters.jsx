@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import Grid from "@material-ui/core/Grid";
 import Circle from "@material-ui/icons/FiberManualRecord";
 import TextField from "@material-ui/core/TextField";
+import Checkbox from "@material-ui/core/Checkbox";
 
 import { parametersStyles } from "./styles";
 
@@ -22,7 +23,7 @@ const Parameters = props => {
   const handleOnChange = useCallback(
     evt => {
       handleIOPortsInputs(
-        evt.target.value,
+        evt.target,
         rowDataName,
         direction,
         ioPort,
@@ -32,6 +33,29 @@ const Parameters = props => {
     [rowDataName, direction, ioPort, param, handleIOPortsInputs]
   );
 
+  const inputType = () => {
+  // TODO: Ports data should provide which type the frontend should render
+  // and not this harcoded string
+    if (["latch", "Oneshot"].includes(param)) {
+      return <Checkbox
+        type={"checkbox"}
+        defaultChecked={paramValue}
+        onChange={handleOnChange}
+      />;
+    }
+    else {
+      return <TextField
+        type={["Frequency", "queue_size"].includes(param) ? "number" : "text"}
+        inputProps={{ "data-testid": "input_parameter" }}
+        disabled={!editable}
+        defaultValue={paramValue}
+        className={classes.input}
+        onChange={handleOnChange}
+      />;
+    }
+
+  }
+
   return (
     <Grid className={classes.gridContainer}>
       <Grid item xs={3} className={classes.titleColumn}>
@@ -39,13 +63,7 @@ const Parameters = props => {
         {`${param}:`}
       </Grid>
       <Grid item xs={9}>
-        <TextField
-          inputProps={{ "data-testid": "input_parameter" }}
-          disabled={!editable}
-          defaultValue={paramValue}
-          className={classes.input}
-          onChange={handleOnChange}
-        />
+        {inputType()}
       </Grid>
     </Grid>
   );

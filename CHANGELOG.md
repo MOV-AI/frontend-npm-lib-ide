@@ -1,4 +1,6 @@
 # TBD
+
+- [FP-2739](https://movai.atlassian.net/browse/FP-2739): Port properties of the node templates are turning to strings after editing them
 - [FP-2716](https://movai.atlassian.net/browse/FP-2716): Annotations imported cannot be edited
 - [FP-2711](https://movai.atlassian.net/browse/FP-2711): Corrupted data in Annotation
 
