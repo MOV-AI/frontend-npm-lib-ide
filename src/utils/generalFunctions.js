@@ -68,6 +68,7 @@ export function aboutPopup(call, classes = {}) {
   });
 }
 
+/* breaks a tool id into the alphabetical and numerical components */
 function breakToolId(tabId) {
   const index = tabId.search(/\d/);
   const alpha = tabId.substring(0, index - 1);
@@ -80,9 +81,18 @@ function breakToolId(tabId) {
   return [alpha, number];
 }
 
+/* get the structure from the tabsMap that will allow us
+ * to efficently organize tool ids.
+ */
 function computeIds(tabsMap) {
   const res = {};
 
+  /* get a map of this format:
+   * {
+   *   Topics: { last: 3, busy: [2] },
+   *   VarsDebug: { last 2, busy: [1] },
+   * }
+   */
   for (const [tabId] of tabsMap) {
     const [alpha, number] = breakToolId(tabId);
     const index = tabId.search(/\d/);
@@ -95,6 +105,12 @@ function computeIds(tabsMap) {
     res[alpha] = specific;
   }
 
+  /* turn it into:
+   * {
+   *   Topics: { last: 3, free: [1] },
+   *   VarsDebug: { last 2, free: [] },
+   * }
+   */
   for (const toolName in res) {
     const specific = res[toolName];
     for (let j = 0; j < specific.last; j++)
@@ -111,6 +127,7 @@ const workspace = new Workspace();
 const tabsMap = workspace.getTabs();
 const toolIds = computeIds(tabsMap);
 
+/* free a tool id */
 export function freeToolId(tabId) {
   const [alpha, number] = breakToolId(tabId);
 
