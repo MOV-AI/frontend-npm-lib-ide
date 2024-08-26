@@ -117,21 +117,22 @@ class AbstractDataType {
    * @returns {ReactComponent} Text input for editing common strings
    */
   stringEditComponent(props, placeholder, parsedValue) {
-    const value = parsedValue !== undefined ? parsedValue : props.rowData.value;
-    const convert = typeof value === "object" || Array.isArray(value);
+    const value = (parsedValue !== undefined ? parsedValue : props.rowData.value) ?? "";
     return (
       <TextField
         inputProps={{ "data-testid": "input_value" }}
         fullWidth
         placeholder={placeholder}
-        defaultValue={(convert ? JSON.stringify(value) : value) || ""}
+        defaultValue={
+          typeof value === "object" || Array.isArray(value))
+          ? JSON.stringify(value) : value
+        }
         onChange={evt => {
-          if (!convert)
-            return props.onChange(evt.target.value);
-
           try {
             props.onChange(JSON.parse(evt.target.value));
-          } catch (e) {}
+          } catch (e) {
+            return props.onChange(evt.target.value);
+          }
         }}
       ></TextField>
     );
