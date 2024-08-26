@@ -124,7 +124,7 @@ class AbstractDataType {
         fullWidth
         placeholder={placeholder}
         defaultValue={
-          typeof value === "object" || Array.isArray(value))
+          typeof value === "object" || Array.isArray(value)
           ? JSON.stringify(value) : value
         }
         onChange={evt => {
