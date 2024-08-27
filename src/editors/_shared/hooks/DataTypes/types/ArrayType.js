@@ -22,7 +22,7 @@ class ArrayType extends DataType {
    * @returns
    */
   validate(value) {
-    value = typeof value === "string" ? value?.replace(/'/g, '"'): value;
+    value = typeof value === "string" ? value.replace(/'/g, '"'): value;
     return new Promise(resolve => {
       try {
         if (checkIfDefaultOrDisabled(value)) {
