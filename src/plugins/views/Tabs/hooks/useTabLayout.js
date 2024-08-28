@@ -15,10 +15,10 @@ import {
   PLUGINS
 } from "../../../../utils/Constants";
 import { getIconByScope } from "../../../../utils/Utils";
-import { freeToolId } from "../../../../utils/generalFunctions";
 import PluginManagerIDE from "../../../../engine/PluginManagerIDE/PluginManagerIDE";
 import Workspace from "../../../../utils/Workspace";
 import { getToolTabData } from "../../../../tools";
+import { freeToolId } from "../tabHelpers";
 import useTabStack from "./useTabStack";
 
 const useTabLayout = (props, dockRef) => {
@@ -55,7 +55,7 @@ const useTabLayout = (props, dockRef) => {
           // was being added to the tabStack (HomeTab) and that meant
           // that the last tab to enter tabStack would always be
           // HomeTab, instead of the correct last tab
-          if(!firstLoad.current){
+          if (!firstLoad.current) {
             addTabToStack(tabData, DOCK_POSITIONS.DOCK);
           }
 
@@ -340,7 +340,8 @@ const useTabLayout = (props, dockRef) => {
    */
   const _onLayoutRemoveTab = useCallback(
     (newLayout, tabId, forceClose) => {
-      const { name, scope, isNew, isDirty } = tabsByIdRef.current.get(tabId);
+      const { name, scope, isNew, isDirty, tabIncrement } =
+        tabsByIdRef.current.get(tabId);
 
       if (isDirty && !forceClose) {
         const document = { id: tabId, name, scope, isNew };
@@ -357,7 +358,7 @@ const useTabLayout = (props, dockRef) => {
 
         // Remove tab and apply new layout
         tabsByIdRef.current.delete(tabId);
-        freeToolId(tabId);
+        freeToolId({ scope, tabIncrement });
         workspaceManager.setTabs(tabsByIdRef.current);
         const dock = getDockFromTabId(tabId);
         removeTabFromStack(tabId, dock);
@@ -644,6 +645,7 @@ const useTabLayout = (props, dockRef) => {
         extension,
         isDirty,
         isNew,
+        tabIncrement,
         tabProps
       } = tabFromMemory ?? data;
       tabsByIdRef.current.set(id, {
@@ -655,9 +657,10 @@ const useTabLayout = (props, dockRef) => {
         extension,
         isNew,
         isDirty,
+        tabIncrement,
         tabProps
       });
-      const tabData = { id, scope, name, tabTitle, extension };
+      const tabData = { id, scope, name, tabTitle, tabIncrement, extension };
       return {
         id: id,
         title: _getCustomTab(tabData, _closeTab, isDirty),
@@ -699,7 +702,7 @@ const useTabLayout = (props, dockRef) => {
       // Emit new active tab id
       if (!tabId) return;
 
-      if(isActuallyTabChange){
+      if (isActuallyTabChange) {
         activeTabId.current = newActiveTabId;
         emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
       }
