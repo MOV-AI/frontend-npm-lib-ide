@@ -133,7 +133,6 @@ class AbstractDataType {
             props.onChange(parsedValue);
           } catch (e) {
             props.onChange(evt.target.value);
-            console.error("Error parsing value", e);
           }
         }}
       ></TextField>
