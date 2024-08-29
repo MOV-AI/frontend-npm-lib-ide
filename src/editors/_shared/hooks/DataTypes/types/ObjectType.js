@@ -6,11 +6,14 @@ class ObjectType extends DataType {
   // Object type properties definition
   key = DATA_TYPES.OBJECT;
   label = "Object";
-  default = "{}";
+  default = {};
 
   editComponent = (props, mode = "row") => {
     const editor = {
-      row: _props => this.stringEditComponent(_props, this.default),
+      row: _props => this.stringEditComponent(_props, this.default, undefined, {
+        parse: a => JSON.parse(a),
+        unparse: a => JSON.stringify(a),
+      }),
       dialog: this.codeEditComponent
     };
     return editor[mode](props);
@@ -22,17 +25,7 @@ class ObjectType extends DataType {
    * @returns
    */
   validate(value) {
-    return new Promise(resolve => {
-      try {
-        if (checkIfDefaultOrDisabled(value)) {
-          return resolve({ success: true, value });
-        }
-        const parsed = JSON.parse(value);
-        resolve({ success: parsed.constructor === Object });
-      } catch (e) {
-        resolve({ success: false });
-      }
-    });
+    return Promise.resolve({ success: typeof(value) === "object" });
   }
 }
 

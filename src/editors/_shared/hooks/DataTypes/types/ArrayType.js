@@ -6,11 +6,14 @@ class ArrayType extends DataType {
   // Array type properties definition
   key = DATA_TYPES.ARRAY;
   label = "Array";
-  default = "[]";
+  default = [];
 
   editComponent = (props, mode = "row") => {
     const editor = {
-      row: _props => this.stringEditComponent(_props, this.default),
+      row: _props => this.stringEditComponent(_props, this.default, undefined, {
+        parse: a => JSON.parse(a),
+        unparse: a => JSON.stringify(a),
+      }),
       dialog: this.codeEditComponent
     };
     return editor[mode](props);
@@ -22,18 +25,7 @@ class ArrayType extends DataType {
    * @returns
    */
   validate(value) {
-    value = typeof value === "string" ? value.replace(/'/g, '"'): value;
-    return new Promise(resolve => {
-      try {
-        if (checkIfDefaultOrDisabled(value)) {
-          return resolve({ success: true, value });
-        }
-        const parsed = this.getParsedValue(value);
-        resolve({ success: Array.isArray(parsed), value });
-      } catch (e) {
-        resolve({ success: false, value });
-      }
-    });
+    return Promise.resolve({ success: Array.isArray(value) });
   }
 }
 

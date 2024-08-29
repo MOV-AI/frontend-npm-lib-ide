@@ -1,8 +1,12 @@
+# TBD
+
+- [FP-2716](https://movai.atlassian.net/browse/FP-2716): Annotations imported cannot be edited
+- [FP-2711](https://movai.atlassian.net/browse/FP-2711): Corrupted data in Annotation
+- [FP-2927](https://movai.atlassian.net/browse/FP-2927): IDE - Validate user input data string/array/object and only try to transform when needed
+
 # v1.2.6
 
 - [FP-2739](https://movai.atlassian.net/browse/FP-2739): Port properties of the node templates are turning to strings after editing them
-- [FP-2716](https://movai.atlassian.net/browse/FP-2716): Annotations imported cannot be edited
-- [FP-2711](https://movai.atlassian.net/browse/FP-2711): Corrupted data in Annotation
 
 # v1.2.5
 

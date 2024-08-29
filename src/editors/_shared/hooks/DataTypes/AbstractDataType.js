@@ -116,22 +116,24 @@ class AbstractDataType {
    * @param {*} parsedValue : Parsed value (can be a string, array, or object)
    * @returns {ReactComponent} Text input for editing common strings
    */
-  stringEditComponent(props, placeholder, parsedValue) {
+  stringEditComponent(props, placeholder, parsedValue, options = {}) {
+    const { parse = a => a, unparse = a => a } = options;
+
     const value = (parsedValue !== undefined ? parsedValue : props.rowData.value) ?? "";
+
     return (
       <TextField
         inputProps={{ "data-testid": "input_value" }}
         fullWidth
         placeholder={placeholder}
-        defaultValue={
-          typeof value === "object" || Array.isArray(value)
-          ? JSON.stringify(value) : value
-        }
+        defaultValue={unparse(value)}
         onChange={evt => {
           try {
-            props.onChange(JSON.parse(evt.target.value));
+            const parsedValue = parse(evt.target.value);
+            props.onChange(parsedValue);
           } catch (e) {
-            return props.onChange(evt.target.value);
+            props.onChange(evt.target.value);
+            console.error("Error parsing value", e);
           }
         }}
       ></TextField>

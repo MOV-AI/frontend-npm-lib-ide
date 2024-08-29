@@ -8,14 +8,14 @@ class NumberType extends DataType {
   // Number type properties definition
   key = DATA_TYPES.NUMBER;
   label = "Number";
-  default = "0";
+  default = 0;
 
   editComponent = props => {
     return (
       <TextField
         fullWidth
         type={DATA_TYPES.NUMBER}
-        placeholder={"0"}
+        placeholder={this.default}
         value={props.rowData.value || ""}
         disabled={props.disabled}
         onChange={evt => props.onChange(evt.target.value)}
