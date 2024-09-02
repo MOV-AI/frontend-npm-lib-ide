@@ -12,7 +12,8 @@ class ArrayType extends DataType {
     const editor = {
       row: _props => this.stringEditComponent(_props, this.default, undefined, {
         parse: a => JSON.parse(a),
-        unparse: a => JSON.stringify(a),
+        // Check if value is a string since there are instances where arrays were saved as strings
+        unparse: a => typeof(a) === "string" ? a : JSON.stringify(a),
       }),
       dialog: this.codeEditComponent
     };

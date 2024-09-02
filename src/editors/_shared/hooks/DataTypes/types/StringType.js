@@ -10,7 +10,7 @@ class StringType extends DataType {
   editComponent = (props, mode = "row") => {
     // Define editor by mode
     const editorByMode = {
-      row: () => this.stringEditComponent(props, ''),
+      row: () => this.stringEditComponent(props, this.default),
       dialog: () => this.codeEditComponent(props)
     };
     // Return editor by mode
@@ -22,8 +22,8 @@ class StringType extends DataType {
    * @param {*} value
    * @returns
    */
-  validate(_value) {
-    return Promise.resolve({ success: true });
+  validate(value) {
+    return Promise.resolve({ success: typeof(value) === "string" });
   }
 }
 

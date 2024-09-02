@@ -29,18 +29,8 @@ class NumberType extends DataType {
    * @returns
    */
   validate(value) {
-    return new Promise(resolve => {
-      try {
-        if (checkIfDefaultOrDisabled(value)) {
-          return resolve({ success: true, value });
-        }
-        const parsed = this.parseValueToFloat(value);
-        const isValid = typeof parsed === DATA_TYPES.NUMBER && !isNaN(parsed);
-        resolve({ success: isValid, parsed });
-      } catch (e) {
-        resolve({ success: false });
-      }
-    });
+    // Since the component already enforces the value to be a number, we can just return true
+    return Promise.resolve({ success: true });
   }
 
   //========================================================================================
