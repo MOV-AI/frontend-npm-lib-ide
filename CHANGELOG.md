@@ -3,6 +3,7 @@
 - [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit - active tab change is being wrongfully triggered
 - [QAP-4055](https://movai.atlassian.net/browse/QAP-4055): Forward test coverage for lib-ide
 - [FP-2529](https://movai.atlassian.net/browse/FP-2529): Add data-testid to links. Added unit testing to BaseLink
+- [FP-2787](https://movai.atlassian.net/browse/FP-2787): IDE - Topics - Can't open multiple Topics tabs
 
 # 1.2.3
 
@@ -24,7 +25,7 @@
 
 - [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit
 - [FP-2633](https://movai.atlassian.net/browse/FP-2633): Configuration Key not found error
-- [FP-2655](https://movai.atlassian.net/browse/FP-2655): SCENE\_EDITOR-Old\_Values\_after\_selecting\_another\_entity
+- [FP-2655](https://movai.atlassian.net/browse/FP-2655): SCENE_EDITOR-Old_Values_after_selecting_another_entity
 - [FP-2657](https://movai.atlassian.net/browse/FP-2657): Users with only read permissions can change the scene
 - [FP-2664](https://movai.atlassian.net/browse/FP-2664): Update react in all libs/apps
 - [FP-2557](https://movai.atlassian.net/browse/FP-2557): Removing frontend callbacks from backend

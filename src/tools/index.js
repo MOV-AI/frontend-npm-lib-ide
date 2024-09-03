@@ -1,6 +1,6 @@
 import React from "react";
 import PluginManagerIDE from "../engine/PluginManagerIDE/PluginManagerIDE";
-import { getTabData } from "./NotInstalled/NotInstalled";
+import { getNotInstalledTabData } from "./NotInstalled/NotInstalled";
 
 const APP_TOOLS = {};
 
@@ -10,8 +10,9 @@ export const addTool = (name, tool) => {
 
 export const getToolTabData = (tab, props = {}) => {
   const { id, name, scope } = tab;
-  const notInstalledTab = getTabData(id, name);
-  const data = APP_TOOLS[scope]?.tabData ?? APP_TOOLS[id]?.tabData ?? notInstalledTab;
+  const notInstalledTab = getNotInstalledTabData(id, name);
+  const data =
+    APP_TOOLS[scope]?.tabData ?? APP_TOOLS[id]?.tabData ?? notInstalledTab;
 
   // Sanitize tab data to avoid TypeError: Converting circular structure to JSON
   if (!data.content) {

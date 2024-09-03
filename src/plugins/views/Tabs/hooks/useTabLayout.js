@@ -14,7 +14,7 @@ import {
   DOCK_MODES,
   PLUGINS
 } from "../../../../utils/Constants";
-import { getIconByScope, findNextIncrement } from "../../../../utils/Utils";
+import { getIconByScope } from "../../../../utils/Utils";
 import PluginManagerIDE from "../../../../engine/PluginManagerIDE/PluginManagerIDE";
 import Workspace from "../../../../utils/Workspace";
 import { getToolTabData } from "../../../../tools";
@@ -26,7 +26,7 @@ const useTabLayout = (props, dockRef) => {
   const activeTabId = useRef(null);
   const firstLoad = useRef(true);
   const preventReloadNewDoc = useRef(false);
-  const tabsById = useRef(new Map());
+  const tabsByIdRef = useRef(new Map());
   const [layout, setLayout] = useState({ ...DEFAULT_LAYOUT });
   const { addTabToStack, removeTabFromStack, getNextTabFromStack } =
     useTabStack(workspaceManager);
@@ -47,8 +47,8 @@ const useTabLayout = (props, dockRef) => {
         if (!tab.extension) {
           const toolName = tab.id;
           const tabData = getToolTabData(tab, tab.tabProps);
-          tabsById.current.set(tabData.id, tabData);
-          workspaceManager.setTabs(tabsById.current);
+          tabsByIdRef.current.set(tabData.id, tabData);
+          workspaceManager.setTabs(tabsByIdRef.current);
           addTabToStack(tabData, DOCK_POSITIONS.DOCK);
           dockRef.current?.updateTab?.(toolName, tabData, false);
         }
@@ -202,10 +202,10 @@ const useTabLayout = (props, dockRef) => {
         const tabIndex = box.tabs.findIndex(_el => _el.id === prevTabId);
         box.tabs[tabIndex] = tabData;
         box.activeId = tabData.id;
-        tabsById.current.delete(prevTabId);
-        tabsById.current.set(tabData.id, tabData);
+        tabsByIdRef.current.delete(prevTabId);
+        tabsByIdRef.current.set(tabData.id, tabData);
         addTabToStack(tabData, location);
-        workspaceManager.setTabs(tabsById.current);
+        workspaceManager.setTabs(tabsByIdRef.current);
         workspaceManager.setLayout(newLayout);
       }
       return { newLayout, box };
@@ -331,7 +331,7 @@ const useTabLayout = (props, dockRef) => {
    */
   const _onLayoutRemoveTab = useCallback(
     (newLayout, tabId, forceClose) => {
-      const { name, scope, isNew, isDirty } = tabsById.current.get(tabId);
+      const { name, scope, isNew, isDirty } = tabsByIdRef.current.get(tabId);
 
       if (isDirty && !forceClose) {
         const document = { id: tabId, name, scope, isNew };
@@ -347,8 +347,8 @@ const useTabLayout = (props, dockRef) => {
         }
 
         // Remove tab and apply new layout
-        tabsById.current.delete(tabId);
-        workspaceManager.setTabs(tabsById.current);
+        tabsByIdRef.current.delete(tabId);
+        workspaceManager.setTabs(tabsByIdRef.current);
         const dock = getDockFromTabId(tabId);
         removeTabFromStack(tabId, dock);
         applyLayout(newLayout);
@@ -415,13 +415,13 @@ const useTabLayout = (props, dockRef) => {
     data => {
       const { instance: model, value: isDirty } = data;
       const tabId = model.getUrl();
-      const currentTabData = tabsById.current.get(tabId);
+      const currentTabData = tabsByIdRef.current.get(tabId);
       const currentDirtyState = Boolean(currentTabData?.isDirty);
       // Doesn't trigger update if dirty state didn't change
       if (!currentTabData || currentDirtyState === isDirty) return;
       // Set new dirty state
       const newTabData = { ...currentTabData, isDirty: isDirty };
-      tabsById.current.set(tabId, newTabData);
+      tabsByIdRef.current.set(tabId, newTabData);
       // Trigger tab update
       if (!dockRef.current) return;
       const currentTab = findTab(tabId);
@@ -519,9 +519,8 @@ const useTabLayout = (props, dockRef) => {
    */
   const open = useCallback(
     tabData => {
-      let newTabData = {...tabData};
-      const tabPosition = newTabData.dockPosition ?? getDefaultTabPosition();
-      const position = newTabData.position ?? {
+      const tabPosition = tabData.dockPosition ?? getDefaultTabPosition();
+      const position = tabData.position ?? {
         h: 500,
         w: 600,
         x: 145,
@@ -529,40 +528,25 @@ const useTabLayout = (props, dockRef) => {
         z: 1
       };
 
-      if(Object.hasOwn(newTabData, 'multiple')){
-        const thisTabIds = [...tabsById.current.values()]
-          .filter(tab => tab.scope === newTabData.scope)
-          .map(tab => tab.multiple);
+      emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: tabData.id });
+      addTabToStack(tabData, tabPosition);
+      tabsByIdRef.current.set(tabData.id, tabData);
+      workspaceManager.setTabs(tabsByIdRef.current);
 
-        const currentIncrement = findNextIncrement(thisTabIds);
-        newTabData.multiple = currentIncrement;
-    
-        if(currentIncrement > 1) {
-          newTabData.id = `${newTabData.scope}_${currentIncrement}`;
-          newTabData.name = `${newTabData.name} ${currentIncrement}`;
-          newTabData.tabTitle = `${newTabData.tabTitle} ${currentIncrement}`;
-        }
-      }
-
-      emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newTabData.id });
-      addTabToStack(newTabData, tabPosition);
-      tabsById.current.set(newTabData.id, newTabData);
-      workspaceManager.setTabs(tabsById.current);
-
-      const existingTab = findTab(newTabData.id);
+      const existingTab = findTab(tabData.id);
 
       if (existingTab) {
-        focusExistingTab(newTabData.id);
+        focusExistingTab(tabData.id);
         return;
       }
 
       // Update new open tab id
-      activeTabId.current = newTabData.id;
+      activeTabId.current = tabData.id;
       // Set new layout
       setLayout(prevState => {
         const newState = { ...prevState };
         if (newState[tabPosition].children.length === 0) {
-          newState[tabPosition].children = [{ ...position, tabs: [newTabData] }];
+          newState[tabPosition].children = [{ ...position, tabs: [tabData] }];
 
           workspaceManager.setLayout(newState);
           return { ...newState };
@@ -571,12 +555,12 @@ const useTabLayout = (props, dockRef) => {
         if (tabPosition === DOCK_POSITIONS.FLOAT) {
           newState[tabPosition].children.push({
             ...position,
-            tabs: [newTabData]
+            tabs: [tabData]
           });
         } else {
           const firstContainer = _getFirstContainer(newState[tabPosition]);
-          firstContainer.tabs.push(newTabData);
-          firstContainer.activeId = newTabData.id;
+          firstContainer.tabs.push(tabData);
+          firstContainer.activeId = tabData.id;
         }
 
         workspaceManager.setLayout(newState);
@@ -640,7 +624,7 @@ const useTabLayout = (props, dockRef) => {
    */
   const loadTab = useCallback(
     data => {
-      const tabFromMemory = tabsById.current.get(data.id);
+      const tabFromMemory = tabsByIdRef.current.get(data.id);
       if (!tabFromMemory && !data.content) return;
 
       const {
@@ -652,11 +636,11 @@ const useTabLayout = (props, dockRef) => {
         extension,
         isDirty,
         isNew,
-        multiple,
+        tabIncrement,
         tabProps
       } = tabFromMemory ?? data;
 
-      tabsById.current.set(id, {
+      tabsByIdRef.current.set(id, {
         id,
         scope,
         name,
@@ -665,19 +649,19 @@ const useTabLayout = (props, dockRef) => {
         extension,
         isNew,
         isDirty,
-        multiple,
+        tabIncrement,
         tabProps
       });
-      const tabData = { 
-        id, 
-        scope, 
-        name, 
-        tabTitle, 
-        extension 
+      const tabData = {
+        id,
+        scope,
+        name,
+        tabTitle,
+        extension
       };
       return {
         id: id,
-        multiple,
+        tabIncrement,
         title: _getCustomTab(tabData, _closeTab, isDirty),
         content: content,
         closable: true
@@ -696,7 +680,7 @@ const useTabLayout = (props, dockRef) => {
     (newLayout, tabId, direction) => {
       const isActuallyTabChange = activeTabId.current !== tabId;
       const dock = getDockFromTabId(tabId);
-      const tabData = tabsById.current.get(tabId);
+      const tabData = tabsByIdRef.current.get(tabId);
       let newActiveTabId = tabId;
 
       // Attempt to close tab
@@ -717,7 +701,7 @@ const useTabLayout = (props, dockRef) => {
       // Emit new active tab id
       if (!tabId) return;
 
-      if(isActuallyTabChange){
+      if (isActuallyTabChange) {
         activeTabId.current = newActiveTabId;
         emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
       }
@@ -763,7 +747,7 @@ const useTabLayout = (props, dockRef) => {
    * @returns {string} active tab id
    */
   const getActiveTab = useCallback(() => {
-    return tabsById.current.get(activeTabId.current);
+    return tabsByIdRef.current.get(activeTabId.current);
   }, []);
 
   /**
@@ -839,7 +823,7 @@ const useTabLayout = (props, dockRef) => {
 
     layoutActiveIdIsValid(lastLayout);
 
-    tabsById.current = lastTabs;
+    tabsByIdRef.current = lastTabs;
     // Install current tabs plugins
     lastTabs.forEach(tab => {
       const { content, ...others } = tab;
@@ -849,7 +833,7 @@ const useTabLayout = (props, dockRef) => {
     Promise.allSettled(tabs).then(_tabs => {
       _tabs.forEach(tab => {
         tab.status === "fulfilled" &&
-          tabsById.current.set(tab.value.id, tab.value);
+          tabsByIdRef.current.set(tab.value.id, tab.value);
       });
       setLayout(lastLayout);
 
