@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { DOCK_POSITIONS } from "../../../../utils/Constants";
 import { runBeforeUnload } from "../../../../utils/Utils";
 
-const useTabStack = workspaceManager => {
-  const tabStack = React.useRef({});
-
+const useTabStack = (workspaceManager) => {
+  const tabStack = useRef({});
+  
   //========================================================================================
   /*                                                                                      *
    *                                    Private Methods                                   *
@@ -78,6 +78,7 @@ const useTabStack = workspaceManager => {
   //========================================================================================
 
   useEffect(() => {
+    if(!workspaceManager) return;
     tabStack.current = workspaceManager.getTabStack();
     // Before unload app, remove all "untitled" tabs from stack
     runBeforeUnload(removeNewTabsFromStack);
