@@ -1,10 +1,14 @@
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import AppSettings from "../App/AppSettings";
 import { PLUGINS } from "../utils/Constants";
+import { findNextIncrement } from "./Utils";
+import Workspace from "./Workspace";
 import movaiIconWhite from "../Branding/movai-logo-white.png";
 import { getHomeTab } from "../tools/HomeTab/HomeTab";
 import { getShortcutsTab } from "../tools/AppShortcuts/AppShortcuts";
 import { getToolTabData } from "../tools";
+
+const workspaceManager = new Workspace();
 
 //========================================================================================
 /*                                                                                      *
@@ -70,10 +74,26 @@ export function aboutPopup(call, classes = {}) {
 /**
  * Open Tool tab
  * @param {function} call : Plugin call method
- * @param {string} toolName : Tool Unique Name
+ * @param {string} scope : Tool Unique Name
  */
-export function openTool(call, toolName = getHomeTab().id, props = {}) {
-  const tabData = getToolTabData({ id: toolName }, props);
+export function openTool(call, scope = getHomeTab().scope, props = {}) {
+  const tabData = getToolTabData({ scope }, props);
+
+  if (Object.hasOwn(tabData, "tabIncrement")) {
+    const thisTabIds = [...workspaceManager.getTabs().values()]
+      .filter(tab => tab.scope === tabData.scope)
+      .map(tab => tab.tabIncrement);
+
+    const currentIncrement = findNextIncrement(thisTabIds);
+    tabData.tabIncrement = currentIncrement;
+
+    if (currentIncrement > 1) {
+      tabData.id = `${tabData.scope}_${currentIncrement}`;
+      tabData.name = `${tabData.name} ${currentIncrement}`;
+      tabData.tabTitle = `${tabData.tabTitle} ${currentIncrement}`;
+    }
+  }
+
   call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN, tabData);
 }
 
