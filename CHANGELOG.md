@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-2787](https://movai.atlassian.net/browse/FP-2787): IDE - Topics - Can't open multiple Topics tabs
+
 # v1.2.6
 
 - [FP-2739](https://movai.atlassian.net/browse/FP-2739): Port properties of the node templates are turning to strings after editing them
@@ -13,7 +17,6 @@
 - [FP-2874](https://movai.atlassian.net/browse/FP-2874): IDE app version not correct
 - [QAP-4055](https://movai.atlassian.net/browse/QAP-4055): Forward test coverage for lib-ide
 - [FP-2529](https://movai.atlassian.net/browse/FP-2529): Add data-testid to links. Added unit testing to BaseLink
-- [FP-2787](https://movai.atlassian.net/browse/FP-2787): IDE - Topics - Can't open multiple Topics tabs
 
 # v1.2.3
 
