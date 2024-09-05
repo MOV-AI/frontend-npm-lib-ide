@@ -57,21 +57,6 @@ const ParameterEditorDialog = props => {
   //========================================================================================
 
   /**
-   * Renders a value related to to it's type
-   * @param {*} value : value to be rendered
-   */
-  const renderValue = useCallback(
-    value => {
-      if (props.data.type === DATA_TYPES.STRING) {
-        return `"${value}"`;
-      }
-
-      return value;
-    },
-    [props.data.type]
-  );
-
-  /**
    * Get Default Value Option
    * @param {*} defaultValue : Default value to check
    * @param {*} value : Value to check
@@ -90,26 +75,12 @@ const ParameterEditorDialog = props => {
   }, []);
 
   /**
-   * @private Stringify value if type string
-   * @param {{type: string, value: *}} formData
-   * @returns {*} Formatted value
-   */
-  const valueToRender = useCallback(formData => {
-    const formValue = formData.value ?? formData.defaultValue;
-    return formData?.type === DATA_TYPES.STRING
-      ? JSON.stringify(formValue)
-      : formValue;
-  }, []);
-
-  /**
    * @private Parse value if type string
    * @param {{type: string, value: *}} formData
    * @returns {*} Formatted value
    */
   const valueToSave = useCallback(
     formData => {
-      const type = formData.type;
-
       if (showValueOptions) {
         if (valueOption === VALUE_OPTIONS.DEFAULT) {
           return DEFAULT_VALUE;
@@ -119,8 +90,8 @@ const ParameterEditorDialog = props => {
         }
       }
 
-      return type === DATA_TYPES.STRING
-        ? JSON.parse(formData.value)
+      return typeof formData.value !== "string"
+        ? JSON.stringify(formData.value)
         : formData.value;
     },
     [showValueOptions, valueOption]
@@ -134,7 +105,7 @@ const ParameterEditorDialog = props => {
     (value, options) => {
       if (
         valueOption !== VALUE_OPTIONS.CUSTOM &&
-        renderValue(options.defaultValue) !== value
+        options.defaultValue !== value
       ) {
         setValueOption(VALUE_OPTIONS.CUSTOM);
       }
@@ -194,7 +165,7 @@ const ParameterEditorDialog = props => {
         return Promise.resolve({ success: true, data: dataToValidate });
 
       // Validate data
-      return validate(dataToValidate, getValidationOptions())
+      return validate(data.value, getValidationOptions())
         .then(res => {
           if (!res.success)
             throw new Error(
@@ -265,14 +236,14 @@ const ParameterEditorDialog = props => {
           return { ...prevState, value: DISABLED_VALUE };
         }
         if (opt === VALUE_OPTIONS.DEFAULT || opt === VALUE_OPTIONS.CUSTOM) {
-          return { ...prevState, value: renderValue(props.data.defaultValue) };
+          return { ...prevState, value: props.data.defaultValue };
         }
         return prevState;
       });
 
       setValueOption(opt);
     },
-    [props.data.defaultValue, renderValue]
+    [props.data.defaultValue]
   );
 
   //========================================================================================
@@ -284,8 +255,8 @@ const ParameterEditorDialog = props => {
   useEffect(() => {
     if (showValueOptions) setValueOption(getValueOption(props.data.value));
 
-    setData({ ...props.data, value: valueToRender(props.data) });
-  }, [props.data, showValueOptions, valueToRender, getValueOption]);
+    setData({ ...props.data, value: props.data.value ?? props.data.defaultValue });
+  }, [props.data, showValueOptions, getValueOption]);
 
   //========================================================================================
   /*                                                                                      *
@@ -389,7 +360,7 @@ const ParameterEditorDialog = props => {
               {
                 rowData: {
                   value: options.isDefault
-                    ? renderValue(defaultValue)
+                    ? defaultValue
                     : data.value
                 },
                 alert,
@@ -412,7 +383,6 @@ const ParameterEditorDialog = props => {
       isNew,
       classes,
       renderValueOptions,
-      renderValue,
       getEditComponent,
     ]
   );

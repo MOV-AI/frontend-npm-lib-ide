@@ -104,7 +104,7 @@ class AbstractDataType {
   defaultStringEditor(props, mode = "row") {
     const editor = {
       row: _props => this.stringEditComponent(_props, ""),
-      dialog: this.codeEditComponent
+      dialog: _props => this.codeEditComponent(_props)
     };
     return editor[mode](props);
   }
@@ -144,7 +144,9 @@ class AbstractDataType {
    * @param {{rowData: {value: string}}, onChange: function, isNew: boolean} props : input props
    * @returns {ReactComponent} Code Editor Component
    */
-  codeEditComponent = props => {
+  codeEditComponent = (props, options = {}) => {
+    const { parse = a => a, unparse = a => a } = options;
+
     return (
       <Typography
         data-testid="section_data-type-code-editor"
@@ -152,7 +154,7 @@ class AbstractDataType {
         style={{ height: "100px", width: "100%" }}
       >
         <MonacoCodeEditor
-          value={_toString(props.rowData.value)}
+          value={unparse(props.rowData.value)}
           onLoad={editor => {
             if (!props.isNew) editor.focus();
             props.onLoadEditor && props.onLoadEditor(editor);
@@ -161,7 +163,12 @@ class AbstractDataType {
           disableMinimap={true}
           theme={this._theme?.codeEditor?.theme ?? "dark"}
           options={{ readOnly: props.disabled }}
-          onChange={value => props.onChange(value)}
+          onChange={value => {
+            try {
+              const parsedValue = parse(value);
+              props.onChange(parsedValue);
+            } catch (e) {}
+          }}
         />
       </Typography>
     );
