@@ -13,7 +13,7 @@ const NotInstalled = props => {
 
 export default NotInstalled;
 
-export const getTabData = (id, name) => {
+export const getNotInstalledTabData = (id, name) => {
   const tabTitle = name || id;
   return {
     id: id,
