@@ -4,6 +4,8 @@ import { TextField, Typography } from "@material-ui/core";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
 import { DATA_TYPES } from "../../../../utils/Constants";
 
+const identity = a => a;
+
 /**
  * Abstract Data Type Class
  */
@@ -11,15 +13,36 @@ class AbstractDataType {
   key = "";
   label = "";
   default = "";
+  inputType = "text";
 
-  editComponent = this.defaultStringEditor;
   // hooks
   _theme = {};
 
-  constructor({ theme }) {
+  constructor({ theme, onlyStrings }) {
     // Set hooks to be used in abstract renders
     this._theme = theme;
-    this.defaultStringEditor = this.defaultStringEditor.bind(this);
+    this.onlyStrings = onlyStrings;
+    this.parsing = onlyStrings
+      ? { parse: identity, unparse: identity } : {
+        parse: this.parse.bind(this),
+        unparse: this.unparse.bind(this)
+      };
+    this.getSaveable = onlyStrings ? this.unparse.bind(this) : identity;
+  }
+
+  // parsing strings into real objects
+  parse(value) {
+    return JSON.parse(value);
+  }
+
+  // unparsing real objects into strings
+  unparse(value) {
+    return typeof(value) === "string" ? value : JSON.stringify(value);
+  }
+
+  // ensure a parsed value. runs only for validation
+  getParsed(value) {
+    return this.onlyStrings ? this.parse(value) : value;
   }
 
   /**
@@ -43,23 +66,29 @@ class AbstractDataType {
    * @returns
    */
   getEditComponent() {
-    return this.editComponent;
+    return (...args) => this.editComponent(...args);
   }
 
   /**
-   * Abstract validation : Should fail if not implemented in extended class
+   * Abstract validation : validation for simple types
    * @returns
    */
-  validate() {
-    // To be implemented in extended class
-    console.warn(
-      "debug validation method not implemented for data type",
-      this.key
-    );
-    return Promise.resolve({
-      success: false,
-      error: "ValidationMethodNotImplemented"
-    });
+  _validate(value) {
+    return typeof value === this.key;
+  }
+
+  /**
+   * Abstract validation : validation for simple types
+   * @returns
+   */
+  validate(value) {
+    try {
+      return Promise.resolve({
+        success: this._validate(this.getParsed(value))
+      });
+    } catch (_e) {
+      return Promise.resolve({ success: false });
+    }
   }
 
   /**
@@ -68,7 +97,7 @@ class AbstractDataType {
    * @returns {any} Default value
    */
   getDefault(options) {
-    return this.default;
+    return this.parsing.unparse(this.default);
   }
 
   //========================================================================================
@@ -83,7 +112,7 @@ class AbstractDataType {
    * @returns {string} String value
    */
   toString(value) {
-    return _toString(value);
+    return this.parsing.unparse(value);
   }
 
   /**
@@ -92,7 +121,7 @@ class AbstractDataType {
    * @returns parsed value
    */
   getParsedValue(value) {
-    return typeof value === DATA_TYPES.STRING ? JSON.parse(value) : value;
+    return this.parsing.parse(value);
   }
 
   /**
@@ -101,9 +130,9 @@ class AbstractDataType {
    * @param {*} mode
    * @returns
    */
-  defaultStringEditor(props, mode = "row") {
+  editComponent(props, mode = "row") {
     const editor = {
-      row: _props => this.stringEditComponent(_props, ""),
+      row: _props => this.stringEditComponent(_props, undefined),
       dialog: _props => this.codeEditComponent(_props)
     };
     return editor[mode](props);
@@ -112,29 +141,21 @@ class AbstractDataType {
   /**
    * @private Gets common text editor for regular inputs (strings, arrays, objects, any, default)
    * @param {*} props : Material table row props
-   * @param {string} placeholder : Placeholder
    * @param {*} parsedValue : Parsed value (can be a string, array, or object)
    * @returns {ReactComponent} Text input for editing common strings
    */
-  stringEditComponent(props, placeholder, parsedValue, options = {}) {
-    const { parse = a => a, unparse = a => a } = options;
-
+  stringEditComponent(props, parsedValue) {
     const value = (parsedValue !== undefined ? parsedValue : props.rowData.value) ?? "";
 
     return (
       <TextField
         inputProps={{ "data-testid": "input_value" }}
         fullWidth
-        placeholder={placeholder}
-        defaultValue={unparse(value)}
-        onChange={evt => {
-          try {
-            const parsedValue = parse(evt.target.value);
-            props.onChange(parsedValue);
-          } catch (e) {
-            props.onChange(evt.target.value);
-          }
-        }}
+        type={this.inputType}
+        placeholder={this.getDefault()}
+        defaultValue={this.parsing.unparse(value)}
+        disabled={props.disabled}
+        onChange={evt => props.onChange(this.parsing.parse(evt.target.value))}
       ></TextField>
     );
   }
@@ -144,9 +165,7 @@ class AbstractDataType {
    * @param {{rowData: {value: string}}, onChange: function, isNew: boolean} props : input props
    * @returns {ReactComponent} Code Editor Component
    */
-  codeEditComponent = (props, options = {}) => {
-    const { parse = a => a, unparse = a => a } = options;
-
+  codeEditComponent = (props) => {
     return (
       <Typography
         data-testid="section_data-type-code-editor"
@@ -154,7 +173,7 @@ class AbstractDataType {
         style={{ height: "100px", width: "100%" }}
       >
         <MonacoCodeEditor
-          value={unparse(props.rowData.value)}
+          value={this.parsing.unparse(props.rowData.value)}
           onLoad={editor => {
             if (!props.isNew) editor.focus();
             props.onLoadEditor && props.onLoadEditor(editor);
@@ -163,12 +182,7 @@ class AbstractDataType {
           disableMinimap={true}
           theme={this._theme?.codeEditor?.theme ?? "dark"}
           options={{ readOnly: props.disabled }}
-          onChange={value => {
-            try {
-              const parsedValue = parse(value);
-              props.onChange(parsedValue);
-            } catch (e) {}
-          }}
+          onChange={value => props.onChange(this.parsing.parse(value))}
         />
       </Typography>
     );

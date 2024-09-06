@@ -10,45 +10,20 @@ class BooleanType extends DataType {
   label = "Boolean";
   default = false;
 
-  editComponent = (props, mode = "row") => {
-    this.label = props.label ?? this.label;
-    let pyValue = this.toString(props.rowData.value).toLowerCase();
-    const editor = {
-      row: () => this.booleanEditComponent(props, pyValue),
-      dialog: () => this.booleanEditComponent(props, pyValue, true)
-    };
-    return editor[mode]();
-  };
-
-  /**
-   * Validate Boolean value
-   * @param {*} value
-   * @returns
-   */
-  validate(value) {
-    return new Promise(resolve => {
-      try {
-        const isValid =
-          typeof value === DATA_TYPES.BOOLEAN ||
-          typeof pythonToBool(value) === DATA_TYPES.BOOLEAN;
-
-        resolve({ success: isValid });
-      } catch (e) {
-        resolve({ success: false });
-      }
-    });
+  parse(value) {
+    return this.onlyStrings
+      ? value === "True"
+      : super.unparse(value);
   }
 
-  /**
-   * @override Get boolean default value
-   * @param {*} options
-   * @returns {string | boolean}
-   *  Returns Python Boolean as string if isPythonValue is set to true
-   *  Or js boolean otherwise
-   */
-  getDefault(options = { isPythonValue: false }) {
-    const { isPythonValue } = options;
-    return isPythonValue ? boolToPython(false) : false;
+  unparse(value) {
+    return this.onlyStrings
+      ? (value ? "True" : "False")
+      : super.parse(value);
+  }
+
+  getParsed(value) {
+    return value;
   }
 
   //========================================================================================
@@ -60,34 +35,18 @@ class BooleanType extends DataType {
   /**
    * Render Boolean Type edit component
    * @param {*} props
-   * @param {*} pyValue
-   * @param {*} usePythonValue
    * @returns
    */
-  booleanEditComponent(props, pyValue, usePythonValue) {
-    let parsedValue = false;
-    try {
-      parsedValue = JSON.parse(pyValue);
-      if (typeof parsedValue === DATA_TYPES.STRING)
-        parsedValue = JSON.parse(parsedValue);
-    } catch (e) {
-      parsedValue = false;
-    }
-
-    // On change checkbox value
-    const onChangeCheckbox = event => {
-      const boolValue = event.target.checked;
-      const value = usePythonValue ? boolToPython(boolValue) : boolValue;
-      props.onChange(value);
-    };
-
+  editComponent(props) {
     return (
       <Checkbox
-        data-testid={"Type=boolean-" + this.label}
+        data-testid={"Type=boolean-" + (props.label ?? this.label)}
         color={"primary"}
         style={{ width: "fit-content" }}
-        checked={parsedValue}
-        onChange={onChangeCheckbox}
+        checked={this.parsing.unparse(props.rowData.value)}
+        onChange={evt => props.onChange(
+          this.parsing.parse(evt.target.checked)
+        )}
         disabled={props.disabled}
       />
     );

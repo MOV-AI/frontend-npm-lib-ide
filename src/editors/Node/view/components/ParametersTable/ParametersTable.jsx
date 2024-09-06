@@ -11,7 +11,7 @@ const ParametersTable = props => {
   // Props
   const { editable, data, openEditDialog, onRowDelete, defaultColumns } = props;
   // Hooks
-  const { getLabel } = useDataTypes();
+  const { getLabel } = useDataTypes({ onlyStrings: true });
   // Override default columns
   const typeColumn = {
     title: i18n.t("Type"),

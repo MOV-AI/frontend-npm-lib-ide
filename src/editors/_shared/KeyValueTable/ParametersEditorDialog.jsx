@@ -47,8 +47,8 @@ const ParameterEditorDialog = props => {
   const [data, setData] = useState({});
   const [valueOption, setValueOption] = useState(VALUE_OPTIONS.DEFAULT);
   const classes = parametersDialogStyles();
-  const { getDataTypes, getLabel, getEditComponent, getValidValue, validate } =
-    useDataTypes();
+  const { getDataTypes, getLabel, getEditComponent, getValidValue, validate, getType } =
+    useDataTypes({ onlyStrings: true });
 
   //========================================================================================
   /*                                                                                      *
@@ -90,11 +90,9 @@ const ParameterEditorDialog = props => {
         }
       }
 
-      return typeof formData.value !== "string"
-        ? JSON.stringify(formData.value)
-        : formData.value;
+      return getType(formData.type).getSaveable(formData.value);
     },
-    [showValueOptions, valueOption]
+    [showValueOptions, valueOption, getType]
   );
 
   /**
@@ -159,13 +157,8 @@ const ParameterEditorDialog = props => {
 
       if (customValidation) return customValidation(dataToValidate);
 
-      // If value is DEFAULT_VALUE, the parameter should be removed
-      //  Therefore we can by-pass the validation in that case
-      if (dataToValidate.value === DEFAULT_VALUE)
-        return Promise.resolve({ success: true, data: dataToValidate });
-
       // Validate data
-      return validate(data.value, getValidationOptions())
+      return validate(dataToValidate, getValidationOptions())
         .then(res => {
           if (!res.success)
             throw new Error(

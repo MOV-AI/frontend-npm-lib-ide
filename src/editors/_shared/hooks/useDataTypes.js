@@ -1,10 +1,13 @@
+import { useRef } from "react";
 import { useTheme } from "@material-ui/styles";
 import DataTypeManager from "./DataTypes/DataTypeManager";
 
-const useDataTypes = () => {
+const useDataTypes = (options = {}) => {
+  const { onlyStrings } = options;
+
   // Hooks
   const theme = useTheme();
-  const dataTypeManager = new DataTypeManager({ theme });
+  const dataTypeManager = new DataTypeManager({ theme, onlyStrings });
 
   //========================================================================================
   /*                                                                                      *
@@ -42,6 +45,11 @@ const useDataTypes = () => {
   };
 
   /**
+   * Return a type
+   */
+  const getType = type => dataTypeManager.getType(type);
+
+  /**
    * Return the value if valid otherwise returns
    * the default value ot the type
    * @param {string} type : The type to convert to
@@ -71,6 +79,7 @@ const useDataTypes = () => {
     getDataTypes,
     getEditComponent,
     getValidValue,
+    getType,
     validate
   };
 };

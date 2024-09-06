@@ -7,23 +7,8 @@ class StringType extends DataType {
   label = "String";
   default = '';
 
-  editComponent = (props, mode = "row") => {
-    // Define editor by mode
-    const editorByMode = {
-      row: () => this.stringEditComponent(props, this.default),
-      dialog: () => this.codeEditComponent(props)
-    };
-    // Return editor by mode
-    return editorByMode[mode]();
-  };
-
-  /**
-   * Validate string value
-   * @param {*} value
-   * @returns
-   */
-  validate(value) {
-    return Promise.resolve({ success: typeof(value) === "string" });
+  constructor(options) {
+    super({ ...options, onlyStrings: true });
   }
 }
 
