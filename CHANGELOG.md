@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-2935](https://movai.atlassian.net/browse/FP-2935): Default flow parameters not showing when clicking the edit button
+
 # v1.2.7
 
 - [FP-2787](https://movai.atlassian.net/browse/FP-2787): IDE - Topics - Can't open multiple Topics tabs
