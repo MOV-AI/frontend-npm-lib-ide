@@ -10,6 +10,18 @@ class NumberType extends DataType {
   inputType = DATA_TYPES.NUMBER;
   label = "Number";
   default = 0;
+
+  _validate(value) {
+    return super._validate(value) && !isNaN(value);
+  }
+
+  parse(value) {
+    return Number(value.trim());
+  }
+
+  editComponent(props) {
+    return this.stringEditComponent(props);
+  }
 }
 
 export default NumberType;

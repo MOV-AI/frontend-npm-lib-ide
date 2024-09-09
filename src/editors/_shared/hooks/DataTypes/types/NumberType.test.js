@@ -17,11 +17,11 @@ test("Smoke test", () => {
 
 batteryOfTests.forEach(t => {
   test(`Check if ${t.value} is valid number`, () => {
-    const obj = new NumberType({ theme: {} });
+    const obj = new NumberType({ theme: {}, onlyStrings: true });
     
     return obj.validate(t.value).then(res => {
       expect(res.success).toBe(t.expectedSuccess);
-      expect(res.parsed).toBe(obj.parseValueToFloat(t.value));
+      expect(res.parsed).toBe(obj.parse(t.value));
     });
   });
 });

@@ -11,14 +11,25 @@ class BooleanType extends DataType {
   default = false;
 
   parse(value) {
-    return this.onlyStrings
-      ? value === "True"
-      : super.unparse(value);
+    if (!this.onlyStrings)
+      return value; // the value is already real
+
+    const trimmed = value.trim();
+
+    if (trimmed === "True")
+      return true;
+
+    if (trimmed === "False")
+      return false;
+
+    throw new Error("Invalid boolean string");
   }
 
   unparse(value) {
     return this.onlyStrings
       ? (value ? "True" : "False")
+    // in this case, we want to parse, since we need
+    // a real object for the checkbox component and not a string
       : super.parse(value);
   }
 

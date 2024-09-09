@@ -30,20 +30,19 @@ test("Convert boolean to Python string", () => {
 });
 
 test("Validation", () => {
-  const obj = new BooleanType({ theme: {} });
+  const type = new BooleanType({ theme: {} });
+  const strType = new BooleanType({ theme: {}, onlyStrings: true });
 
-  const validate = (values, expected) => {
-    values.forEach(async value => {
-      const result = await obj.validate(value);
-      expect(result.success).toBe(expected);
-    });
-  };
-
-  const jsBool = [true, false];
-  const pyBool = ["True", "False"];
-  const jsFalsy = [undefined, 0, "", null];
-
-  validate(jsBool, true);
-  validate(pyBool, true);
-  validate(jsFalsy, false);
+  type.validate(true).then(res => expect(res.success).toBe(true));
+  type.validate(false).then(res => expect(res.success).toBe(true));
+  strType.validate(strType.parse("True")).then(
+    res => expect(res.success).toBe(true)
+  );
+  strType.validate(strType.parse("False")).then(
+    res => expect(res.success).toBe(true)
+  );
+  type.validate().then(res => expect(res.success).toBe(false));
+  type.validate(0).then(res => expect(res.success).toBe(false));
+  type.validate("").then(res => expect(res.success).toBe(false));
+  type.validate(null).then(res => expect(res.success).toBe(false));
 });

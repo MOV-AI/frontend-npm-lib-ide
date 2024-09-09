@@ -83,8 +83,10 @@ class AbstractDataType {
    */
   validate(value) {
     try {
+      const parsed = this.getParsed(value);
       return Promise.resolve({
-        success: this._validate(this.getParsed(value))
+        success: this._validate(parsed),
+        parsed,
       });
     } catch (_e) {
       return Promise.resolve({ success: false });
