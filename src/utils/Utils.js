@@ -21,6 +21,26 @@ export const defaultFunction = (name, logToConsole = true) => {
 };
 
 /**
+ * Tries to find the next increment on an array of numbers
+ * @param {Number[]} numArray
+ */
+export const findNextIncrement = numArray => {
+  if (!numArray || numArray.length < 2)
+    return numArray[0] ? numArray[0] + 1 : 1;
+
+  const max = Math.max(...numArray);
+  const min = 1;
+
+  for (let i = min; i <= max; i++) {
+    if (!numArray.includes(i)) {
+      return i;
+    }
+  }
+
+  return max + 1;
+};
+
+/**
  * Returns a given icon with props in a method
  * @param {SvgIcon} Icon
  * @returns {function} Icon with props
