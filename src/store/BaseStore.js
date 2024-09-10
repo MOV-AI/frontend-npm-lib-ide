@@ -171,9 +171,20 @@ class BaseStore extends StorePluginManager {
   }
 
   _onSetDoc(doc) {
-    if (!this.getDoc(doc.name)) {
-      this.newDoc(doc.name);
+    const docInst = this.getDoc(doc.name);
+    if (!docInst) {
+      const newDoc = this.newDoc(doc.name);
+      newDoc
+        .enableObservables(false)
+        .setIsNew(false)
+        .setIsLoaded(false)
+        .setDirty(false)
+        .enableObservables(true);
     }
+
+    // if the doc is existing and not dirty, we should update
+    // it but that is non-trivial. We should open a new issue
+    // for it
   }
 
   /**
