@@ -65,23 +65,25 @@ class DrawerSub extends Sub {
   add(name = "", value, props = {}) {
     const url = value.url ?? this.url;
     const suffix = value.suffix ?? this.suffix;
-    const path = url + "/" + suffix + ".bookmarks";
-    const bookmarks = this.get(path);
+    const cur = this.get(url + "/" + suffix) ?? {};
+    const bookmarks = cur.bookmarks ?? {};
 
     if (!value.force && bookmarks?.[name] && !(Object.entries(props)).filter(
       ([key, value]) => value !== bookmarks[name].props[key]
     ).length)
-      return this.update(bookmarks, path);
+      return;
 
     name = name.replace(".", "/");
 
-    if (value.select)
-      this.setActive(name, value);
-
     return this.update({
-      ...(bookmarks ?? {}),
-      [name]: { ...value, props },
-    }, path);
+      ...this.get(url + "/" + suffix),
+      ...(value.select && name !== cur.active ? { active: name } : {}),
+      plugin: false,
+      bookmarks: Object.assign(bookmarks, {
+        ...(bookmarks ?? {}),
+        [name]: { ...value, props },
+      }),
+    }, url + "/" + suffix);
   }
 
   get keybinds() {
@@ -119,10 +121,10 @@ class DrawerSub extends Sub {
   }
 }
 
-function selectBookmark(suffix, name) {
-  drawerSub.suffix = suffix;
+function selectBookmark(anchor, name) {
+  drawerSub.suffix = anchor;
   drawerSub.open = name !== drawerSub._value[drawerSub.index]?.active ? true : !drawerSub.open;
-  drawerSub.setActive(name, { suffix });
+  drawerSub.setActive(name, { suffix: anchor });
 }
 
 export
@@ -185,25 +187,24 @@ function BookmarkTab(props) {
 function DrawerPanel(props) {
   const {
     anchor,
-    emit,
+    // emit,
     viewPlugins,
     hostName,
     style,
     className,
   } = props;
 
-  const cur = drawerSub.use("");
-  const url = cur.url;
-  const side = cur[url + "/" + anchor] ?? {};
-  const sharedOpen = cur[anchor];
+  const url = drawerSub.use("url");
+  const side = drawerSub.use(url + "/" + anchor) ?? {};
+  const sharedOpen = drawerSub.use(anchor);
   const {
     plugin = anchor === "left" ? true : false,
-    bookmarks = {}, open = sharedOpen,
+    bookmarks = {}, open = true,
   } = side;
   const active = side.active ?? Object.keys(bookmarks)[0];
   const renderedView = bookmarks[active]?.view ?? <></>;
   const realOpen = (open || open === undefined) && (plugin || bookmarks?.[active]);
-  drawerSub.echo("DrawerPanel", cur, sharedOpen, realOpen);
+  drawerSub.echo("DrawerPanel", side, sharedOpen, realOpen);
   const oppositeSide = anchor === "left" ? "right" : "left";
   const classes = bookmarkStyles(anchor, oppositeSide)();
   const drawerClasses = drawerPanelStyles(anchor === "left", realOpen)();
@@ -212,7 +213,7 @@ function DrawerPanel(props) {
     name => {
       selectBookmark(anchor, name);
     },
-    [anchor, active, emit]
+    [anchor, active]
   );
 
   const viewProps = bookmarks[active]?.props;

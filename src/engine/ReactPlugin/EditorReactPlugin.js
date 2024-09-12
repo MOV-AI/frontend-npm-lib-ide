@@ -83,6 +83,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         tabIndex="-1"
         ref={editorContainer}
         className={`container-${scope}`}
+        onClick={() => { drawerSub.url = id }}
       >
         <RefComponent
           {...props}

@@ -44,8 +44,14 @@ const Tabs = (props, ref) => {
    */
   const focusActivePanelTab = evt => {
     const target = evt.target;
-    const tabPane = target.closest(".dock-tabpane-active");
-    if (getActiveTab !== tabPane.id) focusExistingTab(tabPane.id);
+    if (!target?.classList?.contains("dock-nav-wrap")) return;
+
+    const activeTabEl = target.querySelector(".dock-tab-active>.dock-tab-btn");
+    const panelActiveTab = activeTabEl.id.substring(
+      activeTabEl.id.indexOf("tab-") + 4
+    );
+
+    if (getActiveTab !== panelActiveTab) focusExistingTab(panelActiveTab);
   };
 
   return (
@@ -55,7 +61,6 @@ const Tabs = (props, ref) => {
       onClick={focusActivePanelTab}
     >
       <DockLayout
-        mode="horizontal"
         ref={dockRef}
         layout={layout}
         loadTab={loadTab}

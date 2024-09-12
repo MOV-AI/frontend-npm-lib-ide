@@ -121,7 +121,7 @@ export const PLUGINS = {
     }
   },
   LEFT_DRAWER: {
-    NAME: "leftDrawer",
+    NAME: "left",
     CALL: {
       ...BOOKMARK_METHODS,
       ...DRAWER.METHODS
@@ -131,7 +131,7 @@ export const PLUGINS = {
     }
   },
   RIGHT_DRAWER: {
-    NAME: "rightDrawer",
+    NAME: "right",
     CALL: {
       ...BOOKMARK_METHODS,
       ...DRAWER.METHODS

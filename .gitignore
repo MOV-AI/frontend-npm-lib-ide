@@ -33,3 +33,7 @@ storybook-static
 
 # SonarQube
 /.scannerwork
+
+# Optional npm cache directory
+.npm
+.pnpm-store

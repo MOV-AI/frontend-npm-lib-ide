@@ -31,19 +31,17 @@ const Parameters = props => {
     [rowDataName, direction, ioPort, param, handleIOPortsInputs]
   );
 
-  // This is a temporary patch, actually Ports data should provide which type the frontend should render
-  // and not this harcoded string. And the backend should have a type validation as well
   const inputType = () => {
+  // TODO: Ports data should provide which type the frontend should render
+  // and not this harcoded string
     if (["latch", "Oneshot"].includes(param)) {
       return <Checkbox
         type={"checkbox"}
         defaultChecked={paramValue}
-        // className={classes.input}
         onChange={handleOnChange}
       />;
     }
     else {
-      // To improve: MUI has an experimental <NumberInput>
       return <TextField
         type={["Frequency", "queue_size"].includes(param) ? "number" : "text"}
         inputProps={{ "data-testid": "input_parameter" }}

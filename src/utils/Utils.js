@@ -22,6 +22,26 @@ export const defaultFunction = (name, logToConsole = true) => {
 };
 
 /**
+ * Tries to find the next increment on an array of numbers
+ * @param {Number[]} numArray
+ */
+export const findNextIncrement = numArray => {
+  if (!numArray || numArray.length < 2)
+    return numArray[0] ? numArray[0] + 1 : 1;
+
+  const max = Math.max(...numArray);
+  const min = 1;
+
+  for (let i = min; i <= max; i++) {
+    if (!numArray.includes(i)) {
+      return i;
+    }
+  }
+
+  return max + 1;
+};
+
+/**
  * Returns a given icon with props in a method
  * @param {SvgIcon} Icon
  * @returns {function} Icon with props
@@ -171,12 +191,12 @@ export function simulateMouseClick(element) {
  * Trigger callback before unload app
  * @param {function} callback
  */
-export function runBeforeUnload(callback) {
+export function runBeforeUnload(callback, ...args) {
   // Previous beforeunload method
   const onAppUnload = window.onbeforeunload;
   // Set new beforeunload method with given callback
   window.onbeforeunload = event => {
-    callback?.(event);
+    callback?.(event, ...args);
     return onAppUnload(event);
   };
 }
