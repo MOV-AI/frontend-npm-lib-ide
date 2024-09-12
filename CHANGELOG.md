@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-2946](https://movai.atlassian.net/browse/FP-2946): Deleting the "Label" filter from lib-ide BaseStore results in a 500 response in certain conditions
+
 # v1.2.7
 
 - [FP-2787](https://movai.atlassian.net/browse/FP-2787): IDE - Topics - Can't open multiple Topics tabs
