@@ -1,4 +1,4 @@
-# v1.2.8
+# TBD
 
 - [FP-2935](https://movai.atlassian.net/browse/FP-2935): Default flow parameters not showing when clicking the edit button
 - [FP-2946](https://movai.atlassian.net/browse/FP-2946): Deleting the "Label" filter from lib-ide BaseStore results in a 500 response in certain conditions
