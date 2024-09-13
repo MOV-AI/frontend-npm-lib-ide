@@ -79,8 +79,9 @@ class DBSubscriber extends StoreAbstractPlugin {
   onUpdate(data) {
     clearTimeout(this[symbols.timer]);
 
+    let docName = Object.keys(data["key"][this.scope])[0];
     this[symbols.timer] = setTimeout(
-      () => this.updateDocument(data.patterns[0].Name),
+      () => this.updateDocument(docName),
       DEBOUNCE_TIME
     );
   }
