@@ -32,7 +32,10 @@ class AbstractDataType {
 
   // parsing strings into real objects
   parse(value) {
-    return JSON.parse(value);
+    try {
+      return JSON.parse(value);
+    } catch (e) {
+    }
   }
 
   // unparsing real objects into strings

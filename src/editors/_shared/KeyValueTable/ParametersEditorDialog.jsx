@@ -148,10 +148,7 @@ const ParameterEditorDialog = props => {
     formData => {
       const dataToValidate = {
         ...formData,
-        value:
-          showValueOptions && valueOption === VALUE_OPTIONS.DEFAULT
-            ? DEFAULT_VALUE
-            : data.value,
+        value: data.value,
         type: data.type
       };
 
@@ -168,7 +165,7 @@ const ParameterEditorDialog = props => {
           if (res.parsed) data.value = res.parsed.toString();
           const dataToSubmit = {
             ...dataToValidate,
-            value: valueToSave(data)
+            value: valueToSave(dataToValidate)
           };
           return { ...res, data: dataToSubmit };
         })
