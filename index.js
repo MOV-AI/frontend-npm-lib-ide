@@ -46,6 +46,7 @@ import { KEYBINDINGS } from "./src/utils/shortcuts";
 import * as Utils from "./src/utils/Utils";
 import LocalStorage from "./src/utils/LocalStorage";
 // Hooks
+import Loader from "./src/editors/_shared/Loader/Loader";
 import useDataTypes from "./src/editors/_shared/hooks/useDataTypes";
 import useDataSubscriber from "./src/plugins/DocManager/useDataSubscriber";
 export * from "./src/plugins/hosts/DrawerPanel/DrawerPanel";
@@ -82,7 +83,7 @@ export { HomeTabPlugin, getHomeTab };
 export { ShortcutsPlugin, getShortcutsTab };
 export { FlowExplorer };
 export { ApplicationTheme };
-export { useDataTypes, useDataSubscriber, usePluginMethods };
+export { Loader, useDataTypes, useDataSubscriber, usePluginMethods };
 export { openTool };
 
 // Export editor's shared components

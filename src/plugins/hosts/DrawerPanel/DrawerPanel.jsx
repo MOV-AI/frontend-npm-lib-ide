@@ -23,16 +23,11 @@ class DrawerSub extends Sub {
     return suffix === "left" || suffix === "right";
   }
 
-  get plugin(){
-    return this.get("$url.plugin");
-  }
-
-  set plugin(value) {
-    this.update(value, "$url.plugin");
+  get active() {
+    this.get("$url.active");
   }
 
   set active(active) {
-    this.plugin = false;
     this.update(active, "$url.active");
   }
 
@@ -41,7 +36,6 @@ class DrawerSub extends Sub {
     this.update({
       ...this.get(url + "/" + suffix),
       active,
-      plugin: false,
     }, url + "/" + suffix);
   }
 
@@ -63,7 +57,7 @@ class DrawerSub extends Sub {
   }
 
   add(name = "", value, props = {}) {
-    const url = value.url ?? this.url;
+    const url = value.url.replace(".", "/") ?? this.url;
     const suffix = value.suffix ?? this.suffix;
     const cur = this.get(url + "/" + suffix) ?? {};
     const bookmarks = cur.bookmarks ?? {};
@@ -77,8 +71,7 @@ class DrawerSub extends Sub {
 
     return this.update({
       ...this.get(url + "/" + suffix),
-      ...(value.select && name !== cur.active ? { active: name } : {}),
-      plugin: false,
+      ...(value.select ? { active: name } : {}),
       bookmarks: Object.assign(bookmarks, {
         ...(bookmarks ?? {}),
         [name]: { ...value, props },
@@ -123,8 +116,8 @@ class DrawerSub extends Sub {
 
 function selectBookmark(anchor, name) {
   drawerSub.suffix = anchor;
-  drawerSub.open = name !== drawerSub._value[drawerSub.index]?.active ? true : !drawerSub.open;
   drawerSub.setActive(name, { suffix: anchor });
+  drawerSub.open = name === drawerSub.active ? true : !drawerSub.open;
 }
 
 export
@@ -198,12 +191,11 @@ function DrawerPanel(props) {
   const side = drawerSub.use(url + "/" + anchor) ?? {};
   const sharedOpen = drawerSub.use(anchor);
   const {
-    plugin = anchor === "left" ? true : false,
     bookmarks = {}, open = true,
   } = side;
-  const active = side.active ?? Object.keys(bookmarks)[0];
+  const active = side.active;
   const renderedView = bookmarks[active]?.view ?? <></>;
-  const realOpen = (open || open === undefined) && (plugin || bookmarks?.[active]);
+  const realOpen = (open || open === undefined) && (!active || bookmarks?.[active]);
   drawerSub.echo("DrawerPanel", side, sharedOpen, realOpen);
   const oppositeSide = anchor === "left" ? "right" : "left";
   const classes = bookmarkStyles(anchor, oppositeSide)();
@@ -254,9 +246,9 @@ function DrawerPanel(props) {
         className={`${drawerClasses.drawer} ${className}`}
       >
         <Typography component="div" className={drawerClasses.content}>
-          {plugin ? viewPlugins : (
+          {active ? (
             <div className={classes.bookmarkHolder}>{realView}</div>
-          )}
+          ) : viewPlugins}
         </Typography>
       </BaseDrawer>
       : null }

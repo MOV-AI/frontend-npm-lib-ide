@@ -53,6 +53,7 @@ export const Callback = (props, ref) => {
       name: menuName,
       url: "global/Callback/" + name,
       suffix: "right",
+      select: true,
       title: menuTitle,
       view: <Menu id={id} call={call} name={name} scope={scope} />
     }, [name]);

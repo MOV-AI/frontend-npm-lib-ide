@@ -57,6 +57,7 @@ export const Configuration = (props, ref) => {
       suffix: "right",
       url: "global/Configuration/" + name,
       title: menuTitle,
+      select: true,
       view: (
         <Menu id={id} name={name} details={details} model={instance}></Menu>
       ),

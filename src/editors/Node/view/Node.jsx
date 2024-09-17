@@ -223,6 +223,7 @@ export const Node = (props, ref) => {
       title: menuTitle,
       suffix: "right",
       url: "global/Node/" + name,
+      select: true,
       view: (
         <Menu id={id} name={name} details={details} model={instance}></Menu>
       )

@@ -45,13 +45,12 @@ const MainMenu = props => {
       isActive: true,
       getOnClick: () => { 
         drawerSub.suffix = "left"; 
-        if (drawerSub.plugin) {
+        const active = drawerSub.active;
+        drawerSub.setActive(null);
+        if (active)
           drawerSub.open = !drawerSub.open;
-        } else {
-          drawerSub.plugin = true; 
+        else
           drawerSub.open = true; 
-        }
-       
       },
     },
     ...getMainMenuTools().map(tool => {
