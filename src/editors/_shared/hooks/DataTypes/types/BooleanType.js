@@ -5,58 +5,31 @@ import { pythonToBool, boolToPython } from "../../../../../utils/Utils";
 import DataType from "../AbstractDataType";
 
 class BooleanType extends DataType {
-  // Boolean type properties definition
   key = DATA_TYPES.BOOLEAN;
   label = "Boolean";
   default = false;
 
+  constructor(opts) {
+    super({ ...opts, reverse: true });
+  }
+
   parse(value) {
-    if (!this.onlyStrings)
-      return value; // the value is already real
-
-    const trimmed = value.trim();
-
-    if (trimmed === "True")
-      return true;
-
-    if (trimmed === "False")
-      return false;
-
-    throw new Error("Invalid boolean string");
+    return value === "True";
   }
 
   unparse(value) {
-    return this.onlyStrings
-      ? (value ? "True" : "False")
-    // in this case, we want to parse, since we need
-    // a real object for the checkbox component and not a string
-      : super.parse(value);
+    return value ? "True" : "False";
   }
 
-  getParsed(value) {
-    return value;
-  }
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                    Private Methods                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  /**
-   * Render Boolean Type edit component
-   * @param {*} props
-   * @returns
-   */
   editComponent(props) {
     return (
       <Checkbox
         data-testid={"Type=boolean-" + (props.label ?? this.label)}
         color={"primary"}
         style={{ width: "fit-content" }}
-        checked={this.parsing.unparse(props.rowData.value)}
+        checked={this.parsing.parse(props.rowData.value)}
         onChange={evt => props.onChange(
-          this.parsing.parse(evt.target.checked)
+          evt.target.checked
         )}
         disabled={props.disabled}
       />

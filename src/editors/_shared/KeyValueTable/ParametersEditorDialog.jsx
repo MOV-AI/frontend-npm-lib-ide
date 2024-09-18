@@ -107,11 +107,15 @@ const ParameterEditorDialog = props => {
       ) {
         setValueOption(VALUE_OPTIONS.CUSTOM);
       }
-      setData(prevState => {
-        return { ...prevState, value: value };
-      });
+      setData(prevState => ({
+        ...prevState,
+        value: valueToSave({
+          ...prevState,
+          value
+        }),
+      }));
     },
-    [valueOption]
+    [valueOption, valueToSave, data]
   );
 
   /**
@@ -163,11 +167,7 @@ const ParameterEditorDialog = props => {
             );
           // Prepare data to submit
           if (res.parsed) data.value = res.parsed.toString();
-          const dataToSubmit = {
-            ...dataToValidate,
-            value: valueToSave(dataToValidate)
-          };
-          return { ...res, data: dataToSubmit };
+          return { ...res, data: dataToValidate };
         })
         .catch(err => {
           alert({ message: err.message, severity: ALERT_SEVERITIES.ERROR });
@@ -206,7 +206,11 @@ const ParameterEditorDialog = props => {
           return {
             ...prevState,
             type,
-            value: newValue ?? prevState.value
+            value: valueToSave({
+              ...prevState,
+              type,
+              value: newValue ?? getType(type).getDefault(),
+            })
           };
         });
       });

@@ -16,11 +16,7 @@ class NumberType extends DataType {
   }
 
   parse(value) {
-    return Number(value.trim());
-  }
-
-  editComponent(props) {
-    return this.stringEditComponent(props);
+    return Number(typeof value === "string" ? value.trim() : value);
   }
 }
 

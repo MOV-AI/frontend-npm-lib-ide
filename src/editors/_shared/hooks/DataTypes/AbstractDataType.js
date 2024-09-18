@@ -1,10 +1,80 @@
-import React from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import _toString from "lodash/toString";
 import { TextField, Typography } from "@material-ui/core";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
 import { DATA_TYPES } from "../../../../utils/Constants";
 
 const identity = a => a;
+
+export function useEdit(props) {
+  const {
+    defaultValue,
+    parse,
+    unparse,
+    onChange: innerOnChange,
+    setInitial = true,
+    ...rest
+  } = props;
+
+  const initialValue = useMemo(() => unparse(defaultValue), [defaultValue]);
+  const [value, setValue] = useState(initialValue);
+
+  const changeValue = useCallback((newValue) => {
+    innerOnChange(parse(newValue));
+  }, [innerOnChange]);
+
+  useEffect(() => {
+    if (setInitial)
+      changeValue(initialValue);
+    setValue(initialValue);
+  }, [initialValue, changeValue, setInitial]);
+
+  const onChange = useCallback((value) => {
+    changeValue(value);
+    setValue(value);
+  }, [changeValue, setValue]); 
+
+  return {
+    ...rest,
+    onChange,
+    value,
+  };
+}
+
+function StringEdit(props) {
+  const { onChange, ...rest } = useEdit(props);
+
+  return (<TextField
+    inputProps={{ "data-testid": "input_value" }}
+    fullWidth
+    onChange={evt => onChange(evt.target.value)}
+    { ...rest }
+  />);
+}
+
+function CodeEdit(props) {
+  const { disabled, isNew, onLoadEditor, ...rest } = useEdit({
+    ...props,
+    setInitial: false,
+  });
+
+  return (<Typography
+    data-testid="section_data-type-code-editor"
+    component="div"
+    style={{ height: "100px", width: "100%" }}
+  >
+    <MonacoCodeEditor
+      onLoad={editor => {
+        if (!isNew) editor.focus();
+        onLoadEditor && onLoadEditor(editor);
+      }}
+      language="python"
+      disableMinimap={true}
+      options={{ readOnly: disabled }}
+      { ...rest }
+    />
+  </Typography>);
+}
 
 /**
  * Abstract Data Type Class
@@ -18,16 +88,26 @@ class AbstractDataType {
   // hooks
   _theme = {};
 
-  constructor({ theme, onlyStrings }) {
+  constructor({ theme, onlyStrings, reverse }) {
     // Set hooks to be used in abstract renders
     this._theme = theme;
-    this.onlyStrings = onlyStrings;
-    this.parsing = onlyStrings
+
+    this.parsing = (onlyStrings ? !reverse : reverse)
       ? { parse: identity, unparse: identity } : {
         parse: this.parse.bind(this),
         unparse: this.unparse.bind(this)
       };
-    this.getSaveable = onlyStrings ? this.unparse.bind(this) : identity;
+
+    // validation occurs on real objects
+    this.getParsed = onlyStrings
+      ? this.parse.bind(this)
+      : identity;
+
+    // might save strings or real objects
+    this.getSaveable = onlyStrings
+      ? this.unparse.bind(this)
+      : identity;
+
   }
 
   // parsing strings into real objects
@@ -41,11 +121,6 @@ class AbstractDataType {
   // unparsing real objects into strings
   unparse(value) {
     return typeof(value) === "string" ? value : JSON.stringify(value);
-  }
-
-  // ensure a parsed value. runs only for validation
-  getParsed(value) {
-    return this.onlyStrings ? this.parse(value) : value;
   }
 
   /**
@@ -105,30 +180,6 @@ class AbstractDataType {
     return this.parsing.unparse(this.default);
   }
 
-  //========================================================================================
-  /*                                                                                      *
-   *                                    Private Methods                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  /**
-   * Expose lodash toString method
-   * @param {*} value
-   * @returns {string} String value
-   */
-  toString(value) {
-    return this.parsing.unparse(value);
-  }
-
-  /**
-   * @private Check if value is already parsed, or if it still needs to be parsed to return
-   * @param {*} value : Value to be parsed
-   * @returns parsed value
-   */
-  getParsedValue(value) {
-    return this.parsing.parse(value);
-  }
-
   /**
    *
    * @param {*} props
@@ -149,19 +200,17 @@ class AbstractDataType {
    * @param {*} parsedValue : Parsed value (can be a string, array, or object)
    * @returns {ReactComponent} Text input for editing common strings
    */
-  stringEditComponent(props, parsedValue) {
-    const value = (parsedValue !== undefined ? parsedValue : props.rowData.value) ?? "";
-
+  stringEditComponent(props) {
+    const { rowData, ...rest } = props;
     return (
-      <TextField
-        inputProps={{ "data-testid": "input_value" }}
-        fullWidth
+      <StringEdit
         type={this.inputType}
-        placeholder={this.getDefault()}
-        defaultValue={this.parsing.unparse(value)}
-        disabled={props.disabled}
-        onChange={evt => props.onChange(this.parsing.parse(evt.target.value))}
-      ></TextField>
+        placeholder={this.parsing.unparse(this.default)}
+        defaultValue={rowData.value}
+        parse={this.parsing.parse}
+        unparse={this.parsing.unparse}
+        { ...rest }
+      />
     );
   }
 
@@ -171,26 +220,15 @@ class AbstractDataType {
    * @returns {ReactComponent} Code Editor Component
    */
   codeEditComponent = (props) => {
-    return (
-      <Typography
-        data-testid="section_data-type-code-editor"
-        component="div"
-        style={{ height: "100px", width: "100%" }}
-      >
-        <MonacoCodeEditor
-          value={this.parsing.unparse(props.rowData.value)}
-          onLoad={editor => {
-            if (!props.isNew) editor.focus();
-            props.onLoadEditor && props.onLoadEditor(editor);
-          }}
-          language="python"
-          disableMinimap={true}
-          theme={this._theme?.codeEditor?.theme ?? "dark"}
-          options={{ readOnly: props.disabled }}
-          onChange={value => props.onChange(this.parsing.parse(value))}
-        />
-      </Typography>
-    );
+    const { rowData, ...rest } = props;
+    return (<CodeEdit
+      defaultValue={rowData.value}
+      parse={this.parsing.parse}
+      unparse={this.parsing.unparse}
+      placeholder={this.parsing.unparse(this.default)}
+      theme={this._theme?.codeEditor?.theme ?? "dark"}
+      { ...rest }
+    />);
   };
 }
 

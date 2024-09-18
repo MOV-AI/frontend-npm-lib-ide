@@ -10,6 +10,14 @@ class StringType extends DataType {
   constructor(options) {
     super({ ...options, onlyStrings: true });
   }
+
+  parse(string) {
+    return string;
+  }
+
+  unparse(string) {
+    return string;
+  }
 }
 
 export default StringType;
