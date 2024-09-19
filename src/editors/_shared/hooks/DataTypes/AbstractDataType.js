@@ -160,6 +160,9 @@ class AbstractDataType {
    * @returns
    */
   validate(value) {
+    if (value === "None")
+      return Promise.resolve({ success: true });
+
     try {
       const parsed = this.getParsed(value);
       return Promise.resolve({

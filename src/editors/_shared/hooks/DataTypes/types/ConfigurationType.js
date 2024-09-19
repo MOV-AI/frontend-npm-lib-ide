@@ -26,6 +26,9 @@ class ConfigurationType extends DataType {
    * @returns
    */
   validate(value, options) {
+    if (value === "None")
+      return Promise.resolve({ success: true });
+
     const validationMethod = options?.isConfigFromParameter
       ? "validateConfiguration"
       : "validateConfigurationRaw";
