@@ -8,7 +8,7 @@ class ObjectType extends DataType {
   default = {};
 
   _validate(value) {
-    return value === undefined || typeof value === "object" && !Array.isArray(value);
+    return value === undefined || value !== null && typeof value === "object" && !Array.isArray(value);
   }
 }
 

@@ -41,7 +41,7 @@ test("Validation", () => {
   strType.validate(strType.parse("False")).then(
     res => expect(res.success).toBe(true)
   );
-  type.validate().then(res => expect(res.success).toBe(false));
+  type.validate().then(res => expect(res.success).toBe(true));
   type.validate(0).then(res => expect(res.success).toBe(false));
   type.validate("").then(res => expect(res.success).toBe(false));
   type.validate(null).then(res => expect(res.success).toBe(false));

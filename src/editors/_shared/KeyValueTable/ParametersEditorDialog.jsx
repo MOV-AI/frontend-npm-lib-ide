@@ -46,7 +46,7 @@ const ParameterEditorDialog = props => {
   // Hooks
   const [data, setData] = useState(props.data);
   const classes = parametersDialogStyles();
-  const { getDataTypes, getLabel, getEditComponent, validate, getType } =
+  const { getDataTypes, getType } =
     useDataTypes({ onlyStrings: true });
 
   //========================================================================================
@@ -159,7 +159,7 @@ const ParameterEditorDialog = props => {
       if (customValidation) return customValidation(dataToValidate);
 
       // Validate data
-      return validate(dataToValidate, getValidationOptions())
+      return getType(data.type).validate(data.value, getValidationOptions())
         .then(res => {
           if (!res.success)
             throw new Error(
@@ -180,7 +180,7 @@ const ParameterEditorDialog = props => {
       data.value,
       data.type,
       alert,
-      validate,
+      getType,
       valueToSave,
       customValidation,
     ]
@@ -201,11 +201,15 @@ const ParameterEditorDialog = props => {
     evt => {
       const type = evt?.target?.value;
       const typeInst = getType(type);
-      setData(prevState => ({
-        ...prevState,
-        type,
-      }));
-    }, [getType, setData]
+
+      typeInst.validate(data.value).then(({ success }) => {
+        setData(prevState => ({
+          ...prevState,
+          type,
+          value: success ? prevState.value : typeInst.getDefault(),
+        }));
+      });
+    }, [getType, data.value, setData]
   );
 
   /**
@@ -254,7 +258,7 @@ const ParameterEditorDialog = props => {
         >
           {getDataTypes().map(key => (
             <MenuItem key={key} value={key}>
-              {getLabel(key)}
+              {getType(key).getLabel()}
             </MenuItem>
           ))}
         </Select>
@@ -267,7 +271,7 @@ const ParameterEditorDialog = props => {
     preventRenderType,
     disableType,
     getDataTypes,
-    getLabel,
+    getType,
     handleTypeChange,
   ]);
 
@@ -316,7 +320,7 @@ const ParameterEditorDialog = props => {
    */
   const renderValueEditor = useCallback(
     (defaultValue, options) => {
-      const editComponent = getEditComponent(data.type);
+      const editComponent = getType(data.type).getEditComponent();
       if (!editComponent) return <></>;
       return (
         <>
@@ -359,7 +363,7 @@ const ParameterEditorDialog = props => {
       handleTypeChange,
       renderValueOptions,
       handleTypeChange,
-      getEditComponent,
+      getType,
     ]
   );
 

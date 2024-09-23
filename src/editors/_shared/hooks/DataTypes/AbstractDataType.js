@@ -6,11 +6,12 @@ import { DATA_TYPES } from "../../../../utils/Constants";
 
 const identity = a => a;
 
+// for inputs that use strings
 export function useEdit(props) {
   const { rowData, dataType, onChange: innerOnChange } = props;
   const initialValue = useMemo(
     () => dataType.parsing.unparse(rowData.value),
-    [dataType, rowData.value]
+    [dataType]
   );
   const placeholder = useMemo(() => dataType.unparse(dataType.default), [dataType]);
   const [value, setValue] = useState(initialValue || placeholder);
@@ -18,12 +19,12 @@ export function useEdit(props) {
   const onChange = useCallback((value) => {
     innerOnChange(dataType.parsing.parse(value));
     setValue(value);
-  }, [innerOnChange, dataType]);
+  }, [innerOnChange, setValue, dataType]);
 
   useEffect(() => {
-    if (!dataType._validate(dataType.parse(value)))
-      onChange(placeholder);
-  }, [value, onChange, dataType, placeholder]);
+    if (rowData.value !== null)
+      setValue(dataType.parsing.unparse(rowData.value));
+  }, [onChange, rowData.value]);
 
   return { ...props, onChange, value };
 }
@@ -103,6 +104,7 @@ class AbstractDataType {
     try {
       return JSON.parse(value);
     } catch (e) {
+      return null; // null is invalid
     }
   }
 

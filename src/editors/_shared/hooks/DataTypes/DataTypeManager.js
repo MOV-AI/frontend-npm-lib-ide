@@ -46,7 +46,7 @@ class DataTypeManager {
    * @param {string} type
    * @returns
    */
-  getType(type) {
+  getType(type = "any") {
     return this.dataTypes.get(type);
   }
 }

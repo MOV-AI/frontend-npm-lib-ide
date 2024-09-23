@@ -21,7 +21,7 @@ export default {
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template = args => {
-  const { validate } = useDataTypes();
+  const { getType } = useDataTypes();
   const [value, setValue] = React.useState("");
   const [title, setTitle] = React.useState("");
   const { isConfigFromParameter } = args;
@@ -35,7 +35,7 @@ const Template = args => {
   };
 
   const validateData = () => {
-    validate({ type: "config", value: props.rowData.value }, args)
+    getType("config").validate(props.rowData.value, args)
       .then(result => {
         const message = result.success
           ? "Configuration valid"
