@@ -27,7 +27,7 @@ class BooleanType extends DataType {
         data-testid={"Type=boolean-" + (props.label ?? this.label)}
         color={"primary"}
         style={{ width: "fit-content" }}
-        checked={this.parsing.parse(props.rowData.value)}
+        checked={this.parsing.parse(props.rowData.value) === true}
         onChange={evt => props.onChange(
           evt.target.checked
         )}

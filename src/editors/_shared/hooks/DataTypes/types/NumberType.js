@@ -11,11 +11,16 @@ class NumberType extends DataType {
   default = 0;
 
   _validate(value) {
-    return super._validate(value) && !isNaN(value);
+    return value === undefined
+      || typeof value === this.key && !isNaN(value);
   }
 
   parse(value) {
     return Number(typeof value === "string" ? value.trim() : value);
+  }
+
+  editComponent(props) {
+    return this.stringEditComponent(props);
   }
 }
 

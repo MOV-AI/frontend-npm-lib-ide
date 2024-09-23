@@ -7,44 +7,32 @@ import { DATA_TYPES } from "../../../../utils/Constants";
 const identity = a => a;
 
 export function useEdit(props) {
-  const {
-    defaultValue,
-    parse,
-    unparse,
-    onChange: innerOnChange,
-    setInitial = true,
-    ...rest
-  } = props;
-
-  const initialValue = useMemo(() => unparse(defaultValue), [defaultValue]);
-  const [value, setValue] = useState(initialValue);
-
-  const changeValue = useCallback((newValue) => {
-    innerOnChange(parse(newValue));
-  }, [innerOnChange]);
-
-  useEffect(() => {
-    if (setInitial)
-      changeValue(initialValue);
-    setValue(initialValue);
-  }, [initialValue, changeValue, setInitial]);
+  const { rowData, dataType, onChange: innerOnChange } = props;
+  const initialValue = useMemo(
+    () => dataType.parsing.unparse(rowData.value),
+    [dataType, rowData.value]
+  );
+  const placeholder = useMemo(() => dataType.unparse(dataType.default), [dataType]);
+  const [value, setValue] = useState(initialValue || placeholder);
 
   const onChange = useCallback((value) => {
-    changeValue(value);
+    innerOnChange(dataType.parsing.parse(value));
     setValue(value);
-  }, [changeValue, setValue]); 
+  }, [innerOnChange, dataType]);
 
-  return {
-    ...rest,
-    onChange,
-    value,
-  };
+  useEffect(() => {
+    if (!dataType._validate(dataType.parse(value)))
+      onChange(placeholder);
+  }, [value, onChange, dataType, placeholder]);
+
+  return { ...props, onChange, value };
 }
 
 function StringEdit(props) {
-  const { onChange, ...rest } = useEdit(props);
+  const { onChange, dataType, ...rest } = useEdit(props);
 
   return (<TextField
+    type={dataType.inputType}
     inputProps={{ "data-testid": "input_value" }}
     fullWidth
     onChange={evt => onChange(evt.target.value)}
@@ -53,10 +41,7 @@ function StringEdit(props) {
 }
 
 function CodeEdit(props) {
-  const { disabled, isNew, onLoadEditor, ...rest } = useEdit({
-    ...props,
-    setInitial: false,
-  });
+  const { disabled, isNew, onLoadEditor, dataType, ...rest } = useEdit(props);
 
   return (<Typography
     data-testid="section_data-type-code-editor"
@@ -71,6 +56,7 @@ function CodeEdit(props) {
       language="python"
       disableMinimap={true}
       options={{ readOnly: disabled }}
+      theme={dataType._theme?.codeEditor?.theme ?? "dark"}
       { ...rest }
     />
   </Typography>);
@@ -112,6 +98,8 @@ class AbstractDataType {
 
   // parsing strings into real objects
   parse(value) {
+    if (value === '')
+      return undefined;
     try {
       return JSON.parse(value);
     } catch (e) {
@@ -152,7 +140,7 @@ class AbstractDataType {
    * @returns
    */
   _validate(value) {
-    return typeof value === this.key;
+    return value === undefined || typeof value === this.key;
   }
 
   /**
@@ -180,7 +168,7 @@ class AbstractDataType {
    * @returns {any} Default value
    */
   getDefault(options) {
-    return this.parsing.unparse(this.default);
+    return this.unparse(this.default);
   }
 
   /**
@@ -204,17 +192,7 @@ class AbstractDataType {
    * @returns {ReactComponent} Text input for editing common strings
    */
   stringEditComponent(props) {
-    const { rowData, ...rest } = props;
-    return (
-      <StringEdit
-        type={this.inputType}
-        placeholder={this.parsing.unparse(this.default)}
-        defaultValue={rowData.value}
-        parse={this.parsing.parse}
-        unparse={this.parsing.unparse}
-        { ...rest }
-      />
-    );
+    return <StringEdit dataType={this} { ...props } />;
   }
 
   /**
@@ -223,15 +201,7 @@ class AbstractDataType {
    * @returns {ReactComponent} Code Editor Component
    */
   codeEditComponent = (props) => {
-    const { rowData, ...rest } = props;
-    return (<CodeEdit
-      defaultValue={rowData.value}
-      parse={this.parsing.parse}
-      unparse={this.parsing.unparse}
-      placeholder={this.parsing.unparse(this.default)}
-      theme={this._theme?.codeEditor?.theme ?? "dark"}
-      { ...rest }
-    />);
+    return <CodeEdit dataType={this} { ...props } />;
   };
 }
 

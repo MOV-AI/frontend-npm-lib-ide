@@ -8,6 +8,14 @@ class AnyType extends DataType {
   _validate(value) {
     return true;
   }
+
+  parse(value) {
+    return value;
+  }
+
+  unparse(value) {
+    return value;
+  }
 }
 
 export default AnyType;

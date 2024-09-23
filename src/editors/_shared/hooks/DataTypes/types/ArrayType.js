@@ -8,7 +8,7 @@ class ArrayType extends DataType {
   default = [];
 
   _validate(value) {
-    return Array.isArray(value);
+    return value === undefined || Array.isArray(value);
   }
 }
 

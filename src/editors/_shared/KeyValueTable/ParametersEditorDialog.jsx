@@ -44,10 +44,9 @@ const ParameterEditorDialog = props => {
   } = props;
 
   // Hooks
-  const [data, setData] = useState({});
-  const [valueOption, setValueOption] = useState(VALUE_OPTIONS.DEFAULT);
+  const [data, setData] = useState(props.data);
   const classes = parametersDialogStyles();
-  const { getDataTypes, getLabel, getEditComponent, getValidValue, validate, getType } =
+  const { getDataTypes, getLabel, getEditComponent, validate, getType } =
     useDataTypes({ onlyStrings: true });
 
   //========================================================================================
@@ -74,6 +73,7 @@ const ParameterEditorDialog = props => {
     return result;
   }, []);
 
+  const [valueOption, setValueOption] = useState(getValueOption(props.data.value));
   /**
    * @private Parse value if type string
    * @param {{type: string, value: *}} formData
@@ -96,7 +96,7 @@ const ParameterEditorDialog = props => {
   );
 
   /**
-   * On change value editor (refactored to its own method to reduce cognitivity complexity)
+   * On change value editor (refactored to its own method to reduce cognitive complexity)
    * @param {*} _value
    */
   const onChangeValueEditor = useCallback(
@@ -115,7 +115,7 @@ const ParameterEditorDialog = props => {
         }),
       }));
     },
-    [valueOption, valueToSave, data]
+    [valueOption, valueToSave, setData]
   );
 
   /**
@@ -126,7 +126,7 @@ const ParameterEditorDialog = props => {
     return data.type === DATA_TYPES.CONFIGURATION
       ? ConfigurationType.format2Parameter
       : s => s;
-  }, [data]);
+  }, [data.type]);
 
   /**
    * Get Validation options for each type
@@ -136,7 +136,7 @@ const ParameterEditorDialog = props => {
     return data.type === DATA_TYPES.CONFIGURATION
       ? { isConfigFromParameter: true }
       : {};
-  }, [data]);
+  }, [data.type]);
 
   //========================================================================================
   /*                                                                                      *
@@ -177,7 +177,8 @@ const ParameterEditorDialog = props => {
     [
       showValueOptions,
       valueOption,
-      data,
+      data.value,
+      data.type,
       alert,
       validate,
       valueToSave,
@@ -199,23 +200,12 @@ const ParameterEditorDialog = props => {
   const handleTypeChange = useCallback(
     evt => {
       const type = evt?.target?.value;
-      const options = { isPythonValue: true };
-
-      getValidValue(type, data.value, options).then(newValue => {
-        setData(prevState => {
-          return {
-            ...prevState,
-            type,
-            value: valueToSave({
-              ...prevState,
-              type,
-              value: newValue ?? getType(type).getDefault(),
-            })
-          };
-        });
-      });
-    },
-    [data, getValidValue]
+      const typeInst = getType(type);
+      setData(prevState => ({
+        ...prevState,
+        type,
+      }));
+    }, [getType, setData]
   );
 
   /**
@@ -239,18 +229,6 @@ const ParameterEditorDialog = props => {
     },
     [props.data.defaultValue]
   );
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                    React lifecycle                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  useEffect(() => {
-    if (showValueOptions) setValueOption(getValueOption(props.data.value));
-
-    setData({ ...props.data, value: props.data.value ?? props.data.defaultValue });
-  }, [props.data, showValueOptions, getValueOption]);
 
   //========================================================================================
   /*                                                                                      *
@@ -285,7 +263,7 @@ const ParameterEditorDialog = props => {
   }, [
     disabled,
     classes,
-    data,
+    data.type,
     preventRenderType,
     disableType,
     getDataTypes,
@@ -373,10 +351,14 @@ const ParameterEditorDialog = props => {
       valueOption,
       showValueOptions,
       disabled,
-      data,
+      data.value,
+      data.type,
+      data.paramType,
       isNew,
       classes,
+      handleTypeChange,
       renderValueOptions,
+      handleTypeChange,
       getEditComponent,
     ]
   );

@@ -6,6 +6,10 @@ class ObjectType extends DataType {
   key = DATA_TYPES.OBJECT;
   label = "Object";
   default = {};
+
+  _validate(value) {
+    return value === undefined || typeof value === "object" && !Array.isArray(value);
+  }
 }
 
 export default ObjectType;

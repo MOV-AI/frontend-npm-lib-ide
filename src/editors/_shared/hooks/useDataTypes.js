@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useMemo, useCallback } from "react";
 import { useTheme } from "@material-ui/styles";
 import DataTypeManager from "./DataTypes/DataTypeManager";
 
@@ -7,7 +7,10 @@ const useDataTypes = (options = {}) => {
 
   // Hooks
   const theme = useTheme();
-  const dataTypeManager = new DataTypeManager({ theme, onlyStrings });
+  const dataTypeManager = useMemo(
+    () => new DataTypeManager({ theme, onlyStrings }),
+    []
+  );
 
   //========================================================================================
   /*                                                                                      *
@@ -20,47 +23,37 @@ const useDataTypes = (options = {}) => {
    * @param {Array} excluded : Excluded keys
    * @returns {Array} List of valid data types to be displayed in the select box
    */
-  const getDataTypes = (excluded = []) => {
+  const getDataTypes = useCallback((excluded = []) => {
     return dataTypeManager
       .getTypeKeys()
       .filter(type => !excluded.includes(type));
-  };
+  }, [dataTypeManager]);
 
   /**
    * Get data type label
    * @param {string} dataType
    * @returns {string} Type Label
    */
-  const getLabel = dataType => {
+  const getLabel = useCallback(dataType => {
     return dataTypeManager.getType(dataType)?.getLabel();
-  };
+  }, [dataTypeManager]);
 
   /**
    * Get edit component
    * @param {string} dataType : Data type
    * @returns {ReactElement} Data Type Editor Component
    */
-  const getEditComponent = dataType => {
+  const getEditComponent = useCallback(dataType => {
     return dataTypeManager.getType(dataType ?? "any")?.getEditComponent();
-  };
+  }, [dataTypeManager]);
 
   /**
    * Return a type
    */
-  const getType = type => dataTypeManager.getType(type ?? "any");
-
-  /**
-   * Return the value if valid otherwise returns
-   * the default value ot the type
-   * @param {string} type : The type to convert to
-   * @param {string} value : The value to validate
-   * @returns {string}
-   */
-  const getValidValue = async (type, value, options) => {
-    const typeInst = dataTypeManager.getType(type);
-    const res = await typeInst.validate(value);
-    return res.success ? value : typeInst.getDefault(options);
-  };
+  const getType = useCallback(
+    type => dataTypeManager.getType(type ?? "any"),
+    [dataTypeManager]
+  );
 
   /**
    * Validation method of data
@@ -68,20 +61,19 @@ const useDataTypes = (options = {}) => {
    * @param {{object | undefined}} options : Validation options object
    * @returns {Promise} Async validation of data
    */
-  const validate = (data, options) => {
+  const validate = useCallback((data, options) => {
     const dataType = dataTypeManager.getType(data.type);
     if (!dataType) return Promise.resolve({ success: true, data });
     return dataType.validate(data.value, options);
-  };
+  }, [dataTypeManager]);
 
-  return {
+  return useMemo(() => ({
     getLabel,
     getDataTypes,
     getEditComponent,
-    getValidValue,
     getType,
     validate
-  };
+  }), [getLabel, getDataTypes, getEditComponent, getType, validate]);
 };
 
 export default useDataTypes;
