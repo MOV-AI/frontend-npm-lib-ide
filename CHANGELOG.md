@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-2926](https://movai.atlassian.net/browse/FP-2926): Clear console and app errors
+
 # v1.2.8
 
 - [FP-2935](https://movai.atlassian.net/browse/FP-2935): Default flow parameters not showing when clicking the edit button
