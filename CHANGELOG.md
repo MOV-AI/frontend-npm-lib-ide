@@ -1,4 +1,14 @@
-# TBD
+# v1.2.8
+
+- [FP-2935](https://movai.atlassian.net/browse/FP-2935): Default flow parameters not showing when clicking the edit button
+- [FP-2946](https://movai.atlassian.net/browse/FP-2946): Deleting the "Label" filter from lib-ide BaseStore results in a 500 response in certain conditions
+- [FP-2937](https://movai.atlassian.net/browse/FP-2937): Initial storybook fixes
+
+# v1.2.7
+
+- [FP-2787](https://movai.atlassian.net/browse/FP-2787): IDE - Topics - Can't open multiple Topics tabs
+
+# v1.2.6
 
 - [FP-2739](https://movai.atlassian.net/browse/FP-2739): Port properties of the node templates are turning to strings after editing them
 
@@ -34,7 +44,7 @@
 
 - [FP-2603](https://movai.atlassian.net/browse/FP-2603): Properties dropdown closing after edit
 - [FP-2633](https://movai.atlassian.net/browse/FP-2633): Configuration Key not found error
-- [FP-2655](https://movai.atlassian.net/browse/FP-2655): SCENE\_EDITOR-Old\_Values\_after\_selecting\_another\_entity
+- [FP-2655](https://movai.atlassian.net/browse/FP-2655): SCENE_EDITOR-Old_Values_after_selecting_another_entity
 - [FP-2657](https://movai.atlassian.net/browse/FP-2657): Users with only read permissions can change the scene
 - [FP-2664](https://movai.atlassian.net/browse/FP-2664): Update react in all libs/apps
 - [FP-2557](https://movai.atlassian.net/browse/FP-2557): Removing frontend callbacks from backend

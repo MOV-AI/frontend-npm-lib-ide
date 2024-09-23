@@ -38,7 +38,7 @@ const useDataTypes = () => {
    * @returns {ReactElement} Data Type Editor Component
    */
   const getEditComponent = dataType => {
-    return dataTypeManager.getType(dataType)?.getEditComponent();
+    return dataTypeManager.getType(dataType ?? "any")?.getEditComponent();
   };
 
   /**
