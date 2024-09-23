@@ -9,12 +9,22 @@ class BooleanType extends DataType {
   label = "Boolean";
   default = false;
 
+  // boolType does parsing in reverse, since it only
+  // wants to parse values when we're in onlyStrings.
+  // it also uses a non-text input
+
   constructor(opts) {
-    super({ ...opts, reverse: true });
+    super({ ...opts, textInput: false });
   }
 
   parse(value) {
-    return value === "True";
+    if (value === "")
+      return undefined;
+    if (value === "True")
+      return true;
+    if (value === "False")
+      return false;
+    return null;
   }
 
   unparse(value) {

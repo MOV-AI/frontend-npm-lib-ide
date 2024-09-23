@@ -7,7 +7,7 @@ import ObjectType from "./types/ObjectType";
 import StringType from "./types/StringType";
 
 class DataTypeManager {
-  constructor({ theme, selfProvision = true, onlyStrings = false }) {
+  constructor({ theme, selfProvision = true, onlyStrings = false } = {}) {
     this.onlyStrings = onlyStrings;
     // Hooks
     this.theme = theme;

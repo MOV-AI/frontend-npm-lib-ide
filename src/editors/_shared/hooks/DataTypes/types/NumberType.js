@@ -12,11 +12,8 @@ class NumberType extends DataType {
 
   _validate(value) {
     return value === undefined
-      || typeof value === this.key && !isNaN(value);
-  }
-
-  parse(value) {
-    return Number(typeof value === "string" ? value.trim() : value);
+      || value !== null && typeof value === this.key
+      && !isNaN(value) && !Array.isArray(value);
   }
 
   editComponent(props) {

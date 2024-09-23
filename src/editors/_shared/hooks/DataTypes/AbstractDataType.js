@@ -6,7 +6,8 @@ import { DATA_TYPES } from "../../../../utils/Constants";
 
 const identity = a => a;
 
-// for inputs that use strings
+// for inputs that use strings as input
+// although they might output real things like numbers
 export function useEdit(props) {
   const { rowData, dataType, onChange: innerOnChange } = props;
   const initialValue = useMemo(
@@ -75,26 +76,19 @@ class AbstractDataType {
   // hooks
   _theme = {};
 
-  constructor({ theme, onlyStrings, reverse }) {
+  constructor({ theme, onlyStrings, textInput = true } = {}) {
     // Set hooks to be used in abstract renders
     this._theme = theme;
 
-    this.parsing = (onlyStrings ? !reverse : reverse)
-      ? { parse: identity, unparse: identity } : {
-        parse: this.parse.bind(this),
-        unparse: this.unparse.bind(this)
-      };
+    const parsing = {
+      parse: this.parse.bind(this),
+      unparse: this.unparse.bind(this),
+    }, noParsing = { parse: identity, unparse: identity };
 
-    // validation occurs on real objects
-    this.getParsed = onlyStrings
-      ? this.parse.bind(this)
-      : identity;
-
-    // might save strings or real objects
-    this.getSaveable = onlyStrings
-      ? this.unparse.bind(this)
-      : identity;
-
+    const doInputParsing = (onlyStrings ? !textInput : textInput);
+    this.parsing = doInputParsing ? parsing : noParsing;
+    this._validationParse = onlyStrings ? parsing.parse : identity;
+    this.getSaveable = onlyStrings ? parsing.unparse : identity;
   }
 
   // parsing strings into real objects
@@ -154,7 +148,7 @@ class AbstractDataType {
       return Promise.resolve({ success: true });
 
     try {
-      const parsed = this.getParsed(value);
+      const parsed = this._validationParse(value);
       return Promise.resolve({
         success: this._validate(parsed),
         parsed,
