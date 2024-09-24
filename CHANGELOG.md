@@ -3,7 +3,6 @@
 - [FP-2716](https://movai.atlassian.net/browse/FP-2716): Annotations imported cannot be edited
 - [FP-2711](https://movai.atlassian.net/browse/FP-2711): Corrupted data in Annotation
 - [FP-2927](https://movai.atlassian.net/browse/FP-2927): IDE - Validate user input data string/array/object and only try to transform when needed
-- [FP-2934](https://movai.atlassian.net/browse/FP-2934): Cursor position resets when editing a flow parameter
 - [FP-2926](https://movai.atlassian.net/browse/FP-2926): Clear console and app errors
 
 # v1.2.8
