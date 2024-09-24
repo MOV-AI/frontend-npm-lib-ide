@@ -95,9 +95,7 @@ const MainMenu = props => {
           <>
             {AppSettings.APP_PROPS.SHOW_APP_SELECTION && (
               <div className={classes.appsHolder}>
-                <Tooltip title={i18n.t("Home")}>
-                  <HomeMenuPopper />
-                </Tooltip>
+                <HomeMenuPopper />
                 <hr />
               </div>
             )}
