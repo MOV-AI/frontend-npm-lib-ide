@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 // create mock for Code Editor
 export const MonacoEditor = props => {
@@ -12,4 +13,8 @@ export const MonacoCodeEditor = props => {
     onChange={evt => onChange(evt.target.value)}
     {...rest}
   />);
+};
+
+MonacoCodeEditor.propTypes = {
+  onChange: PropTypes.func,
 };

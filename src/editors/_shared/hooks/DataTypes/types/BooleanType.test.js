@@ -20,7 +20,7 @@ it("Renders correctly", () => {
 
 it("Set value correctly", () => {
   const onChange = jest.fn();
-  const container = getRendered(new BooleanType(), {
+  getRendered(new BooleanType(), {
     rowData: { value: [] },
     onChange,
   });
@@ -32,7 +32,7 @@ it("Set value correctly", () => {
 
 it("Set value correctly (onlyStrings)", () => {
   const onChange = jest.fn();
-  const container = getRendered(
+  getRendered(
     new BooleanType({ onlyStrings: true }), {
     rowData: { value: [] },
     onChange,

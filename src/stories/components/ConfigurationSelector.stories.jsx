@@ -1,4 +1,5 @@
 import { Button, snackbar, withNotification } from "@mov-ai/mov-fe-lib-react";
+import PropTypes from "prop-types";
 import React from "react";
 import ConfigurationSelector from "../../editors/_shared/ConfigurationSelector/ConfigurationSelector";
 import ConfigurationType from "../../editors/_shared/hooks/DataTypes/types/ConfigurationType";
@@ -71,6 +72,12 @@ const Template = args => {
       </Button>
     </>
   );
+};
+
+Template.propTypes = {
+  rowData: PropTypes.shape({
+    value: PropTypes.string,
+  }),
 };
 
 export const Selector = withNotification(Template).bind({});
