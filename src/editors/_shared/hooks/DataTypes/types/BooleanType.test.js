@@ -1,72 +1,44 @@
 import BooleanType from "./BooleanType";
+import { getRendered, testValidation } from "../testUtils";
+import { screen, fireEvent } from "@testing-library/react";
 
-test("Smoke test", () => {
-  const obj = new BooleanType({});
-  expect(obj).toBeInstanceOf(BooleanType);
+testValidation(BooleanType, [
+  false, false, true, false, true, true, false, // 6
+  false, false, false, false, false, false, // 12
+  false, false, false, false, false, false, false, // 19
+  false, false, false, false, false, false, // 25
+  // onlyStrings
+  false, false, false, false, false, false, false, // 32
+  false, false, false, false, false, false, // 38
+  false, false, true, false, true, true, false, // 45
+  false, false, false, false, false, false, true // 52
+], "false", false, "False");
+
+it("Renders correctly", () => {
+  getRendered(new BooleanType());
 });
 
-test("Validation for real objects", () => {
-  const type = new BooleanType({});
-
-  type.validate({}).then(res => expect(res.success).toBe(false));
-  type.validate([]).then(res => expect(res.success).toBe(false));
-  type.validate(undefined).then(res => expect(res.success).toBe(true));
-  type.validate(null).then(res => expect(res.success).toBe(false));
-  type.validate(false).then(res => expect(res.success).toBe(true));
-  type.validate(true).then(res => expect(res.success).toBe(true));
-  type.validate(3).then(res => expect(res.success).toBe(false));
-  type.validate({a: 1}).then(res => expect(res.success).toBe(false));
-  type.validate({a: [1, 2]}).then(res => expect(res.success).toBe(false));
-  type.validate({a: [1, 2], b: {}}).then(res => expect(res.success).toBe(false));
-  type.validate([1]).then(res => expect(res.success).toBe(false));
-  type.validate([[1, 2]]).then(res => expect(res.success).toBe(false));
-  type.validate([[1, 2], {}]).then(res => expect(res.success).toBe(false));
-
-  type.validate("{}").then(res => expect(res.success).toBe(false));
-  type.validate("[]").then(res => expect(res.success).toBe(false));
-  type.validate("").then(res => expect(res.success).toBe(false));
-  type.validate("null").then(res => expect(res.success).toBe(false));
-  type.validate("False").then(res => expect(res.success).toBe(false));
-  type.validate("True").then(res => expect(res.success).toBe(false));
-  type.validate("3").then(res => expect(res.success).toBe(false));
-  type.validate("{a: 1}").then(res => expect(res.success).toBe(false));
-  type.validate("{a: [1, 2]}").then(res => expect(res.success).toBe(false));
-  type.validate("{a: [1, 2], b: {}}").then(res => expect(res.success).toBe(false));
-  type.validate("[1]").then(res => expect(res.success).toBe(false));
-  type.validate("[[1, 2]]").then(res => expect(res.success).toBe(false));
-  type.validate("[[1, 2], {}]").then(res => expect(res.success).toBe(false));
+it("Set value correctly", () => {
+  const onChange = jest.fn();
+  const container = getRendered(new BooleanType(), {
+    rowData: { value: [] },
+    onChange,
+  });
+  const input = screen.getByTestId('bool-checkbox');
+  fireEvent.click(input);
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalledWith(true);
 });
 
-test("Validation for onlyStrings", () => {
-  const type = new BooleanType({ onlyStrings: true });
-  // boolType does parsing in reverse, since it only
-  // wants to parse values when we're in onlyStrings.
-
-  type.validate({}).then(res => expect(res.success).toBe(false));
-  type.validate([]).then(res => expect(res.success).toBe(false));
-  type.validate(undefined).then(res => expect(res.success).toBe(false));
-  type.validate(null).then(res => expect(res.success).toBe(false));
-  type.validate(false).then(res => expect(res.success).toBe(false));
-  type.validate(true).then(res => expect(res.success).toBe(false));
-  type.validate(3).then(res => expect(res.success).toBe(false));
-  type.validate({a: 1}).then(res => expect(res.success).toBe(false));
-  type.validate({a: [1, 2]}).then(res => expect(res.success).toBe(false));
-  type.validate({a: [1, 2], b: {}}).then(res => expect(res.success).toBe(false));
-  type.validate([1]).then(res => expect(res.success).toBe(false));
-  type.validate([[1, 2]]).then(res => expect(res.success).toBe(false));
-  type.validate([[1, 2], {}]).then(res => expect(res.success).toBe(false));
-
-  type.validate("{}").then(res => expect(res.success).toBe(false));
-  type.validate("[]").then(res => expect(res.success).toBe(false));
-  type.validate("").then(res => expect(res.success).toBe(true));
-  type.validate("null").then(res => expect(res.success).toBe(false));
-  type.validate("False").then(res => expect(res.success).toBe(true));
-  type.validate("True").then(res => expect(res.success).toBe(true));
-  type.validate("3").then(res => expect(res.success).toBe(false));
-  type.validate('{"a": 1}').then(res => expect(res.success).toBe(false));
-  type.validate('{"a": [1, 2]}').then(res => expect(res.success).toBe(false));
-  type.validate('{"a": [1, 2], "b": {}}').then(res => expect(res.success).toBe(false));
-  type.validate("[1]").then(res => expect(res.success).toBe(false));
-  type.validate("[[1, 2]]").then(res => expect(res.success).toBe(false));
-  type.validate("[[1, 2], {}]").then(res => expect(res.success).toBe(false));
+it("Set value correctly (onlyStrings)", () => {
+  const onChange = jest.fn();
+  const container = getRendered(
+    new BooleanType({ onlyStrings: true }), {
+    rowData: { value: [] },
+    onChange,
+  });
+  const input = screen.getByTestId('bool-checkbox');
+  fireEvent.click(input);
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalledWith(true);
 });

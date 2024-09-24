@@ -1,20 +1,12 @@
 import { DATA_TYPES } from "../../../../../utils/Constants";
-import DataType from "../AbstractDataType";
+import StringType from "./StringType";
 
-class AnyType extends DataType {
+class AnyType extends StringType {
   key = DATA_TYPES.ANY;
   label = "Any";
 
   _validate(value) {
     return true;
-  }
-
-  parse(value) {
-    return value;
-  }
-
-  unparse(value) {
-    return value;
   }
 }
 

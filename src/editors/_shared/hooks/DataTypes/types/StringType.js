@@ -6,10 +6,6 @@ class StringType extends DataType {
   label = "String";
   default = '';
 
-  constructor(options) {
-    super({ ...options, onlyStrings: true });
-  }
-
   parse(string) {
     return string;
   }

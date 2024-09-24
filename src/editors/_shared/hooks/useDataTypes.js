@@ -1,4 +1,4 @@
-import { useRef, useMemo, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 import { useTheme } from "@material-ui/styles";
 import DataTypeManager from "./DataTypes/DataTypeManager";
 

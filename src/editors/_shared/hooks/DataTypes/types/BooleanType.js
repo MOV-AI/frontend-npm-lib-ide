@@ -32,16 +32,18 @@ class BooleanType extends DataType {
   }
 
   editComponent(props) {
+    const { label, disabled, onChange, rowData = {} } = props;
     return (
       <Checkbox
-        data-testid={"Type=boolean-" + (props.label ?? this.label)}
+        inputProps={{ "data-testid": "bool-checkbox" }}
+        data-testid={"Type=boolean-" + (label ?? this.label)}
         color={"primary"}
         style={{ width: "fit-content" }}
-        checked={this.parsing.parse(props.rowData.value) === true}
-        onChange={evt => props.onChange(
+        checked={this.parsing.parse(rowData.value) === true}
+        onChange={evt => onChange(
           evt.target.checked
         )}
-        disabled={props.disabled}
+        disabled={disabled}
       />
     );
   }

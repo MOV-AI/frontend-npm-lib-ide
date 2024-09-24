@@ -4,3 +4,12 @@ import React from "react";
 export const MonacoEditor = props => {
   return <textarea {...props} />;
 };
+
+export const MonacoCodeEditor = props => {
+  const { onChange, ...rest } = props;
+  return (<textarea
+    data-testid="code-editor-area"
+    onChange={evt => onChange(evt.target.value)}
+    {...rest}
+  />);
+};

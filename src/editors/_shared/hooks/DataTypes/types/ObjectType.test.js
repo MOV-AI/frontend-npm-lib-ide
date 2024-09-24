@@ -1,70 +1,16 @@
 import ObjectType from "./ObjectType";
+import { testValidation, testStringInput } from "../testUtils";
 
-test("Smoke test", () => {
-  const obj = new ObjectType({});
-  expect(obj).toBeInstanceOf(ObjectType);
-});
+testValidation(ObjectType, [
+  true, false, true, false, false, false, false, // 6
+  true, true, true, false, false, false, // 12
+  false, false, false, false, false, false, false, // 19
+  false, false, false, false, false, false, // 25
+  // onlyStrings
+  false, false, false, false, false, false, false, // 32
+  false, false, false, false, false, false, // 38
+  true, false, true, false, false, false, false, // 45
+  true, true, true, false, false, false, true // 52
+], '{"hi":1}', { hi: 1 });
 
-test("Validation for real objects", () => {
-  const type = new ObjectType({});
-
-  type.validate({}).then(res => expect(res.success).toBe(true));
-  type.validate([]).then(res => expect(res.success).toBe(false));
-  type.validate(undefined).then(res => expect(res.success).toBe(true));
-  type.validate(null).then(res => expect(res.success).toBe(false));
-  type.validate(false).then(res => expect(res.success).toBe(false));
-  type.validate(true).then(res => expect(res.success).toBe(false));
-  type.validate(3).then(res => expect(res.success).toBe(false));
-  type.validate({a: 1}).then(res => expect(res.success).toBe(true));
-  type.validate({a: [1, 2]}).then(res => expect(res.success).toBe(true));
-  type.validate({a: [1, 2], b: {}}).then(res => expect(res.success).toBe(true));
-  type.validate([1]).then(res => expect(res.success).toBe(false));
-  type.validate([[1, 2]]).then(res => expect(res.success).toBe(false));
-  type.validate([[1, 2], {}]).then(res => expect(res.success).toBe(false));
-
-  type.validate("{}").then(res => expect(res.success).toBe(false));
-  type.validate("[]").then(res => expect(res.success).toBe(false));
-  type.validate("").then(res => expect(res.success).toBe(false));
-  type.validate("null").then(res => expect(res.success).toBe(false));
-  type.validate("False").then(res => expect(res.success).toBe(false));
-  type.validate("True").then(res => expect(res.success).toBe(false));
-  type.validate("3").then(res => expect(res.success).toBe(false));
-  type.validate("{a: 1}").then(res => expect(res.success).toBe(false));
-  type.validate("{a: [1, 2]}").then(res => expect(res.success).toBe(false));
-  type.validate("{a: [1, 2], b: {}}").then(res => expect(res.success).toBe(false));
-  type.validate("[1]").then(res => expect(res.success).toBe(false));
-  type.validate("[[1, 2]]").then(res => expect(res.success).toBe(false));
-  type.validate("[[1, 2], {}]").then(res => expect(res.success).toBe(false));
-});
-
-test("Validation for onlyStrings", () => {
-  const type = new ObjectType({ onlyStrings: true });
-
-  type.validate({}).then(res => expect(res.success).toBe(false));
-  type.validate([]).then(res => expect(res.success).toBe(false));
-  type.validate(undefined).then(res => expect(res.success).toBe(false));
-  type.validate(null).then(res => expect(res.success).toBe(false));
-  type.validate(false).then(res => expect(res.success).toBe(false));
-  type.validate(true).then(res => expect(res.success).toBe(false));
-  type.validate(3).then(res => expect(res.success).toBe(false));
-  type.validate({a: 1}).then(res => expect(res.success).toBe(false));
-  type.validate({a: [1, 2]}).then(res => expect(res.success).toBe(false));
-  type.validate({a: [1, 2], b: {}}).then(res => expect(res.success).toBe(false));
-  type.validate([1]).then(res => expect(res.success).toBe(false));
-  type.validate([[1, 2]]).then(res => expect(res.success).toBe(false));
-  type.validate([[1, 2], {}]).then(res => expect(res.success).toBe(false));
-
-  type.validate("{}").then(res => expect(res.success).toBe(true));
-  type.validate("[]").then(res => expect(res.success).toBe(false));
-  type.validate("").then(res => expect(res.success).toBe(true));
-  type.validate("null").then(res => expect(res.success).toBe(false));
-  type.validate("False").then(res => expect(res.success).toBe(false));
-  type.validate("True").then(res => expect(res.success).toBe(false));
-  type.validate("3").then(res => expect(res.success).toBe(false));
-  type.validate('{"a": 1}').then(res => expect(res.success).toBe(true));
-  type.validate('{"a": [1, 2]}').then(res => expect(res.success).toBe(true));
-  type.validate('{"a": [1, 2], "b": {}}').then(res => expect(res.success).toBe(true));
-  type.validate("[1]").then(res => expect(res.success).toBe(false));
-  type.validate("[[1, 2]]").then(res => expect(res.success).toBe(false));
-  type.validate("[[1, 2], {}]").then(res => expect(res.success).toBe(false));
-});
+testStringInput(ObjectType, '{ "hi":1 }', { hi: 1 });

@@ -9,7 +9,7 @@ const identity = a => a;
 // for inputs that use strings as input
 // although they might output real things like numbers
 export function useEdit(props) {
-  const { rowData, dataType, onChange: innerOnChange } = props;
+  const { rowData = {}, dataType, onChange: innerOnChange = () => {} } = props;
   const initialValue = useMemo(
     () => dataType.parsing.unparse(rowData.value),
     [dataType]
@@ -43,7 +43,7 @@ function StringEdit(props) {
 }
 
 function CodeEdit(props) {
-  const { disabled, isNew, onLoadEditor, dataType, ...rest } = useEdit(props);
+  const { isNew, disabled, dataType, ...rest } = useEdit(props);
 
   return (<Typography
     data-testid="section_data-type-code-editor"
@@ -52,8 +52,8 @@ function CodeEdit(props) {
   >
     <MonacoCodeEditor
       onLoad={editor => {
-        if (!isNew) editor.focus();
-        onLoadEditor && onLoadEditor(editor);
+        if (!isNew)
+          editor.focus();
       }}
       language="python"
       disableMinimap={true}
@@ -79,6 +79,7 @@ class AbstractDataType {
   constructor({ theme, onlyStrings, textInput = true } = {}) {
     // Set hooks to be used in abstract renders
     this._theme = theme;
+    this._onlyStrings = onlyStrings;
 
     const parsing = {
       parse: this.parse.bind(this),
@@ -89,6 +90,17 @@ class AbstractDataType {
     this.parsing = doInputParsing ? parsing : noParsing;
     this._validationParse = onlyStrings ? parsing.parse : identity;
     this.getSaveable = onlyStrings ? parsing.unparse : identity;
+  }
+
+  getEditComponent() {
+    return this.editComponent.bind(this);
+  }
+
+  editComponent(props) {
+    if (this._onlyStrings)
+      return this.codeEditComponent(props);
+
+    return this.stringEditComponent(props);
   }
 
   // parsing strings into real objects
@@ -121,14 +133,6 @@ class AbstractDataType {
    */
   getLabel() {
     return this.label;
-  }
-
-  /**
-   * Get data type edit component
-   * @returns
-   */
-  getEditComponent() {
-    return (...args) => this.editComponent(...args);
   }
 
   /**
@@ -168,23 +172,8 @@ class AbstractDataType {
   }
 
   /**
-   *
-   * @param {*} props
-   * @param {*} mode
-   * @returns
-   */
-  editComponent(props, mode = "row") {
-    const editor = {
-      row: _props => this.stringEditComponent(_props, undefined),
-      dialog: _props => this.codeEditComponent(_props)
-    };
-    return editor[mode](props);
-  }
-
-  /**
    * @private Gets common text editor for regular inputs (strings, arrays, objects, any, default)
    * @param {*} props : Material table row props
-   * @param {*} parsedValue : Parsed value (can be a string, array, or object)
    * @returns {ReactComponent} Text input for editing common strings
    */
   stringEditComponent(props) {
