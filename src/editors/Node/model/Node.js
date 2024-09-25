@@ -3,7 +3,7 @@ import {
   Command,
   EnvVar,
   ContainerConf,
-  ParameterWithType,
+  Parameter,
   Port
 } from "../../../models/subModels";
 import schema from "./schema";
@@ -35,7 +35,7 @@ class Node extends Model {
     this.launch = true;
     this.remappable = true;
     this.packageDep = "";
-    this.parameters = new Manager("parameters", ParameterWithType, this.events);
+    this.parameters = new Manager("parameters", Parameter, this.events);
     this.envVars = new Manager("envVars", EnvVar, this.events);
     this.commands = new Manager("commands", Command, this.events);
     this.containerConf = new Manager(
@@ -551,7 +551,7 @@ class Node extends Model {
       launch,
       remappable,
       packageDep,
-      parameters: Manager.serializeOfDB(parameters, ParameterWithType),
+      parameters: Manager.serializeOfDB(parameters, Parameter),
       envVars: Manager.serializeOfDB(envVars, EnvVar),
       commands: Manager.serializeOfDB(commands, Command),
       containerConf: Manager.serializeOfDB(containerConf, ContainerConf),

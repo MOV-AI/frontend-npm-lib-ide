@@ -24,7 +24,7 @@ class BaseStore extends StorePluginManager {
     this._scope = model.SCOPE;
     this._name = name || "Store";
     this._title = title || "Generic Store";
-    this.pattern = pattern || { Scope: this.scope, Name: "*", Label: "*" };
+    this.pattern = pattern || { Scope: this.scope, Name: "*"}
     this.observer = observer;
     this.docManager = docManager;
     this.protectedDocs = [];
@@ -171,9 +171,20 @@ class BaseStore extends StorePluginManager {
   }
 
   _onSetDoc(doc) {
-    if (!this.getDoc(doc.name)) {
-      this.newDoc(doc.name);
+    const docInst = this.getDoc(doc.name);
+    if (!docInst) {
+      const newDoc = this.newDoc(doc.name);
+      newDoc
+        .enableObservables(false)
+        .setIsNew(false)
+        .setIsLoaded(false)
+        .setDirty(false)
+        .enableObservables(true);
     }
+
+    // if the doc is existing and not dirty, we should update
+    // it but that is non-trivial. We should open a new issue
+    // for it
   }
 
   /**
