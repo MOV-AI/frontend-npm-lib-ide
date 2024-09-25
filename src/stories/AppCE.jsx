@@ -1,6 +1,6 @@
 import { withDefaults, Translations as reactTranslations } from "@mov-ai/mov-fe-lib-react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { Translations as ideTranslations } from "../i18n/i18n";
+import { Translations as ideTranslations } from "../i18n";
 import React, { useEffect } from "react";
 // Base App
 import BaseApp, { installEditor, installTool } from "../App/BaseApp";
@@ -26,6 +26,8 @@ import HomeTabPlugin, { getHomeTab } from "../tools/HomeTab/HomeTab";
 // Utils
 import ApplicationTheme from "../themes";
 import * as CONSTANTS from "../utils/Constants";
+// Externals
+import { ThemeProvider, withStyles } from "@mov-ai/mov-fe-lib-react";
 // Icons
 import { HomeIcon, KeyboardIcon } from "@mov-ai/mov-fe-lib-react";
 

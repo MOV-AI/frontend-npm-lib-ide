@@ -1,3 +1,16 @@
+# TBD
+
+- [FP-2716](https://movai.atlassian.net/browse/FP-2716): Annotations imported cannot be edited
+- [FP-2711](https://movai.atlassian.net/browse/FP-2711): Corrupted data in Annotation
+- [FP-2927](https://movai.atlassian.net/browse/FP-2927): IDE - Validate user input data string/array/object and only try to transform when needed
+- [FP-2926](https://movai.atlassian.net/browse/FP-2926): Clear console and app errors
+
+# v1.2.8
+
+- [FP-2935](https://movai.atlassian.net/browse/FP-2935): Default flow parameters not showing when clicking the edit button
+- [FP-2946](https://movai.atlassian.net/browse/FP-2946): Deleting the "Label" filter from lib-ide BaseStore results in a 500 response in certain conditions
+- [FP-2937](https://movai.atlassian.net/browse/FP-2937): Initial storybook fixes
+
 # v1.2.7
 
 - [FP-2787](https://movai.atlassian.net/browse/FP-2787): IDE - Topics - Can't open multiple Topics tabs

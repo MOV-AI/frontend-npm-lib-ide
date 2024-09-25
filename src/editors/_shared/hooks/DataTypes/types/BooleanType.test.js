@@ -1,49 +1,44 @@
 import BooleanType from "./BooleanType";
-import { boolToPython, pythonToBool } from "../../../../../utils/Utils";
+import { getRendered, testValidation } from "../testUtils";
+import { screen, fireEvent } from "@testing-library/react";
 
-test("Smoke test", () => {
-  const obj = new BooleanType({ theme: {} });
+testValidation(BooleanType, [
+  false, false, true, false, true, true, false, // 6
+  false, false, false, false, false, false, // 12
+  false, false, false, false, false, false, false, // 19
+  false, false, false, false, false, false, // 25
+  // onlyStrings
+  false, false, false, false, false, false, false, // 32
+  false, false, false, false, false, false, // 38
+  false, false, true, false, true, true, false, // 45
+  false, false, false, false, false, false, true // 52
+], "false", false, "False");
 
-  expect(obj).toBeInstanceOf(BooleanType);
+it("Renders correctly", () => {
+  getRendered(new BooleanType());
 });
 
-test("Convert Python string to boolean", () => {
-  expect(pythonToBool("True")).toBe(true);
-  expect(pythonToBool("False")).toBe(false);
-  expect(pythonToBool(undefined)).toBe(undefined);
-  expect(pythonToBool(null)).toBe(undefined);
-  expect(pythonToBool("")).toBe(undefined);
-  expect(pythonToBool([])).toBe(undefined);
-  expect(pythonToBool({})).toBe(undefined);
+it("Set value correctly", () => {
+  const onChange = jest.fn();
+  getRendered(new BooleanType(), {
+    rowData: { value: [] },
+    onChange,
+  });
+  const input = screen.getByTestId('bool-checkbox');
+  fireEvent.click(input);
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalledWith(true);
 });
 
-test("Convert boolean to Python string", () => {
-  expect(boolToPython(true)).toBe("True");
-  expect(boolToPython(false)).toBe("False");
-  expect(boolToPython(undefined)).toBe("False");
-  expect(boolToPython(null)).toBe("False");
-  expect(boolToPython("")).toBe("False");
-  expect(boolToPython("True")).toBe("False");
-  expect(boolToPython("False")).toBe("False");
-  expect(boolToPython([])).toBe("False");
-  expect(boolToPython({})).toBe("False");
-});
-
-test("Validation", () => {
-  const obj = new BooleanType({ theme: {} });
-
-  const validate = (values, expected) => {
-    values.forEach(async value => {
-      const result = await obj.validate(value);
-      expect(result.success).toBe(expected);
-    });
-  };
-
-  const jsBool = [true, false];
-  const pyBool = ["True", "False"];
-  const jsFalsy = [undefined, 0, "", null];
-
-  validate(jsBool, true);
-  validate(pyBool, true);
-  validate(jsFalsy, false);
+it("Set value correctly (onlyStrings)", () => {
+  const onChange = jest.fn();
+  getRendered(
+    new BooleanType({ onlyStrings: true }), {
+    rowData: { value: [] },
+    onChange,
+  });
+  const input = screen.getByTestId('bool-checkbox');
+  fireEvent.click(input);
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalledWith(true);
 });

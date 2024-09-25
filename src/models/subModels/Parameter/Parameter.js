@@ -53,6 +53,14 @@ class Parameter extends Model {
   }
 
   /**
+   * Returns the type property
+   * @returns {string}
+   */
+  getType() {
+    return this.type;
+  }
+
+  /**
    * Sets the new value of the property
    * @param {string} value : The new value
    * @returns {Parameter} : The instance

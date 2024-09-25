@@ -2,7 +2,19 @@ import React from "react";
 import { Rest } from "@mov-ai/mov-fe-lib-core";
 import { DATA_TYPES, SCOPES } from "../../../../../utils/Constants";
 import ConfigurationSelector from "../../../ConfigurationSelector/ConfigurationSelector";
-import DataType from "../AbstractDataType";
+import DataType, { useEdit } from "../AbstractDataType";
+
+function ConfigurationEdit(props) {
+  const { alert, formatValue, ...rest } = useEdit(props);
+
+  return (
+    <ConfigurationSelector
+      alert={alert}
+      rowProps={rest}
+      formatValue={formatValue}
+    />
+  );
+}
 
 class ConfigurationType extends DataType {
   // Configuration type properties definition
@@ -10,14 +22,7 @@ class ConfigurationType extends DataType {
   label = SCOPES.CONFIGURATION;
 
   editComponent = props => {
-    const { alert, formatValue, ...otherProps } = props;
-    return (
-      <ConfigurationSelector
-        alert={alert}
-        rowProps={otherProps}
-        formatValue={formatValue}
-      />
-    );
+    return <ConfigurationEdit dataType={this} { ...props } />;
   };
 
   /**
@@ -26,6 +31,9 @@ class ConfigurationType extends DataType {
    * @returns
    */
   validate(value, options) {
+    if (value === "None")
+      return Promise.resolve({ success: true });
+
     const validationMethod = options?.isConfigFromParameter
       ? "validateConfiguration"
       : "validateConfigurationRaw";
