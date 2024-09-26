@@ -147,18 +147,18 @@ class AbstractDataType {
    * Abstract validation : validation for simple types
    * @returns
    */
-  validate(value) {
+  async validate(value) {
     if (value === "None")
-      return Promise.resolve({ success: true });
+      return { success: true };
 
     try {
       const parsed = this._validationParse(value);
-      return Promise.resolve({
-        success: this._validate(parsed),
+      return {
+        success: await this._validate(parsed),
         parsed,
-      });
+      };
     } catch (_e) {
-      return Promise.resolve({ success: false });
+      return { success: false };
     }
   }
 

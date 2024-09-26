@@ -25,39 +25,18 @@ class ConfigurationType extends StringType {
     return <ConfigurationEdit dataType={this} { ...props } />;
   };
 
-  /**
-   * Validate configuration value
-   * @param {*} value
-   * @returns
-   */
-  validate(value, options) {
-    if (value === "None")
-      return Promise.resolve({ success: true });
+  async _validate(value) {
+    if (value === '')
+      return true;
 
-    // Callback to validate value
-    return Rest.cloudFunction({
+    const res = await Rest.cloudFunction({
       cbName: "backend.DataValidation",
       func: "validateConfiguration",
       args: value
-    })
-      .then(res => {
-        const isValid = res.success && res.result;
-        return { success: isValid, error: "ConfigurationNotFound" };
-      })
-      .catch(err => {
-        console.log("Configuration validation err", err);
-        return { success: false };
-      });
-  }
+    });
 
-  /**
-   * Temporary Hack to format configuration for parameter containing the $(config ) syntax
-   * @param {string} configurationName : Configuration selected
-   * @returns {string} Formatted Configuration Value
-   */
-  static format2Parameter = configurationName => {
-    return `$(config ${configurationName})`;
-  };
+    return res.success && res.result;
+  }
 }
 
 export default ConfigurationType;
