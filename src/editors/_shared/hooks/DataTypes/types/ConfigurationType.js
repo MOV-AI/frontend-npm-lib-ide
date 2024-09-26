@@ -2,21 +2,21 @@ import React from "react";
 import { Rest } from "@mov-ai/mov-fe-lib-core";
 import { DATA_TYPES, SCOPES } from "../../../../../utils/Constants";
 import ConfigurationSelector from "../../../ConfigurationSelector/ConfigurationSelector";
-import DataType, { useEdit } from "../AbstractDataType";
+import { useEdit } from "../AbstractDataType";
+import StringType from "./StringType";
 
 function ConfigurationEdit(props) {
-  const { alert, formatValue, ...rest } = useEdit(props);
+  const { alert, ...rest } = useEdit(props);
 
   return (
     <ConfigurationSelector
       alert={alert}
       rowProps={rest}
-      formatValue={formatValue}
     />
   );
 }
 
-class ConfigurationType extends DataType {
+class ConfigurationType extends StringType {
   // Configuration type properties definition
   key = DATA_TYPES.CONFIGURATION;
   label = SCOPES.CONFIGURATION;
@@ -34,13 +34,10 @@ class ConfigurationType extends DataType {
     if (value === "None")
       return Promise.resolve({ success: true });
 
-    const validationMethod = options?.isConfigFromParameter
-      ? "validateConfiguration"
-      : "validateConfigurationRaw";
     // Callback to validate value
     return Rest.cloudFunction({
       cbName: "backend.DataValidation",
-      func: validationMethod,
+      func: "validateConfiguration",
       args: value
     })
       .then(res => {

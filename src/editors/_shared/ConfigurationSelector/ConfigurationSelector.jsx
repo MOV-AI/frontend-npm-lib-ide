@@ -6,48 +6,30 @@ import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
 import { Document } from "@mov-ai/mov-fe-lib-core";
 import CodeIcon from "@material-ui/icons/Code";
 
+function formatValue(value) {
+  return '$(config ' + value.split('/').pop() + ')';
+}
+
 const ConfigurationSelector = props => {
   // Props
   const {
-    rowProps,
+    rowProps = {},
     alert = window.alert,
-    formatValue = value => value
   } = props;
   // State Hooks
   const [openModal, setOpenModal] = useState(false);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState(rowProps.rowData?.value);
   // Refs
   const inputTextRef = useRef();
-
-  const rowData = rowProps?.rowData;
-
-  /**
-   * Format Configuration Value on input value
-   * @param {string} configuration : Configuration Path (workspace/scope/name/version)
-   * @returns {string} Formatted value
-   */
-  const formatConfigurationValue = configuration => {
-    const document = Document.parsePath(configuration, SCOPES.CONFIGURATION);
-    // Temporary validation if document is from archive
-    // TO BE REMOVED AFTER STANDARDIZATION OF PARSING PROCESS
-    if (document.workspace !== "global") {
-      alert({
-        message: i18n.t("OnlyGlobalConfiguration"),
-        severity: ALERT_SEVERITIES.WARNING
-      });
-    }
-    // Return formatted config name
-    return formatValue(document.name);
-  };
 
   /**
    * On Configuration selected
    * @param {string} selectedConfiguration
    */
   const onSubmit = selectedConfiguration => {
-    const formatted = formatConfigurationValue(selectedConfiguration);
+    const formatted =  formatValue(selectedConfiguration);
     rowProps.onChange(formatted);
-    setSelected(selectedConfiguration);
+    setSelected(formatted);
     setOpenModal(false);
     // Set cursor position
     setImmediate(() => {
@@ -68,9 +50,9 @@ const ConfigurationSelector = props => {
   return (
     <TextField
       style={{ width: "100%" }}
-      value={rowData?.value || ""}
+      value={selected || ""}
       data-testid="selector-text-input"
-      onChange={evt => rowProps?.onChange(evt.target.value)}
+      onChange={evt => rowProps.onChange(evt.target.value)}
       InputProps={{
         ref: inputTextRef,
         endAdornment: (

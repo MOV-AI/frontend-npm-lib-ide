@@ -119,16 +119,6 @@ const ParameterEditorDialog = props => {
   );
 
   /**
-   * Format Value Editor (used to format the configurations)
-   * @returns {string} Method used to format value
-   */
-  const getFormatterValueEditor = useCallback(() => {
-    return data.type === DATA_TYPES.CONFIGURATION
-      ? ConfigurationType.format2Parameter
-      : s => s;
-  }, [data.type]);
-
-  /**
    * Get Validation options for each type
    * @returns {Object} Validation options
    */
@@ -340,7 +330,6 @@ const ParameterEditorDialog = props => {
                     : data.value
                 },
                 alert,
-                formatValue: getFormatterValueEditor(),
                 onChange: _value => onChangeValueEditor(_value, options),
                 disabled: options.disabled || disabled,
                 isNew: options.isNew ?? isNew
