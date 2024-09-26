@@ -2,12 +2,12 @@ import React, { forwardRef, useCallback, useEffect, useRef } from "react";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
 import withAlerts from "../../decorators/withAlerts";
-import withKeyBinds from "../../decorators/withKeyBinds";
 import withMenuHandler from "../../decorators/withMenuHandler";
 import withLoader from "../../decorators/withLoader";
 import { withDataHandler } from "../../plugins/DocManager/DataHandler";
 import { KEYBINDINGS } from "../../utils/shortcuts";
 import { PLUGINS } from "../../utils/Constants";
+import { useKeyBinds, setUrl } from "../../utils/keybinds";
 import { composeDecorators } from "../../utils/Utils";
 import { ViewPlugin } from "./ViewReactPlugin";
 
@@ -30,49 +30,20 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       off,
       call,
       scope,
-      addKeyBind,
-      removeKeyBind,
       save,
       updateRightMenu,
-      activateKeyBind,
-      deactivateKeyBind
     } = props;
 
     const editorContainer = useRef();
+
+    const { addKeyBind, removeKeyBind } = useKeyBinds(id);
 
     /**
      * Activate editor : activate editor's keybinds and update right menu
      */
     const activateEditor = useCallback(() => {
-      activateKeyBind();
-    }, [activateKeyBind]);
-
-    /**
-     * Activate editor : activate editor's keybinds and update right menu
-     */
-    const deactivateEditor = useCallback(() => {
-      deactivateKeyBind();
-    }, [deactivateKeyBind]);
-
-    /**
-     * Triggers activateEditor if is this editor
-     */
-    const activateThisEditor = useCallback(
-      (data = {}) => {
-        if (data.id === id) activateEditor();
-      },
-      [id, activateEditor]
-    );
-
-    /**
-     * Triggers activateEditor if is this editor
-     */
-    const deactivateThisEditor = useCallback(
-      (data = {}) => {
-        if (data.id !== id) deactivateEditor();
-      },
-      [id, deactivateEditor]
-    );
+      setUrl(id);
+    }, [id]);
 
     /**
      * Component did mount
@@ -98,18 +69,10 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         }
       });
 
-      // This is needed when editing documents using modals
-      on(
-        PLUGINS.DOC_MANAGER.NAME,
-        PLUGINS.DOC_MANAGER.ON.UPDATE_DOC_DIRTY,
-        activateThisEditor
-      );
-
       // Remove key bind on component unmount
       return () => {
         removeKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS);
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
-        off(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.UPDATE_DOC_DIRTY);
       };
     }, [
       id,
@@ -120,7 +83,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       save,
       call,
       updateRightMenu,
-      activateThisEditor,
       activateEditor
     ]);
 
@@ -132,8 +94,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       >
         <RefComponent
           {...props}
-          onFocus={activateEditor}
-          onBlur={deactivateEditor}
           saveDocument={save}
           ref={ref}
         />
@@ -145,7 +105,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
   const DecoratedEditorComponent = composeDecorators(EditorComponent, [
     withAlerts,
     withLoader,
-    withKeyBinds,
     withDataHandler,
     withMenuHandler
   ]);
