@@ -1,6 +1,7 @@
 # TBD
 
 - [FP-2926](https://movai.atlassian.net/browse/FP-2926): Clear console and app errors
+- [FP-2932](https://movai.atlassian.net/browse/FP-2932) Save doesn't work well in split screen
 
 # v1.2.8
 

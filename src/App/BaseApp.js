@@ -22,9 +22,10 @@ import PluginManagerIDE from "../engine/PluginManagerIDE/PluginManagerIDE";
 import Placeholder from "../plugins/views/Placeholder/Placeholder";
 import { PLUGINS, HOSTS, KEYBIND_SCOPES } from "../utils/Constants";
 import { MainContext } from "../main-context";
+import { defaultFunction } from "../utils/Utils";
 import { addEditor } from "../plugins/DocManager/factory";
 import { addTool } from "../tools";
-import { addKeyBind, defaultFunction } from "../utils/Utils";
+import { addKeyBind } from "../utils/keybinds";
 import * as genFunctions from "../utils/generalFunctions";
 import { KEYBINDINGS } from "../utils/shortcuts";
 import AppSettings, {
@@ -91,7 +92,7 @@ function BaseApp(props) {
     Object.values(KEYBINDINGS.GENERAL.KEYBINDS).forEach(shortcut => {
       const callback =
         genFunctions[shortcut.DEFAULT_CALLBACK] ?? defaultFunction;
-      addKeyBind(shortcut.SHORTCUTS, () => {
+      addKeyBind(undefined, shortcut.SHORTCUTS, () => {
         const call = PluginManagerIDE.getInstance().manager.call;
         callback(call);
       });
