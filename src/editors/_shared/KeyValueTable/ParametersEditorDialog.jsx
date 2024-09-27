@@ -73,20 +73,6 @@ const ParameterEditorDialog = props => {
   const [valueOption, setValueOption] = useState(getValueOption(data.value));
 
   /**
-   * @private Parse value if type string
-   * @param {{type: string, value: *}} formData
-   * @returns {*} Formatted value
-   */
-  const valueToSave = useCallback(
-    formData => {
-      return getType(formData.type).getSaveable(
-        formData.walue === props.data.defaultValue ? undefined : formData.value
-      );
-    },
-    [showValueOptions, valueOption, getType]
-  );
-
-  /**
    * On change value editor (refactored to its own method to reduce cognitive complexity)
    * @param {*} _value
    */
@@ -95,18 +81,17 @@ const ParameterEditorDialog = props => {
       if (
         valueOption !== VALUE_OPTIONS.CUSTOM &&
         options.defaultValue !== value
-      ) {
+      )
         setValueOption(VALUE_OPTIONS.CUSTOM);
-      }
+
       setData(prevState => ({
         ...prevState,
-        value: valueToSave({
-          ...prevState,
-          value
-        }),
+        value: getType(prevState.type).getSaveable(
+          value === props.data.defaultValue ? undefined : value
+        ),
       }));
     },
-    [valueOption, valueToSave, setData]
+    [valueOption, setData, getType]
   );
 
   /**
