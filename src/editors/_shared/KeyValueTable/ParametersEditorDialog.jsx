@@ -171,7 +171,7 @@ const ParameterEditorDialog = props => {
         setData(prevState => ({
           ...prevState,
           type,
-          value: success ? prevState.value : typeInst.getDefault(),
+          value: success ? prevState.value : typeInst.unparse(typeInst.default),
         }));
       });
     }, [getType, data.value, setData]

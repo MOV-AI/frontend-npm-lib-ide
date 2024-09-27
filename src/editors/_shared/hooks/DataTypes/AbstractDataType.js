@@ -6,10 +6,13 @@ import { DATA_TYPES } from "../../../../utils/Constants";
 
 const identity = a => a;
 
-// for inputs that use strings as input
-// although they might output real things like numbers
-export function useEdit(props) {
-  const { rowData = {}, dataType, onChange: innerOnChange = () => {} } = props;
+/*
+ * inputs that use strings as input
+ * (although they might output real objects)
+ * all need similar functionality
+ */
+export function useTextEdit(props) {
+  const { rowData = {}, dataType, onChange = () => {} } = props;
   const initialValue = useMemo(
     () => dataType.parsing.unparse(rowData.value),
     [dataType]
@@ -17,21 +20,21 @@ export function useEdit(props) {
   const placeholder = useMemo(() => dataType.unparse(dataType.default), [dataType]);
   const [value, setValue] = useState(initialValue || placeholder);
 
-  const onChange = useCallback((value) => {
-    innerOnChange(dataType.parsing.parse(value));
+  const handleOnChange = useCallback((value) => {
+    onChange(dataType.parsing.parse(value));
     setValue(value);
-  }, [innerOnChange, setValue, dataType]);
+  }, [onChange, setValue, dataType]);
 
   useEffect(() => {
     if (rowData.value !== null)
       setValue(dataType.parsing.unparse(rowData.value));
-  }, [onChange, rowData.value]);
+  }, [handleOnChange, rowData.value]);
 
-  return { ...props, onChange, value };
+  return { ...props, onChange: handleOnChange, value };
 }
 
 function StringEdit(props) {
-  const { onChange, dataType, ...rest } = useEdit(props);
+  const { onChange, dataType, ...rest } = useTextEdit(props);
 
   return (<TextField
     type={dataType.inputType}
@@ -43,7 +46,7 @@ function StringEdit(props) {
 }
 
 function CodeEdit(props) {
-  const { isNew, disabled, dataType, ...rest } = useEdit(props);
+  const { isNew, disabled, dataType, ...rest } = useTextEdit(props);
 
   return (<Typography
     data-testid="section_data-type-code-editor"
@@ -72,24 +75,19 @@ class AbstractDataType {
   label = "";
   default = "";
   inputType = "text";
-
-  // hooks
   _theme = {};
 
-  constructor({ theme, onlyStrings, textInput = true } = {}) {
-    // Set hooks to be used in abstract renders
+  constructor({ theme, onlyStrings = false, textInput = true } = {}) {
     this._theme = theme;
     this._onlyStrings = onlyStrings;
 
-    const parsing = {
-      parse: this.parse.bind(this),
-      unparse: this.unparse.bind(this),
-    }, noParsing = { parse: identity, unparse: identity };
+    const doInputParsing = onlyStrings !== textInput;
+    this.parsing = doInputParsing
+      ? { parse: this.parse, unparse: this.unparse }
+      : { parse: identity, unparse: identity };
 
-    const doInputParsing = (onlyStrings ? !textInput : textInput);
-    this.parsing = doInputParsing ? parsing : noParsing;
-    this._validationParse = onlyStrings ? parsing.parse : identity;
-    this.getSaveable = onlyStrings ? parsing.unparse : identity;
+    this._validationParse = onlyStrings ? this.parse : identity;
+    this.getSaveable = onlyStrings ? this.unparse : identity;
   }
 
   getEditComponent() {
@@ -98,12 +96,14 @@ class AbstractDataType {
 
   editComponent(props) {
     if (this._onlyStrings)
-      return this.codeEditComponent(props);
+      return this.stringEditComponent(props);
 
-    return this.stringEditComponent(props);
+    return this.realEditComponent(props);
   }
 
-  // parsing strings into real objects
+  /**
+   * parsing strings into real objects
+   */
   parse(value) {
     if (value === '')
       return undefined;
@@ -114,14 +114,15 @@ class AbstractDataType {
     }
   }
 
-  // unparsing real objects into strings
+  /**
+   * unparsing real objects into strings
+   */
   unparse(value) {
     return typeof(value) === "string" ? value : JSON.stringify(value);
   }
 
   /**
    * Get Data type key
-   * @returns
    */
   getKey() {
     return this.key;
@@ -129,7 +130,6 @@ class AbstractDataType {
 
   /**
    * Get data type label
-   * @returns
    */
   getLabel() {
     return this.label;
@@ -137,7 +137,6 @@ class AbstractDataType {
 
   /**
    * Abstract validation : validation for simple types
-   * @returns
    */
   _validate(value) {
     return value === undefined || typeof value === this.key;
@@ -145,7 +144,6 @@ class AbstractDataType {
 
   /**
    * Abstract validation : validation for simple types
-   * @returns
    */
   async validate(value) {
     if (value === "None")
@@ -163,29 +161,16 @@ class AbstractDataType {
   }
 
   /**
-   * Get Default data type value
-   * @param {*} options
-   * @returns {any} Default value
+   * @private Real object editor
    */
-  getDefault(options) {
-    return this.unparse(this.default);
-  }
-
-  /**
-   * @private Gets common text editor for regular inputs (strings, arrays, objects, any, default)
-   * @param {*} props : Material table row props
-   * @returns {ReactComponent} Text input for editing common strings
-   */
-  stringEditComponent(props) {
+  realEditComponent(props) {
     return <StringEdit dataType={this} { ...props } />;
   }
 
   /**
-   * @private Render code editor
-   * @param {{rowData: {value: string}}, onChange: function, isNew: boolean} props : input props
-   * @returns {ReactComponent} Code Editor Component
+   * @private String editor
    */
-  codeEditComponent = (props) => {
+  stringEditComponent = (props) => {
     return <CodeEdit dataType={this} { ...props } />;
   };
 }

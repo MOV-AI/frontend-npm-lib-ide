@@ -17,7 +17,7 @@ class NumberType extends DataType {
   }
 
   editComponent(props) {
-    return this.stringEditComponent(props);
+    return this.realEditComponent(props);
   }
 }
 

@@ -18,13 +18,12 @@ class BooleanType extends DataType {
   }
 
   parse(value) {
-    if (value === "")
-      return undefined;
-    if (value === "True")
-      return true;
-    if (value === "False")
-      return false;
-    return null;
+    switch (value) {
+      case "": return undefined;
+      case "True": return true;
+      case "False": return false;
+      default: return null;
+    }
   }
 
   unparse(value) {
