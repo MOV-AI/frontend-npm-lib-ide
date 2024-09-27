@@ -61,19 +61,17 @@ const ParameterEditorDialog = props => {
    * @param {*} value : Value to check
    */
   const getValueOption = useCallback(value => {
-    let result = VALUE_OPTIONS.CUSTOM;
+    if (value === DISABLED_VALUE)
+      return VALUE_OPTIONS.DISABLED;
 
-    if (value === DISABLED_VALUE) {
-      result = VALUE_OPTIONS.DISABLED;
-    }
-    if (value === DEFAULT_VALUE) {
-      result = VALUE_OPTIONS.DEFAULT;
-    }
+    if (value === DEFAULT_VALUE || value === props.data.defaultValue)
+      return VALUE_OPTIONS.DEFAULT;
 
-    return result;
-  }, []);
+    return VALUE_OPTIONS.CUSTOM;
+  }, [props.data.defaultValue]);
 
-  const [valueOption, setValueOption] = useState(getValueOption(props.data.value));
+  const [valueOption, setValueOption] = useState(getValueOption(data.value));
+
   /**
    * @private Parse value if type string
    * @param {{type: string, value: *}} formData
@@ -81,16 +79,9 @@ const ParameterEditorDialog = props => {
    */
   const valueToSave = useCallback(
     formData => {
-      if (showValueOptions) {
-        if (valueOption === VALUE_OPTIONS.DEFAULT) {
-          return DEFAULT_VALUE;
-        }
-        if (valueOption === VALUE_OPTIONS.DISABLED) {
-          return DISABLED_VALUE;
-        }
-      }
-
-      return getType(formData.type).getSaveable(formData.value);
+      return getType(formData.type).getSaveable(
+        formData.walue === props.data.defaultValue ? undefined : formData.value
+      );
     },
     [showValueOptions, valueOption, getType]
   );
@@ -209,19 +200,15 @@ const ParameterEditorDialog = props => {
   const handleChangeValueOption = useCallback(
     evt => {
       const opt = evt.target.value;
-      setData(prevState => {
-        if (opt === VALUE_OPTIONS.DISABLED) {
-          return { ...prevState, value: DISABLED_VALUE };
-        }
-        if (opt === VALUE_OPTIONS.DEFAULT || opt === VALUE_OPTIONS.CUSTOM) {
-          return { ...prevState, value: props.data.defaultValue };
-        }
-        return prevState;
-      });
+
+      if (opt === VALUE_OPTIONS.DISABLED)
+        setData(prevState => ({ ...prevState, value: DISABLED_VALUE }));
+      else if (valueOption === VALUE_OPTIONS.DEFAULT)
+        setData(prevState => ({ ...prevState, value: undefined }));
 
       setValueOption(opt);
     },
-    [props.data.defaultValue]
+    [props.data.defaultValue, setData, setValueOption]
   );
 
   //========================================================================================
@@ -324,11 +311,7 @@ const ParameterEditorDialog = props => {
           ) : (
             editComponent(
               {
-                rowData: {
-                  value: options.isDefault
-                    ? defaultValue
-                    : data.value
-                },
+                rowData: { value: defaultValue ?? props.data.defaultValue },
                 alert,
                 onChange: _value => onChangeValueEditor(_value, options),
                 disabled: options.disabled || disabled,
@@ -344,7 +327,6 @@ const ParameterEditorDialog = props => {
       valueOption,
       showValueOptions,
       disabled,
-      data.value,
       data.type,
       data.paramType,
       isNew,
@@ -359,6 +341,7 @@ const ParameterEditorDialog = props => {
   return (
     <KeyValueEditorDialog
       {...props}
+      data={data}
       validate={onValidate}
       renderValueEditor={renderValueEditor}
       renderCustomContent={renderTypeSelector}

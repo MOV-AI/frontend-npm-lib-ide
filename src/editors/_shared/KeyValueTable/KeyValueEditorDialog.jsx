@@ -220,7 +220,7 @@ const KeyValueEditorDialog = props => {
             {renderCustomContent && renderCustomContent()}
             <InputLabel className={classes.label}>{i18n.t("Value")}</InputLabel>
             <FormControl className={classes.marginTop}>
-              {renderValueEditor(data.value, {
+              {renderValueEditor(data.value ?? data.defaultValue, {
                 isNew,
                 onChange: onChangeValue,
                 error:
