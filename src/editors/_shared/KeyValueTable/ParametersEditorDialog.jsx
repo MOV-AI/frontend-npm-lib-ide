@@ -147,7 +147,6 @@ const ParameterEditorDialog = props => {
       data.type,
       alert,
       getType,
-      valueToSave,
       customValidation,
     ]
   );
