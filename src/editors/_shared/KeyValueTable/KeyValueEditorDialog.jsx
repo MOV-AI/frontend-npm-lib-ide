@@ -36,6 +36,8 @@ const KeyValueEditorDialog = props => {
     valueValidation,
     title,
     isNew,
+    data,
+    setData,
     disabled,
     renderCustomContent,
     renderValueEditor,
@@ -46,7 +48,6 @@ const KeyValueEditorDialog = props => {
     showDefault = false
   } = props;
   // State hook
-  const [data, setData] = useState({});
   const [validation, setValidation] = useState({
     component: null,
     error: false,
@@ -72,16 +73,6 @@ const KeyValueEditorDialog = props => {
     },
     [validation.component]
   );
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                    React lifecycle                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  useEffect(() => {
-    setData(props.data);
-  }, [props.data]);
 
   //========================================================================================
   /*                                                                                      *

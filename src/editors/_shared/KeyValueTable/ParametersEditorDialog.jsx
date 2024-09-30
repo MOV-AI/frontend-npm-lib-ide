@@ -326,6 +326,7 @@ const ParameterEditorDialog = props => {
     <KeyValueEditorDialog
       {...props}
       data={data}
+      setData={setData}
       validate={onValidate}
       renderValueEditor={renderValueEditor}
       renderCustomContent={renderTypeSelector}
