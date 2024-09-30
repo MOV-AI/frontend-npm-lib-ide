@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import _toString from "lodash/toString";
 import { TextField, Typography } from "@material-ui/core";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
-import { DATA_TYPES } from "../../../../utils/Constants";
 
 const identity = a => a;
 

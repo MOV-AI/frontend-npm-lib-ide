@@ -1,9 +1,7 @@
 import React, { useState, useRef } from "react";
 import { IconButton, InputAdornment, TextField } from "@material-ui/core";
-import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { SCOPES, ALERT_SEVERITIES } from "../../../utils/Constants";
+import { SCOPES } from "../../../utils/Constants";
 import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
-import { Document } from "@mov-ai/mov-fe-lib-core";
 import CodeIcon from "@material-ui/icons/Code";
 
 function formatValue(value) {
@@ -14,7 +12,6 @@ const ConfigurationSelector = props => {
   // Props
   const {
     rowProps = {},
-    alert = window.alert,
   } = props;
   // State Hooks
   const [openModal, setOpenModal] = useState(false);
@@ -32,7 +29,7 @@ const ConfigurationSelector = props => {
     setSelected(formatted);
     setOpenModal(false);
     // Set cursor position
-    setImmediate(() => {
+    globalThis.setImmediate(() => {
       if (!inputTextRef.current) return;
       const inputText = inputTextRef.current.querySelector("input");
       inputText.focus();
