@@ -24,7 +24,7 @@ class ConfigurationType extends StringType {
 
     const res = await Rest.cloudFunction({
       cbName: "backend.DataValidation",
-      func: "validateConfiguration",
+      func: "validateConfigurationRaw",
       args: value
     });
 

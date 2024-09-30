@@ -7,7 +7,7 @@ import { Document } from "@mov-ai/mov-fe-lib-core";
 import CodeIcon from "@material-ui/icons/Code";
 
 function formatValue(value) {
-  return '$(config ' + value.split('/').pop() + ')';
+  return value.split('/').pop();
 }
 
 const ConfigurationSelector = props => {
@@ -52,7 +52,10 @@ const ConfigurationSelector = props => {
       style={{ width: "100%" }}
       value={selected || ""}
       data-testid="selector-text-input"
-      onChange={evt => rowProps.onChange(evt.target.value)}
+      onChange={evt => {
+        setSelected(evt.target.value);
+        rowProps.onChange(evt.target.value);
+      }}
       InputProps={{
         ref: inputTextRef,
         endAdornment: (
