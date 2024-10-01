@@ -282,7 +282,14 @@ KeyValueEditorDialog.propTypes = {
   renderValueEditor: PropTypes.func,
   renderCustomContent: PropTypes.func,
   nameValidation: PropTypes.func,
-  valueValidation: PropTypes.func
+  valueValidation: PropTypes.func,
+  setData: PropTypes.func,
+  data: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+    value: PropTypes.string,
+    defaultValue: PropTypes.string,
+  }),
 };
 
 //The function returns true when the compared props equal, preventing the component from re-rendering

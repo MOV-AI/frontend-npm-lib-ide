@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import PropTypes from "prop-types";
 import { IconButton, InputAdornment, TextField } from "@material-ui/core";
 import { SCOPES } from "../../../utils/Constants";
 import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
@@ -80,5 +81,15 @@ const ConfigurationSelector = props => {
     />
   );
 };
+
+ConfigurationSelector.propTypes = {
+  rowProps: {
+    disabled: PropTypes.bool,
+    onChange: PropTypes.func,
+    rowData: PropTypes.shape({
+      value: PropTypes.string,
+    }),
+  },
+}
 
 export default ConfigurationSelector;
