@@ -1,4 +1,4 @@
-# TBD
+# 1.2.9
 
 - [FP-2926](https://movai.atlassian.net/browse/FP-2926): Clear console and app errors
 
