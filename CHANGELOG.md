@@ -2,6 +2,7 @@
 
 - [FP-2926](https://movai.atlassian.net/browse/FP-2926): Clear console and app errors
 - [FP-2937](https://movai.atlassian.net/browse/FP-2937): Initial storybook fixes
+- [FP-2930](https://movai.atlassian.net/browse/FP-2930): Update node and pnpm versions
 
 # v1.2.8
 
@@ -20,7 +21,6 @@
 
 - [FP-2879](https://movai.atlassian.net/browse/FP-2879): Closing last tab keeps bookmarks
 - [FP-2882](https://movai.atlassian.net/browse/FP-2882): Clicking in the bar under the documents loses context, not easy to get back
-- [FP-2930](https://movai.atlassian.net/browse/FP-2930): Update node and pnpm versions
 
 # v1.2.4
 
