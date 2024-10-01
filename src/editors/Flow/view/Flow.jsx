@@ -1398,13 +1398,6 @@ export const Flow = (props, ref) => {
 
   useEffect(() => {
     addKeyBind(
-      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SHORTCUTS,
-      evt => {
-        evt.preventDefault();
-      },
-      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SCOPE
-    );
-    addKeyBind(
       KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SHORTCUTS,
       evt => {
         evt.preventDefault();
@@ -1433,9 +1426,6 @@ export const Flow = (props, ref) => {
     );
     // remove keyBind on unmount
     return () => {
-      removeKeyBind(
-        KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SHORTCUTS
-      );
       removeKeyBind(KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SHORTCUTS);
       removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.COPY_NODE.SHORTCUTS);
       removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.PASTE_NODE.SHORTCUTS);

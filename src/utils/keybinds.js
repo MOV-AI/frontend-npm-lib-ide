@@ -39,7 +39,9 @@ function setUrl(local_url = 'global', scope = '') {
 }
 
 globalThis.addEventListener("keydown", (evt) => {
-  const kbs = { ...(keybinds[url] ?? {}), ...keybinds["/"] };
+  const dataScope = evt.target.getAttribute("data-scope");
+  const path = url + (dataScope ?? '');
+  const kbs = { ...(keybinds[path] ?? {}), ...keybinds["/"] };
 
   if (evt.key === "Control" || evt.key === "Alt")
     return;

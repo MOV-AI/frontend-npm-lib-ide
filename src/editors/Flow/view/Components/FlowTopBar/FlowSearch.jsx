@@ -7,6 +7,7 @@ import {
   IconButton,
   Popper
 } from "@material-ui/core";
+import { KEYBINDINGS } from "../../../../../utils/shortcuts";
 import { Autocomplete } from "@material-ui/lab";
 import { flowTopBarStyles } from "./styles";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
@@ -79,15 +80,14 @@ const FlowSearch = props => {
           className={classes.searchInputText}
           autoFocus
           InputProps={{
-            ...params.InputProps,
             startAdornment: (
-              <>
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-                {params.InputProps.startAdornment}
-              </>
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
             )
+          }}
+          inputProps={{
+            "data-scope": KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SCOPE,
           }}
         />
       );
