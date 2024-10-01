@@ -17,7 +17,7 @@ function addKeyBind(url = '', keys, callback, scope = '') {
   const local = keybinds[path] ?? {};
 
   for (const name of Array.isArray(keys) ? keys : [keys])
-    local[name] = { callback, scope };
+    local[name] = { callback };
 
   keybinds[path] = local;
 }
@@ -39,7 +39,7 @@ function setUrl(local_url = 'global', scope = '') {
 }
 
 globalThis.addEventListener("keydown", (evt) => {
-  const kbs = keybinds[url] ?? {};
+  const kbs = { ...(keybinds[url] ?? {}), ...keybinds.global };
 
   if (evt.key === "Control" || evt.key === "Alt")
     return;
