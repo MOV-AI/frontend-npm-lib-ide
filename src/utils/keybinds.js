@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
-const keybinds = { global: {} };
-let url = "global";
+const keybinds = { "/": {} };
+let url = "/";
 
 export
 function useKeyBinds(url) {
@@ -39,7 +39,7 @@ function setUrl(local_url = 'global', scope = '') {
 }
 
 globalThis.addEventListener("keydown", (evt) => {
-  const kbs = { ...(keybinds[url] ?? {}), ...keybinds.global };
+  const kbs = { ...(keybinds[url] ?? {}), ...keybinds["/"] };
 
   if (evt.key === "Control" || evt.key === "Alt")
     return;
@@ -58,3 +58,5 @@ globalThis.addEventListener("keydown", (evt) => {
     kbs[key].callback(evt);
   }
 });
+
+window.keybinds = keybinds;
