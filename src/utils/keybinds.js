@@ -6,13 +6,13 @@ let url = "/";
 export
 function useKeyBinds(url) {
   return useMemo(() => ({
-    addKeyBind: addKeyBind.bind(null, url),
-    removeKeyBind: removeKeyBind.bind(null, url),
+    addKeyBind: (keys, callback, scope) => addKeyBind(keys, callback, scope, url),
+    removeKeyBind: (keys, scope) => removeKeyBind(keys, scope, url),
   }), [url]);
 }
 
 export
-function addKeyBind(url = '', keys, callback, scope = '') {
+function addKeyBind(keys, callback, scope = '', url = '') {
   const path = url + "/" + scope;
   const local = keybinds[path] ?? {};
 
@@ -23,7 +23,7 @@ function addKeyBind(url = '', keys, callback, scope = '') {
 }
 
 export
-function removeKeyBind(url = '', keys, scope = '') {
+function removeKeyBind(keys, scope = '', url = '') {
   const path = url + "/" + scope;
   const local = keybinds[path] ?? {};
 

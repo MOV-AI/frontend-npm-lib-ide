@@ -92,7 +92,7 @@ function BaseApp(props) {
     Object.values(KEYBINDINGS.GENERAL.KEYBINDS).forEach(shortcut => {
       const callback =
         genFunctions[shortcut.DEFAULT_CALLBACK] ?? defaultFunction;
-      addKeyBind(undefined, shortcut.SHORTCUTS, () => {
+      addKeyBind(shortcut.SHORTCUTS, () => {
         const call = PluginManagerIDE.getInstance().manager.call;
         callback(call);
       });
