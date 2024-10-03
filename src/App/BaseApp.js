@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
-import hotkeys from "hotkeys-js";
 import { Style } from "@mov-ai/mov-fe-lib-react";
 import { Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -119,7 +118,6 @@ function BaseApp(props) {
     addAppKeybinds();
     // Write log in consle
     writeMovaiLogo();
-    hotkeys.setScope(KEYBIND_SCOPES.APP);
   }, [dependencies]);
 
   // Set app settings
