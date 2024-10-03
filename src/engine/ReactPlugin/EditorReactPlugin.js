@@ -92,7 +92,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         ref={editorContainer}
         className={`container-${scope}`}
         onClick={activateEditor}
-        role="presentation"
       >
         <RefComponent
           {...props}
