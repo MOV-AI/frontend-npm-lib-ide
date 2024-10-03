@@ -7,7 +7,6 @@ import { Store, DBSubscriber } from "./src/store";
 import { Model, Manager } from "./src/models";
 import {
   withAlerts,
-  withKeyBinds,
   withMenuHandler
 } from "./src/decorators";
 import { withEditorPlugin, withViewPlugin, withToolPlugin } from "./src/engine";
@@ -45,6 +44,7 @@ import * as CONSTANTS from "./src/utils/Constants";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "./src/utils/Messages";
 import Workspace from "./src/utils/Workspace";
 import { KEYBINDINGS } from "./src/utils/shortcuts";
+export { useKeyBinds, addKeyBind, removeKeyBind } from "./src/utils/keybinds";
 import * as Utils from "./src/utils/Utils";
 import LocalStorage from "./src/utils/LocalStorage";
 // Hooks
@@ -59,7 +59,7 @@ export { BaseApp, installEditor, installTool };
 export { PluginManagerIDE };
 export { Store, DBSubscriber };
 export { Model, Manager };
-export { withAlerts, withKeyBinds, withMenuHandler };
+export { withAlerts, withMenuHandler };
 export { withEditorPlugin, withViewPlugin, withToolPlugin };
 export { CallbackModel, CallbackStore, CallbackEditor, Callback };
 export {
