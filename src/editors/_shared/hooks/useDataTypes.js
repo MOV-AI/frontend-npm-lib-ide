@@ -3,12 +3,12 @@ import { useTheme } from "@material-ui/styles";
 import DataTypeManager from "./DataTypes/DataTypeManager";
 
 const useDataTypes = (options = {}) => {
-  const { onlyStrings } = options;
+  const { stringOutput } = options;
 
   // Hooks
   const theme = useTheme();
   const dataTypeManager = useMemo(
-    () => new DataTypeManager({ theme, onlyStrings }),
+    () => new DataTypeManager({ theme, stringOutput }),
     []
   );
 

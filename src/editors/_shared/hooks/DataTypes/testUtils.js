@@ -28,10 +28,10 @@ export function testStringInput(DataType, stringValue, realValue) {
     expect(onChange).toHaveBeenCalledWith(realValue);
   });
 
-  it("Set value correctly (onlyStrings)", () => {
+  it("Set value correctly (stringOutput)", () => {
     const onChange = jest.fn();
     getRendered(
-      new DataType({ onlyStrings: true }), {
+      new DataType({ stringOutput: true }), {
         rowData: { value: [] },
         onChange,
       }
@@ -90,8 +90,8 @@ export function testValidation(DataType, returns, unparsed, parsed, strUnparsed)
     }
   });
 
-  test("Validation (onlyStrings)", () => {
-    const type = new DataType({ onlyStrings: true });
+  test("Validation (stringOutput)", () => {
+    const type = new DataType({ stringOutput: true });
 
     validateSuit(type, returns, 26);
 

@@ -6,7 +6,7 @@ testValidation(ObjectType, [
   true, true, true, false, false, false, // 12
   false, false, false, false, false, false, false, // 19
   false, false, false, false, false, false, // 25
-  // onlyStrings
+  // stringOutput
   false, false, false, false, false, false, false, // 32
   false, false, false, false, false, false, // 38
   true, false, true, false, false, false, false, // 45

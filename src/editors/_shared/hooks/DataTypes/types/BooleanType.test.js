@@ -7,7 +7,7 @@ testValidation(BooleanType, [
   false, false, false, false, false, false, // 12
   false, false, false, false, false, false, false, // 19
   false, false, false, false, false, false, // 25
-  // onlyStrings
+  // stringOutput
   false, false, false, false, false, false, false, // 32
   false, false, false, false, false, false, // 38
   false, false, true, false, true, true, false, // 45
@@ -30,10 +30,10 @@ it("Set value correctly", () => {
   expect(onChange).toHaveBeenCalledWith(true);
 });
 
-it("Set value correctly (onlyStrings)", () => {
+it("Set value correctly (stringOutput)", () => {
   const onChange = jest.fn();
   getRendered(
-    new BooleanType({ onlyStrings: true }), {
+    new BooleanType({ stringOutput: true }), {
     rowData: { value: [] },
     onChange,
   });

@@ -7,8 +7,8 @@ import ObjectType from "./types/ObjectType";
 import StringType from "./types/StringType";
 
 class DataTypeManager {
-  constructor({ theme, selfProvision = true, onlyStrings = false } = {}) {
-    this.onlyStrings = onlyStrings;
+  constructor({ theme, selfProvision = true, stringOutput = false } = {}) {
+    this.stringOutput = stringOutput;
     // Hooks
     this.theme = theme;
     // Initiate types
@@ -29,7 +29,7 @@ class DataTypeManager {
    * @param {DataType} DataType : DataType class
    */
   setDataType(DataType) {
-    const dataTypeInstance = new DataType({ theme: this.theme, onlyStrings: this.onlyStrings });
+    const dataTypeInstance = new DataType({ theme: this.theme, stringOutput: this.stringOutput });
     this.dataTypes.set(dataTypeInstance.getKey(), dataTypeInstance);
   }
 

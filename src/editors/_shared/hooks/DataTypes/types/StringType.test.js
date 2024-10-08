@@ -6,7 +6,7 @@ testValidation(StringType, [
   false, false, false, false, false, false,
   true, true, true, true, true, true, true,
   true, true, true, true, true, true,
-  // onlyStrings
+  // stringOutput
   false, false, true, false, false, false, false,
   false, false, false, false, false, false,
   true, true, true, true, true, true, true,

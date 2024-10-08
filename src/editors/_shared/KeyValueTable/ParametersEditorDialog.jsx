@@ -47,7 +47,7 @@ const ParameterEditorDialog = props => {
   const [data, setData] = useState(props.data);
   const classes = parametersDialogStyles();
   const { getDataTypes, getType } =
-    useDataTypes({ onlyStrings: true });
+    useDataTypes({ stringOutput: true });
 
   //========================================================================================
   /*                                                                                      *

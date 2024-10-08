@@ -5,27 +5,26 @@ import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
 const identity = a => a;
 
 /*
- * inputs that use strings as input
- * (although they might output real objects)
- * all need similar functionality
+ * Handles initial value and onChange for data types that use strings as input
+ * Although they might output real objects
  */
 export function useTextEdit(props) {
   const { rowData = {}, dataType, onChange = () => {} } = props;
   const initialValue = useMemo(
-    () => dataType.parsing.unparse(rowData.value),
+    () => dataType.inputParsing.unparse(rowData.value),
     [dataType]
   );
   const placeholder = useMemo(() => dataType.unparse(dataType.default), [dataType]);
   const [value, setValue] = useState(initialValue || placeholder);
 
   const handleOnChange = useCallback((value) => {
-    onChange(dataType.parsing.parse(value));
+    onChange(dataType.inputParsing.parse(value));
     setValue(value);
   }, [onChange, setValue, dataType]);
 
   useEffect(() => {
     if (rowData.value !== null)
-      setValue(dataType.parsing.unparse(rowData.value));
+      setValue(dataType.inputParsing.unparse(rowData.value));
   }, [handleOnChange, rowData.value]);
 
   return { ...props, onChange: handleOnChange, value };
@@ -66,7 +65,10 @@ function CodeEdit(props) {
 }
 
 /**
- * Abstract Data Type Class
+ * Class that provides generic data type functionality
+ * - parsing and unparsing
+ * - validation
+ * - basic data type components
  */
 class AbstractDataType {
   key = "";
@@ -75,17 +77,26 @@ class AbstractDataType {
   inputType = "text";
   _theme = {};
 
-  constructor({ theme, onlyStrings = false, textInput = true } = {}) {
+   /**
+   * Constructor
+   *
+   * stringOutput: When true, the output is a string (e.g. stringified dictionary)
+   * stringInput: When true, the input returns a string (e.g. false for boolean type)
+   */
+  constructor({ theme, stringOutput = false, stringInput = true } = {}) {
     this._theme = theme;
-    this._onlyStrings = onlyStrings;
+    this._stringOutput = stringOutput;
 
-    const doInputParsing = onlyStrings !== textInput;
-    this.parsing = doInputParsing
-      ? { parse: this.parse, unparse: this.unparse }
-      : { parse: identity, unparse: identity };
+    // when input and output are strings, no parsing is needed
+    // when input and output are not strings, no parsing is needed
+    // otherwise, parsing is needed
+    const noInputParsing = stringOutput === stringInput;
+    this.inputParsing = noInputParsing
+      ? { parse: identity, unparse: identity }
+      : { parse: this.parse, unparse: this.unparse };
 
-    this._validationParse = onlyStrings ? this.parse : identity;
-    this.getSaveable = onlyStrings ? this.unparse : identity;
+    this._validationParse = stringOutput ? this.parse : identity;
+    this.getSaveable = stringOutput ? this.unparse : identity;
   }
 
   getEditComponent() {
@@ -93,7 +104,7 @@ class AbstractDataType {
   }
 
   editComponent(props) {
-    if (this._onlyStrings)
+    if (this._stringOutput)
       return this.stringEditComponent(props);
 
     return this.realEditComponent(props);

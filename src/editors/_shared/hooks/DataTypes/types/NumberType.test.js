@@ -1,4 +1,3 @@
-import React from "react";
 import NumberType from "./ArrayType";
 import { testValidation, testStringInput } from "../testUtils";
 
@@ -7,7 +6,7 @@ testValidation(NumberType, [
   false, false, false, true, true, true, // 12
   false, false, false, false, false, false, false, // 19
   false, false, false, false, false, false, // 25
-  // onlyStrings
+  // stringOutput
   false, false, false, false, false, false, false, // 32
   false, false, false, false, false, false, // 38
   false, true, true, false, false, false, false, // 45
