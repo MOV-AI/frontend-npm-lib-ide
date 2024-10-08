@@ -122,29 +122,6 @@ const KeyValueEditorDialog = props => {
   }, []);
 
   /**
-   * On change Value
-   * @param {string} value : Code editor value
-   */
-  const onChangeValue = useCallback(
-    value => {
-      if (valueValidation && validate) {
-        validate({ value }).then(res => {
-          setValidation({
-            component: COMPONENTS.VALUE,
-            error: !res.result,
-            message: i18n.t(res.error)
-          });
-        });
-      }
-
-      setData(prevState => {
-        return { ...prevState, value };
-      });
-    },
-    [validate, valueValidation]
-  );
-
-  /**
    * Submit form and close dialog
    */
   const onSave = useCallback(() => {
@@ -211,16 +188,14 @@ const KeyValueEditorDialog = props => {
             {renderCustomContent && renderCustomContent()}
             <InputLabel className={classes.label}>{i18n.t("Value")}</InputLabel>
             <FormControl className={classes.marginTop}>
-              {renderValueEditor(data.value ?? data.defaultValue, {
+              {renderValueEditor(data.value, {
                 isNew,
-                onChange: onChangeValue,
                 error:
                   getValidationComponent(COMPONENTS.VALUE) && validation.error,
                 helperText:
                   getValidationComponent(COMPONENTS.VALUE) &&
                   validation.message,
                 disabled: disabled,
-                defaultValue: data.defaultValue
               })}
             </FormControl>
             {showDefault && (
@@ -234,9 +209,8 @@ const KeyValueEditorDialog = props => {
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails className={classes.noHorizontalPadding}>
-                  {renderValueEditor(data.defaultValue, {
+                  {renderValueEditor(undefined, {
                     isNew,
-                    onChange: onChangeValue,
                     isDefault: true,
                     disabled: true
                   })}
@@ -275,7 +249,6 @@ KeyValueEditorDialog.propTypes = {
   disableDescription: PropTypes.bool,
   showDefault: PropTypes.bool,
   showDescription: PropTypes.bool,
-  defaultValue: PropTypes.string,
   onClose: PropTypes.func,
   validate: PropTypes.func,
   onSubmit: PropTypes.func,
@@ -288,7 +261,6 @@ KeyValueEditorDialog.propTypes = {
     name: PropTypes.string,
     description: PropTypes.string,
     value: PropTypes.string,
-    defaultValue: PropTypes.string,
   }),
 };
 
