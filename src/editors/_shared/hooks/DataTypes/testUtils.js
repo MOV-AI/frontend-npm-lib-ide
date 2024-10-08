@@ -82,11 +82,11 @@ export function testValidation(DataType, returns, unparsed, parsed, strUnparsed)
     validateSuit(type, returns, 0);
 
     if (strUnparsed) {
-      expect(type.parsing.parse(unparsed)).toStrictEqual(unparsed);
-      expect(type.parsing.unparse(parsed)).toStrictEqual(parsed);
+      expect(type.inputParsing.parse(unparsed)).toStrictEqual(unparsed);
+      expect(type.inputParsing.unparse(parsed)).toStrictEqual(parsed);
     } else {
-      expect(type.parsing.parse(unparsed)).toStrictEqual(parsed);
-      expect(type.parsing.unparse(parsed)).toStrictEqual(unparsed);
+      expect(type.inputParsing.parse(unparsed)).toStrictEqual(parsed);
+      expect(type.inputParsing.unparse(parsed)).toStrictEqual(unparsed);
     }
   });
 
@@ -98,11 +98,11 @@ export function testValidation(DataType, returns, unparsed, parsed, strUnparsed)
     type.validate("None").then(res => expect(res.success).toBe(returns[52]));
 
     if (strUnparsed) {
-      expect(type.parsing.parse(strUnparsed)).toStrictEqual(parsed);
-      expect(type.parsing.unparse(parsed)).toStrictEqual(strUnparsed);
+      expect(type.inputParsing.parse(strUnparsed)).toStrictEqual(parsed);
+      expect(type.inputParsing.unparse(parsed)).toStrictEqual(strUnparsed);
     } else {
-      expect(type.parsing.parse(unparsed)).toStrictEqual(unparsed);
-      expect(type.parsing.unparse(parsed)).toStrictEqual(parsed);
+      expect(type.inputParsing.parse(unparsed)).toStrictEqual(unparsed);
+      expect(type.inputParsing.unparse(parsed)).toStrictEqual(parsed);
     }
   });
 }
