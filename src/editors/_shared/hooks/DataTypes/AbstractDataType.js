@@ -69,6 +69,8 @@ function CodeEdit(props) {
  * - parsing and unparsing
  * - validation
  * - basic data type components
+ *
+ * When a value is undefined, the default value is used
  */
 class AbstractDataType {
   key = "";
@@ -155,6 +157,7 @@ class AbstractDataType {
    * Abstract validation : validation for simple types
    */
   async validate(value) {
+    // "None" indicates a disabled value
     if (value === "None")
       return { success: true };
 
