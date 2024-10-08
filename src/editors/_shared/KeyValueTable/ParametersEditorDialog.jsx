@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import {
@@ -24,7 +24,6 @@ import KeyValueEditorDialog from "../KeyValueTable/KeyValueEditorDialog";
 import useDataTypes from "../hooks/useDataTypes";
 
 import { parametersDialogStyles } from "./styles";
-import ConfigurationType from "../hooks/DataTypes/types/ConfigurationType";
 
 const VALUE_OPTIONS = {
   CUSTOM: "custom",
