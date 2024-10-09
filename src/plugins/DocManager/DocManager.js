@@ -248,7 +248,10 @@ class DocManager extends IDEPlugin {
     return this.call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.NEW_DOC, {
       scope,
       placeholder: name,
-      onSubmit: newName => this.doSave(modelKey, callback, newName, opts),
+      onSubmit: newName => {
+        this.doSave(modelKey, callback, newName, opts);
+        this.discardDocChanges({ scope, name: newName });
+      },
       onClose: () => this.saveStack.delete(`${name}_${scope}`)
     });
   }
