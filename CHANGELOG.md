@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-2770](https://movai.atlassian.net/browse/FP-2770) Scene closing button not working when with changes *
+
 # 1.2.9
 
 - [FP-2926](https://movai.atlassian.net/browse/FP-2926): Clear console and app errors
