@@ -1,6 +1,7 @@
 import React from "react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { DISABLED_VALUE } from "./../../../../utils/Constants.js"
 
 export function getRendered(type, props = {}) {
   const Component = type.getEditComponent();
@@ -10,11 +11,11 @@ export function getRendered(type, props = {}) {
 }
 
 export function testStringInput(DataType, stringValue, realValue) {
-  it("Renders correctly", () => {
+  it("Renders correctly value " + stringValue, () => {
     getRendered(new DataType());
   });
 
-  it("Set value correctly", () => {
+  it("Set value correctly to " + stringValue, () => {
     const onChange = jest.fn();
     getRendered(
       new DataType(), {
@@ -28,7 +29,7 @@ export function testStringInput(DataType, stringValue, realValue) {
     expect(onChange).toHaveBeenCalledWith(realValue);
   });
 
-  it("Set value correctly (stringOutput)", () => {
+  it("Set value correctly (stringOutput) " + stringValue, () => {
     const onChange = jest.fn();
     getRendered(
       new DataType({ stringOutput: true }), {
@@ -95,7 +96,7 @@ export function testValidation(DataType, returns, unparsed, parsed, strUnparsed)
 
     validateSuit(type, returns, 26);
 
-    type.validate("None").then(res => expect(res.success).toBe(returns[52]));
+    type.validate(DISABLED_VALUE).then(res => expect(res.success).toBe(returns[52]));
 
     if (strUnparsed) {
       expect(type.inputParsing.parse(strUnparsed)).toStrictEqual(parsed);

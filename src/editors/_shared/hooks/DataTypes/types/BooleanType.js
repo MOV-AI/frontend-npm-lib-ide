@@ -30,8 +30,7 @@ class BooleanType extends DataType {
     const { label, disabled, onChange, rowData = {} } = props;
     return (
       <Checkbox
-        inputProps={{ "data-testid": "bool-checkbox" }}
-        data-testid={"Type=boolean-" + (label ?? this.label)}
+        inputProps={{ "data-testid": "input_bool-checkbox" }}
         color={"primary"}
         style={{ width: "fit-content" }}
         checked={this.inputParsing.parse(rowData.value) === true}

@@ -13,4 +13,5 @@ testValidation(ObjectType, [
   true, true, true, false, false, false, true // 52
 ], '{"hi":1}', { hi: 1 });
 
+testStringInput(ObjectType, '{ "hi"', null);
 testStringInput(ObjectType, '{ "hi":1 }', { hi: 1 });

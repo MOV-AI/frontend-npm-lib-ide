@@ -13,4 +13,5 @@ testValidation(NumberType, [
   false, false, false, true, true, true, true // 52
 ], "1", 1);
 
+testStringInput(NumberType, 'a', null);
 testStringInput(NumberType, '1', 1);

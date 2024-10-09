@@ -13,4 +13,5 @@ testValidation(ArrayType, [
   false, false, false, true, true, true, true
 ], "[1]", [1]);
 
+testStringInput(ArrayType, '[1, 2,', null);
 testStringInput(ArrayType, '[1, 2, 3]', [1, 2, 3]);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { TextField, Typography } from "@material-ui/core";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
+import { DISABLED_VALUE } from "./../../../../utils/Constants.js";
 
 const identity = a => a;
 
@@ -42,13 +43,18 @@ function StringEdit(props) {
   />);
 }
 
+const useCodeEditStyles = makeStyles(() => ({
+  root: { width: "100%", height: "100px" },
+}));
+
 function CodeEdit(props) {
   const { isNew, disabled, dataType, ...rest } = useTextEdit(props);
+  const classes = useCodeEditStyles();
 
   return (<Typography
     data-testid="section_data-type-code-editor"
     component="div"
-    style={{ height: "100px", width: "100%" }}
+    className={classes.root}
   >
     <MonacoCodeEditor
       onLoad={editor => {
@@ -158,7 +164,7 @@ class AbstractDataType {
    */
   async validate(value) {
     // "None" indicates a disabled value
-    if (value === "None")
+    if (value === DISABLED_VALUE)
       return { success: true };
 
     try {

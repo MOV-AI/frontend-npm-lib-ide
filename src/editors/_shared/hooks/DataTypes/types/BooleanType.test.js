@@ -24,7 +24,7 @@ it("Set value correctly", () => {
     rowData: { value: [] },
     onChange,
   });
-  const input = screen.getByTestId('bool-checkbox');
+  const input = screen.getByTestId('input_bool-checkbox');
   fireEvent.click(input);
   expect(onChange).toHaveBeenCalledTimes(1);
   expect(onChange).toHaveBeenCalledWith(true);
@@ -37,7 +37,7 @@ it("Set value correctly (stringOutput)", () => {
     rowData: { value: [] },
     onChange,
   });
-  const input = screen.getByTestId('bool-checkbox');
+  const input = screen.getByTestId('input_bool-checkbox');
   fireEvent.click(input);
   expect(onChange).toHaveBeenCalledTimes(1);
   expect(onChange).toHaveBeenCalledWith(true);
