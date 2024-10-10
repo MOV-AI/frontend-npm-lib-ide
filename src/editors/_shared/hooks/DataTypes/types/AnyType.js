@@ -1,19 +1,12 @@
 import { DATA_TYPES } from "../../../../../utils/Constants";
-import DataType from "../AbstractDataType";
+import StringType from "./StringType";
 
-class AnyType extends DataType {
-  // Any type properties definition
+class AnyType extends StringType {
   key = DATA_TYPES.ANY;
   label = "Any";
-  editComponent = this.defaultStringEditor;
 
-  /**
-   * Validate value
-   * @param {*} value
-   * @returns
-   */
-  validate(value) {
-    return Promise.resolve({ success: true, value });
+  _validate(value) {
+    return true;
   }
 }
 

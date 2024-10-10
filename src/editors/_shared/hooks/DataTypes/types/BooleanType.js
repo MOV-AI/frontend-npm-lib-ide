@@ -1,94 +1,43 @@
 import React from "react";
 import { Checkbox } from "@material-ui/core";
 import { DATA_TYPES } from "../../../../../utils/Constants";
-import { pythonToBool, boolToPython } from "../../../../../utils/Utils";
 import DataType from "../AbstractDataType";
 
 class BooleanType extends DataType {
-  // Boolean type properties definition
   key = DATA_TYPES.BOOLEAN;
   label = "Boolean";
   default = false;
 
-  editComponent = (props, mode = "row") => {
-    this.label = props.label ?? this.label;
-    let pyValue = this.toString(props.rowData.value).toLowerCase();
-    const editor = {
-      row: () => this.booleanEditComponent(props, pyValue),
-      dialog: () => this.booleanEditComponent(props, pyValue, true)
-    };
-    return editor[mode]();
-  };
-
-  /**
-   * Validate Boolean value
-   * @param {*} value
-   * @returns
-   */
-  validate(value) {
-    return new Promise(resolve => {
-      try {
-        const isValid =
-          typeof value === DATA_TYPES.BOOLEAN ||
-          typeof pythonToBool(value) === DATA_TYPES.BOOLEAN;
-
-        resolve({ success: isValid });
-      } catch (e) {
-        resolve({ success: false });
-      }
-    });
+  constructor(opts) {
+    // the check box returns a boolean value, so no need to parse the input
+    super({ ...opts, stringInput: false });
   }
 
-  /**
-   * @override Get boolean default value
-   * @param {*} options
-   * @returns {string | boolean}
-   *  Returns Python Boolean as string if isPythonValue is set to true
-   *  Or js boolean otherwise
-   */
-  getDefault(options = { isPythonValue: false }) {
-    const { isPythonValue } = options;
-    return isPythonValue ? boolToPython(false) : false;
-  }
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                    Private Methods                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  /**
-   * Render Boolean Type edit component
-   * @param {*} props
-   * @param {*} pyValue
-   * @param {*} usePythonValue
-   * @returns
-   */
-  booleanEditComponent(props, pyValue, usePythonValue) {
-    let parsedValue = false;
-    try {
-      parsedValue = JSON.parse(pyValue);
-      if (typeof parsedValue === DATA_TYPES.STRING)
-        parsedValue = JSON.parse(parsedValue);
-    } catch (e) {
-      parsedValue = false;
+  parse(value) {
+    switch (value) {
+      case "": return undefined;
+      case "True": return true;
+      case "False": return false;
+      default: return null;
     }
+  }
 
-    // On change checkbox value
-    const onChangeCheckbox = event => {
-      const boolValue = event.target.checked;
-      const value = usePythonValue ? boolToPython(boolValue) : boolValue;
-      props.onChange(value);
-    };
+  unparse(value) {
+    return value ? "True" : "False";
+  }
 
+  editComponent(props) {
+    const { label, disabled, onChange, rowData = {} } = props;
     return (
       <Checkbox
-        data-testid={"Type=boolean-" + this.label}
+        inputProps={{ "data-testid": "input_bool-checkbox" }}
         color={"primary"}
         style={{ width: "fit-content" }}
-        checked={parsedValue}
-        onChange={onChangeCheckbox}
-        disabled={props.disabled}
+        checked={this.inputParsing.parse(rowData.value) === true}
+        onChange={evt => onChange(
+          evt.target.checked
+        )}
+        disabled={disabled}
       />
     );
   }

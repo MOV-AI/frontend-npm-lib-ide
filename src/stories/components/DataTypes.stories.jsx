@@ -5,14 +5,12 @@ import useDataTypes from "../../editors/_shared/hooks/useDataTypes";
 
 const Component = props => {
   const [data, setData] = useState([]);
-  const { getDataTypes, getLabel, getEditComponent, getValidValue, validate } =
+  const { getDataTypes, getType } =
     useDataTypes();
 
   const validateRow = async rowData => {
-    const rowType = rowData.type || "default";
-    const rowValue = await getValidValue(rowData.type, rowData.value);
-    const validateData = { value: rowValue, type: rowType };
-    return validate(validateData).then(paramValidation => {
+    const rowType = rowData.type;
+    return getType(rowType).validate(rowData.value).then(paramValidation => {
       if (paramValidation.success)
         snackbar({ message: "Valid data", severity: "success" });
       else snackbar({ message: "Invalid data", severity: "error" });
@@ -55,7 +53,7 @@ const Component = props => {
   };
 
   const renderValueEditor = _props => {
-    const editComponent = getEditComponent(_props.rowData.type);
+    const editComponent = getType(_props.rowData.type).getEditComponent();
     if (!editComponent) return <></>;
     // Pass alert method to edit component through props
     return editComponent({ ..._props, alert });
@@ -66,7 +64,7 @@ const Component = props => {
     {
       title: "Type",
       field: "type",
-      render: rowData => getLabel(rowData.type),
+      render: rowData => getType(rowData.type).getLabel(),
       editComponent: _props => (
         <Select
           value={_props.rowData.type || ""}
@@ -79,7 +77,7 @@ const Component = props => {
         >
           {getDataTypes([]).map(key => (
             <MenuItem key={key} value={key}>
-              {getLabel(key)}
+              {getType(key).getLabel()}
             </MenuItem>
           ))}
         </Select>

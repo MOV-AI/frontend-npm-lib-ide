@@ -2,57 +2,34 @@ import React from "react";
 import { Rest } from "@mov-ai/mov-fe-lib-core";
 import { DATA_TYPES, SCOPES } from "../../../../../utils/Constants";
 import ConfigurationSelector from "../../../ConfigurationSelector/ConfigurationSelector";
-import DataType from "../AbstractDataType";
+import { useTextEdit } from "../AbstractDataType";
+import StringType from "./StringType";
 
-class ConfigurationType extends DataType {
-  // Configuration type properties definition
+function ConfigurationEdit(props) {
+  const { alert, ...rest } = useTextEdit(props);
+  return <ConfigurationSelector alert={alert} rowProps={rest} />;
+}
+
+class ConfigurationType extends StringType {
   key = DATA_TYPES.CONFIGURATION;
   label = SCOPES.CONFIGURATION;
 
   editComponent = props => {
-    const { alert, formatValue, ...otherProps } = props;
-    return (
-      <ConfigurationSelector
-        alert={alert}
-        rowProps={otherProps}
-        formatValue={formatValue}
-      />
-    );
+    return <ConfigurationEdit dataType={this} { ...props } />;
   };
 
-  /**
-   * Validate configuration value
-   * @param {*} value
-   * @returns
-   */
-  validate(value, options) {
-    const validationMethod = options?.isConfigFromParameter
-      ? "validateConfiguration"
-      : "validateConfigurationRaw";
-    // Callback to validate value
-    return Rest.cloudFunction({
+  async _validate(value) {
+    if (value === '')
+      return true;
+
+    const res = await Rest.cloudFunction({
       cbName: "backend.DataValidation",
-      func: validationMethod,
+      func: "validateConfigurationRaw",
       args: value
-    })
-      .then(res => {
-        const isValid = res.success && res.result;
-        return { success: isValid, error: "ConfigurationNotFound" };
-      })
-      .catch(err => {
-        console.log("Configuration validation err", err);
-        return { success: false };
-      });
-  }
+    });
 
-  /**
-   * Temporary Hack to format configuration for parameter containing the $(config ) syntax
-   * @param {string} configurationName : Configuration selected
-   * @returns {string} Formatted Configuration Value
-   */
-  static format2Parameter = configurationName => {
-    return `$(config ${configurationName})`;
-  };
+    return res.success && res.result;
+  }
 }
 
 export default ConfigurationType;
