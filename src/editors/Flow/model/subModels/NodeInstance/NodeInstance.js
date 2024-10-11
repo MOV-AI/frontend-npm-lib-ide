@@ -60,7 +60,7 @@ class NodeInstance extends Model {
       }
     );
 
-    this.templateDoc = templateDoc;
+    this.templateDoc = templateDoc ?? {};
     return this;
   }
 
