@@ -1,6 +1,7 @@
 # TBD
 
-- [FP-2770](https://movai.atlassian.net/browse/FP-2770) Scene closing button not working when with changes *
+- [FP-2770](https://movai.atlassian.net/browse/FP-2770): Scene closing button not working when with changes *
+- [FP-2972](https://movai.atlassian.net/browse/FP-2972): Opening flow when nodes don't exist results in stacktrace
 
 # 1.2.9
 
