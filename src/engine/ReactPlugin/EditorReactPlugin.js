@@ -92,6 +92,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         ref={editorContainer}
         className={`container-${scope}`}
         onClick={activateEditor}
+        onFocus={activateEditor}
       >
         <RefComponent
           {...props}
