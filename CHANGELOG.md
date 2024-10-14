@@ -3,7 +3,7 @@
 - [FP-2932](https://movai.atlassian.net/browse/FP-2932) Save doesn't work well in split screen
 
 # v1.2.9
-
+- [FP-2972](https://movai.atlassian.net/browse/FP-2972):Opening flow when nodes don't exist results in stacktrace
 - [FP-2926](https://movai.atlassian.net/browse/FP-2926): Clear console and app errors
 - [FP-2937](https://movai.atlassian.net/browse/FP-2937): Initial storybook fixes
 - [FP-2930](https://movai.atlassian.net/browse/FP-2930): Update node and pnpm versions
