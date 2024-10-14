@@ -1,27 +1,17 @@
-import NumberType from "./NumberType";
+import NumberType from "./ArrayType";
+import { testValidation, testStringInput } from "../testUtils";
 
-const batteryOfTests = [
-  { value: "0", expectedSuccess: true },
-  { value: "125", expectedSuccess: true },
-  { value: "0125", expectedSuccess: true },
-  { value: "00125", expectedSuccess: true },
-  { value: "01.25", expectedSuccess: true },
-  { value: "01,25", expectedSuccess: false },
-]
+testValidation(NumberType, [
+  false, true, true, false, false, false, false, // 6
+  false, false, false, true, true, true, // 12
+  false, false, false, false, false, false, false, // 19
+  false, false, false, false, false, false, // 25
+  // stringOutput
+  false, false, false, false, false, false, false, // 32
+  false, false, false, false, false, false, // 38
+  false, true, true, false, false, false, false, // 45
+  false, false, false, true, true, true, true // 52
+], "1", 1);
 
-test("Smoke test", () => {
-  const obj = new NumberType({ theme: {} });
-
-  expect(obj).toBeInstanceOf(NumberType);
-});
-
-batteryOfTests.forEach(t => {
-  test(`Check if ${t.value} is valid number`, () => {
-    const obj = new NumberType({ theme: {} });
-    
-    return obj.validate(t.value).then(res => {
-      expect(res.success).toBe(t.expectedSuccess);
-      expect(res.parsed).toBe(obj.parseValueToFloat(t.value));
-    });
-  });
-});
+testStringInput(NumberType, 'a', null);
+testStringInput(NumberType, '1', 1);
