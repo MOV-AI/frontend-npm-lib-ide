@@ -3,6 +3,9 @@ import { useMemo } from "react";
 const keybinds = { "/": {} };
 let url = "/";
 
+/**
+ * get url-bound addKeyBind and removeKeyBind functions
+ */
 export
 function useKeyBinds(url) {
   return useMemo(() => ({
@@ -11,6 +14,11 @@ function useKeyBinds(url) {
   }), [url]);
 }
 
+/**
+ * add a keyBind
+ * provide a scope and/or a url to have that keybind apply only
+ * in a certain context
+ */
 export
 function addKeyBind(keys, callback, scope = '', url = '') {
   const path = url + "/" + scope;
@@ -22,6 +30,9 @@ function addKeyBind(keys, callback, scope = '', url = '') {
   keybinds[path] = local;
 }
 
+/**
+ * remove a keyBind
+ */
 export
 function removeKeyBind(keys, scope = '', url = '') {
   const path = url + "/" + scope;
@@ -33,11 +44,19 @@ function removeKeyBind(keys, scope = '', url = '') {
   keybinds[path] = local;
 }
 
+/**
+ * set the current url so that we can trigger
+ * the right callbacks when the user presses key combinations
+ */
 export
 function setUrl(local_url = 'global', scope = '') {
   url = local_url + '/' + scope;
 }
 
+/**
+ * this handles calling callbacks that correspond
+ * to user key combinations
+ */
 globalThis.addEventListener("keydown", (evt) => {
   const dataScope = evt.target.getAttribute("data-scope");
   const path = url + (dataScope ?? '');
