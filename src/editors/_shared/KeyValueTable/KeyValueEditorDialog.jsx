@@ -36,6 +36,8 @@ const KeyValueEditorDialog = props => {
     valueValidation,
     title,
     isNew,
+    data,
+    setData,
     disabled,
     renderCustomContent,
     renderValueEditor,
@@ -46,7 +48,6 @@ const KeyValueEditorDialog = props => {
     showDefault = false
   } = props;
   // State hook
-  const [data, setData] = useState({});
   const [validation, setValidation] = useState({
     component: null,
     error: false,
@@ -72,16 +73,6 @@ const KeyValueEditorDialog = props => {
     },
     [validation.component]
   );
-
-  //========================================================================================
-  /*                                                                                      *
-   *                                    React lifecycle                                   *
-   *                                                                                      */
-  //========================================================================================
-
-  useEffect(() => {
-    setData(props.data);
-  }, [props.data]);
 
   //========================================================================================
   /*                                                                                      *
@@ -129,29 +120,6 @@ const KeyValueEditorDialog = props => {
       return { ...prevState, description };
     });
   }, []);
-
-  /**
-   * On change Value
-   * @param {string} value : Code editor value
-   */
-  const onChangeValue = useCallback(
-    value => {
-      if (valueValidation && validate) {
-        validate({ value }).then(res => {
-          setValidation({
-            component: COMPONENTS.VALUE,
-            error: !res.result,
-            message: i18n.t(res.error)
-          });
-        });
-      }
-
-      setData(prevState => {
-        return { ...prevState, value };
-      });
-    },
-    [validate, valueValidation]
-  );
 
   /**
    * Submit form and close dialog
@@ -222,14 +190,12 @@ const KeyValueEditorDialog = props => {
             <FormControl className={classes.marginTop}>
               {renderValueEditor(data.value, {
                 isNew,
-                onChange: onChangeValue,
                 error:
                   getValidationComponent(COMPONENTS.VALUE) && validation.error,
                 helperText:
                   getValidationComponent(COMPONENTS.VALUE) &&
                   validation.message,
                 disabled: disabled,
-                defaultValue: data.defaultValue
               })}
             </FormControl>
             {showDefault && (
@@ -243,9 +209,8 @@ const KeyValueEditorDialog = props => {
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails className={classes.noHorizontalPadding}>
-                  {renderValueEditor(data.defaultValue, {
+                  {renderValueEditor(undefined, {
                     isNew,
-                    onChange: onChangeValue,
                     isDefault: true,
                     disabled: true
                   })}
@@ -284,14 +249,19 @@ KeyValueEditorDialog.propTypes = {
   disableDescription: PropTypes.bool,
   showDefault: PropTypes.bool,
   showDescription: PropTypes.bool,
-  defaultValue: PropTypes.string,
   onClose: PropTypes.func,
   validate: PropTypes.func,
   onSubmit: PropTypes.func,
   renderValueEditor: PropTypes.func,
   renderCustomContent: PropTypes.func,
   nameValidation: PropTypes.func,
-  valueValidation: PropTypes.func
+  valueValidation: PropTypes.func,
+  setData: PropTypes.func,
+  data: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+    value: PropTypes.string,
+  }),
 };
 
 //The function returns true when the compared props equal, preventing the component from re-rendering
