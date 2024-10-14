@@ -1,5 +1,6 @@
 # 1.3.0 - This version contains breaking changes in the lib-ide <-> IDE DataTypes and useDataTypes interface
 
+- [FP-2932](https://movai.atlassian.net/browse/FP-2932) Save doesn't work well in split screen
 - [FP-2716](https://movai.atlassian.net/browse/FP-2716): Annotations imported cannot be edited
 - [FP-2711](https://movai.atlassian.net/browse/FP-2711): Corrupted data in Annotation
 - [FP-2927](https://movai.atlassian.net/browse/FP-2927): IDE - Validate user input data string/array/object and only try to transform when needed
