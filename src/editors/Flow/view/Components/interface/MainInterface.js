@@ -279,6 +279,7 @@ export default class MainInterface {
       Visualization: nodePos,
       [NODE_PROP_DATA.LABEL]: name,
       Label: name,
+      ContainerFlow: nodeData.ContainerFlow,
       name: name,
       id: name
     };
