@@ -1,6 +1,7 @@
 # TBD
 
 - [FP-2981](https://movai.atlassian.net/browse/FP-2981): IDE - Copy subFlow doesn't work
+- [FP-2770](https://movai.atlassian.net/browse/FP-2770): Scene closing button not working when with changes *
 
 # 1.3.0 - This version contains breaking changes in the lib-ide <-> IDE DataTypes and useDataTypes interface
 
