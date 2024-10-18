@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-2770](https://movai.atlassian.net/browse/FP-2770): Scene closing button not working when with changes *
+
 # 1.3.0 - This version contains breaking changes in the lib-ide <-> IDE DataTypes and useDataTypes interface
 
 - [FP-2716](https://movai.atlassian.net/browse/FP-2716): Annotations imported cannot be edited
