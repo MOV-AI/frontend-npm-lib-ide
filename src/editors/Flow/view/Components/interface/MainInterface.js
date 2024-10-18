@@ -275,6 +275,7 @@ export default class MainInterface {
       // the following line exists because nodeData is outdated.
       // which results in props and params not getting copied properly
       // it has to do with Proxy / original instance inconsistencies
+      ...nodeData,
       ...this.modelView.current.serializeToDB(this.modelView.current.serialize()).NodeInst[nodeData.id],
       Visualization: nodePos,
       [NODE_PROP_DATA.LABEL]: name,
