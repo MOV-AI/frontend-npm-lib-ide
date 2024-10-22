@@ -342,7 +342,7 @@ const useTabLayout = (props, dockRef) => {
    */
   const _onLayoutRemoveTab = useCallback(
     (newLayout, tabId, forceClose) => {
-      const { name, scope, isNew, isDirty } = tabsByIdRef.current.get(tabId);
+      const { name, scope, isNew, isDirty } = tabsByIdRef.current?.get(tabId) ?? {};
 
       if (isDirty && !forceClose) {
         const document = { id: tabId, name, scope, isNew };
