@@ -80,13 +80,18 @@ const FlowSearch = props => {
           className={classes.searchInputText}
           autoFocus
           InputProps={{
+            ...params.InputProps,
             startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
+              <>
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+                {params.InputProps.startAdornment}
+              </>
             )
           }}
           inputProps={{
+            ...params.inputProps,
             "data-scope": KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SCOPE,
           }}
         />
