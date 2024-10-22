@@ -7,6 +7,7 @@ import {
   IconButton,
   Popper
 } from "@material-ui/core";
+import { KEYBINDINGS } from "../../../../../utils/shortcuts";
 import { Autocomplete } from "@material-ui/lab";
 import { flowTopBarStyles } from "./styles";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
@@ -88,6 +89,10 @@ const FlowSearch = props => {
                 {params.InputProps.startAdornment}
               </>
             )
+          }}
+          inputProps={{
+            ...params.inputProps,
+            "data-scope": KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SCOPE,
           }}
         />
       );

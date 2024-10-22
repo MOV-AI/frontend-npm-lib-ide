@@ -22,6 +22,7 @@ import {
 } from "../../../utils/Constants";
 import Workspace from "../../../utils/Workspace";
 import { KEYBINDINGS } from "../../../utils/shortcuts";
+import { useKeyBinds } from "../../../utils/keybinds";
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "../../../utils/Messages";
 import CallbackModel from "../../Callback/model/Callback";
 import Clipboard, { KEYS } from "./Utils/Clipboard";
@@ -61,9 +62,6 @@ export const Flow = (props, ref) => {
     instance,
     data,
     alert,
-    addKeyBind,
-    removeKeyBind,
-    activateKeyBind,
     confirmationAlert,
     contextOptions,
     on,
@@ -99,6 +97,7 @@ export const Flow = (props, ref) => {
   const [tooltipConfig, setTooltipConfig] = useState(null);
   const [contextMenuOptions, setContextMenuOptions] = useState(null);
   const [searchVisible, setSearchVisible] = useState(false);
+  const { addKeyBind, removeKeyBind } = useKeyBinds(id);
 
   // Other Hooks
   const classes = flowStyles();
@@ -657,10 +656,6 @@ export const Flow = (props, ref) => {
       // Temporary fix to show loading (even though UI still freezes)
       setTimeout(() => {
         setViewMode(newViewMode);
-        addKeyBind(
-          KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS,
-          ()=>{}
-        );
       }, 100);
     },
     [viewMode, setMode]
@@ -1129,9 +1124,8 @@ export const Flow = (props, ref) => {
     e => {
       workspaceManager.setFlowIsDebugging(e.target.checked);
       setFlowDebugging(e.target.checked);
-      activateKeyBind();
     },
-    [activateKeyBind, workspaceManager]
+    [workspaceManager]
   );
 
   /**
@@ -1316,8 +1310,7 @@ export const Flow = (props, ref) => {
 
   const handleSearchDisabled = useCallback(() => {
     setSearchVisible(false);
-    activateKeyBind();
-  }, [activateKeyBind]);
+  }, []);
 
   const getContextOptions = useCallback(
     (mode, data, args) => {
@@ -1405,13 +1398,6 @@ export const Flow = (props, ref) => {
 
   useEffect(() => {
     addKeyBind(
-      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SHORTCUTS,
-      evt => {
-        evt.preventDefault();
-      },
-      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SCOPE
-    );
-    addKeyBind(
       KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SHORTCUTS,
       evt => {
         evt.preventDefault();
@@ -1440,9 +1426,6 @@ export const Flow = (props, ref) => {
     );
     // remove keyBind on unmount
     return () => {
-      removeKeyBind(
-        KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SHORTCUTS
-      );
       removeKeyBind(KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SHORTCUTS);
       removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.COPY_NODE.SHORTCUTS);
       removeKeyBind(KEYBINDINGS.FLOW.KEYBINDS.PASTE_NODE.SHORTCUTS);
@@ -1466,15 +1449,6 @@ export const Flow = (props, ref) => {
     handleShortcutDelete,
     handleSearchDisabled
   ]);
-
-  useEffect(() => {
-    if (searchVisible) {
-      return activateKeyBind(
-        KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SCOPE
-      );
-    }
-    activateKeyBind();
-  }, [searchVisible, activateKeyBind]);
 
   //========================================================================================
   /*                                                                                      *
@@ -1548,8 +1522,6 @@ Flow.propTypes = {
   instance: PropTypes.object,
   editable: PropTypes.bool,
   alert: PropTypes.func,
-  addKeyBind: PropTypes.func,
-  removeKeyBind: PropTypes.func,
   confirmationAlert: PropTypes.func,
   saveDocument: PropTypes.func
 };

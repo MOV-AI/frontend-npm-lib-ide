@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
-import hotkeys from "hotkeys-js";
 import { Style } from "@mov-ai/mov-fe-lib-react";
 import { Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -22,9 +21,10 @@ import PluginManagerIDE from "../engine/PluginManagerIDE/PluginManagerIDE";
 import Placeholder from "../plugins/views/Placeholder/Placeholder";
 import { PLUGINS, HOSTS, KEYBIND_SCOPES } from "../utils/Constants";
 import { MainContext } from "../main-context";
+import { defaultFunction } from "../utils/Utils";
 import { addEditor } from "../plugins/DocManager/factory";
 import { addTool } from "../tools";
-import { addKeyBind, defaultFunction } from "../utils/Utils";
+import { addKeyBind } from "../utils/keybinds";
 import * as genFunctions from "../utils/generalFunctions";
 import { KEYBINDINGS } from "../utils/shortcuts";
 import AppSettings, {
@@ -118,7 +118,6 @@ function BaseApp(props) {
     addAppKeybinds();
     // Write log in consle
     writeMovaiLogo();
-    hotkeys.setScope(KEYBIND_SCOPES.APP);
   }, [dependencies]);
 
   // Set app settings

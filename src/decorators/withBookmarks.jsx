@@ -1,6 +1,5 @@
 import React, { useCallback, useState, useEffect, useRef } from "react";
 import { DRAWER, PLUGINS } from "../utils/Constants";
-import { activateKeyBind } from "../utils/Utils";
 import { usePluginMethods } from "../engine/ReactPlugin/ViewReactPlugin";
 import BookmarkTab from "./Components/BookmarkTab";
 
@@ -48,14 +47,6 @@ const withBookmarks = Component => {
      *                                                                                      */
     //========================================================================================
 
-    const activateActiveTabEditor = useCallback(async () => {
-      const tab = await call(
-        PLUGINS.TABS.NAME,
-        PLUGINS.TABS.CALL.GET_ACTIVE_TAB
-      );
-      activateKeyBind(tab.id);
-    }, [call]);
-
     /**
      * Select bookmark
      * @param {String} name : Bookmark name
@@ -63,7 +54,6 @@ const withBookmarks = Component => {
     const selectBookmark = useCallback(
       name => {
         const drawerView = drawerRef.current.getActiveView();
-        activateActiveTabEditor();
         if (active === name && drawerView === DRAWER.VIEWS.BOOKMARK) {
           drawerRef.current.toggleDrawer();
           return;
@@ -74,7 +64,7 @@ const withBookmarks = Component => {
         drawerRef.current.activateBookmarkView();
         emit(PLUGINS.RIGHT_DRAWER.ON.CHANGE_BOOKMARK, { name });
       },
-      [activateActiveTabEditor, active, emit]
+      [active, emit]
     );
 
     /**

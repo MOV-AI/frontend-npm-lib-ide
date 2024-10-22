@@ -11,14 +11,11 @@ import { dependencyInfoStyles } from "./styles";
 const DependencyInfo = props => {
   const [minified, setMinified] = useState(false);
 
-  const { activateKeyBind } = props;
-
   // Style hook
   const classes = dependencyInfoStyles();
 
   const toggleMinify = useCallback(() => {
     setMinified(prevState => !prevState);
-    activateKeyBind();
   }, []);
 
   return (
