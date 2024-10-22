@@ -541,8 +541,8 @@ const useTabLayout = (props, dockRef) => {
         z: 1
       };
 
-      emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: tabData.id });
       setUrl(tabData.id);
+      emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: tabData.id });
       addTabToStack(tabData, tabPosition);
       tabsByIdRef.current.set(tabData.id, tabData);
       workspaceManager.setTabs(tabsByIdRef.current);

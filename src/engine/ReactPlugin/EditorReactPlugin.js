@@ -1,5 +1,4 @@
 import React, { forwardRef, useCallback, useEffect, useRef } from "react";
-import { Utils } from "@mov-ai/mov-fe-lib-core";
 import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
 import withAlerts from "../../decorators/withAlerts";
 import withMenuHandler from "../../decorators/withMenuHandler";
