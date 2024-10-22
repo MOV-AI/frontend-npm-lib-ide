@@ -17,6 +17,7 @@ import {
 import { getIconByScope } from "../../../../utils/Utils";
 import PluginManagerIDE from "../../../../engine/PluginManagerIDE/PluginManagerIDE";
 import Workspace from "../../../../utils/Workspace";
+import { setUrl } from "../../../../utils/keybinds";
 import { getToolTabData } from "../../../../tools";
 import useTabStack from "./useTabStack";
 
@@ -65,6 +66,7 @@ const useTabLayout = (props, dockRef) => {
 
       // Set current active tab id after extra tabs update
       activeTabId.current = currentActiveTabId;
+      setUrl(currentActiveTabId);
       emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: currentActiveTabId });
     },
     [emit, workspaceManager, addTabToStack, dockRef]
@@ -361,7 +363,9 @@ const useTabLayout = (props, dockRef) => {
         const dock = getDockFromTabId(tabId);
         removeTabFromStack(tabId, dock);
         applyLayout(newLayout);
-        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: getNextTabFromStack() });
+        const newTabId = getNextTabFromStack();
+        setUrl(newTabId);
+        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newTabId });
       }
     },
     [
@@ -537,6 +541,7 @@ const useTabLayout = (props, dockRef) => {
         z: 1
       };
 
+      setUrl(tabData.id);
       emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: tabData.id });
       addTabToStack(tabData, tabPosition);
       tabsByIdRef.current.set(tabData.id, tabData);
@@ -712,6 +717,7 @@ const useTabLayout = (props, dockRef) => {
 
       if (isActuallyTabChange) {
         activeTabId.current = newActiveTabId;
+        setUrl(newActiveTabId);
         emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newActiveTabId });
       }
     },
