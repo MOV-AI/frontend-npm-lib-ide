@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-2956](https://movai.atlassian.net/browse/FP-2956): Drawers should reflect editor being interacted with in split view mode
+
 # 1.4.0 - This version contains breaking changes in the lib-ide <-> IDE keybindings interface
 
 - [FP-2981](https://movai.atlassian.net/browse/FP-2981): IDE - Copy subFlow doesn't work

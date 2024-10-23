@@ -42,7 +42,30 @@ export function withEditorPlugin(ReactComponent, methods = []) {
      */
     const activateEditor = useCallback(() => {
       setUrl(id);
+      updateMenusOnTabOrEditorChange();
     }, [id]);
+    
+    const updateMenusOnTabOrEditorChange = async (tabId) => {
+      const validTab = await call(
+        PLUGINS.TABS.NAME,
+        PLUGINS.TABS.CALL.FIND_TAB,
+        tabId
+      );
+
+      // This check goes through every open tab checking it's id
+      // towards tabId (which comes from the ACTIVE_TAB_CHANGE broadcast)
+      // When we find the tab with the id that we want to reset, we reset it
+      if (!validTab || (validTab && tabId === id)) {
+        // We should reset bookmarks when changing tabs. Right? And Left too :D
+        PluginManagerIDE.resetBookmarks();
+        updateRightMenu();
+
+        // We only need to activate the editor when it's an Active Tab Change
+        if(tabId)
+          activateEditor();
+      }
+
+    }
 
     /**
      * Component did mount
@@ -51,21 +74,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
 
       on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async data => {
-        const validTab = await call(
-          PLUGINS.TABS.NAME,
-          PLUGINS.TABS.CALL.FIND_TAB,
-          data.id
-        );
-
-        // This check goes through every open tab checking it's id
-        // towards data.id (which comes from the ACTIVE_TAB_CHANGE broadcast)
-        // When we find the tab with the id that we want to reset, we reset it
-        if (!validTab || (validTab && data.id === id)) {
-          // We should reset bookmarks when changing tabs. Right? And Left too :D
-          PluginManagerIDE.resetBookmarks();
-          updateRightMenu();
-          activateEditor();
-        }
+        updateMenusOnTabOrEditorChange(data.id)
       });
 
       // Remove key bind on component unmount
@@ -90,7 +99,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         tabIndex="-1"
         ref={editorContainer}
         className={`container-${scope}`}
-        onClick={activateEditor}
         onFocus={activateEditor}
       >
         <RefComponent
