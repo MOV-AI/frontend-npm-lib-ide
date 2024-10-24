@@ -1,4 +1,8 @@
-import { Style, withDefaults, Translations as reactTranslations } from "@mov-ai/mov-fe-lib-react";
+import {
+  Style,
+  withDefaults,
+  Translations as reactTranslations,
+} from "@mov-ai/mov-fe-lib-react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { Translations as ideTranslations } from "../i18n";
 import React, { useEffect } from "react";
@@ -8,19 +12,19 @@ import BaseApp, { installEditor, installTool } from "../App/BaseApp";
 import {
   CallbackEditor,
   CallbackModel,
-  CallbackStore
+  CallbackStore,
 } from "../editors/Callback";
 import {
   ConfigurationEditor,
   ConfigurationModel,
-  ConfigurationStore
+  ConfigurationStore,
 } from "../editors/Configuration";
 import { FlowEditor, FlowModel, FlowStore } from "../editors/Flow";
 import FlowExplorer from "../editors/Flow/view/Components/Explorer/Explorer";
 import { NodeEditor, NodeModel, NodeStore } from "../editors/Node";
 // Tools
 import ShortcutsPlugin, {
-  getShortcutsTab
+  getShortcutsTab,
 } from "../tools/AppShortcuts/AppShortcuts";
 import HomeTabPlugin, { getHomeTab } from "../tools/HomeTab/HomeTab";
 // Utils
@@ -34,23 +38,27 @@ import KeyboardIcon from "@material-ui/icons/Keyboard";
 
 i18n.init({
   resources: {
-    en: { translation: {
-      ...reactTranslations.en,
-      ...ideTranslations.en,
-    } },
-    pt: { translation: {
-      ...reactTranslations.pt,
-      ...ideTranslations.pt,
-    } },
+    en: {
+      translation: {
+        ...reactTranslations.en,
+        ...ideTranslations.en,
+      },
+    },
+    pt: {
+      translation: {
+        ...reactTranslations.pt,
+        ...ideTranslations.pt,
+      },
+    },
   },
-  lng: window?.SERVER_DATA?.Language || "en"
+  lng: window?.SERVER_DATA?.Language || "en",
 });
 
 const dependencies = {
   "@material-ui/styles": { ThemeProvider, withStyles },
 };
 
-const AppCE = props => {
+const AppCE = (props) => {
   //========================================================================================
   /*                                                                                      *
    *                                    React Lifecycle                                   *
@@ -67,25 +75,25 @@ const AppCE = props => {
       otherPlugins: [
         {
           profile: CONSTANTS.FLOW_EXPLORER_PROFILE,
-          factory: profile => new FlowExplorer(profile)
-        }
-      ]
+          factory: (profile) => new FlowExplorer(profile),
+        },
+      ],
     });
     installEditor({
       scope: NodeModel.SCOPE,
       store: NodeStore,
-      editorPlugin: NodeEditor
+      editorPlugin: NodeEditor,
     });
     installEditor({
       scope: CallbackModel.SCOPE,
       store: CallbackStore,
       editorPlugin: CallbackEditor,
-      props: { useLanguageServer: false }
+      props: { useLanguageServer: false },
     });
     installEditor({
       scope: ConfigurationModel.SCOPE,
       store: ConfigurationStore,
-      editorPlugin: ConfigurationEditor
+      editorPlugin: ConfigurationEditor,
     });
     // Install tools
     installTool({
@@ -96,7 +104,7 @@ const AppCE = props => {
       icon: HomeIcon,
       quickAccess: false,
       toolBar: false,
-      mainMenu: false
+      mainMenu: false,
     });
     installTool({
       id: CONSTANTS.SHORTCUTS_PROFILE.name,
@@ -106,7 +114,7 @@ const AppCE = props => {
       icon: KeyboardIcon,
       quickAccess: false,
       toolBar: false,
-      mainMenu: false
+      mainMenu: false,
     });
   }, []);
 
@@ -122,5 +130,5 @@ export default withDefaults({
   name: "mov-fe-app-ide",
   component: AppCE,
   ApplicationTheme,
-  dependencies
+  dependencies,
 });

@@ -8,7 +8,7 @@ import {
   FormControlLabel,
   InputLabel,
   Radio,
-  RadioGroup
+  RadioGroup,
 } from "@material-ui/core";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../themes";
@@ -17,7 +17,7 @@ import {
   DATA_TYPES,
   DEFAULT_VALUE,
   DISABLED_VALUE,
-  ALERT_SEVERITIES
+  ALERT_SEVERITIES,
 } from "../../../utils/Constants";
 import withAlerts from "../../../decorators/withAlerts";
 import KeyValueEditorDialog from "../KeyValueTable/KeyValueEditorDialog";
@@ -28,10 +28,10 @@ import { parametersDialogStyles } from "./styles";
 const VALUE_OPTIONS = {
   CUSTOM: "custom",
   DEFAULT: "default",
-  DISABLED: "disabled"
+  DISABLED: "disabled",
 };
 
-const ParameterEditorDialog = props => {
+const ParameterEditorDialog = (props) => {
   const {
     isNew,
     disabled,
@@ -39,14 +39,13 @@ const ParameterEditorDialog = props => {
     customValidation,
     preventRenderType,
     showValueOptions,
-    alert
+    alert,
   } = props;
 
   // Hooks
   const [data, setData] = useState(props.data);
   const classes = parametersDialogStyles();
-  const { getDataTypes, getType } =
-    useDataTypes({ stringOutput: true });
+  const { getDataTypes, getType } = useDataTypes({ stringOutput: true });
 
   //========================================================================================
   /*                                                                                      *
@@ -59,15 +58,17 @@ const ParameterEditorDialog = props => {
    * @param {*} defaultValue : Default value to check
    * @param {*} value : Value to check
    */
-  const getValueOption = useCallback(value => {
-    if (value === DISABLED_VALUE)
-      return VALUE_OPTIONS.DISABLED;
+  const getValueOption = useCallback(
+    (value) => {
+      if (value === DISABLED_VALUE) return VALUE_OPTIONS.DISABLED;
 
-    if (value === DEFAULT_VALUE || value === data.defaultValue)
-      return VALUE_OPTIONS.DEFAULT;
+      if (value === DEFAULT_VALUE || value === data.defaultValue)
+        return VALUE_OPTIONS.DEFAULT;
 
-    return VALUE_OPTIONS.CUSTOM;
-  }, [data.defaultValue]);
+      return VALUE_OPTIONS.CUSTOM;
+    },
+    [data.defaultValue],
+  );
 
   const [valueOption, setValueOption] = useState(getValueOption(data.value));
 
@@ -79,18 +80,16 @@ const ParameterEditorDialog = props => {
     (value) => {
       if (value === data.defaultValue || value === undefined)
         setValueOption(VALUE_OPTIONS.DEFAULT);
-      else
-        setValueOption(VALUE_OPTIONS.CUSTOM);
+      else setValueOption(VALUE_OPTIONS.CUSTOM);
 
-      setData(prevState => ({
+      setData((prevState) => ({
         ...prevState,
         value: getType(prevState.type).getSaveable(
-          value === data.defaultValue ? undefined : value
+          value === data.defaultValue ? undefined : value,
         ),
       }));
-
     },
-    [setValueOption, setData, getType, data.defaultValue]
+    [setValueOption, setData, getType, data.defaultValue],
   );
 
   /**
@@ -114,27 +113,29 @@ const ParameterEditorDialog = props => {
    * @returns
    */
   const onValidate = useCallback(
-    formData => {
+    (formData) => {
       const dataToValidate = {
         ...formData,
         value: data.value,
-        type: data.type
+        type: data.type,
       };
 
       if (customValidation) return customValidation(dataToValidate);
 
       // Validate data
-      return getType(data.type).validate(data.value, getValidationOptions())
-        .then(res => {
+      return getType(data.type)
+        .validate(data.value, getValidationOptions())
+        .then((res) => {
           if (!res.success)
             throw new Error(
-              i18n.t(res.error) || i18n.t(ERROR_MESSAGES.DATA_VALIDATION_FAILED)
+              i18n.t(res.error) ||
+                i18n.t(ERROR_MESSAGES.DATA_VALIDATION_FAILED),
             );
           // Prepare data to submit
           if (res.parsed) data.value = res.parsed.toString();
           return { ...res, data: dataToValidate };
         })
-        .catch(err => {
+        .catch((err) => {
           alert({ message: err.message, severity: ALERT_SEVERITIES.ERROR });
           return err;
         });
@@ -147,7 +148,7 @@ const ParameterEditorDialog = props => {
       alert,
       getType,
       customValidation,
-    ]
+    ],
   );
 
   //========================================================================================
@@ -162,18 +163,19 @@ const ParameterEditorDialog = props => {
    * @returns
    */
   const handleTypeChange = useCallback(
-    evt => {
+    (evt) => {
       const type = evt?.target?.value;
       const typeInst = getType(type);
 
       typeInst.validate(data.value).then(({ success }) => {
-        setData(prevState => ({
+        setData((prevState) => ({
           ...prevState,
           type,
           value: success ? prevState.value : typeInst.unparse(typeInst.default),
         }));
       });
-    }, [getType, data.value, setData]
+    },
+    [getType, data.value, setData],
   );
 
   /**
@@ -181,17 +183,17 @@ const ParameterEditorDialog = props => {
    * @param {*} evt
    */
   const handleChangeValueOption = useCallback(
-    evt => {
+    (evt) => {
       const opt = evt.target.value;
 
       if (opt === VALUE_OPTIONS.DISABLED)
-        setData(prevState => ({ ...prevState, value: DISABLED_VALUE }));
+        setData((prevState) => ({ ...prevState, value: DISABLED_VALUE }));
       else if (opt === VALUE_OPTIONS.DEFAULT)
-        setData(prevState => ({ ...prevState, value: undefined }));
+        setData((prevState) => ({ ...prevState, value: undefined }));
 
       setValueOption(opt);
     },
-    [setData, setValueOption]
+    [setData, setValueOption],
   );
 
   //========================================================================================
@@ -216,7 +218,7 @@ const ParameterEditorDialog = props => {
           disabled={disableType || disabled}
           inputProps={{ "data-testid": "input_type" }}
         >
-          {getDataTypes().map(key => (
+          {getDataTypes().map((key) => (
             <MenuItem key={key} value={key}>
               {getType(key).getLabel()}
             </MenuItem>
@@ -261,19 +263,13 @@ const ParameterEditorDialog = props => {
             disabled={disabled}
             control={<Radio inputProps={{ "data-testid": "input_disabled" }} />}
             label={i18n.t("DisableParamType", {
-              paramType: data.paramType || i18n.t("Value")
+              paramType: data.paramType || i18n.t("Value"),
             })}
           />
         </RadioGroup>
       </FormControl>
     );
-  }, [
-    data.paramType,
-    valueOption,
-    classes,
-    handleChangeValueOption,
-    disabled
-  ]);
+  }, [data.paramType, valueOption, classes, handleChangeValueOption, disabled]);
 
   /**
    * Render Value Editor Component
@@ -288,7 +284,7 @@ const ParameterEditorDialog = props => {
           {!options.isDefault && valueOption === VALUE_OPTIONS.DISABLED ? (
             <p className={classes.disabledValue}>
               {i18n.t("DisabledParamType", {
-                paramType: data.paramType || i18n.t("Value")
+                paramType: data.paramType || i18n.t("Value"),
               })}
             </p>
           ) : (
@@ -296,11 +292,11 @@ const ParameterEditorDialog = props => {
               {
                 rowData: { value: defaultValue ?? data.defaultValue },
                 alert,
-                onChange: _value => onChangeValueEditor(_value),
+                onChange: (_value) => onChangeValueEditor(_value),
                 disabled: options.disabled || disabled,
-                isNew: options.isNew ?? isNew
+                isNew: options.isNew ?? isNew,
               },
-              "dialog"
+              "dialog",
             )
           )}
         </>
@@ -319,7 +315,7 @@ const ParameterEditorDialog = props => {
       onChangeValueEditor,
       handleTypeChange,
       getType,
-    ]
+    ],
   );
 
   return (
@@ -342,7 +338,7 @@ ParameterEditorDialog.propTypes = {
   preventRenderType: PropTypes.bool,
   showValueOptions: PropTypes.bool,
   customValidation: PropTypes.func,
-  alert: PropTypes.func
+  alert: PropTypes.func,
 };
 
 export default withAlerts(withTheme(ParameterEditorDialog, ApplicationTheme));

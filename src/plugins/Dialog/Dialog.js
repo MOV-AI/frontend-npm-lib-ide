@@ -19,8 +19,8 @@ class Dialog extends IDEPlugin {
     const methods = Array.from(
       new Set([
         ...(profile.methods ?? []),
-        ...Object.values(PLUGINS.DIALOG.CALL)
-      ])
+        ...Object.values(PLUGINS.DIALOG.CALL),
+      ]),
     );
     super({ ...profile, methods });
   }
@@ -43,7 +43,7 @@ class Dialog extends IDEPlugin {
         message={data.message}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -61,7 +61,7 @@ class Dialog extends IDEPlugin {
         submitText={data.submitText}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -81,7 +81,7 @@ class Dialog extends IDEPlugin {
         onSubmit={data.onSubmit}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -101,7 +101,7 @@ class Dialog extends IDEPlugin {
         onSubmit={data.onSubmit}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -122,7 +122,7 @@ class Dialog extends IDEPlugin {
       inputLabel,
       value,
       onValidation,
-      onPostValidation
+      onPostValidation,
     } = data;
     ReactDOM.render(
       <FormDialog
@@ -139,7 +139,7 @@ class Dialog extends IDEPlugin {
         onPostValidation={onPostValidation}
         onClose={() => this._handleDialogClose(targetElement, onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -155,12 +155,12 @@ class Dialog extends IDEPlugin {
     const title = i18n.t("SaveChangesConfirmationTitle");
     const message = i18n.t("SaveChangesConfirmationMessage", {
       scope: data.scope,
-      name: data.name
+      name: data.name,
     });
     const actions = {
       dontSave: { label: i18n.t("DontSave"), testId: "input_dont-save" },
       cancel: { label: i18n.t("Cancel"), testId: "input_close" },
-      save: { label: i18n.t("Save"), testId: "input_save" }
+      save: { label: i18n.t("Save"), testId: "input_save" },
     };
     ReactDOM.render(
       <AlertBeforeAction
@@ -170,7 +170,7 @@ class Dialog extends IDEPlugin {
         onSubmit={data.onSubmit}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -178,26 +178,26 @@ class Dialog extends IDEPlugin {
     const targetElement = this._handleDialogOpen();
     // Set dialog message
     const title = i18n.t("SaveOutdatedDocTitle", {
-      docName: data.name
+      docName: data.name,
     });
     const message = i18n.t("SaveOutdatedDocMessage", {
       docType: data.scope,
-      docName: data.name
+      docName: data.name,
     });
     // Set dialog actions
     const actions = {
       [SAVE_OUTDATED_DOC_ACTIONS.UPDATE_DOC]: {
         label: i18n.t("UpdateDoc"),
-        testId: "input_update"
+        testId: "input_update",
       },
       [SAVE_OUTDATED_DOC_ACTIONS.OVERWRITE_DOC]: {
         label: i18n.t("OverwriteDoc"),
-        testId: "input_overwrite"
+        testId: "input_overwrite",
       },
       [SAVE_OUTDATED_DOC_ACTIONS.CANCEL]: {
         label: i18n.t("Cancel"),
-        testId: "input_cancel"
-      }
+        testId: "input_cancel",
+      },
     };
     // Show dialog
     ReactDOM.render(
@@ -208,7 +208,7 @@ class Dialog extends IDEPlugin {
         onSubmit={data.onSubmit}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -242,7 +242,7 @@ class Dialog extends IDEPlugin {
         {message}
         <Component {...props} closeModal={closeModal} />
       </AppDialog>,
-      targetElement
+      targetElement,
     );
     return closeModal;
   }
@@ -260,7 +260,7 @@ class Dialog extends IDEPlugin {
         {...data}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -274,7 +274,7 @@ class Dialog extends IDEPlugin {
     const ThemedModal = withTheme(SelectScopeModal, ApplicationTheme);
 
     // Handle submit
-    const handleDialogSubmit = selectedItem => {
+    const handleDialogSubmit = (selectedItem) => {
       onSubmit(selectedItem);
       this._handleDialogClose(targetElement, onClose);
     };
@@ -290,7 +290,7 @@ class Dialog extends IDEPlugin {
         onCancel={() => this._handleDialogClose(targetElement, onClose)}
         onSubmit={handleDialogSubmit}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -321,8 +321,7 @@ class Dialog extends IDEPlugin {
     document.body.classList.remove(Dialog.BODY_CLASS_NAME);
     ReactDOM.unmountComponentAtNode(targetElement);
     const pnode = targetElement.parentNode;
-    if (pnode)
-      pnode.removeChild(targetElement);
+    if (pnode) pnode.removeChild(targetElement);
     this.call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_ACTIVE_TAB);
 
     onClose?.();

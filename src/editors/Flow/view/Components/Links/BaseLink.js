@@ -3,7 +3,7 @@ import { defaultFunction } from "../../../../../utils/Utils";
 import { EVT_NAMES } from "../../events";
 import {
   LINK_DEPENDENCY,
-  MOVAI_FLOW_TYPES
+  MOVAI_FLOW_TYPES,
 } from "../../../../../utils/Constants";
 import { isLinkeable } from "../Nodes/BaseNode/PortValidator";
 import { generatePathPoints } from "./generatePathPoints";
@@ -12,7 +12,7 @@ import { baseLinkStyles } from "./styles";
 
 const SEPARATOR = {
   SUBFLOW: "__",
-  NODE: "/"
+  NODE: "/",
 };
 
 class BaseLinkStruct {
@@ -29,8 +29,8 @@ class BaseLinkStruct {
       dependency,
       error,
       sourceFullPath,
-      targetFullPath
-    }
+      targetFullPath,
+    },
   ) {
     this.canvas = canvas;
     this.src = src; // {x, y, nodeSize {height, width}, type}
@@ -45,7 +45,7 @@ class BaseLinkStruct {
       targetPort,
       sourceFullPath,
       targetFullPath,
-      Dependency: dependency
+      Dependency: dependency,
     };
     this._visible = true;
     this._selected = false;
@@ -77,7 +77,7 @@ class BaseLinkStruct {
   /**
    * @private
    */
-  calculatePath = method => {
+  calculatePath = (method) => {
     this.pathPoints = generatePathPoints(this.src, this.trg, method);
     return this;
   };
@@ -87,7 +87,7 @@ class BaseLinkStruct {
    * @param {*} pathPoints
    * @returns
    */
-  calculateLine = pathPoints => {
+  calculateLine = (pathPoints) => {
     return d3
       .line()
       .curve(d3.curveBasis)
@@ -107,7 +107,7 @@ export default class BaseLink extends BaseLinkStruct {
     trg,
     data,
     flowDebugging = false,
-    onLinkErrorMouseOver = () => defaultFunction("onLinkErrorMouseOver")
+    onLinkErrorMouseOver = () => defaultFunction("onLinkErrorMouseOver"),
   ) {
     super(canvas, src, trg, data);
     this.object = null;
@@ -139,7 +139,10 @@ export default class BaseLink extends BaseLinkStruct {
     this.object = d3
       .create("svg")
       .attr("id", `path-${this.canvas.containerId}-${linkData.id}`)
-      .attr("data-testid", `link-from-${linkData.sourceNode}-port-${linkData.sourcePort}-to-${linkData.targetNode}-port-${linkData.targetPort}`)
+      .attr(
+        "data-testid",
+        `link-from-${linkData.sourceNode}-port-${linkData.sourcePort}-to-${linkData.targetNode}-port-${linkData.targetPort}`,
+      )
       .attr("x", 0)
       .attr("y", 0)
       .attr("width", this.maxMovingPixels)
@@ -266,9 +269,9 @@ export default class BaseLink extends BaseLinkStruct {
       this.onLinkErrorMouseOver(
         {
           link: { ...this.data, message, position },
-          mouseover: true
+          mouseover: true,
         },
-        "Link"
+        "Link",
       );
     }
   };
@@ -298,7 +301,7 @@ export default class BaseLink extends BaseLinkStruct {
     this.canvas.events.next({
       name: EVT_NAMES.ON_CLICK,
       type: "Link",
-      data: this
+      data: this,
     });
     this.onSelected(!this._isSelected);
   };
@@ -313,9 +316,9 @@ export default class BaseLink extends BaseLinkStruct {
         event: d3.event,
         linkId: this.data.id, //this.data has the linkId
         ...this.data,
-        linkType: this.src.data?.message ?? "_default"
+        linkType: this.src.data?.message ?? "_default",
       },
-      true
+      true,
     );
   };
 
@@ -362,7 +365,7 @@ export default class BaseLink extends BaseLinkStruct {
     return strokeColor;
   }
 
-  onSelected = selected => {
+  onSelected = (selected) => {
     this._isSelected = selected;
     if (selected) this.styleMouseOver();
     else {
@@ -377,11 +380,11 @@ export default class BaseLink extends BaseLinkStruct {
     this.calculatePath().refreshPath();
   };
 
-  updateData = data => {
+  updateData = (data) => {
     this.data = { ...this.data, ...data };
   };
 
-  updateError = error => {
+  updateError = (error) => {
     this.error = error;
     this.styleMouseOut();
   };
@@ -389,7 +392,7 @@ export default class BaseLink extends BaseLinkStruct {
   changeStrokeColor = () => {
     this.path.attr(
       "stroke",
-      this.error ? this.style.stroke.warning : this.getStrokeColor()
+      this.error ? this.style.stroke.warning : this.getStrokeColor(),
     );
     return this;
   };
@@ -404,7 +407,7 @@ export default class BaseLink extends BaseLinkStruct {
   };
 
   portsAny = (src, trg) => {
-    return [src, trg].some(port => port.acceptsAny);
+    return [src, trg].some((port) => port.acceptsAny);
   };
 
   /**
@@ -415,8 +418,8 @@ export default class BaseLink extends BaseLinkStruct {
    * @returns {array} [<src port instance>, <trg port instance>]
    */
   getSrcTrg = (portA, portB) => {
-    return ["Out", "In"].map(type => {
-      return [portA, portB].find(port => port.type === type);
+    return ["Out", "In"].map((type) => {
+      return [portA, portB].find((port) => port.type === type);
     });
   };
 
@@ -439,14 +442,14 @@ export default class BaseLink extends BaseLinkStruct {
 
       const fromCond = [
         `${link.sourceNode}/${link.sourcePort}`,
-        `${src.node.data.id}/${src.data.name}`
+        `${src.node.data.id}/${src.data.name}`,
       ];
       const toCond = [
         `${link.targetNode}/${link.targetPort}`,
-        `${trg.node.data.id}/${trg.data.name}`
+        `${trg.node.data.id}/${trg.data.name}`,
       ];
 
-      if ([fromCond, toCond].every(cond => cond[0] === cond[1])) {
+      if ([fromCond, toCond].every((cond) => cond[0] === cond[1])) {
         return true;
       }
 
@@ -465,7 +468,7 @@ export default class BaseLink extends BaseLinkStruct {
     // find which port is the source and the target
     const values = this.getSrcTrg(portA, portB);
 
-    return values.map(item => {
+    return values.map((item) => {
       const node = item.node.data.id;
       const type = item.node._template?.Type ?? "";
       const port = item.data.name;
@@ -483,7 +486,7 @@ export default class BaseLink extends BaseLinkStruct {
       id,
       From,
       To,
-      Dependency = LINK_DEPENDENCY.ALL_DEPENDENCIES.VALUE
+      Dependency = LINK_DEPENDENCY.ALL_DEPENDENCIES.VALUE,
     } = linksData;
     const [sourceNode, sourcePort, sourceFullPath] = BaseLink.getNodePort(From);
     const [targetNode, targetPort, targetFullPath] = BaseLink.getNodePort(To);
@@ -496,7 +499,7 @@ export default class BaseLink extends BaseLinkStruct {
       targetNode,
       targetPort,
       targetFullPath,
-      dependency: Dependency
+      dependency: Dependency,
     };
   }
 
@@ -506,7 +509,7 @@ export default class BaseLink extends BaseLinkStruct {
    *
    * @returns {array} [node, port]
    */
-  static getNodePort = plink => {
+  static getNodePort = (plink) => {
     // source and target nodes can have the following format
     // nodes : <node name>
     // flows : <container1>__<nodeInContainer> or <Container2>__<Container1>__<nodeNameInContainer1>
@@ -515,7 +518,7 @@ export default class BaseLink extends BaseLinkStruct {
     const nodes = _node.split(SEPARATOR.SUBFLOW);
     const [node, ...lPort] = nodes;
 
-    const subFlow = values => {
+    const subFlow = (values) => {
       return values.length
         ? values.join(SEPARATOR.SUBFLOW).concat(SEPARATOR.NODE)
         : "";

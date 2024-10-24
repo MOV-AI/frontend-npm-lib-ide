@@ -9,7 +9,7 @@ class ConfigurationStore extends Store {
       name: Model.SCOPE,
       title: "Configurations",
       plugins: [DBSubscriber],
-      observer
+      observer,
     });
   }
 

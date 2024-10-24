@@ -23,7 +23,7 @@ class Workspace {
     this.tabs = this.layoutAndTabs[1];
     this.defaultTabStack = Object.values(DOCK_POSITIONS).reduce(
       (a, k) => ({ ...a, [k]: [] }),
-      {}
+      {},
     );
     // Since we are always setting the DEFAULT_TABS
     // It makes sense to add them to the tabStack as well.
@@ -118,13 +118,14 @@ class Workspace {
    * @returns {Object} tabStack
    */
   getTabStack() {
-    const tabStack = this.storage.get(this.TAB_STACK_KEY) ?? this.defaultTabStack;
+    const tabStack =
+      this.storage.get(this.TAB_STACK_KEY) ?? this.defaultTabStack;
 
     // Convert tabStack to new format
     for (const dock in tabStack) {
-      tabStack[dock] = tabStack[dock].map(tab => ({
+      tabStack[dock] = tabStack[dock].map((tab) => ({
         id: tab.id || tab,
-        isNew: tab.isNew
+        isNew: tab.isNew,
       }));
     }
     // Return formatted tabStack

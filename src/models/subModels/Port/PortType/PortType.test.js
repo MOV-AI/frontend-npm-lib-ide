@@ -14,8 +14,8 @@ test("Serialize to DB", () => {
     message: "movai_msgs/TF",
     parameters: {
       Child: "camera_link",
-      Parent: "tag"
-    }
+      Parent: "tag",
+    },
   };
   port.setData(data);
 
@@ -23,8 +23,8 @@ test("Serialize to DB", () => {
     Message: "movai_msgs/TF",
     Parameter: {
       Child: "camera_link",
-      Parent: "tag"
-    }
+      Parent: "tag",
+    },
   };
 
   expect(port.serializeToDB()).toMatchObject(expected);
@@ -36,15 +36,15 @@ test("Serialize OF db", () => {
       Message: "movai_msgs/TF",
       Parameter: {
         Child: "camera_link",
-        Parent: "tag"
-      }
-    }
+        Parent: "tag",
+      },
+    },
   };
 
   const expected = {
     name: "out",
     message: content.out.Message,
-    parameters: content.out.Parameter
+    parameters: content.out.Parameter,
   };
 
   const data = PortType.serializeOfDB(content);

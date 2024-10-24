@@ -12,7 +12,7 @@ import { searchStyles } from "./styles";
  * @param {*} str
  * @returns
  */
-const normalizeString = str => {
+const normalizeString = (str) => {
   return str
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -46,9 +46,8 @@ function filter(searchQuery, subject) {
     case DATA_TYPES.OBJECT:
       // Is array
       if (Array.isArray(subject)) {
-        subject = subject?.filter(e => {
-          if (e === undefined)
-            return false;
+        subject = subject?.filter((e) => {
+          if (e === undefined) return false;
 
           const value = filter(searchQuery, e);
 
@@ -74,7 +73,7 @@ function filter(searchQuery, subject) {
   }
 }
 
-const Search = props => {
+const Search = (props) => {
   const { onSearch } = props;
 
   // State hooks
@@ -105,7 +104,7 @@ const Search = props => {
     return searchInput === null || searchInput.trim() === "";
   };
 
-  const doSearch = value => {
+  const doSearch = (value) => {
     setSearchInput(value);
     onSearch(value);
   };
@@ -120,7 +119,7 @@ const Search = props => {
    * Handle on change search input event
    * @param {*} event
    */
-  const onChangeSearch = event => {
+  const onChangeSearch = (event) => {
     const value = event.target.value;
     doSearch(value);
   };
@@ -149,7 +148,7 @@ const Search = props => {
               </Tooltip>
             )}
           </IconButton>
-        )
+        ),
       }}
     />
   );

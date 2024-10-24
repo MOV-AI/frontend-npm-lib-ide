@@ -106,7 +106,7 @@ class Parameter extends Model {
       name: this.getName(),
       value: this.getValue(),
       type: this.getType(),
-      description: this.getDescription()
+      description: this.getDescription(),
     };
   }
 
@@ -121,7 +121,7 @@ class Parameter extends Model {
     return {
       Value: value,
       Type: type,
-      Description: description
+      Description: description,
     };
   }
 
@@ -152,14 +152,14 @@ class Parameter extends Model {
     NAME: "name",
     VALUE: "value",
     DESCRIPTION: "description",
-    TYPE: "type"
+    TYPE: "type",
   };
 
   /**
    * Defalt values
    */
   static defaults = {
-    type: undefined
+    type: undefined,
   };
 }
 

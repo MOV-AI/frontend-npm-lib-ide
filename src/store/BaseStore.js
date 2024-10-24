@@ -13,7 +13,7 @@ class BaseStore extends StorePluginManager {
       pattern,
       observer,
       docManager,
-      plugins
+      plugins,
     } = args;
 
     super(plugins);
@@ -24,7 +24,7 @@ class BaseStore extends StorePluginManager {
     this._scope = model.SCOPE;
     this._name = name || "Store";
     this._title = title || "Generic Store";
-    this.pattern = pattern || { Scope: this.scope, Name: "*"}
+    this.pattern = pattern || { Scope: this.scope, Name: "*" };
     this.observer = observer;
     this.docManager = docManager;
     this.protectedDocs = [];
@@ -66,7 +66,7 @@ class BaseStore extends StorePluginManager {
    */
   loadDoc(name) {
     return this.fetchDoc(name)
-      .then(file => {
+      .then((file) => {
         // get or create document
         const obj = this.getDoc(name) || this.newDoc(name).setIsNew(false);
 
@@ -78,7 +78,7 @@ class BaseStore extends StorePluginManager {
           .setDirty(false)
           .enableObservables(true);
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.status === 404) {
           return this.newDoc(name);
         }
@@ -194,11 +194,11 @@ class BaseStore extends StorePluginManager {
   getUpdateDoc() {
     const docType = this.scope;
     const event2actionMap = {
-      del: doc => this._onDelDoc(doc),
-      set: doc => this._onSetDoc(doc)
+      del: (doc) => this._onDelDoc(doc),
+      set: (doc) => this._onSetDoc(doc),
     };
 
-    return data => {
+    return (data) => {
       if (data.event in event2actionMap) {
         const docName = Object.keys(data.key[docType])[0];
         const docContent = Object.values(data.key[docType])[0];
@@ -210,9 +210,9 @@ class BaseStore extends StorePluginManager {
             {
               document: this.data.get(docName),
               documentName: docName,
-              documentType: docType
+              documentType: docType,
             },
-            data.event
+            data.event,
           );
         }
       }
@@ -228,7 +228,7 @@ class BaseStore extends StorePluginManager {
     const docType = this.scope;
 
     if (data?.value)
-      Object.values(data.value[docType]).forEach(doc => {
+      Object.values(data.value[docType]).forEach((doc) => {
         const name = doc.Label;
 
         // Check if is doc protected
@@ -268,9 +268,11 @@ class BaseStore extends StorePluginManager {
    */
   enableSubscriber() {
     this.subscriber = new Subscriber({
-      pattern: this.pattern
+      pattern: this.pattern,
     });
-    this.subscriber.subscribe(this.getUpdateDoc(), data => this.loadDocs(data));
+    this.subscriber.subscribe(this.getUpdateDoc(), (data) =>
+      this.loadDocs(data),
+    );
   }
 
   destroy() {

@@ -32,7 +32,7 @@ class Clipboard {
 }
 
 const KEYS = {
-  NODES_TO_COPY: "NodesToCopy"
+  NODES_TO_COPY: "NodesToCopy",
 };
 
 export default Clipboard;

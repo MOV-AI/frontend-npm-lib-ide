@@ -17,7 +17,7 @@ export const EXCLUDED_PATHS = ["functions", "consts", "classes"];
  * @param {string} str : String to be normalized
  * @returns {string} Normalized string
  */
-const _normalizeString = str => {
+const _normalizeString = (str) => {
   return str
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -44,11 +44,11 @@ const _searchInnerKeys = (result, value, allImports, key) => {
     _children = searchImports(value, allImports[key].modules);
   }
 
-  EXCLUDED_PATHS.forEach(x => {
+  EXCLUDED_PATHS.forEach((x) => {
     const array =
       x in allImports[key]
-        ? allImports[key][x].filter(elem =>
-            _normalizeString(elem).includes(value)
+        ? allImports[key][x].filter((elem) =>
+            _normalizeString(elem).includes(value),
           )
         : [];
     if (array.length > 0) {
@@ -82,19 +82,19 @@ export const searchMessages = (value, allMessages) => {
   else {
     let result = [];
     value = _normalizeString(value);
-    allMessages.forEach(elem => {
+    allMessages.forEach((elem) => {
       if (_normalizeString(elem.text).includes(value)) {
         result.push(elem);
       } else {
         // If has children
         if (elem.children !== undefined) {
-          const _children = elem.children.filter(el =>
-            _normalizeString(el.text).includes(value)
+          const _children = elem.children.filter((el) =>
+            _normalizeString(el.text).includes(value),
           );
           if (_children.length > 0) {
             result.push({
               text: elem.text,
-              children: _children
+              children: _children,
             });
           }
         }
@@ -122,7 +122,7 @@ export const searchImports = (value, allImports) => {
   // Has search value => Filter by value
   let result = {};
   value = _normalizeString(value);
-  Object.keys(allImports).forEach(key => {
+  Object.keys(allImports).forEach((key) => {
     if (_normalizeString(key).includes(value)) {
       result[key] = allImports[key];
     } else {

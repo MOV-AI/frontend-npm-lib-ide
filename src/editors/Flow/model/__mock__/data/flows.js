@@ -15,34 +15,34 @@ const flows = {
         EnvVar: { path: { Value: "/opt/movai" } },
         Visualization: {
           y: { Value: 0.01 },
-          x: { Value: 0.023333333333333334 }
+          x: { Value: 0.023333333333333334 },
         },
         Parameter: {
           camera: { Value: "back1", Type: "any" },
-          move_distance_to_car: { Value: "0.30", Type: "any" }
-        }
-      }
+          move_distance_to_car: { Value: "0.30", Type: "any" },
+        },
+      },
     },
     Container: {
       subflow: {
         ContainerLabel: "subflow",
         ContainerFlow: "tugbot_actuators",
         Visualization: [0.04133333333333333, 0.015466666666666667],
-        Parameter: { varA: { Value: "5", Type: "any" } }
-      }
+        Parameter: { varA: { Value: "5", Type: "any" } },
+      },
     },
     Links: {
       "71e3bc41-ddc0-42c0-b9f3-68b41cb1ebd3": {
         From: "start/start/start",
-        To: "align/trans/in"
+        To: "align/trans/in",
       },
       "910c8964-2375-4697-806c-fcffc88bb5b2": {
         From: "align/transFor/out",
-        To: "subflow__actuator_v2/trans_in/in"
-      }
+        To: "subflow__actuator_v2/trans_in/in",
+      },
     },
     Layers: { 0: { name: "layer1", on: true } },
-    Parameter: { var1: { Value: "movai", Description: "", Type: "any" } }
+    Parameter: { var1: { Value: "movai", Description: "", Type: "any" } },
   },
   test2: {
     Label: "test",
@@ -57,8 +57,8 @@ const flows = {
         NodeLayers: [],
         Visualization: {
           y: { Value: 0.02011501921062771 },
-          x: { Value: 0.022897170968381453 }
-        }
+          x: { Value: 0.022897170968381453 },
+        },
       },
       viewer: {
         Template: "actuator_client_test",
@@ -66,10 +66,10 @@ const flows = {
         NodeLayers: [],
         Visualization: {
           x: { Value: 0.033985346476236994 },
-          y: { Value: 0.021107220458984385 }
-        }
-      }
-    }
-  }
+          y: { Value: 0.021107220458984385 },
+        },
+      },
+    },
+  },
 };
 export default flows;

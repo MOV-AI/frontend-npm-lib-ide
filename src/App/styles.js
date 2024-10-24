@@ -1,12 +1,12 @@
 import { makeStyles } from "@material-ui/styles";
 
-export const appStyles = debugMode =>
-  makeStyles(theme => ({
+export const appStyles = (debugMode) =>
+  makeStyles((theme) => ({
     leftPanel: {
       border: debugMode ? "solid 5px red" : "",
       borderRight: debugMode ? "" : `1px solid ${theme.background}`,
       display: "flex",
-      position: "relative"
+      position: "relative",
     },
     mainGrid: { flexGrow: 1 },
     sidePanel: { height: "100%" },
@@ -14,7 +14,7 @@ export const appStyles = debugMode =>
     rightDrawer: {
       border: debugMode ? "solid 5px blue" : "",
       borderLeft: debugMode ? "" : `1px solid ${theme.background}`,
-      position: "relative"
+      position: "relative",
     },
-    bottomBar: { border: debugMode ? "solid 5px orange" : "", width: "100%" }
+    bottomBar: { border: debugMode ? "solid 5px orange" : "", width: "100%" },
   }));

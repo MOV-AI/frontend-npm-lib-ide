@@ -28,7 +28,10 @@ class DataTypeManager {
    * @param {DataType} DataType : DataType class
    */
   setDataType(DataType) {
-    const dataTypeInstance = new DataType({ theme: this.theme, stringOutput: this.stringOutput });
+    const dataTypeInstance = new DataType({
+      theme: this.theme,
+      stringOutput: this.stringOutput,
+    });
     this.dataTypes.set(dataTypeInstance.getKey(), dataTypeInstance);
   }
 

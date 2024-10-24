@@ -6,7 +6,7 @@ import { DEFAULT_EXPLORER_ROW_HEIGHT } from "../../../../../utils/Constants";
 
 import { virtualizedTreeStyles } from "./styles";
 
-const VirtualizedTree = props => {
+const VirtualizedTree = (props) => {
   const { itemData, rowRender, fixedHeight, fixedWidth } = props;
 
   // Style hook
@@ -23,7 +23,7 @@ const VirtualizedTree = props => {
    * @param {*} rowProps
    * @returns {JSX} To be rendered
    */
-  const defaultRow = rowProps => {
+  const defaultRow = (rowProps) => {
     const { index, style, data } = rowProps;
     return (
       <div className={classes.listItem} style={style}>
@@ -55,7 +55,7 @@ VirtualizedTree.propTypes = {
   itemData: PropTypes.array.isRequired,
   rowRender: PropTypes.func,
   fixedHeight: PropTypes.number,
-  fixedWidth: PropTypes.number
+  fixedWidth: PropTypes.number,
 };
 
 export default VirtualizedTree;

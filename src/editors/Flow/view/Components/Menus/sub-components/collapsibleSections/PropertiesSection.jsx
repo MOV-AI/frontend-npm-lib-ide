@@ -8,7 +8,7 @@ const PropertiesSection = ({
   editable,
   onChangeProperties,
   templateData,
-  nodeInstance
+  nodeInstance,
 }) => {
   const properties = useMemo(
     () => ({
@@ -16,25 +16,25 @@ const PropertiesSection = ({
         title: i18n.t("Persistent"),
         options: [
           { text: i18n.t("IsPersistent"), value: true },
-          { text: i18n.t("NotPersistent"), value: false }
-        ]
+          { text: i18n.t("NotPersistent"), value: false },
+        ],
       },
       remappable: {
         title: i18n.t("Remappable"),
         options: [
           { text: i18n.t("IsRemappable"), value: true },
-          { text: i18n.t("NotRemappable"), value: false }
-        ]
+          { text: i18n.t("NotRemappable"), value: false },
+        ],
       },
       launch: {
         title: i18n.t("Launch"),
         options: [
           { text: i18n.t("ToLaunch"), value: true },
-          { text: i18n.t("NotToLaunch"), value: false }
-        ]
-      }
+          { text: i18n.t("NotToLaunch"), value: false },
+        ],
+      },
     }),
-    []
+    [],
   );
 
   //========================================================================================
@@ -61,11 +61,11 @@ PropertiesSection.propTypes = {
   templateData: PropTypes.object.isRequired,
   nodeInstance: PropTypes.object.isRequired,
   onChangeProperties: PropTypes.func.isRequired,
-  editable: PropTypes.bool
+  editable: PropTypes.bool,
 };
 
 PropertiesSection.defaultProps = {
-  editable: false
+  editable: false,
 };
 
 export default PropertiesSection;

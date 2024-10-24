@@ -1,6 +1,6 @@
 const symbols = {
   timer: Symbol(),
-  enabled: Symbol()
+  enabled: Symbol(),
 };
 
 /**
@@ -30,7 +30,7 @@ class Observable {
 
         // default
         return Reflect.set(...arguments);
-      }
+      },
     });
   }
 

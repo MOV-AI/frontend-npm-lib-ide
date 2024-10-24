@@ -17,7 +17,7 @@ import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 
 export const BOOKMARKS_PROFILE = {
   name: "BookmarkManager",
-  title: "Bookmark Manager"
+  title: "Bookmark Manager",
 };
 
 //========================================================================================
@@ -36,7 +36,7 @@ const getIcon = () => {
     AccessibleForwardIcon,
     AddIcCallIcon,
     AirplanemodeActiveIcon,
-    AssignmentIndIcon
+    AssignmentIndIcon,
   ];
 
   const Icon = icons[Math.floor(Math.random() * icons.length)];
@@ -49,7 +49,7 @@ const getIcon = () => {
  *                                                                                      */
 //========================================================================================
 
-const BookmarkManager = props => {
+const BookmarkManager = (props) => {
   const theme = useTheme();
   const { call } = props;
 
@@ -58,14 +58,14 @@ const BookmarkManager = props => {
    *    Always set newly added menu as active and make it visible (open drawer if necessary)
    * @param {*} position : Either "leftDrawer" or "rightDrawer"
    */
-  const addBookmark = position => () => {
+  const addBookmark = (position) => () => {
     if (!position) return;
     const id = Utils.randomId();
     const bookmark = {
       icon: getIcon(),
       name: id,
       title: `Random ${id} Bookmark`,
-      view: <h2>{id}</h2>
+      view: <h2>{id}</h2>,
     };
     call(
       position,
@@ -73,7 +73,7 @@ const BookmarkManager = props => {
       bookmark,
       id,
       true,
-      true
+      true,
     );
   };
 
@@ -112,6 +112,6 @@ export const getTabData = () => {
     name: BOOKMARKS_PROFILE.name,
     tabTitle: BOOKMARKS_PROFILE.title,
     extension: "",
-    content: <BookmarkManager />
+    content: <BookmarkManager />,
   };
 };

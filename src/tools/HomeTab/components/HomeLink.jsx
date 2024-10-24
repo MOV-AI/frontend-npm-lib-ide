@@ -15,15 +15,15 @@ function HomeLink(props) {
 
   const handleOpenDocument = useCallback(
     () => openRecentDocument(doc),
-    [doc, openRecentDocument]
+    [doc, openRecentDocument],
   );
 
   const handleDeleteDocument = useCallback(
-    e => {
+    (e) => {
       removeRecentDocument(id);
       e.stopPropagation();
     },
-    [id, removeRecentDocument]
+    [id, removeRecentDocument],
   );
 
   return (
