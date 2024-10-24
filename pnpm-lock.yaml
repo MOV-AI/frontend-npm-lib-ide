@@ -189,12 +189,18 @@ importers:
       jest-environment-jsdom:
         specifier: ^29.0.3
         version: 29.7.0(canvas@2.11.2)
+      prettier:
+        specifier: 3.3.3
+        version: 3.3.3
       react:
         specifier: ^18.2.0
         version: 18.2.0
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      sort-package-json:
+        specifier: 2.10.1
+        version: 2.10.1
       storybook-addon-mock:
         specifier: ^2.4.1
         version: 2.4.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -209,7 +215,7 @@ importers:
         version: 28.0.8(@babel/core@7.23.9)(@jest/types@28.1.3)(babel-jest@28.1.3(@babel/core@7.23.9))(jest@28.1.3(@types/node@20.11.16))(typescript@5.3.3)
       url-loader:
         specifier: ^4.1.1
-        version: 4.1.1(file-loader@6.2.0(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1))))(webpack@5.90.1(webpack-cli@4.10.0(webpack@5.90.1)))
+        version: 4.1.1(file-loader@6.2.0(webpack@5.90.1(webpack-cli@4.10.0(webpack@5.90.1))))(webpack@5.90.1(webpack-cli@4.10.0(webpack@5.90.1)))
       webpack:
         specifier: ^5.53.0
         version: 5.90.1(webpack-cli@4.10.0(webpack@5.90.1))
@@ -3430,6 +3436,10 @@ packages:
   detab@2.0.4:
     resolution: {integrity: sha512-8zdsQA5bIkoRECvCrNKPla84lyoR7DSAyf7p0YgXzBO9PDJx8KntPUay7NS6yp+KdxdVtiE5SpHKtbp2ZQyA9g==}
 
+  detect-indent@7.0.1:
+    resolution: {integrity: sha512-Mc7QhQ8s+cLrnUfU/Ji94vG/r8M26m8f++vyres4ZoojaRDpZ1eSIh/EpzLNwlWuvzSZ3UbDFspjFvTDXe6e/g==}
+    engines: {node: '>=12.20'}
+
   detect-libc@2.0.2:
     resolution: {integrity: sha512-UX6sGumvvqSaXgdKGUsgZWqcUyIXZ/vZTrlRT/iobiKhGL0zL4d3osHj3uqllWJK+i+sixDS/3COVEOFbupFyw==}
     engines: {node: '>=8'}
@@ -3437,6 +3447,10 @@ packages:
   detect-newline@3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
     engines: {node: '>=8'}
+
+  detect-newline@4.0.1:
+    resolution: {integrity: sha512-qE3Veg1YXzGHQhlA6jzebZN2qVf6NX+A7m7qlhCGG30dJixrAQhYOsJjsnBjJkCSmuOPpCk30145fr8FV0bzog==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   detect-package-manager@2.0.1:
     resolution: {integrity: sha512-j/lJHyoLlWi6G1LDdLgvUtz60Zo5GEj+sVYtTVXnYLDPuzgC3llMxonXym9zIwhhUII8vjdw0LXxavpLqTbl1A==}
@@ -4029,6 +4043,10 @@ packages:
     resolution: {integrity: sha512-F5aQMywwJ2n85s4hJPTT9RPxGmubonuB10MNYo17/xph174n2MIR33HRguhzVag10O/npM7SPk73LMZNP+FaWw==}
     engines: {node: '>=0.10.0'}
 
+  get-stdin@9.0.0:
+    resolution: {integrity: sha512-dVKBjfWisLAicarI2Sf+JuBE/DghV4UzNAVe9yhEJuzeREd3JhOTE9cUaJTeSa77fsbQUK3pcOpJfM59+VKZaA==}
+    engines: {node: '>=12'}
+
   get-stream@4.1.0:
     resolution: {integrity: sha512-GMat4EJ5161kIy2HevLlr4luNjBgvmj413KaQA7jt4V8B4RDsfpHk7WQ9GVqfYyyx8OS/L66Kox+rJRNklLK7w==}
     engines: {node: '>=6'}
@@ -4044,6 +4062,9 @@ packages:
   get-value@2.0.6:
     resolution: {integrity: sha512-Ln0UQDlxH1BapMu3GPtf7CuYNwRZf2gwCuPqbyG6pB8WfmFpzqcy4xtAaAMUhnNqjMKTiCPZG2oMT3YSx8U2NA==}
     engines: {node: '>=0.10.0'}
+
+  git-hooks-list@3.1.0:
+    resolution: {integrity: sha512-LF8VeHeR7v+wAbXqfgRlTSX/1BJR9Q1vEMR8JAz1cEg6GX07+zyj3sAdDvYjj/xnlIfVuGgj4qBei1K3hKH+PA==}
 
   github-slugger@1.5.0:
     resolution: {integrity: sha512-wIh+gKBI9Nshz2o46B0B3f5k/W+WI9ZAv6y5Dn5WJ5SK1t0TnDimB4WE5rmTD05ZAIn8HALCZVmCsvj0w0v0lw==}
@@ -4092,6 +4113,10 @@ packages:
   globby@11.1.0:
     resolution: {integrity: sha512-jhIXaOzy1sb8IyocaruWSn1TjmnBVs8Ayhcy83rmxNJ8q2uWKCAj3CnJY+KpGSXCueAPc0i05kVvVKtP1t9S3g==}
     engines: {node: '>=10'}
+
+  globby@13.2.2:
+    resolution: {integrity: sha512-Y1zNGV+pzQdh7H39l9zgB4PJqjRNqydvdYCDG4HFXM4XuvSaQQlEc91IU1yALL8gUTDomgBAfz3XJdmUS+oo0w==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   globby@9.2.0:
     resolution: {integrity: sha512-ollPHROa5mcxDEkwg6bPt3QbEf4pDQSNtd6JPL1YvOvAo/7/0VAm9TccUeoTmarjPw4pfUthSCqcyfNB1I3ZSg==}
@@ -4544,6 +4569,10 @@ packages:
   is-plain-obj@3.0.0:
     resolution: {integrity: sha512-gwsOE28k+23GP1B6vFl1oVh/WOzmawBrKwo5Ev6wMKzPkaXaCDIQKzLnvsA42DRlbVTWorkgTKIviAKCWkfUwA==}
     engines: {node: '>=10'}
+
+  is-plain-obj@4.1.0:
+    resolution: {integrity: sha512-+Pgi+vMuUNkJyExiMBt5IlFoMyKnr5zhJ4Uspz58WOhBF5QoIZkFyNHIbBAtHwzVAgk5RtndVNsDRN61/mmDqg==}
+    engines: {node: '>=12'}
 
   is-plain-object@2.0.4:
     resolution: {integrity: sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og==}
@@ -5824,6 +5853,11 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
+  prettier@3.3.3:
+    resolution: {integrity: sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==}
+    engines: {node: '>=14'}
+    hasBin: true
+
   pretty-error@2.1.2:
     resolution: {integrity: sha512-EY5oDzmsX5wvuynAByrmY0P0hcp+QpnAKbJng2A2MPjVKXCxrDSUkzghVJ4ZGPIv+JC4gX8fPUWscC0RtjsWGw==}
 
@@ -6450,6 +6484,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  semver@7.6.3:
+    resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   send@0.18.0:
     resolution: {integrity: sha512-qqWzuOjSFOuqPjFe4NOsMLafToQQwBSOEpS+FwEt3A2V3vKubTquT3vmLTQpFgMXp8AlFWFuP1qKaJZOtPpVXg==}
     engines: {node: '>= 0.8.0'}
@@ -6542,6 +6581,10 @@ packages:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
 
+  slash@4.0.0:
+    resolution: {integrity: sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==}
+    engines: {node: '>=12'}
+
   snapdragon-node@2.1.1:
     resolution: {integrity: sha512-O27l4xaMYt/RSQ5TR3vpWCAB5Kb/czIcqUFOM/C4fYcLnbZUc1PkjTAMjof2pBWaSTwOUd6qUHcFGVGj7aIwnw==}
     engines: {node: '>=0.10.0'}
@@ -6564,6 +6607,13 @@ packages:
   socket.io@4.7.4:
     resolution: {integrity: sha512-DcotgfP1Zg9iP/dH9zvAQcWrE0TtbMVwXmlV4T4mqsvY+gw+LqUGPfx2AoVyRk0FLME+GQhufDMyacFmw7ksqw==}
     engines: {node: '>=10.2.0'}
+
+  sort-object-keys@1.1.3:
+    resolution: {integrity: sha512-855pvK+VkU7PaKYPc+Jjnmt4EzejQHyhhF33q31qG8x7maDzkeFhAAThdCYay11CISO+qAMwjOBP+fPZe0IPyg==}
+
+  sort-package-json@2.10.1:
+    resolution: {integrity: sha512-d76wfhgUuGypKqY72Unm5LFnMpACbdxXsLPcL27pOsSrmVqH3PztFp1uq+Z22suk15h7vXmTesuh2aEjdCqb5w==}
+    hasBin: true
 
   source-list-map@2.0.1:
     resolution: {integrity: sha512-qnQ7gVMxGNxsiL4lEuJwe/To8UnK7fAnmbGEEH8RpLouuKbeEm0lhbQVFIrNSuB+G7tVrAlVsZgETT5nljf+Iw==}
@@ -9715,7 +9765,7 @@ snapshots:
       style-loader: 1.3.0(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
       terser-webpack-plugin: 4.2.3(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
       ts-dedent: 2.2.0
-      url-loader: 4.1.1(file-loader@6.2.0(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1))))(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
+      url-loader: 4.1.1(file-loader@6.2.0(webpack@5.90.1(webpack-cli@4.10.0(webpack@5.90.1))))(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
       util-deprecate: 1.0.2
       webpack: 4.47.0(webpack-cli@4.10.0(webpack@5.90.1))
       webpack-dev-middleware: 3.7.3(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
@@ -10132,7 +10182,7 @@ snapshots:
       core-js: 3.35.1
       css-loader: 3.6.0(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
       express: 4.18.2
-      file-loader: 6.2.0(webpack@5.90.1(webpack-cli@4.10.0(webpack@5.90.1)))
+      file-loader: 6.2.0(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
       find-up: 5.0.0
       fs-extra: 9.1.0
       html-webpack-plugin: 4.5.2(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
@@ -10147,7 +10197,7 @@ snapshots:
       telejson: 6.0.8
       terser-webpack-plugin: 4.2.3(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
       ts-dedent: 2.2.0
-      url-loader: 4.1.1(file-loader@6.2.0(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1))))(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
+      url-loader: 4.1.1(file-loader@6.2.0(webpack@5.90.1(webpack-cli@4.10.0(webpack@5.90.1))))(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
       util-deprecate: 1.0.2
       webpack: 4.47.0(webpack-cli@4.10.0(webpack@5.90.1))
       webpack-dev-middleware: 3.7.3(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
@@ -12351,9 +12401,13 @@ snapshots:
     dependencies:
       repeat-string: 1.6.1
 
+  detect-indent@7.0.1: {}
+
   detect-libc@2.0.2: {}
 
   detect-newline@3.1.0: {}
+
+  detect-newline@4.0.1: {}
 
   detect-package-manager@2.0.1:
     dependencies:
@@ -13187,6 +13241,8 @@ snapshots:
   get-stdin@4.0.1:
     optional: true
 
+  get-stdin@9.0.0: {}
+
   get-stream@4.1.0:
     dependencies:
       pump: 3.0.0
@@ -13199,6 +13255,8 @@ snapshots:
       get-intrinsic: 1.2.2
 
   get-value@2.0.6: {}
+
+  git-hooks-list@3.1.0: {}
 
   github-slugger@1.5.0: {}
 
@@ -13256,6 +13314,14 @@ snapshots:
       ignore: 5.3.1
       merge2: 1.4.1
       slash: 3.0.0
+
+  globby@13.2.2:
+    dependencies:
+      dir-glob: 3.0.1
+      fast-glob: 3.3.2
+      ignore: 5.3.1
+      merge2: 1.4.1
+      slash: 4.0.0
 
   globby@9.2.0:
     dependencies:
@@ -13743,6 +13809,8 @@ snapshots:
   is-plain-obj@2.1.0: {}
 
   is-plain-obj@3.0.0: {}
+
+  is-plain-obj@4.1.0: {}
 
   is-plain-object@2.0.4:
     dependencies:
@@ -15337,6 +15405,8 @@ snapshots:
 
   prettier@2.3.0: {}
 
+  prettier@3.3.3: {}
+
   pretty-error@2.1.2:
     dependencies:
       lodash: 4.17.21
@@ -16136,6 +16206,8 @@ snapshots:
     dependencies:
       lru-cache: 6.0.0
 
+  semver@7.6.3: {}
+
   send@0.18.0:
     dependencies:
       debug: 2.6.9
@@ -16255,6 +16327,8 @@ snapshots:
 
   slash@3.0.0: {}
 
+  slash@4.0.0: {}
+
   snapdragon-node@2.1.1:
     dependencies:
       define-property: 1.0.0
@@ -16305,6 +16379,19 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+
+  sort-object-keys@1.1.3: {}
+
+  sort-package-json@2.10.1:
+    dependencies:
+      detect-indent: 7.0.1
+      detect-newline: 4.0.1
+      get-stdin: 9.0.0
+      git-hooks-list: 3.1.0
+      globby: 13.2.2
+      is-plain-obj: 4.1.0
+      semver: 7.6.3
+      sort-object-keys: 1.1.3
 
   source-list-map@2.0.1: {}
 
@@ -16968,7 +17055,7 @@ snapshots:
 
   urix@0.1.0: {}
 
-  url-loader@4.1.1(file-loader@6.2.0(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1))))(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1))):
+  url-loader@4.1.1(file-loader@6.2.0(webpack@5.90.1(webpack-cli@4.10.0(webpack@5.90.1))))(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1))):
     dependencies:
       loader-utils: 2.0.4
       mime-types: 2.1.35
@@ -16977,14 +17064,14 @@ snapshots:
     optionalDependencies:
       file-loader: 6.2.0(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
 
-  url-loader@4.1.1(file-loader@6.2.0(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1))))(webpack@5.90.1(webpack-cli@4.10.0(webpack@5.90.1))):
+  url-loader@4.1.1(file-loader@6.2.0(webpack@5.90.1(webpack-cli@4.10.0(webpack@5.90.1))))(webpack@5.90.1(webpack-cli@4.10.0(webpack@5.90.1))):
     dependencies:
       loader-utils: 2.0.4
       mime-types: 2.1.35
       schema-utils: 3.3.0
       webpack: 5.90.1(webpack-cli@4.10.0(webpack@5.90.1))
     optionalDependencies:
-      file-loader: 6.2.0(webpack@5.90.1(webpack-cli@4.10.0(webpack@5.90.1)))
+      file-loader: 6.2.0(webpack@4.47.0(webpack-cli@4.10.0(webpack@5.90.1)))
 
   url-parse@1.5.10:
     dependencies:
