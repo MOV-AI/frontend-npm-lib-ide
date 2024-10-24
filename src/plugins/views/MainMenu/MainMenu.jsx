@@ -5,7 +5,7 @@ import {
   VerticalBar,
   ProfileMenu,
   ContextMenu,
-  HomeMenuPopper
+  HomeMenuPopper,
 } from "@mov-ai/mov-fe-lib-react";
 import TextSnippetIcon from "@material-ui/icons/Description";
 import AddBoxIcon from "@material-ui/icons/AddBox";
@@ -22,7 +22,7 @@ import movaiIcon from "../../../Branding/movai-logo-transparent.png";
 
 import { mainMenuStyles } from "./styles";
 
-const MainMenu = props => {
+const MainMenu = (props) => {
   const { call } = props;
   // State hooks
   const [docTypes, setDocTypes] = useState([]);
@@ -34,7 +34,7 @@ const MainMenu = props => {
     isMenuOpen,
     onCloseMenu,
     handleLogOut,
-    handleToggleTheme
+    handleToggleTheme,
   } = useContext(MainContext);
   // Refs
   const MENUS = [
@@ -47,11 +47,11 @@ const MainMenu = props => {
         // Toggle left drawer
         call(
           HOSTS.LEFT_DRAWER.NAME,
-          HOSTS.LEFT_DRAWER.CALL.ACTIVATE_PLUGIN_VIEW
+          HOSTS.LEFT_DRAWER.CALL.ACTIVATE_PLUGIN_VIEW,
         );
-      }
+      },
     },
-    ...getMainMenuTools().map(tool => {
+    ...getMainMenuTools().map((tool) => {
       return {
         name: tool.id,
         icon: getIconFn(tool.icon),
@@ -60,9 +60,9 @@ const MainMenu = props => {
         getOnClick: () => {
           // Open tool
           openTool(call, tool.profile.name);
-        }
+        },
       };
-    })
+    }),
   ];
 
   //========================================================================================
@@ -74,9 +74,9 @@ const MainMenu = props => {
   // To run when component is initiated
   useEffect(() => {
     call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.GET_DOC_TYPES).then(
-      _docTypes => {
+      (_docTypes) => {
         setDocTypes(_docTypes);
-      }
+      },
     );
   }, [call]);
 
@@ -108,35 +108,35 @@ const MainMenu = props => {
                   ></AddBoxIcon>
                 </Tooltip>
               }
-              menuList={docTypes.map(docType => ({
+              menuList={docTypes.map((docType) => ({
                 onClick: () =>
                   call(
                     PLUGINS.DOC_MANAGER.NAME,
                     PLUGINS.DOC_MANAGER.CALL.CREATE,
                     {
-                      scope: docType.scope
-                    }
-                  ).then(document => {
+                      scope: docType.scope,
+                    },
+                  ).then((document) => {
                     call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
                       id: document.getUrl(),
                       name: document.getName(),
                       scope: docType.scope,
-                      isNew: true
+                      isNew: true,
                     });
                   }),
                 element: docType.name || docType.scope,
                 icon: getIconByScope(docType.scope),
-                onClose: true
+                onClose: true,
               }))}
             />
           </>
         }
-        navigationList={MENUS.map(menu => (
+        navigationList={MENUS.map((menu) => (
           <Tooltip key={menu.name} title={menu.title} placement="right" arrow>
             <span>
               {menu.icon({
                 className: classes.icon,
-                onClick: () => menu.getOnClick()
+                onClick: () => menu.getOnClick(),
               })}
             </span>
           </Tooltip>
@@ -158,7 +158,7 @@ const MainMenu = props => {
             src={movaiIcon}
             className={classes.movaiIcon}
             alt="MOV.AI"
-          />
+          />,
         ]}
       ></VerticalBar>
     </div>
@@ -168,7 +168,7 @@ const MainMenu = props => {
 MainMenu.propTypes = {
   call: PropTypes.func.isRequired,
   emit: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
 };
 
 export default withViewPlugin(MainMenu);

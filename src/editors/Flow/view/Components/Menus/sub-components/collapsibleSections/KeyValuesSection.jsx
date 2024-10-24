@@ -7,7 +7,7 @@ import { EMPTY_MESSAGE } from "../../../../../../../utils/Constants";
 
 import { keyValueSectionStyles } from "../../styles";
 
-const KeyValuesSection = props => {
+const KeyValuesSection = (props) => {
   const {
     editable,
     deletable,
@@ -15,7 +15,7 @@ const KeyValuesSection = props => {
     handleTableKeyDelete,
     instanceValues,
     templateValues,
-    varName
+    varName,
   } = props;
   // State hooks
   const [keyValues, setKeyValues] = useState([]);
@@ -37,10 +37,10 @@ const KeyValuesSection = props => {
     const allValues = [
       ...new Set([
         ...Object.keys(templateValues),
-        ...Object.keys(instanceValues)
-      ])
+        ...Object.keys(instanceValues),
+      ]),
     ];
-    allValues.forEach(key => {
+    allValues.forEach((key) => {
       const value = instanceValues[key]?.value;
       const type = templateValues[key]?.type;
       const defaultValue = templateValues[key]?.value;
@@ -52,7 +52,7 @@ const KeyValuesSection = props => {
         description,
         defaultValue,
         invalid,
-        type
+        type,
       });
     });
 
@@ -102,12 +102,12 @@ KeyValuesSection.propTypes = {
   handleTableKeyDelete: PropTypes.func,
   templateValues: PropTypes.object,
   editable: PropTypes.bool,
-  deletable: PropTypes.bool
+  deletable: PropTypes.bool,
 };
 
 KeyValuesSection.defaultProps = {
   editable: false,
-  deletable: false
+  deletable: false,
 };
 
 export default KeyValuesSection;

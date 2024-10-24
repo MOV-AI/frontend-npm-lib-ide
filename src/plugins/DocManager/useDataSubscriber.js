@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import _isEqual from "lodash/isEqual";
 
-const useDataSubscriber = props => {
+const useDataSubscriber = (props) => {
   const { instance, keysToDisconsider, propsData = {} } = props;
   // State hooks
   const [data, setData] = React.useState(propsData);
@@ -24,12 +24,12 @@ const useDataSubscriber = props => {
     subscriberId = modelRef.subscribe((_, key, value) => {
       if (!keysToDisconsider || keysToDisconsider.includes(key)) return;
       // Update doc data to be used locally
-      setData(prevState => {
+      setData((prevState) => {
         if (_isEqual(prevState[key], value)) return prevState;
         return { ...prevState, [key]: value };
       });
       // Update details if necessary
-      setDetails(prevState => {
+      setDetails((prevState) => {
         const newDetails = modelRef.getDetails();
         if (prevState === newDetails) return prevState;
         return newDetails;
@@ -48,7 +48,7 @@ const useDataSubscriber = props => {
 useDataSubscriber.propTypes = {
   instance: PropTypes.object.isRequired,
   keysToDisconsider: PropTypes.array.isRequired,
-  propsData: PropTypes.object.isRequired
+  propsData: PropTypes.object.isRequired,
 };
 
 export default useDataSubscriber;

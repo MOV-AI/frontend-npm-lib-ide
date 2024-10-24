@@ -4,77 +4,77 @@ const sharedStyles = {
   paper: {
     margin: "10px",
     flex: 1,
-    borderRadius: "5px"
+    borderRadius: "5px",
   },
   columnTitle: {
     padding: "14px",
-    fontSize: "24px"
+    fontSize: "24px",
   },
   columnBody: {
     margin: "7px",
     display: "flex",
-    flexFlow: "column"
-  }
+    flexFlow: "column",
+  },
 };
 
-export const shortcutsStyles = makeStyles(theme => ({
+export const shortcutsStyles = makeStyles((theme) => ({
   root: {
     height: "100%",
     width: "100%",
     display: "flex",
     overflow: "auto",
     flexDirection: "column",
-    backgroundColor: theme.robotDetails?.backgroundColor
+    backgroundColor: theme.robotDetails?.backgroundColor,
   },
   body: {
     flex: "1 1 auto",
     display: "flex",
     padding: "0 5px",
-    marginTop: "15px"
+    marginTop: "15px",
   },
   smallColumn: {
     flex: "0 0 30%",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   bigColumn: {
     flex: "0 0 70%",
     display: "flex",
-    flexDirection: "column"
-  }
+    flexDirection: "column",
+  },
 }));
 
-export const shortcutsListStyles = makeStyles(_theme => ({
+export const shortcutsListStyles = makeStyles((_theme) => ({
   ...sharedStyles,
   listItem: {
     padding: "20px 10px",
     borderBottom: "1px solid #666",
     borderRadius: "3px",
     "&.activeItem": {
-      backgroundColor: "rgba(54,181,230, 0.4)"
-    }
+      backgroundColor: "rgba(54,181,230, 0.4)",
+    },
   },
   listContent: {
     display: "inline-flex",
     width: "100%",
     justifyContent: "space-between",
     "& > MuiSvgIcon-root": {
-      fontSize: "26px"
-    }
-  }
+      fontSize: "26px",
+    },
+  },
 }));
 
-export const shortcutsTableStyles = makeStyles(_theme => ({
+export const shortcutsTableStyles = makeStyles((_theme) => ({
   ...sharedStyles,
   columnBody: {
     ...sharedStyles.columnBody,
     "& .MuiToolbar-root": {
-      paddingLeft: "0px"
-    }
+      paddingLeft: "0px",
+    },
   },
   description: {
     fontSize: "20px",
     fontStyle: "italic",
-    padding: "0 15px"
-  }
+    padding: "0 15px",
+  },
 }));

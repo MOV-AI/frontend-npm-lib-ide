@@ -7,7 +7,7 @@ class CollapsableItem {
     text,
     isExpanded = true,
     parent = null,
-    onToggleCollapsePorts = () => defaultFunction("onToggleCollapsePorts")
+    onToggleCollapsePorts = () => defaultFunction("onToggleCollapsePorts"),
   }) {
     this.text = text;
     this.parent = parent;
@@ -99,7 +99,7 @@ class CollapsableItem {
       .attr("class", "children-container");
     if (this.isExpanded) {
       // Add children
-      this.children.forEach(child => {
+      this.children.forEach((child) => {
         this._childrenContainer.append(() => {
           return child.el;
         });
@@ -116,7 +116,7 @@ class CollapsableItem {
    */
   collapse() {
     // Remove belong line
-    this.children.forEach(child => {
+    this.children.forEach((child) => {
       if (child.removeBelongLine) child.removeBelongLine();
     });
     // Remove children container
@@ -138,7 +138,7 @@ class CollapsableItem {
   updateBelongLines(children) {
     // Update belong lines
     if (!children) return;
-    children.forEach(child => {
+    children.forEach((child) => {
       if (child.updateBelongLines) child.updateBelongLines();
       this.updateBelongLines(child.children);
     });

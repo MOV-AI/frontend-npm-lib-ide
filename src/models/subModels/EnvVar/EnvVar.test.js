@@ -13,7 +13,7 @@ test("Serialize to DB", () => {
   const data = {
     name: "param1",
     value: "/opt/movai",
-    description: "test param1"
+    description: "test param1",
   };
   envvar.setData(data);
 
@@ -24,13 +24,13 @@ test("Serialize to DB", () => {
 
 test("Serialize OF db", () => {
   const content = {
-    envvar1: { Value: "/opt/movai", Description: "test envvar1" }
+    envvar1: { Value: "/opt/movai", Description: "test envvar1" },
   };
 
   const expected = {
     name: "envvar1",
     value: content.envvar1.Value,
-    description: content.envvar1.Description
+    description: content.envvar1.Description,
   };
 
   const data = EnvVar.serializeOfDB(content);

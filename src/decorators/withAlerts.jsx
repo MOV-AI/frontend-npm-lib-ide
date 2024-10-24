@@ -7,7 +7,7 @@ import { PLUGINS } from "../utils/Constants";
  * @param {*} Component
  * @returns
  */
-const withAlerts = Component => {
+const withAlerts = (Component) => {
   const RefComponent = getRefComponent(Component);
 
   return (props, ref) => {
@@ -18,7 +18,7 @@ const withAlerts = Component => {
      * Create snackbar alert
      * @param {{title: String, message: String, location: String, severity: String}} alertData
      */
-    const alert = options => {
+    const alert = (options) => {
       call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, options);
     };
 
@@ -31,14 +31,14 @@ const withAlerts = Component => {
       message,
       onSubmit,
       onClose,
-      submitText
+      submitText,
     }) => {
       call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.CONFIRMATION, {
         title,
         message,
         onSubmit,
         onClose,
-        submitText
+        submitText,
       });
     };
 

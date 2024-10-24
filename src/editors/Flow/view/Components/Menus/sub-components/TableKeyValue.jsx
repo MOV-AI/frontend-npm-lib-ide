@@ -11,7 +11,7 @@ import { tableKeyValueStyles } from "../styles";
  * List to show key and input with the value
  * @param {array} list { key: "bla", value: "bla", defaultValue: "place" }
  */
-const TableKeyValue = props => {
+const TableKeyValue = (props) => {
   const { list, allowSearch, allowEdit, allowDelete } = props;
   const [searchValue, setSearchValue] = useState("");
   const classes = tableKeyValueStyles();
@@ -20,7 +20,7 @@ const TableKeyValue = props => {
     <Typography component="div" className={classes.root}>
       {allowSearch && (
         <div className={classes.searchHolder}>
-          <Search onSearch={value => setSearchValue(value)}></Search>
+          <Search onSearch={(value) => setSearchValue(value)}></Search>
         </div>
       )}
       {filter(searchValue, list)
@@ -30,7 +30,7 @@ const TableKeyValue = props => {
             data-testid="section_key-value-row"
             {...props}
             key={`key-value-row_${convertToValidString(
-              item.key
+              item.key,
             )}_${convertToValidString(item.value)}`}
             item={item}
             allowEdit={!item.invalid && allowEdit}
@@ -44,12 +44,12 @@ const TableKeyValue = props => {
 TableKeyValue.propTypes = {
   list: PropTypes.array.isRequired, //[{ key: "bla", value: "bla", defaultValue: "place" }]
   allowSearch: PropTypes.bool,
-  allowDelete: PropTypes.bool
+  allowDelete: PropTypes.bool,
 };
 
 TableKeyValue.defaultProps = {
   allowSearch: false,
-  allowDelete: false
+  allowDelete: false,
 };
 
 export default TableKeyValue;

@@ -104,7 +104,7 @@ class PortType extends Model {
       name: this.getName(),
       message: this.getMessage(),
       callback: this.getCallback(),
-      parameters: this.getParameters()
+      parameters: this.getParameters(),
     };
   }
 
@@ -120,7 +120,7 @@ class PortType extends Model {
     return {
       Message: message,
       Parameter: parameters,
-      ...(callback ? { Callback: callback } : {})
+      ...(callback ? { Callback: callback } : {}),
     };
   }
 
@@ -136,7 +136,7 @@ class PortType extends Model {
     const {
       Message: message,
       Callback: callback,
-      Parameter: parameters
+      Parameter: parameters,
     } = content;
 
     return { name, message, callback, parameters };

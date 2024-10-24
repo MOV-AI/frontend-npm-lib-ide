@@ -34,20 +34,20 @@ function CloseSquare(props) {
   );
 }
 
-const StyledTreeItem = withStyles(theme => ({
+const StyledTreeItem = withStyles((theme) => ({
   iconContainer: {
     "& .close": {
-      opacity: 0.3
-    }
+      opacity: 0.3,
+    },
   },
   group: {
     marginLeft: 12,
     paddingLeft: 12,
-    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`
-  }
-}))(props => <TreeItem {...props} />);
+    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+  },
+}))((props) => <TreeItem {...props} />);
 
-const MaterialTree = props => {
+const MaterialTree = (props) => {
   // Props
   const { data, multiSelect, onNodeSelect, onSelectItem } = props;
 
@@ -92,7 +92,7 @@ const MaterialTree = props => {
    * @returns {ReactElement} Rendered Tree
    */
   const recursiveArrayTree = (array, id) => {
-    return array.map(elem => {
+    return array.map((elem) => {
       const elementId = id ? `${id}/${elem.text}` : elem.text;
 
       return elem.children === undefined ? (
@@ -125,7 +125,7 @@ const MaterialTree = props => {
   const recursiveObjectTree = (obj, id) => {
     return Object.keys(obj)
       .sort()
-      .map(key => {
+      .map((key) => {
         const elementId = id ? `${id}.${key}` : key;
         return (
           <StyledTreeItem
@@ -135,7 +135,7 @@ const MaterialTree = props => {
             label={key}
             onClick={() => onSelectItem(key, id || key)}
           >
-            {Object.keys(obj[key]).map(innerKey => {
+            {Object.keys(obj[key]).map((innerKey) => {
               return obj[key][innerKey].length > 0 ? (
                 <StyledTreeItem
                   data-testid="input_select-tree-item"
@@ -144,7 +144,7 @@ const MaterialTree = props => {
                   label={innerKey}
                   onClick={() => onSelectItem(key, id || key)}
                 >
-                  {obj[key][innerKey].map(elem => {
+                  {obj[key][innerKey].map((elem) => {
                     return (
                       <StyledTreeItem
                         data-testid="input_select-tree-item"
@@ -187,14 +187,14 @@ MaterialTree.propTypes = {
   data: PropTypes.object,
   onNodeSelect: PropTypes.func,
   onSelectItem: PropTypes.func,
-  multiSelect: PropTypes.bool
+  multiSelect: PropTypes.bool,
 };
 
 MaterialTree.defaultProps = {
   data: {},
   onSelectItem: (elem, path) => console.log(elem, path),
   onNodeSelect: (elem, path) => console.log(elem, path),
-  multiSelect: false
+  multiSelect: false,
 };
 
 //The function returns true when the compared props equal, preventing the component from re-rendering

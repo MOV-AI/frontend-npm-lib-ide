@@ -7,7 +7,7 @@ const acceptsAny = ["movai_msgs/Any"];
  * @param {string} msgB message type
  */
 const checkAny = (msgA, msgB) => {
-  return [msgA, msgB].some(msg => acceptsAny.includes(msg));
+  return [msgA, msgB].some((msg) => acceptsAny.includes(msg));
 };
 
 /**
@@ -38,9 +38,9 @@ const validType = (typeA, typeB) => {
 const isLinkeable = (dataA, dataB) => {
   const rules = [
     (a, b) => validMessage(a.message, b.message),
-    (a, b) => validType(a.type, b.type)
+    (a, b) => validType(a.type, b.type),
   ];
-  return rules.every(fn => fn(dataA, dataB));
+  return rules.every((fn) => fn(dataA, dataB));
 };
 
 export { isLinkeable };

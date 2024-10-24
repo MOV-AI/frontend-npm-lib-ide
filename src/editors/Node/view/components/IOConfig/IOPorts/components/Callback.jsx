@@ -8,7 +8,7 @@ import { Edit, AddBox } from "@material-ui/icons";
 import { SCOPES } from "../../../../../../../utils/Constants";
 import { callbackStyles } from "./styles";
 
-const Callback = props => {
+const Callback = (props) => {
   // Props
   const {
     id,
@@ -19,7 +19,7 @@ const Callback = props => {
     protectedCallbacks,
     handleNewCallback,
     handleOpenCallback,
-    handleOpenSelectScopeModal
+    handleOpenSelectScopeModal,
   } = props;
   // Hooks
   const classes = callbackStyles();
@@ -39,10 +39,10 @@ const Callback = props => {
         message,
         selectedIoPort: ioPort,
         selected: callback,
-        scopeList: [SCOPES.CALLBACK]
+        scopeList: [SCOPES.CALLBACK],
       },
       portName,
-      ioPort
+      ioPort,
     );
   }, [callback, handleOpenSelectScopeModal, ioPort, message, portName]);
 

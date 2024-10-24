@@ -27,10 +27,10 @@ export default class PluginManagerIDE {
     }
     await this.manager.activatePlugin(pluginName);
     // Iterate through registered topics and add newly installed plugin to list
-    Object.values(this.topics).forEach(pluginTopics => {
+    Object.values(this.topics).forEach((pluginTopics) => {
       const _plugin = pluginTopics.plugin;
       const _topics = pluginTopics.topics;
-      Object.keys(_topics).forEach(topicName => {
+      Object.keys(_topics).forEach((topicName) => {
         _plugin.on(pluginName, topicName, _topics[topicName]);
       });
     });

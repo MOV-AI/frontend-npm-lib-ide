@@ -6,7 +6,7 @@ import Factory from "../../Components/Nodes/Factory";
 import {
   FLOW_VIEW_MODE,
   CANVAS_LIMITS,
-  MAX_MOVING_PIXELS
+  MAX_MOVING_PIXELS,
 } from "../../Constants/constants";
 import { EVT_NAMES } from "../../events";
 import TemporaryLink from "../Links/TemporaryLink";
@@ -172,7 +172,7 @@ class Canvas {
       //.style("background-color", classes.flowEditor.interfaceColor)
       .attr(
         "class",
-        `${FlowModel.CLASSNAME} ${classes.flowEditor.interfaceColor}`
+        `${FlowModel.CLASSNAME} ${classes.flowEditor.interfaceColor}`,
       )
       .call(this.zoomBehavior);
 
@@ -197,7 +197,7 @@ class Canvas {
       .scaleExtent([minScale, 4])
       .translateExtent([
         [pixMin, pixMin],
-        [pixMax, pixMax]
+        [pixMax, pixMax],
       ])
       .on("zoom", cameraUpdate);
   };
@@ -220,7 +220,7 @@ class Canvas {
       .brush()
       .extent([
         [pixMin, pixMin],
-        [pixMax, pixMax]
+        [pixMax, pixMax],
       ])
       .filter(() => d3.event.shiftKey)
       .keyModifiers(false)
@@ -239,24 +239,24 @@ class Canvas {
     const { k, x, y } = this.mInterface.canvas.currentZoom || {
       k: 1,
       x: 0,
-      y: 0
+      y: 0,
     };
     const minCorner = quad[0].map(
-      (v, i) => (v + Math.abs(i === 0 ? x : y)) / k
+      (v, i) => (v + Math.abs(i === 0 ? x : y)) / k,
     );
     const maxCorner = quad[1].map(
-      (v, i) => (v + Math.abs(i === 0 ? x : y)) / k
+      (v, i) => (v + Math.abs(i === 0 ? x : y)) / k,
     );
     const nodes = Array.from(this.mInterface?.graph?.nodes.values());
     const nodesInsideQuad = [];
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       const { xCenter, yCenter } = node.obj.center;
       const center = [xCenter, yCenter];
       const greaterThanMinCorner = center.every(
-        (xValue, i) => xValue > minCorner[i]
+        (xValue, i) => xValue > minCorner[i],
       );
       const lessThanMaxCorner = center.every(
-        (xValue, i) => xValue < maxCorner[i]
+        (xValue, i) => xValue < maxCorner[i],
       );
       if (greaterThanMinCorner && lessThanMaxCorner) {
         node.obj.selected = true;
@@ -264,24 +264,24 @@ class Canvas {
       }
     });
     const selectedSet = new Set(
-      [...this.mInterface.selectedNodes].concat(nodesInsideQuad)
+      [...this.mInterface.selectedNodes].concat(nodesInsideQuad),
     );
     if (selectedSet.size > 0) {
       this.setMode(
         EVT_NAMES.SELECT_NODE,
         {
           nodes: Array.from(selectedSet),
-          shiftKey: true
+          shiftKey: true,
         },
-        true
+        true,
       );
     }
   }
 
-  getEditionCursor = mode => {
+  getEditionCursor = (mode) => {
     const cursor = {
       [FLOW_VIEW_MODE.default]: "default",
-      [FLOW_VIEW_MODE.treeView]: "not-allowed"
+      [FLOW_VIEW_MODE.treeView]: "not-allowed",
     };
     return cursor[mode];
   };
@@ -301,7 +301,7 @@ class Canvas {
       .selectAll("marker")
       .data([
         { type: "selected", color: "red" },
-        { type: "normal", color: "white" }
+        { type: "normal", color: "white" },
       ])
       .enter()
       .append("svg:marker")
@@ -394,27 +394,27 @@ class Canvas {
     const events = [
       {
         event: "contextmenu",
-        fn: () => this.onContext()
+        fn: () => this.onContext(),
       },
       {
         event: "click",
-        fn: () => this.onClick()
+        fn: () => this.onClick(),
       },
       {
         event: "mousemove",
-        fn: () => this.onMouseMove()
+        fn: () => this.onMouseMove(),
       },
       {
         event: "keydown",
-        fn: () => this.onKeyDown()
+        fn: () => this.onKeyDown(),
       },
       {
         event: "keyup",
-        fn: () => this.onKeyUp()
-      }
+        fn: () => this.onKeyUp(),
+      },
     ];
 
-    events.forEach(item => {
+    events.forEach((item) => {
       svg.on(item.event, item.fn);
     });
 
@@ -425,13 +425,15 @@ class Canvas {
    * @private
    */
   addSubscribers = () => {
-    this.mode.addNode.onEnter.subscribe(node => this.onAddNodeEnter(node));
+    this.mode.addNode.onEnter.subscribe((node) => this.onAddNodeEnter(node));
     this.mode.addNode.onExit.subscribe(() => this.onAddNodeExit());
-    this.mode.addFlow.onEnter.subscribe(flow => this.onAddFlowEnter(flow));
+    this.mode.addFlow.onEnter.subscribe((flow) => this.onAddFlowEnter(flow));
     this.mode.addFlow.onExit.subscribe(() => this.onAddFlowExit());
-    this.mode.addState.onEnter.subscribe(state => this.onAddStateEnter(state));
+    this.mode.addState.onEnter.subscribe((state) =>
+      this.onAddStateEnter(state),
+    );
     this.mode.addState.onExit.subscribe(() => this.onAddStateExit());
-    this.mode.linking.onEnter.subscribe(data => this.onLinkingEnter(data));
+    this.mode.linking.onEnter.subscribe((data) => this.onLinkingEnter(data));
     this.mode.linking.onExit.subscribe(() => this.onLinkingExit());
     this.mode.default.onEnter.subscribe(() => this.delBrushCanvas());
 
@@ -452,8 +454,8 @@ class Canvas {
     // Returns false if x or y is not in boundaries
     return ![
       [x, ...CANVAS_LIMITS[0]],
-      [y, ...CANVAS_LIMITS[1]]
-    ].some(values => fn(...values));
+      [y, ...CANVAS_LIMITS[1]],
+    ].some((values) => fn(...values));
   };
 
   /**
@@ -509,7 +511,7 @@ class Canvas {
     this.setMode(
       EVT_NAMES.ON_CANVAS_CTX_MENU,
       { event: d3.event, position: { x: newPosition[0], y: newPosition[1] } },
-      true
+      true,
     );
   };
 
@@ -534,7 +536,7 @@ class Canvas {
     const fn = this.mode.current.onClick ?? {
       next: () => {
         this.setMode(EVT_NAMES.DEFAULT, null, true);
-      }
+      },
     };
     fn.next();
   };
@@ -548,9 +550,11 @@ class Canvas {
       { id: EVT_NAMES.ADD_NODE, fn: () => this.onAddNodeMouseMove() },
       { id: EVT_NAMES.ADD_FLOW, fn: () => this.onAddNodeMouseMove() },
       { id: EVT_NAMES.ADD_STATE, fn: () => this.onAddNodeMouseMove() },
-      { id: EVT_NAMES.LINKING, fn: () => this.onLinkingMouseMove() }
+      { id: EVT_NAMES.LINKING, fn: () => this.onLinkingMouseMove() },
     ];
-    fn.filter(obj => obj.id === this.mode.current.id).forEach(obj => obj.fn());
+    fn.filter((obj) => obj.id === this.mode.current.id).forEach((obj) =>
+      obj.fn(),
+    );
   };
 
   /**
@@ -571,7 +575,7 @@ class Canvas {
     }
   };
 
-  onAddNodeEnter = props => {
+  onAddNodeEnter = (props) => {
     const { templateId } = props;
     const modeEvent = this.mode.addNode;
     const node = { Template: templateId };
@@ -589,20 +593,20 @@ class Canvas {
     }
   };
 
-  onAddFlowEnter = props => {
+  onAddFlowEnter = (props) => {
     const { templateId } = props;
     const modeEvent = this.mode.addFlow;
     const node = {
       id: templateId,
       ContainerFlow: templateId,
-      ContainerLabel: templateId
+      ContainerLabel: templateId,
     };
     const factoryOutput = Factory.OUTPUT.TMP_CONTAINER;
 
     this.addNodeEnter({ modeEvent, node, factoryOutput });
   };
 
-  addNodeEnter = props => {
+  addNodeEnter = (props) => {
     const { modeEvent, node, factoryOutput } = props;
     this.el.focus();
 
@@ -614,8 +618,8 @@ class Canvas {
     Factory.create(this.docManager, factoryOutput, {
       canvas: this,
       node,
-      events: {}
-    }).then(obj => {
+      events: {},
+    }).then((obj) => {
       modeEvent.props.node = obj;
 
       this.append(() => {
@@ -650,7 +654,7 @@ class Canvas {
     // set new position on the temporary node
     this.mode.current.props?.node?.setPosition(
       newPosition[0] + offset.x,
-      newPosition[1] + offset.y
+      newPosition[1] + offset.y,
     );
   };
 
@@ -660,7 +664,7 @@ class Canvas {
     this.mode.linking.props.link = new TemporaryLink(
       this,
       src.position,
-      src.position
+      src.position,
     );
     this.append(() => {
       return this.mode.linking.props.link.el;
@@ -684,7 +688,7 @@ class Canvas {
       x: newPosition[0],
       y: newPosition[1],
       nodeSize: { height: 50, width: 50 },
-      data: {}
+      data: {},
     };
     this.mode.linking.props.link.update(null, trg);
   };
@@ -707,7 +711,7 @@ class Canvas {
         d3.zoomIdentity
           .translate(width / 2, height / 2)
           .translate(-SCALE * xCoordinate, -SCALE * yCoordinate)
-          .scale(SCALE)
+          .scale(SCALE),
       );
   };
 }

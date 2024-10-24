@@ -10,11 +10,11 @@ const AppSettings = {
   LOGO: Logo,
   SHORTCUTS: KEYBINDINGS,
   HELP: {
-    DOCUMENTATION: "https://flow.mov.ai/"
+    DOCUMENTATION: "https://flow.mov.ai/",
   },
   APP_PROPS: {
     SHOW_APP_SELECTION: false,
-    SHOW_TOGGLE_THEME: true
+    SHOW_TOGGLE_THEME: true,
   },
   APP_INFORMATION: {
     VERSION: packageJson.version,
@@ -22,8 +22,8 @@ const AppSettings = {
     CONFIGURATION_FILE: APPLICATION_DATA?.Configuration || "-",
     CUSTOM_CONFIGURATION_FILE: APPLICATION_DATA?.CustomConfiguration || "-",
     DESCRIPTION: APPLICATION_DATA?.Description || "-",
-    LABEL: APPLICATION_DATA?.Label || BRANDING.NAME
-  }
+    LABEL: APPLICATION_DATA?.Label || BRANDING.NAME,
+  },
 };
 
 //========================================================================================
@@ -32,7 +32,7 @@ const AppSettings = {
  *                                                                                      */
 //========================================================================================
 
-export const setLogo = logo => {
+export const setLogo = (logo) => {
   AppSettings.LOGO = logo;
 };
 
@@ -40,7 +40,7 @@ export const setLinks = ({ documentation }) => {
   AppSettings.HELP.DOCUMENTATION = documentation;
 };
 
-export const setName = name => {
+export const setName = (name) => {
   AppSettings.NAME = name;
   AppSettings.APP_INFORMATION.LABEL = name;
 };
@@ -50,7 +50,7 @@ export const setShortcuts = (shortcuts, keepBase) => {
   AppSettings.SHORTCUTS = { ...baseShortcuts, ...shortcuts };
 };
 
-export const setAppProps = props => {
+export const setAppProps = (props) => {
   AppSettings.APP_PROPS = props;
 };
 

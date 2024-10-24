@@ -14,18 +14,17 @@ class ConfigurationType extends StringType {
   key = DATA_TYPES.CONFIGURATION;
   label = SCOPES.CONFIGURATION;
 
-  editComponent = props => {
-    return <ConfigurationEdit dataType={this} { ...props } />;
+  editComponent = (props) => {
+    return <ConfigurationEdit dataType={this} {...props} />;
   };
 
   async _validate(value) {
-    if (value === '')
-      return true;
+    if (value === "") return true;
 
     const res = await Rest.cloudFunction({
       cbName: "backend.DataValidation",
       func: "validateConfigurationRaw",
-      args: value
+      args: value,
     });
 
     return res.success && res.result;

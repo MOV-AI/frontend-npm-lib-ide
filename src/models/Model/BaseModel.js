@@ -9,7 +9,7 @@ export default class Model extends Observable {
     id,
     name,
     version = "-",
-    workspace = CONSTANTS.GLOBAL_WORKSPACE
+    workspace = CONSTANTS.GLOBAL_WORKSPACE,
   }) {
     super();
     this.id = id ?? name;
@@ -266,7 +266,7 @@ export default class Model extends Observable {
       scope: this.getScope(),
       workspace: this.getWorkspace(),
       details: this.getDetails(),
-      version: this.getVersion()
+      version: this.getVersion(),
     };
   }
 

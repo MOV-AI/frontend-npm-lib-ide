@@ -1,7 +1,7 @@
-export const virtualizedTreeStyles = _theme => ({
+export const virtualizedTreeStyles = (_theme) => ({
   listItem: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
-  }
+    justifyContent: "center",
+  },
 });

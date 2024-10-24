@@ -8,11 +8,11 @@ import { withToolPlugin } from "../../engine";
 
 import { shortcutsStyles } from "./styles";
 
-const AppShortcuts = props => {
+const AppShortcuts = (props) => {
   // Hooks
   const shortcutsData = useRef(formatData(AppSettings.SHORTCUTS));
   const [selectedScope, setSelectedScope] = useState(
-    AppSettings.SHORTCUTS.GENERAL.NAME ?? KEYBIND_SCOPES.APP
+    AppSettings.SHORTCUTS.GENERAL.NAME ?? KEYBIND_SCOPES.APP,
   );
 
   // Style hook
@@ -26,22 +26,22 @@ const AppShortcuts = props => {
 
   function formatData(data) {
     const formattedData = {
-      scopes: []
+      scopes: [],
     };
-    Object.values(data).forEach(value => {
+    Object.values(data).forEach((value) => {
       formattedData.scopes.push({
         id: value.NAME,
         label: value.LABEL,
-        description: value.DESCRIPTION
+        description: value.DESCRIPTION,
       });
       formattedData[value.NAME] = [];
 
-      Object.values(value.KEYBINDS).forEach(keybind => {
+      Object.values(value.KEYBINDS).forEach((keybind) => {
         formattedData[value.NAME].push({
           id: keybind.NAME,
           label: keybind.LABEL,
           description: keybind.DESCRIPTION,
-          shortcut: keybind.SHORTCUTS
+          shortcut: keybind.SHORTCUTS,
         });
       });
     });
@@ -68,7 +68,7 @@ const AppShortcuts = props => {
         <div className={classes.bigColumn}>
           <ShortcutsTable
             scope={shortcutsData.current.scopes.find(
-              s => s.id === selectedScope
+              (s) => s.id === selectedScope,
             )}
             data={shortcutsData.current[selectedScope]}
           />
@@ -80,7 +80,7 @@ const AppShortcuts = props => {
 
 AppShortcuts.propTypes = {
   call: PropTypes.func.isRequired,
-  on: PropTypes.func.isRequired
+  on: PropTypes.func.isRequired,
 };
 
 const ShortcutsPlugin = withToolPlugin(AppShortcuts);
@@ -98,6 +98,6 @@ export const getShortcutsTab = () => {
     name: SHORTCUTS_PROFILE.title,
     tabTitle: SHORTCUTS_PROFILE.title,
     scope: SHORTCUTS_PROFILE.name,
-    extension: ""
+    extension: "",
   };
 };

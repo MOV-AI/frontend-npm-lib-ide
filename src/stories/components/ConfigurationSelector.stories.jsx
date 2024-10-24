@@ -14,37 +14,38 @@ export default {
       description:
         "Wheather the selector is to be used by Parameters or others",
       control: {
-        type: "boolean"
-      }
-    }
-  }
+        type: "boolean",
+      },
+    },
+  },
 };
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template = args => {
+const Template = (args) => {
   const { getType } = useDataTypes();
   const [value, setValue] = React.useState("");
   const [title, setTitle] = React.useState("");
   const { isConfigFromParameter } = args;
 
   const props = {
-    onChange: _value => setValue(_value),
+    onChange: (_value) => setValue(_value),
     rowData: {
       value,
-      onChange: _value => setValue(_value)
-    }
+      onChange: (_value) => setValue(_value),
+    },
   };
 
   const validateData = () => {
-    getType("config").validate(props.rowData.value, args)
-      .then(result => {
+    getType("config")
+      .validate(props.rowData.value, args)
+      .then((result) => {
         const message = result.success
           ? "Configuration valid"
           : "Configuration not found";
         const severity = result.success ? "success" : "error";
         snackbar({ message, severity });
       })
-      .catch(err => {
+      .catch((err) => {
         snackbar({ message: "Failed to validate", severity: "error" });
       });
   };

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withHostReactPlugin } from "../../../engine/ReactPlugin/HostReactPlugin";
 
-const AlertPanel = props => {
+const AlertPanel = (props) => {
   const { viewPlugins, hostName, style, className } = props;
   return (
     <div id={hostName} style={{ ...style }} className={className}>
@@ -14,9 +14,9 @@ const AlertPanel = props => {
 export default withHostReactPlugin(AlertPanel);
 
 AlertPanel.propTypes = {
-  hostName: PropTypes.string.isRequired
+  hostName: PropTypes.string.isRequired,
 };
 
 AlertPanel.defaultProps = {
-  hostName: "alertPanel"
+  hostName: "alertPanel",
 };

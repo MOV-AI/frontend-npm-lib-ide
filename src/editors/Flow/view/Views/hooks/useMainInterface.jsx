@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import MainInterface from "../../Components/interface/MainInterface";
 
-const useMainInterface = props => {
+const useMainInterface = (props) => {
   //========================================================================================
   /*                                                                                      *
    *                                         Hooks                                        *
@@ -32,7 +32,7 @@ const useMainInterface = props => {
       model,
       readOnly,
       call,
-      graphCls
+      graphCls,
     } = props;
 
     mainInterface.current = new MainInterface({
@@ -47,7 +47,7 @@ const useMainInterface = props => {
       data,
       classes,
       call,
-      graphCls
+      graphCls,
     });
   }, [props]);
 

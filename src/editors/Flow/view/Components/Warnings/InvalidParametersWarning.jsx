@@ -6,7 +6,7 @@ import ParameterLine from "./components/ParameterLine";
 
 import { invalidParametersWarningStyles } from "./styles";
 
-const InvalidParametersWarning = props => {
+const InvalidParametersWarning = (props) => {
   const { invalidContainerParams, call, closeModal } = props;
 
   // Style hooks
@@ -22,11 +22,13 @@ const InvalidParametersWarning = props => {
     <div testid="section_invalid-parameters-warning">
       <p>{i18n.t("InvalidContainersParamMessagePre")}</p>
       <div className={classes.invalidParametersHeader}>
-        <Typography variant="h6">{i18n.t("InvalidSubFlowParameters")}</Typography>
+        <Typography variant="h6">
+          {i18n.t("InvalidSubFlowParameters")}
+        </Typography>
         <Typography variant="h6">{i18n.t("FlowTemplate")}</Typography>
       </div>
       <div className={classes.invalidParametersMessageHolder}>
-        {invalidContainerParams.map(subFlowInfo => (
+        {invalidContainerParams.map((subFlowInfo) => (
           <ParameterLine
             key={subFlowInfo.id}
             call={call}
@@ -43,7 +45,7 @@ const InvalidParametersWarning = props => {
 };
 
 InvalidParametersWarning.propTypes = {
-  invalidContainerParams: PropTypes.array.isRequired
+  invalidContainerParams: PropTypes.array.isRequired,
 };
 
 export default InvalidParametersWarning;

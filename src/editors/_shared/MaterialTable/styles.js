@@ -1,10 +1,10 @@
 import { makeStyles } from "@material-ui/styles";
 
-export const materialTableStyles = makeStyles(_theme => ({
+export const materialTableStyles = makeStyles((_theme) => ({
   tableContainer: {
     "& .MuiPaper-root": {
       boxShadow: "none",
-      justifyContent: "center"
-    }
-  }
+      justifyContent: "center",
+    },
+  },
 }));

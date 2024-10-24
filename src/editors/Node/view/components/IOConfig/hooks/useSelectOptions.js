@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-const useSelectOptions = data => {
+const useSelectOptions = (data) => {
   const { scopeSystemPortsData, scopePorts } = data;
 
   //========================================================================================
@@ -54,7 +54,7 @@ const useSelectOptions = data => {
     let groupIndex = -1;
     try {
       scopePorts !== undefined &&
-        Object.keys(scopePorts).forEach(templateKey => {
+        Object.keys(scopePorts).forEach((templateKey) => {
           const [transport, protocol] =
             scopePorts[templateKey].Label.split("/");
           // Set options to insert
@@ -63,12 +63,14 @@ const useSelectOptions = data => {
           if (!protocol) groupedObj.push(option);
           else {
             // Find if there is a group already with that transport
-            groupIndex = groupedObj.findIndex(elem => elem.label === transport);
+            groupIndex = groupedObj.findIndex(
+              (elem) => elem.label === transport,
+            );
             // If no group, create one
             if (groupIndex === -1) {
               groupedObj.push({
                 label: transport,
-                options: [option]
+                options: [option],
               });
             }
             // Else just append to that group options
@@ -77,7 +79,7 @@ const useSelectOptions = data => {
               const existingGroup = { ...groupedObj[groupIndex] };
               groupedObj[groupIndex] = insertInAlphabeticalOrder(
                 existingGroup,
-                option
+                option,
               );
             }
           }
@@ -92,73 +94,79 @@ const useSelectOptions = data => {
    * Dependencies object and the selected template.
    * @returns {array} List of Packages
    */
-  const getPackageOptions = useCallback(rowData => {
-    if (
-      rowData === undefined ||
-      rowData.template === undefined ||
-      rowData.template === ""
-    ) {
-      return [];
-    }
-    let packageOptions = [];
-    try {
-      const dataObj = { ...scopePorts[rowData.template].Data };
-      // If there is package and message add package option
-      if (Object.keys(dataObj).length > 1) {
-        packageOptions = [{ value: dataObj.Package, label: dataObj.Package }];
+  const getPackageOptions = useCallback(
+    (rowData) => {
+      if (
+        rowData === undefined ||
+        rowData.template === undefined ||
+        rowData.template === ""
+      ) {
+        return [];
       }
-      // Else go find by type. Example: ROS1_msg, ROS1_action
-      else {
-        packageOptions = Object.keys(scopeSystemPortsData[dataObj.type]).map(
-          element => {
-            return { value: element, label: element };
-          }
-        );
+      let packageOptions = [];
+      try {
+        const dataObj = { ...scopePorts[rowData.template].Data };
+        // If there is package and message add package option
+        if (Object.keys(dataObj).length > 1) {
+          packageOptions = [{ value: dataObj.Package, label: dataObj.Package }];
+        }
+        // Else go find by type. Example: ROS1_msg, ROS1_action
+        else {
+          packageOptions = Object.keys(scopeSystemPortsData[dataObj.type]).map(
+            (element) => {
+              return { value: element, label: element };
+            },
+          );
+        }
+        // Return sorted package options
+        return packageOptions.sort(sortByLabel);
+      } catch (error) {
+        console.warn("debug : Error getting Package Options");
+        return [];
       }
-      // Return sorted package options
-      return packageOptions.sort(sortByLabel);
-    } catch (error) {
-      console.warn("debug : Error getting Package Options");
-      return [];
-    }
-  }, [scopePorts, scopeSystemPortsData]);
+    },
+    [scopePorts, scopeSystemPortsData],
+  );
 
   /**
    * Get list of messages based in dependencies object and the selected protocol and package.
    * @returns {array} List of Messages
    */
-  const getMessageOptions = useCallback(rowData => {
-    if (
-      rowData === undefined ||
-      rowData.template === undefined ||
-      rowData.template === "" ||
-      rowData.msgPackage === undefined ||
-      rowData.msgPackage === ""
-    ) {
-      return [];
-    }
-    let messageOptions = [];
-    try {
-      const dataObj = { ...scopePorts[rowData.template].Data };
-      // If there is package and message add package option
-      if (Object.keys(dataObj).length > 1) {
-        messageOptions = [{ value: dataObj.Message, label: dataObj.Message }];
+  const getMessageOptions = useCallback(
+    (rowData) => {
+      if (
+        rowData === undefined ||
+        rowData.template === undefined ||
+        rowData.template === "" ||
+        rowData.msgPackage === undefined ||
+        rowData.msgPackage === ""
+      ) {
+        return [];
       }
-      // Else go find by type and selected package and return the messages
-      else {
-        messageOptions = scopeSystemPortsData[dataObj.type][
-          rowData.msgPackage
-        ].map(element => {
-          return { value: element, label: element };
-        });
+      let messageOptions = [];
+      try {
+        const dataObj = { ...scopePorts[rowData.template].Data };
+        // If there is package and message add package option
+        if (Object.keys(dataObj).length > 1) {
+          messageOptions = [{ value: dataObj.Message, label: dataObj.Message }];
+        }
+        // Else go find by type and selected package and return the messages
+        else {
+          messageOptions = scopeSystemPortsData[dataObj.type][
+            rowData.msgPackage
+          ].map((element) => {
+            return { value: element, label: element };
+          });
+        }
+        // Return sorted messages
+        return messageOptions.sort(sortByLabel);
+      } catch (error) {
+        console.warn("debug : Error in getting Message Options");
+        return [];
       }
-      // Return sorted messages
-      return messageOptions.sort(sortByLabel);
-    } catch (error) {
-      console.warn("debug : Error in getting Message Options");
-      return [];
-    }
-  }, [scopePorts, scopeSystemPortsData]);
+    },
+    [scopePorts, scopeSystemPortsData],
+  );
 
   return { getGroupOptions, getPackageOptions, getMessageOptions };
 };

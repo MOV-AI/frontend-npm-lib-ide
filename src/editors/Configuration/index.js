@@ -6,5 +6,5 @@ export {
   ConfigurationModel,
   ConfigurationStore,
   ConfigurationEditor,
-  Configuration
+  Configuration,
 };

@@ -14,7 +14,7 @@ export default class Callback extends Model {
     //========================================================================================
 
     this.pyLibs = new Manager("pyLibs", PyLib, {
-      onAny: (event, name, value) => this.propsUpdate(event, name, value)
+      onAny: (event, name, value) => this.propsUpdate(event, name, value),
     });
 
     //========================================================================================
@@ -165,7 +165,7 @@ export default class Callback extends Model {
       ...super.serialize(),
       code: this.getCode(),
       message: this.getMessage(),
-      pyLibs: this.getPyLibs().serialize()
+      pyLibs: this.getPyLibs().serialize(),
     };
   }
 
@@ -182,7 +182,7 @@ export default class Callback extends Model {
       Code: code,
       Message: message,
       LastUpdate: details,
-      Py3Lib: this.pyLibs.serializeToDB()
+      Py3Lib: this.pyLibs.serializeToDB(),
     };
   }
 
@@ -206,7 +206,7 @@ export default class Callback extends Model {
       Py3Lib: pyLibs,
       LastUpdate: details,
       workspace,
-      version
+      version,
     } = json;
 
     return {
@@ -217,7 +217,7 @@ export default class Callback extends Model {
       details,
       workspace,
       version,
-      pyLibs: Manager.serializeOfDB(pyLibs, PyLib)
+      pyLibs: Manager.serializeOfDB(pyLibs, PyLib),
     };
   }
 
@@ -229,7 +229,7 @@ export default class Callback extends Model {
     NAME: "name",
     CODE: "code",
     DETAILS: "details",
-    MESSAGE: "message"
+    MESSAGE: "message",
   };
 
   static KEYS_TO_DISCONSIDER = [this.OBSERVABLE_KEYS.CODE];

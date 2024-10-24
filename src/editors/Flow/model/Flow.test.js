@@ -22,20 +22,20 @@ test("Serialize OF db", () => {
         launch: true,
         remappable: true,
         commands: {
-          cmd1: { value: "exec.sh" }
+          cmd1: { value: "exec.sh" },
         },
         envVars: {
-          path: { value: "/opt/movai" }
+          path: { value: "/opt/movai" },
         },
         position: {
           y: 0.01,
-          x: 0.023333333333333334
+          x: 0.023333333333333334,
         },
         parameters: {
           camera: { value: "back1" },
-          move_distance_to_car: { value: "0.30" }
-        }
-      }
+          move_distance_to_car: { value: "0.30" },
+        },
+      },
     },
     subFlows: {
       subflow: {
@@ -43,26 +43,26 @@ test("Serialize OF db", () => {
         template: "tugbot_actuators",
         position: {
           x: 0.04133333333333333,
-          y: 0.015466666666666667
+          y: 0.015466666666666667,
         },
         parameters: {
-          varA: { value: "5" }
-        }
-      }
+          varA: { value: "5" },
+        },
+      },
     },
     links: {
       "71e3bc41-ddc0-42c0-b9f3-68b41cb1ebd3": {
         from: "start/start/start",
-        to: "align/trans/in"
+        to: "align/trans/in",
       },
       "910c8964-2375-4697-806c-fcffc88bb5b2": {
         from: "align/transFor/out",
-        to: "subflow__actuator_v2/trans_in/in"
-      }
+        to: "subflow__actuator_v2/trans_in/in",
+      },
     },
     parameters: {
-      var1: { value: "movai", description: "" }
-    }
+      var1: { value: "movai", description: "" },
+    },
   };
 
   const data = Flow.serializeOfDB(content);

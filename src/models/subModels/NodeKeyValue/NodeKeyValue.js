@@ -75,7 +75,7 @@ class NodeKeyValue extends Model {
     return {
       name: this.getName(),
       value: this.getValue(),
-      description: this.getDescription()
+      description: this.getDescription(),
     };
   }
 
@@ -89,7 +89,7 @@ class NodeKeyValue extends Model {
 
     return {
       Value: value,
-      Description: description
+      Description: description,
     };
   }
 
@@ -115,7 +115,7 @@ class NodeKeyValue extends Model {
   static OBSERVABLE_KEYS = {
     NAME: "name",
     VALUE: "value",
-    DESCRIPTION: "description"
+    DESCRIPTION: "description",
   };
 }
 

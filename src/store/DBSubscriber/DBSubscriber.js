@@ -4,7 +4,7 @@ import _isEqual from "lodash/isEqual";
 
 const symbols = {
   timer: Symbol(),
-  subscribers: Symbol()
+  subscribers: Symbol(),
 };
 
 // debounce updates (in milliseconds)
@@ -31,12 +31,12 @@ class DBSubscriber extends StoreAbstractPlugin {
 
   subscribe(docName) {
     const subscriber = new Subscriber({
-      pattern: this.getPattern(docName)
+      pattern: this.getPattern(docName),
     });
 
     subscriber.subscribe(
-      data => this.onUpdate(data),
-      data => this.onLoad(data)
+      (data) => this.onUpdate(data),
+      (data) => this.onLoad(data),
     );
 
     // add the subscriber to the map
@@ -82,7 +82,7 @@ class DBSubscriber extends StoreAbstractPlugin {
     let docName = Object.keys(data["key"][this.scope])[0];
     this[symbols.timer] = setTimeout(
       () => this.updateDocument(docName),
-      DEBOUNCE_TIME
+      DEBOUNCE_TIME,
     );
   }
 
@@ -92,7 +92,7 @@ class DBSubscriber extends StoreAbstractPlugin {
   updateDocument(docName) {
     this.iStore
       .fetchDoc(docName)
-      .then(updatedData => {
+      .then((updatedData) => {
         // get the document instance from the store
         const doc = this.getDoc(docName);
 
@@ -114,7 +114,7 @@ class DBSubscriber extends StoreAbstractPlugin {
             : this.overwriteDoc(docName, filteredData);
         }
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   }
 
   /**

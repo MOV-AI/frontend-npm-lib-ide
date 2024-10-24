@@ -4,7 +4,7 @@ import DockLayout from "rc-dock";
 import { PLUGINS } from "../../../utils/Constants";
 import {
   withViewPlugin,
-  usePluginMethods
+  usePluginMethods,
 } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import useTabLayout from "./hooks/useTabLayout";
 
@@ -25,7 +25,7 @@ const Tabs = (props, ref) => {
     getActiveTab,
     focusActiveTab,
     loadTab,
-    updateTabId
+    updateTabId,
   } = useTabLayout(props, dockRef);
 
   usePluginMethods(ref, {
@@ -35,20 +35,20 @@ const Tabs = (props, ref) => {
     updateTabId,
     getActiveTab,
     focusActiveTab,
-    close
+    close,
   });
 
   /**
    * Searches active tab in clicked panel and focus that tab.
    * @param {*} evt
    */
-  const focusActivePanelTab = evt => {
+  const focusActivePanelTab = (evt) => {
     const target = evt.target;
     if (!target?.classList?.contains("dock-nav-wrap")) return;
 
     const activeTabEl = target.querySelector(".dock-tab-active>.dock-tab-btn");
     const panelActiveTab = activeTabEl.id.substring(
-      activeTabEl.id.indexOf("tab-") + 4
+      activeTabEl.id.indexOf("tab-") + 4,
     );
 
     if (getActiveTab !== panelActiveTab) focusExistingTab(panelActiveTab);
@@ -80,5 +80,5 @@ Tabs.propTypes = {
   on: PropTypes.func.isRequired,
   emit: PropTypes.func.isRequired,
   onTopic: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
 };

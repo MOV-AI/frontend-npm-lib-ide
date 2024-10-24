@@ -5,7 +5,7 @@ import { Utils } from "@mov-ai/mov-fe-lib-core";
 import {
   ALERT_SEVERITIES,
   HOMETAB_PROFILE,
-  PLUGINS
+  PLUGINS,
 } from "../../utils/Constants";
 import { ERROR_MESSAGES } from "../../utils/Messages";
 import Workspace from "../../utils/Workspace";
@@ -16,7 +16,7 @@ import RecentDocumentsComponent from "./components/RecentDocuments";
 import { withToolPlugin } from "../../engine";
 import { homeTabStyles } from "./styles";
 
-const HomeTab = props => {
+const HomeTab = (props) => {
   const { call, on, off, alert } = props;
   const workspaceManager = useMemo(() => new Workspace(), []);
   const classes = homeTabStyles();
@@ -32,21 +32,21 @@ const HomeTab = props => {
    * @param {{name: string, scope: string, id: string, isDeleted: bool}} doc : Document data
    */
   const openExistingDocument = useCallback(
-    doc => {
+    (doc) => {
       if (!doc.name) doc.name = Utils.getNameFromURL(doc.id);
 
       if (doc.isDeleted) {
         alert({
           message: i18n.t(ERROR_MESSAGES.FILE_DOESNT_EXIST, {
-            FILE_URL: doc.id
+            FILE_URL: doc.id,
           }),
-          severity: ALERT_SEVERITIES.WARNING
+          severity: ALERT_SEVERITIES.WARNING,
         });
       } else {
         call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, doc);
       }
     },
-    [alert, call]
+    [alert, call],
   );
 
   //========================================================================================
@@ -81,7 +81,7 @@ export default HomeTabPlugin;
 
 HomeTab.propTypes = {
   call: PropTypes.func.isRequired,
-  on: PropTypes.func.isRequired
+  on: PropTypes.func.isRequired,
 };
 
 /**
@@ -95,6 +95,6 @@ export const getHomeTab = () => {
     name: HOMETAB_PROFILE.title,
     tabTitle: HOMETAB_PROFILE.title,
     scope: HOMETAB_PROFILE.name,
-    extension: ""
+    extension: "",
   };
 };

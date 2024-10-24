@@ -9,7 +9,7 @@
  * @param {string} path : Document path
  * @returns {string} Uniform document path
  */
-const parseDocumentPath = path => {
+const parseDocumentPath = (path) => {
   if (!path) return;
 
   const splittedPath = path.split("/");

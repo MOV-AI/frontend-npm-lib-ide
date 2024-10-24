@@ -1,5 +1,5 @@
 const symbols = {
-  plugins: Symbol
+  plugins: Symbol,
 };
 
 /**
@@ -21,7 +21,7 @@ class StorePluginManager {
   initPlugins(plugins = []) {
     this[symbols.plugins] = new Map();
 
-    plugins.forEach(plugin => {
+    plugins.forEach((plugin) => {
       const instance = new plugin(this);
 
       this[symbols.plugins].set(instance.getName(), instance);

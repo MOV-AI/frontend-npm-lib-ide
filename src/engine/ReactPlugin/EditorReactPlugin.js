@@ -23,15 +23,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
    * Component responsible to handle common editor lifecycle
    */
   const EditorComponent = forwardRef((props, ref) => {
-    const {
-      id,
-      on,
-      off,
-      call,
-      scope,
-      save,
-      updateRightMenu,
-    } = props;
+    const { id, on, off, call, scope, save, updateRightMenu } = props;
 
     const editorContainer = useRef();
 
@@ -50,11 +42,11 @@ export function withEditorPlugin(ReactComponent, methods = []) {
     useEffect(() => {
       addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
 
-      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async data => {
+      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async (data) => {
         const validTab = await call(
           PLUGINS.TABS.NAME,
           PLUGINS.TABS.CALL.FIND_TAB,
-          data.id
+          data.id,
         );
 
         // This check goes through every open tab checking it's id
@@ -82,7 +74,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       save,
       call,
       updateRightMenu,
-      activateEditor
+      activateEditor,
     ]);
 
     return (
@@ -93,11 +85,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         onClick={activateEditor}
         onFocus={activateEditor}
       >
-        <RefComponent
-          {...props}
-          saveDocument={save}
-          ref={ref}
-        />
+        <RefComponent {...props} saveDocument={save} ref={ref} />
       </div>
     );
   });
@@ -107,7 +95,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
     withAlerts,
     withLoader,
     withDataHandler,
-    withMenuHandler
+    withMenuHandler,
   ]);
 
   /**

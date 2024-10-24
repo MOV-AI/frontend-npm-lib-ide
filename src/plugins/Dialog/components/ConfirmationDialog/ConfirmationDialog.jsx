@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import AppDialog from "../AppDialog/AppDialog";
 
-const ConfirmationDialog = props => {
+const ConfirmationDialog = (props) => {
   const { title, message, onSubmit, onClose, submitText } = props;
 
   return (
@@ -23,11 +23,11 @@ ConfirmationDialog.propTypes = {
   message: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
-    PropTypes.array
+    PropTypes.array,
   ]),
   submitText: PropTypes.string,
   onSubmit: PropTypes.func,
-  onClose: PropTypes.func
+  onClose: PropTypes.func,
 };
 
 ConfirmationDialog.defaultProps = {
@@ -35,7 +35,7 @@ ConfirmationDialog.defaultProps = {
   title: "Confirmation",
   message: "Are you sure do you want to continue?",
   onSubmit: () => console.log("Not Implemented"),
-  onClose: () => console.log("Not Implemented")
+  onClose: () => console.log("Not Implemented"),
 };
 
 export default ConfirmationDialog;

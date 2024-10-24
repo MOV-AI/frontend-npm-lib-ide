@@ -13,12 +13,12 @@ const cloudFunction = async (functionName, args) => {
   return Rest.cloudFunction({
     cbName: CB_NAME,
     func: functionName,
-    args
+    args,
   })
-    .then(res => {
+    .then((res) => {
       return res.success ? res.result : null;
     })
-    .catch(err => console.warn("debug err", err));
+    .catch((err) => console.warn("debug err", err));
 };
 
 /**
@@ -27,7 +27,7 @@ const cloudFunction = async (functionName, args) => {
  */
 Helper.getDefaultRobot = async () => {
   if (data.defaultRobot) return Promise.resolve(data.defaultRobot);
-  return cloudFunction("getDefaultRobot", "").then(res => {
+  return cloudFunction("getDefaultRobot", "").then((res) => {
     data.defaultRobot = res.robotName;
     return data.defaultRobot;
   });

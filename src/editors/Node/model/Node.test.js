@@ -13,7 +13,7 @@ test("Serialize OF db", () => {
     Label: "align_with_cart",
     LastUpdate: {
       date: "02/07/2021 at 17:26:35",
-      user: "movai"
+      user: "movai",
     },
     Path: "/op/node.sh",
     Info: "State node to perform full alignment procedure given that the tugbot is already in the position with the back facing the cart. The steps in the node are as follows:\n1) Open and center the gripper\n2) Align with the cart -> can transition from timeout\n3) Grab the cart\n4) Move forward\n5) Regrab the cart -> can transition from failed",
@@ -26,25 +26,25 @@ test("Serialize OF db", () => {
       move_distance: {
         Value: "0.2",
         Description:
-          "[Float] Distance in meters to move forward with the cart before regrabbing"
+          "[Float] Distance in meters to move forward with the cart before regrabbing",
       },
       detection_type: {
         Value: "gentag",
         Description:
-          "[Sring] Type of detection to be used. Can be either tag or cart_detector"
-      }
+          "[Sring] Type of detection to be used. Can be either tag or cart_detector",
+      },
     },
     CmdLine: {
       cmd1: {
         Value: "exec.sh",
-        Description: ""
-      }
+        Description: "",
+      },
     },
     EnvVar: {
       varA: {
         Value: "/opt/movai",
-        Description: ""
-      }
+        Description: "",
+      },
     },
     PortsInst: {
       tag_tf: {
@@ -56,10 +56,10 @@ test("Serialize OF db", () => {
             Message: "movai_msgs/TF",
             Parameter: {
               Child: "camera_link",
-              Parent: "tag"
-            }
-          }
-        }
+              Parent: "tag",
+            },
+          },
+        },
       },
       camera_info: {
         Template: "ROS1/Subscriber",
@@ -67,11 +67,11 @@ test("Serialize OF db", () => {
         Message: "CameraInfo",
         In: {
           in: {
-            Message: "sensor_msgs/CameraInfo"
-          }
-        }
-      }
-    }
+            Message: "sensor_msgs/CameraInfo",
+          },
+        },
+      },
+    },
   };
 
   const expected = {
@@ -92,7 +92,7 @@ test("Serialize OF db", () => {
         name: "detection_type",
         value: "gentag",
         description: data.Parameter.detection_type.Description,
-      }
+      },
     },
     envVars: { varA: { name: "varA", value: "/opt/movai" } },
     commands: { cmd1: { name: "cmd1", value: "exec.sh" } },
@@ -104,9 +104,9 @@ test("Serialize OF db", () => {
         portOut: {
           out: {
             message: "movai_msgs/TF",
-            parameters: { Child: "camera_link", Parent: "tag" }
-          }
-        }
+            parameters: { Child: "camera_link", Parent: "tag" },
+          },
+        },
       },
       camera_info: {
         template: "ROS1/Subscriber",
@@ -114,11 +114,11 @@ test("Serialize OF db", () => {
         message: "CameraInfo",
         portIn: {
           in: {
-            message: "sensor_msgs/CameraInfo"
-          }
-        }
-      }
-    }
+            message: "sensor_msgs/CameraInfo",
+          },
+        },
+      },
+    },
   };
 
   expect(Node.serializeOfDB(data)).toMatchObject(expected);
@@ -131,7 +131,7 @@ test("Serialize TO db", () => {
     name: "align_with_cart",
     details: {
       date: "02/07/2021 at 17:26:35",
-      user: "movai"
+      user: "movai",
     },
     path: "/op/node.sh",
     description:
@@ -153,10 +153,10 @@ test("Serialize TO db", () => {
         value: "gentag",
         description:
           "[Sring] Type of detection to be used. Can be either tag or cart_detector",
-      }
+      },
     },
     envVars: { varA: { name: "varA", value: "/opt/movai" } },
-    commands: { cmd1: { name: "cmd1", value: "exec.sh" } }
+    commands: { cmd1: { name: "cmd1", value: "exec.sh" } },
   };
 
   obj.setData(data);
@@ -174,23 +174,23 @@ test("Serialize TO db", () => {
     Parameter: {
       move_distance: {
         Value: "0.2",
-        Description: data.parameters.move_distance.description
+        Description: data.parameters.move_distance.description,
       },
       detection_type: {
         Value: "gentag",
-        Description: data.parameters.detection_type.description
-      }
+        Description: data.parameters.detection_type.description,
+      },
     },
     CmdLine: {
       cmd1: {
-        Value: "exec.sh"
-      }
+        Value: "exec.sh",
+      },
     },
     EnvVar: {
       varA: {
-        Value: "/opt/movai"
-      }
-    }
+        Value: "/opt/movai",
+      },
+    },
   };
 
   expect(obj.serializeToDB(data)).toMatchObject(expected);
@@ -211,11 +211,11 @@ test("Add ports", () => {
           message: "movai_msgs/TF",
           parameters: {
             Child: "camera_link",
-            Parent: "tag"
-          }
-        }
-      }
-    }
+            Parent: "tag",
+          },
+        },
+      },
+    },
   };
 
   const obj = new Node();
@@ -242,11 +242,11 @@ test("Delete a port", () => {
           message: "movai_msgs/TF",
           parameters: {
             Child: "camera_link",
-            Parent: "tag"
-          }
-        }
-      }
-    }
+            Parent: "tag",
+          },
+        },
+      },
+    },
   };
 
   const obj = new Node();
@@ -273,11 +273,11 @@ test("Update port", () => {
           message: "movai_msgs/TF",
           parameters: {
             Child: "camera_link",
-            Parent: "tag"
-          }
-        }
-      }
-    }
+            Parent: "tag",
+          },
+        },
+      },
+    },
   };
 
   const obj = new Node();
@@ -286,7 +286,7 @@ test("Update port", () => {
 
   obj.getPorts().updateItem({
     name,
-    content: { description: "new description" }
+    content: { description: "new description" },
   });
 
   expect(obj.getPorts().getItem(name).getDescription()).toBe("new description");
@@ -295,7 +295,7 @@ test("Update port", () => {
 test("Add parameter", () => {
   const name = "param1";
   const data = {
-    [name]: { name, value: 1981, description: "max speed" }
+    [name]: { name, value: 1981, description: "max speed" },
   };
 
   const obj = new Node();
@@ -310,7 +310,7 @@ test("Add parameter", () => {
 test("Delete parameter", () => {
   const name = "param1";
   const data = {
-    [name]: { name, value: 1981, description: "max speed" }
+    [name]: { name, value: 1981, description: "max speed" },
   };
 
   const obj = new Node();
@@ -324,7 +324,7 @@ test("Delete parameter", () => {
 test("Update parameter", () => {
   const name = "param1";
   const data = {
-    [name]: { name, value: 1981, description: "max speed" }
+    [name]: { name, value: 1981, description: "max speed" },
   };
 
   const obj = new Node();
@@ -332,7 +332,7 @@ test("Update parameter", () => {
   obj.getParameters().setData(data);
   obj.getParameters().updateItem({
     name: "param1",
-    content: { description: "min speed" }
+    content: { description: "min speed" },
   });
 
   expect(obj.getParameters().getItem(name).getDescription()).toBe("min speed");
@@ -419,7 +419,7 @@ test("Delete command", () => {
   expect(obj.getCommands().getItem(name)).toBe(undefined);
 });
 
-test("Call dispatcher on port callback change", done => {
+test("Call dispatcher on port callback change", (done) => {
   const name = "camera_info";
   const data = {
     [name]: {
@@ -429,10 +429,10 @@ test("Call dispatcher on port callback change", done => {
       portIn: {
         in: {
           message: "sensor_msgs/CameraInfo",
-          callback: "cb1"
-        }
-      }
-    }
+          callback: "cb1",
+        },
+      },
+    },
   };
 
   const expected = {
@@ -441,10 +441,10 @@ test("Call dispatcher on port callback change", done => {
       portIn: {
         in: {
           message: "sensor_msgs/CameraInfo",
-          callback: "cb2"
-        }
-      }
-    }
+          callback: "cb2",
+        },
+      },
+    },
   };
 
   const obj = new Node();
@@ -467,7 +467,7 @@ test("Call dispatcher on port callback change", done => {
   obj.setPortCallback(name, "in", "cb2");
 });
 
-test("Call dispatcher on port parameter change", done => {
+test("Call dispatcher on port parameter change", (done) => {
   const name = "camera_info";
   const data = {
     [name]: {
@@ -478,10 +478,10 @@ test("Call dispatcher on port parameter change", done => {
         in: {
           message: "sensor_msgs/CameraInfo",
           callback: "cb1",
-          parameters: { enabled: false }
-        }
-      }
-    }
+          parameters: { enabled: false },
+        },
+      },
+    },
   };
 
   const expected = {
@@ -491,10 +491,10 @@ test("Call dispatcher on port parameter change", done => {
         in: {
           message: "sensor_msgs/CameraInfo",
           callback: "cb1",
-          parameters: { enabled: true }
-        }
-      }
-    }
+          parameters: { enabled: true },
+        },
+      },
+    },
   };
 
   const obj = new Node();

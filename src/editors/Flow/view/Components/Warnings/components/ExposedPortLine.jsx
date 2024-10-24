@@ -8,7 +8,7 @@ import { PLUGINS } from "../../../../../../utils/Constants";
 
 import { parameterLineStyles } from "../styles";
 
-const ExposedPortLine = props => {
+const ExposedPortLine = (props) => {
   const { exposedPortInfo, call, closeModal } = props;
 
   // Style hooks
@@ -35,7 +35,7 @@ const ExposedPortLine = props => {
         <br />
         <strong>{i18n.t("InvalidExposedPorts-Colon")}</strong>
         <ul>
-          {params.map(param => (
+          {params.map((param) => (
             <li key={`${node}_${param}`}>{param}</li>
           ))}
         </ul>
@@ -59,7 +59,7 @@ const ExposedPortLine = props => {
     const template = {
       id,
       name,
-      scope
+      scope,
     };
     call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, template);
   }, [exposedPortInfo, call, closeModal]);
@@ -75,7 +75,7 @@ const ExposedPortLine = props => {
       title={buildTooltipTitle(
         exposedPortInfo.nodeInst.templateName,
         exposedPortInfo.nodeInst.data.id,
-        exposedPortInfo.invalidPorts
+        exposedPortInfo.invalidPorts,
       )}
     >
       <div
@@ -85,7 +85,7 @@ const ExposedPortLine = props => {
         <div>
           <strong>{exposedPortInfo.nodeInst.data.name}</strong>
           <ul>
-            {exposedPortInfo.invalidPorts.map(port => (
+            {exposedPortInfo.invalidPorts.map((port) => (
               <li key={`${exposedPortInfo.nodeInst.data.id}_${port}`}>
                 <strong>{port}</strong>
               </li>
@@ -100,7 +100,7 @@ const ExposedPortLine = props => {
           >
             <Tooltip
               title={i18n.t("CloseModalOpenTemplate", {
-                templateName: exposedPortInfo.nodeInst.templateName
+                templateName: exposedPortInfo.nodeInst.templateName,
               })}
             >
               <strong>{exposedPortInfo.nodeInst.templateName}</strong>
@@ -115,7 +115,7 @@ const ExposedPortLine = props => {
 ExposedPortLine.propTypes = {
   exposedPortInfo: PropTypes.object.isRequired,
   call: PropTypes.func.isRequired,
-  closeModal: PropTypes.func.isRequired
+  closeModal: PropTypes.func.isRequired,
 };
 
 export default ExposedPortLine;

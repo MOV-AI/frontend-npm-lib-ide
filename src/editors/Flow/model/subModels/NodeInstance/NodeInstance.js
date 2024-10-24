@@ -17,7 +17,7 @@ class NodeInstance extends Model {
     //========================================================================================
 
     this.propEvents = {
-      onAny: (event, name, value) => this.propsUpdate(event, name, value)
+      onAny: (event, name, value) => this.propsUpdate(event, name, value),
     };
 
     //========================================================================================
@@ -56,8 +56,8 @@ class NodeInstance extends Model {
       PLUGINS.DOC_MANAGER.CALL.READ,
       {
         scope: "Node",
-        name: this.template
-      }
+        name: this.template,
+      },
     );
 
     this.templateDoc = templateDoc ?? {};
@@ -156,7 +156,7 @@ class NodeInstance extends Model {
 
     this.dispatch(
       NodeInstance.OBSERVABLE_KEYS.POSITION,
-      this.getPosition().serialize()
+      this.getPosition().serialize(),
     );
 
     return this;
@@ -264,7 +264,7 @@ class NodeInstance extends Model {
       position,
       parameters,
       envVars,
-      commands
+      commands,
     } = json;
 
     super.setData({
@@ -272,7 +272,7 @@ class NodeInstance extends Model {
       template,
       persistent,
       launch,
-      remappable
+      remappable,
     });
 
     this.position.setData(position);
@@ -323,7 +323,7 @@ class NodeInstance extends Model {
       position: this.getPosition().serialize(),
       parameters: this.getParameters().serialize(),
       envVars: this.getEnvVars().serialize(),
-      commands: this.getCommands().serialize()
+      commands: this.getCommands().serialize(),
     };
   }
 
@@ -346,11 +346,11 @@ class NodeInstance extends Model {
       Remappable:
         remappable === this.templateDoc.remappable ? undefined : remappable,
       Visualization: {
-        ...this.getPosition().serializeToDB()
+        ...this.getPosition().serializeToDB(),
       },
       Parameter: this.getParameters().serializeToDB(),
       EnvVar: this.getEnvVars().serializeToDB(),
-      CmdLine: this.getCommands().serializeToDB()
+      CmdLine: this.getCommands().serializeToDB(),
     };
   }
 
@@ -377,7 +377,7 @@ class NodeInstance extends Model {
       Visualization: position,
       Parameter: parameters,
       EnvVar: envVars,
-      CmdLine: commands
+      CmdLine: commands,
     } = content;
 
     return {
@@ -389,7 +389,7 @@ class NodeInstance extends Model {
       position: Position.serializeOfDB(position),
       parameters: Manager.serializeOfDB(parameters, Parameter),
       envVars: Manager.serializeOfDB(envVars, EnvVar),
-      commands: Manager.serializeOfDB(commands, Command)
+      commands: Manager.serializeOfDB(commands, Command),
     };
   }
 
@@ -399,7 +399,7 @@ class NodeInstance extends Model {
     LAUNCH: "launch",
     PERSISTENT: "persistent",
     REMAPPABLE: "remappable",
-    POSITION: "persistent"
+    POSITION: "persistent",
   };
 }
 

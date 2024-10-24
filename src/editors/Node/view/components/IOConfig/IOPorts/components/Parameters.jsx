@@ -6,7 +6,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 import { parametersStyles } from "./styles";
 
-const Parameters = props => {
+const Parameters = (props) => {
   // Props
   const {
     param,
@@ -15,46 +15,42 @@ const Parameters = props => {
     ioPort,
     editable,
     handleIOPortsInputs,
-    rowData: { name: rowDataName }
+    rowData: { name: rowDataName },
   } = props;
   // Hooks
   const classes = parametersStyles();
 
   const handleOnChange = useCallback(
-    evt => {
-      handleIOPortsInputs(
-        evt.target,
-        rowDataName,
-        direction,
-        ioPort,
-        param
-      );
+    (evt) => {
+      handleIOPortsInputs(evt.target, rowDataName, direction, ioPort, param);
     },
-    [rowDataName, direction, ioPort, param, handleIOPortsInputs]
+    [rowDataName, direction, ioPort, param, handleIOPortsInputs],
   );
 
   const inputType = () => {
-  // TODO: Ports data should provide which type the frontend should render
-  // and not this harcoded string
+    // TODO: Ports data should provide which type the frontend should render
+    // and not this harcoded string
     if (["latch", "Oneshot"].includes(param)) {
-      return <Checkbox
-        type={"checkbox"}
-        defaultChecked={paramValue}
-        onChange={handleOnChange}
-      />;
+      return (
+        <Checkbox
+          type={"checkbox"}
+          defaultChecked={paramValue}
+          onChange={handleOnChange}
+        />
+      );
+    } else {
+      return (
+        <TextField
+          type={["Frequency", "queue_size"].includes(param) ? "number" : "text"}
+          inputProps={{ "data-testid": "input_parameter" }}
+          disabled={!editable}
+          defaultValue={paramValue}
+          className={classes.input}
+          onChange={handleOnChange}
+        />
+      );
     }
-    else {
-      return <TextField
-        type={["Frequency", "queue_size"].includes(param) ? "number" : "text"}
-        inputProps={{ "data-testid": "input_parameter" }}
-        disabled={!editable}
-        defaultValue={paramValue}
-        className={classes.input}
-        onChange={handleOnChange}
-      />;
-    }
-
-  }
+  };
 
   return (
     <Grid className={classes.gridContainer}>

@@ -10,20 +10,20 @@ test("smoke test", () => {
 test("serialize OF db", () => {
   const content = {
     0: {
-      name: "data1"
+      name: "data1",
     },
     1: {
-      name: "data2"
-    }
+      name: "data2",
+    },
   };
 
   const expected = {
     0: {
-      name: "data1"
+      name: "data1",
     },
     1: {
-      name: "data2"
-    }
+      name: "data2",
+    },
   };
 
   const data = Manager.serializeOfDB(content, IdBased);
@@ -34,11 +34,11 @@ test("serialize OF db", () => {
 test("serialize TO db", () => {
   const content = {
     0: {
-      name: "data1"
+      name: "data1",
     },
     1: {
-      name: "data2"
-    }
+      name: "data2",
+    },
   };
 
   const data = Manager.serializeOfDB(content, IdBased);
@@ -55,7 +55,7 @@ test("get a IdBased instance", () => {
   const obj = new Manager("model", IdBased);
 
   const content = {
-    name: "group1"
+    name: "group1",
   };
 
   obj.setItem({ name: "0", content });

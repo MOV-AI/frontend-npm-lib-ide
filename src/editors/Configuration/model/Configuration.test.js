@@ -31,7 +31,7 @@ test("Create document of JSON", () => {
     version: "0.0.1",
     LastUpdate: { user: "mj", date: "20/04/1981" },
     Yaml: "varA: 1",
-    Type: "yaml"
+    Type: "yaml",
   };
 
   const expected = {
@@ -39,7 +39,7 @@ test("Create document of JSON", () => {
     name: json.Label,
     code: json.Yaml,
     extension: json.Type,
-    details: json.LastUpdate
+    details: json.LastUpdate,
   };
 
   const obj = Configuration.ofJSON(json);
@@ -57,14 +57,14 @@ test("Serialize to database", () => {
     version: "0.0.1",
     LastUpdate: { user: "mj", date: "20/04/1981" },
     Yaml: "varA: 1",
-    Type: "yaml"
+    Type: "yaml",
   };
 
   const expected = {
     Label: json.Label,
     Yaml: json.Yaml,
     Type: json.Type,
-    LastUpdate: json.LastUpdate
+    LastUpdate: json.LastUpdate,
   };
 
   const obj = Configuration.ofJSON(json);
@@ -82,14 +82,14 @@ test("Verify serialize defaults to DB", () => {
     version: "0.0.1",
     LastUpdate: undefined,
     Yaml: undefined,
-    Type: undefined
+    Type: undefined,
   };
 
   const expected = {
     Label: json.Label,
     Yaml: "",
     Type: "yaml",
-    LastUpdate: { user: "N/A", date: "N/A" }
+    LastUpdate: { user: "N/A", date: "N/A" },
   };
 
   const obj = Configuration.ofJSON(json);

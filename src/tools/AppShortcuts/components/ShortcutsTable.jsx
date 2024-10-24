@@ -8,7 +8,7 @@ import { shortcutsTableStyles } from "../styles";
 import MaterialTable from "../../../editors/_shared/MaterialTable/MaterialTable";
 import { parseKeybinds } from "../../../utils/Utils";
 
-const ShortcutsTable = props => {
+const ShortcutsTable = (props) => {
   const { data, scope } = props;
 
   // Style hook
@@ -25,17 +25,17 @@ const ShortcutsTable = props => {
     return [
       {
         title: i18n.t("Label"),
-        field: "label"
+        field: "label",
       },
       {
         title: i18n.t("Description"),
-        field: "description"
+        field: "description",
       },
       {
         title: i18n.t("Shortcut"),
         field: "shortcut",
-        render: rd => parseKeybinds(rd.shortcut, ", ")
-      }
+        render: (rd) => parseKeybinds(rd.shortcut, ", "),
+      },
     ];
   }
 
@@ -60,7 +60,7 @@ const ShortcutsTable = props => {
 };
 
 ShortcutsTable.propTypes = {
-  call: PropTypes.func
+  call: PropTypes.func,
 };
 
 export default ShortcutsTable;

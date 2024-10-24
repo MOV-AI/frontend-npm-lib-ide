@@ -10,5 +10,5 @@ export default withViewPlugin(Placeholder);
 
 Placeholder.propTypes = {
   call: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
 };

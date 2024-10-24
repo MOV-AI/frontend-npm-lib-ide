@@ -57,7 +57,7 @@ test("Create document of JSON", () => {
     workspace: "myworkspace",
     name: "test",
     version: "0.0.1",
-    details: { user: "mj", date: "20/04/1981" }
+    details: { user: "mj", date: "20/04/1981" },
   };
 
   const obj = BaseModel.ofJSON(json);

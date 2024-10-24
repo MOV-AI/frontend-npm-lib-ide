@@ -14,14 +14,14 @@ import { TYPES } from "../../../Constants/constants";
 const STYLE = {
   stroke: {
     width: { default: 0, selected: 3 },
-    color: { default: "black", selected: "white" }
-  }
+    color: { default: "black", selected: "white" },
+  },
 };
 
 const MINI = {
   width: 18,
   height: 18,
-  padding: 5
+  padding: 5,
 };
 
 /**
@@ -148,7 +148,7 @@ class BaseNode extends BaseNodeStruct {
   get headerPos() {
     return {
       x: this.width / 2 + this.padding.x / 2,
-      y: -10
+      y: -10,
     };
   }
 
@@ -169,7 +169,7 @@ class BaseNode extends BaseNodeStruct {
   set visibility(visible) {
     this.visible = Boolean(visible);
     this.object.attr("visibility", this.visible ? "visible" : "hidden");
-    this._ports.forEach(port => (port.visible = this.visible));
+    this._ports.forEach((port) => (port.visible = this.visible));
   }
 
   /**
@@ -178,7 +178,7 @@ class BaseNode extends BaseNodeStruct {
   get visualizationToDB() {
     return {
       x: { Value: this.data.Visualization[0] },
-      y: { Value: this.data.Visualization[1] }
+      y: { Value: this.data.Visualization[1] },
     };
   }
 
@@ -227,7 +227,7 @@ class BaseNode extends BaseNodeStruct {
       .create("svg")
       .attr(
         "id",
-        `${this.canvas.containerId}-${this.data.id || this.data.Template}`
+        `${this.canvas.containerId}-${this.data.id || this.data.Template}`,
       )
       .style("overflow", "visible")
       .attr("width", this.width + maxPadding)
@@ -316,7 +316,7 @@ class BaseNode extends BaseNodeStruct {
     this._header = new BaseNodeHeader(
       this.headerPos.x,
       this.headerPos.y,
-      this.name
+      this.name,
     );
 
     // append to the svg element
@@ -338,7 +338,7 @@ class BaseNode extends BaseNodeStruct {
     // create the node status instance
     this._status = new BaseNodeStatus(
       this.width / 2 + this.padding.x / 2,
-      this.height / 2 + this.padding.y
+      this.height / 2 + this.padding.y,
     );
 
     // append to the svg element
@@ -355,13 +355,13 @@ class BaseNode extends BaseNodeStruct {
    */
   portEvents() {
     return {
-      onClick: port => this.onPortClick(port),
-      onMouseOver: port => this.onPortMouseOver(port),
-      onMouseOut: port => {
+      onClick: (port) => this.onPortClick(port),
+      onMouseOver: (port) => this.onPortMouseOver(port),
+      onMouseOut: (port) => {
         try {
           const elementMouseIsOver = document.elementFromPoint(
             d3.event.clientX,
-            d3.event.clientY
+            d3.event.clientY,
           );
 
           if (
@@ -374,7 +374,7 @@ class BaseNode extends BaseNodeStruct {
         }
         this.onPortMouseOut(port);
       },
-      onContext: port => this.onPortContext(port)
+      onContext: (port) => this.onPortContext(port),
     };
   }
 
@@ -392,7 +392,7 @@ class BaseNode extends BaseNodeStruct {
 
     // node already has ports; probably an update request
     if (this._ports.size > 0) {
-      this._ports.forEach(port => {
+      this._ports.forEach((port) => {
         port.destroy();
       });
       this._ports.clear();
@@ -403,19 +403,19 @@ class BaseNode extends BaseNodeStruct {
       // get ports from the node's template
       const ports = this._template?.PortsInst ?? {};
 
-      Object.keys(ports).forEach(portInstName => {
+      Object.keys(ports).forEach((portInstName) => {
         // check In and Out ports
-        ["In", "Out"].forEach(type => {
+        ["In", "Out"].forEach((type) => {
           // get port data
           const data = ports[portInstName]?.[type] ?? {};
 
-          Object.keys(data).forEach(portName => {
+          Object.keys(data).forEach((portName) => {
             // customize port data for the instance
             const portData = {
               name: `${portInstName}/${portName}`,
               type: type,
               Template: ports[portInstName]?.Template ?? "",
-              ...data[portName]
+              ...data[portName],
             };
 
             // create port instance
@@ -445,10 +445,10 @@ class BaseNode extends BaseNodeStruct {
     const radius = this.portSize;
     const position = {
       In: this.getPortsInitialPos("In"),
-      Out: this.getPortsInitialPos("Out")
+      Out: this.getPortsInitialPos("Out"),
     };
 
-    this._ports.forEach(port => {
+    this._ports.forEach((port) => {
       // append port to the svg element
       this.object.append(() => {
         port.setPosition(...position[port.type], radius);
@@ -504,7 +504,7 @@ class BaseNode extends BaseNodeStruct {
    *
    * @param {function} fn function to call if the node's events are enabled
    */
-  eventsOn = fn => {
+  eventsOn = (fn) => {
     if (this.visible) fn();
   };
 
@@ -514,7 +514,7 @@ class BaseNode extends BaseNodeStruct {
    *
    * @param {node} target element target of the event to be checked
    */
-  isPort = target => {
+  isPort = (target) => {
     const targetElementType = target.nodeName;
     const targetClasses = target.className.baseVal;
     return targetElementType === "circle" && targetClasses.includes("port");
@@ -597,7 +597,7 @@ class BaseNode extends BaseNodeStruct {
     this.canvas.setMode(
       [EVT_NAMES.ON_NODE_CTX_MENU],
       { node: this, event: d3.event },
-      true
+      true,
     );
   };
 
@@ -649,7 +649,7 @@ class BaseNode extends BaseNodeStruct {
     const _onDrag = this.canvas.mode.current?.onDrag ?? {
       next: () => {
         /* empty method */
-      }
+      },
     };
 
     _onDrag.next(this);
@@ -671,7 +671,7 @@ class BaseNode extends BaseNodeStruct {
       this.canvas.setMode(
         EVT_NAMES.SELECT_NODE,
         { nodes: [this], shiftKey },
-        true
+        true,
       );
     }, 100);
   }
@@ -690,7 +690,7 @@ class BaseNode extends BaseNodeStruct {
 
     // convert format
     const visualizationData = {
-      Visualization: convertVisualization(updatedPos)
+      Visualization: convertVisualization(updatedPos),
     };
 
     // set object new position
@@ -731,16 +731,16 @@ class BaseNode extends BaseNodeStruct {
    * @param {*} data
    * @returns
    */
-  updateNode = data => {
+  updateNode = (data) => {
     const fn = {
-      Visualization: _data => this.updatePosition(_data), // Position changes when dragging or when adding a new node
-      default: _data => {
+      Visualization: (_data) => this.updatePosition(_data), // Position changes when dragging or when adding a new node
+      default: (_data) => {
         this.data = { ...this.data, ...data };
         this.updatePosition(_data);
         this.data.name = this.name;
-      }
+      },
     };
-    Object.keys(data).forEach(key => {
+    Object.keys(data).forEach((key) => {
       (fn[key] || fn["default"])(data);
       if (!this.noReloadRequired.includes(key)) this.init().addToCanvas();
     });
@@ -752,7 +752,7 @@ class BaseNode extends BaseNodeStruct {
    *
    * @param {object} port port object
    */
-  onPortClick = port => {
+  onPortClick = (port) => {
     const currMode = this.canvas.mode.current;
 
     // skip event if pressing shift while on selectNode mode
@@ -765,7 +765,7 @@ class BaseNode extends BaseNodeStruct {
           src: port,
           link: null,
           trg: null,
-          toCreate: false
+          toCreate: false,
         });
       },
       selectNode: () => {
@@ -774,7 +774,7 @@ class BaseNode extends BaseNodeStruct {
           src: port,
           link: null,
           trg: null,
-          toCreate: false
+          toCreate: false,
         });
       },
       // finish linking
@@ -785,7 +785,7 @@ class BaseNode extends BaseNodeStruct {
         currMode.props.trg = port;
         currMode.props.toCreate = true;
         this.canvas.setMode(EVT_NAMES.DEFAULT);
-      }
+      },
     };
 
     const defaultAction = () => {
@@ -803,12 +803,12 @@ class BaseNode extends BaseNodeStruct {
    *
    * @param {object} port port object
    */
-  onPortMouseOver = port => {
+  onPortMouseOver = (port) => {
     this.canvas.events.next({
       name: EVT_NAMES.ON_MOUSE_OVER,
       type: "Port",
       event: d3.event,
-      port
+      port,
     });
   };
 
@@ -817,20 +817,20 @@ class BaseNode extends BaseNodeStruct {
    *
    * @param {object} port port object
    */
-  onPortMouseOut = port => {
+  onPortMouseOut = (port) => {
     this.canvas.events.next({
       name: EVT_NAMES.ON_MOUSE_OUT,
       type: "Port",
       event: d3.event,
-      port
+      port,
     });
   };
 
-  onPortContext = port => {
+  onPortContext = (port) => {
     this.canvas.setMode(
       EVT_NAMES.ON_PORT_CTX_MENU,
       { port: port, event: d3.event },
-      true
+      true,
     );
   };
 
@@ -843,11 +843,11 @@ class BaseNode extends BaseNodeStruct {
       .select("rect")
       .attr(
         "stroke",
-        this.selected ? stroke.color.selected : stroke.color.default
+        this.selected ? stroke.color.selected : stroke.color.default,
       )
       .attr(
         "stroke-width",
-        this.selected ? stroke.width.selected : stroke.width.default
+        this.selected ? stroke.width.selected : stroke.width.default,
       );
   };
 
@@ -857,7 +857,7 @@ class BaseNode extends BaseNodeStruct {
    *
    * @param {string} data node's template name
    */
-  onTemplateUpdate = async data => {
+  onTemplateUpdate = async (data) => {
     const isNotInnerTemplate = !(
       this.data.type === TYPES.CONTAINER && this.template?.NodeInst[data.Label]
     );
@@ -883,9 +883,9 @@ class BaseNode extends BaseNodeStruct {
    *
    * @param {object} data node's data
    */
-  deleteKey = data => {
+  deleteKey = (data) => {
     const path = flattenObject(data);
-    Object.keys(path).forEach(pkey => {
+    Object.keys(path).forEach((pkey) => {
       this.data = _omit(this.data, pkey);
     });
     return this.isValid();
@@ -896,7 +896,7 @@ class BaseNode extends BaseNodeStruct {
    * Delete node if true
    */
   isValid = () => {
-    return !this.requiredKeys.some(key => {
+    return !this.requiredKeys.some((key) => {
       // null: key was already deleted
       return this.data[key] === null || !(key in this.data);
     });
@@ -907,8 +907,8 @@ class BaseNode extends BaseNodeStruct {
    *
    * @param {object} portData port data object, pass undefined to set port to default state
    */
-  linking = portData => {
-    this._ports.forEach(port => {
+  linking = (portData) => {
+    this._ports.forEach((port) => {
       port.setLinking(portData);
     });
   };
@@ -928,7 +928,7 @@ class BaseNode extends BaseNodeStruct {
    * Update node parameters
    * @param {Object} params : new params
    */
-  setParams = params => {
+  setParams = (params) => {
     this.data.Parameter = params;
   };
 
@@ -951,7 +951,7 @@ class BaseNode extends BaseNodeStruct {
 
     return {
       xCenter: posX + this.width / 2,
-      yCenter: posY + this.height / 2
+      yCenter: posY + this.height / 2,
     };
   }
 

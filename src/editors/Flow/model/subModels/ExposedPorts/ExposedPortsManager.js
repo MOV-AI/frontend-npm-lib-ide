@@ -37,7 +37,7 @@ class ExposedPortsManager extends Manager {
    * @returns : True on success, false otherwise
    */
   deleteItem(name) {
-    Object.values(this.getItem(name) ?? {}).forEach(val => {
+    Object.values(this.getItem(name) ?? {}).forEach((val) => {
       val.destroy();
     });
 
@@ -74,8 +74,8 @@ class ExposedPortsManager extends Manager {
       Object.entries(nodeInstances ?? {}).forEach(([nodeInstanceName, obj]) => {
         const ports = obj.ports ?? [];
 
-        ports.forEach(port =>
-          this.toggleExposedPort(nodeTemplate, nodeInstanceName, port)
+        ports.forEach((port) =>
+          this.toggleExposedPort(nodeTemplate, nodeInstanceName, port),
         );
       });
     });
@@ -176,7 +176,7 @@ class ExposedPortsManager extends Manager {
   toggleExposedPort(nodeTemplate, nodeInstanceName, port) {
     const obj = this.getOrCreateByNodeInstance(
       this.getOrCreateByTemplate(nodeTemplate),
-      nodeInstanceName
+      nodeInstanceName,
     );
 
     obj.togglePort(port);
@@ -224,10 +224,10 @@ class ExposedPortsManager extends Manager {
     for (const exposedPorts of this.data) {
       const [templateName, value] = exposedPorts;
 
-      Object.values(value).forEach(nodeInstanceObj => {
+      Object.values(value).forEach((nodeInstanceObj) => {
         output[templateName] = {
           ...output[templateName],
-          ...nodeInstanceObj.serializeToDB()
+          ...nodeInstanceObj.serializeToDB(),
         };
       });
     }
@@ -247,12 +247,12 @@ class ExposedPortsManager extends Manager {
     Object.entries(json ?? {}).forEach(([nodeTemplate, nodeInstances]) => {
       Object.entries(nodeInstances).forEach(([nodeInstance, ports]) => {
         const content = {
-          [nodeTemplate]: { [nodeInstance]: ports }
+          [nodeTemplate]: { [nodeInstance]: ports },
         };
 
         output[nodeTemplate] = {
           ...(output[nodeTemplate] ?? {}),
-          [nodeInstance]: model.serializeOfDB(content)
+          [nodeInstance]: model.serializeOfDB(content),
         };
       });
     });
@@ -261,8 +261,8 @@ class ExposedPortsManager extends Manager {
   }
 
   destroy() {
-    Array.from(this.data.values()).forEach(value => {
-      Object.values(value ?? {}).forEach(ports => ports.destroy());
+    Array.from(this.data.values()).forEach((value) => {
+      Object.values(value ?? {}).forEach((ports) => ports.destroy());
     });
     this.data.clear();
   }

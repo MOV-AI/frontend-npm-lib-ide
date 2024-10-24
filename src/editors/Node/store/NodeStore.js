@@ -11,7 +11,7 @@ class NodeStore extends Store {
       title: "Nodes",
       plugins: [DBSubscriber],
       docManager,
-      observer
+      observer,
     });
   }
 

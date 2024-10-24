@@ -37,7 +37,7 @@ export function portConvertTypeCss(message) {
 export function getBaseTemplate(type) {
   const baseTemplate = {
     start: { id: type },
-    container: { Type: MOVAI_FLOW_TYPES.NODES.MOVAI_FLOW }
+    container: { Type: MOVAI_FLOW_TYPES.NODES.MOVAI_FLOW },
   };
   return baseTemplate[type];
 }

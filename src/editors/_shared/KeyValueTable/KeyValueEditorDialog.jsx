@@ -14,7 +14,7 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
-  Button
+  Button,
 } from "@material-ui/core";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../themes";
@@ -24,10 +24,10 @@ import { keyValueEditorDialogStyles } from "./styles";
 
 const COMPONENTS = {
   NAME: "name",
-  VALUE: "value"
+  VALUE: "value",
 };
 
-const KeyValueEditorDialog = props => {
+const KeyValueEditorDialog = (props) => {
   // Props
   const {
     onClose,
@@ -41,17 +41,17 @@ const KeyValueEditorDialog = props => {
     disabled,
     renderCustomContent,
     renderValueEditor,
-    validate = _data => Promise.resolve({ success: true, data: _data }),
+    validate = (_data) => Promise.resolve({ success: true, data: _data }),
     disableName = false,
     disableDescription = false,
     showDescription = true,
-    showDefault = false
+    showDefault = false,
   } = props;
   // State hook
   const [validation, setValidation] = useState({
     component: null,
     error: false,
-    message: ""
+    message: "",
   });
   // Other hooks
   const classes = keyValueEditorDialogStyles();
@@ -68,10 +68,10 @@ const KeyValueEditorDialog = props => {
    * @param {String} component : component to check against
    */
   const getValidationComponent = useCallback(
-    component => {
+    (component) => {
       return validation.component === component;
     },
-    [validation.component]
+    [validation.component],
   );
 
   //========================================================================================
@@ -85,15 +85,15 @@ const KeyValueEditorDialog = props => {
    * @param {Event} evt : OnChange event
    */
   const onChangeName = useCallback(
-    evt => {
+    (evt) => {
       const name = evt?.target?.value;
       let isValid = Promise.resolve(true);
       if (nameValidation && validate) {
-        isValid = nameValidation({ name }).then(res => {
+        isValid = nameValidation({ name }).then((res) => {
           setValidation({
             component: COMPONENTS.NAME,
             error: !res.result,
-            message: i18n.t(res.error)
+            message: i18n.t(res.error),
           });
           // Return validation
           return res.result;
@@ -101,22 +101,22 @@ const KeyValueEditorDialog = props => {
       }
 
       // Set data
-      setData(prevState => {
+      setData((prevState) => {
         return { ...prevState, name };
       });
       // Return validation result
       return isValid;
     },
-    [nameValidation, validate]
+    [nameValidation, validate],
   );
 
   /**
    * On change Description
    * @param {Event} evt : OnChange event
    */
-  const onChangeDescription = useCallback(evt => {
+  const onChangeDescription = useCallback((evt) => {
     const description = evt?.target?.value;
-    setData(prevState => {
+    setData((prevState) => {
       return { ...prevState, description };
     });
   }, []);
@@ -126,10 +126,10 @@ const KeyValueEditorDialog = props => {
    */
   const onSave = useCallback(() => {
     // Validate name
-    onChangeName({ target: { value: data.name } }).then(isValid => {
+    onChangeName({ target: { value: data.name } }).then((isValid) => {
       if (isValid) {
         // Validate data type
-        validate(data).then(res => {
+        validate(data).then((res) => {
           if (res.result ?? res.success) {
             onSubmit(res.data);
             onClose();
@@ -212,7 +212,7 @@ const KeyValueEditorDialog = props => {
                   {renderValueEditor(undefined, {
                     isNew,
                     isDefault: true,
-                    disabled: true
+                    disabled: true,
                   })}
                 </AccordionDetails>
               </Accordion>
@@ -269,4 +269,7 @@ function arePropsEqual(prevProps, nextProps) {
   return _isEqual(prevProps, nextProps);
 }
 
-export default memo(withTheme(KeyValueEditorDialog, ApplicationTheme), arePropsEqual);
+export default memo(
+  withTheme(KeyValueEditorDialog, ApplicationTheme),
+  arePropsEqual,
+);

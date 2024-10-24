@@ -10,7 +10,7 @@ import { i18n } from "@mov-ai/mov-fe-lib-react";
 import MESSAGES from "../../../../../utils/Messages";
 import {
   ROS_VALID_NAMES,
-  ALERT_SEVERITIES
+  ALERT_SEVERITIES,
 } from "../../../../../utils/Constants";
 import { defaultFunction } from "../../../../../utils/Utils";
 import { MisMatchMessageLink } from "../../Components/Links/Errors";
@@ -22,7 +22,7 @@ export const WARNING_TYPES = {
   LINK_MISMATCH: "linkMismatchMessage",
   INVALID_PARAMETERS: "invalidParameters",
   INVALID_EXPOSED_PORTS: "invalidExposedPorts",
-  INVALID_LINKS: "invalidLinks"
+  INVALID_LINKS: "invalidLinks",
 };
 
 const WARNINGS = {
@@ -31,36 +31,36 @@ const WARNINGS = {
     type: ALERT_SEVERITIES.WARNING,
     isRuntime: true,
     isPersistent: false,
-    warningType: WARNING_TYPES.START_LINK
+    warningType: WARNING_TYPES.START_LINK,
   },
   [WARNING_TYPES.LINK_MISMATCH]: {
     message: i18n.t("MessageMismatchedLinks"),
     type: ALERT_SEVERITIES.WARNING,
     isRuntime: false,
     isPersistent: true,
-    warningType: WARNING_TYPES.LINK_MISMATCH
+    warningType: WARNING_TYPES.LINK_MISMATCH,
   },
   [WARNING_TYPES.INVALID_PARAMETERS]: {
     message: i18n.t("InvalidSubFlowParameters"),
     type: ALERT_SEVERITIES.WARNING,
     isRuntime: false,
     isPersistent: true,
-    warningType: WARNING_TYPES.INVALID_PARAMETERS
+    warningType: WARNING_TYPES.INVALID_PARAMETERS,
   },
   [WARNING_TYPES.INVALID_EXPOSED_PORTS]: {
     message: i18n.t("InvalidExposedPorts"),
     type: ALERT_SEVERITIES.WARNING,
     isRuntime: false,
     isPersistent: true,
-    warningType: WARNING_TYPES.INVALID_EXPOSED_PORTS
+    warningType: WARNING_TYPES.INVALID_EXPOSED_PORTS,
   },
   [WARNING_TYPES.INVALID_LINKS]: {
     message: i18n.t("InvalidLinksFoundTitle"),
     type: ALERT_SEVERITIES.WARNING,
     isRuntime: false,
     isPersistent: true,
-    warningType: WARNING_TYPES.INVALID_LINKS
-  }
+    warningType: WARNING_TYPES.INVALID_LINKS,
+  },
 };
 
 export default class GraphValidator {
@@ -82,7 +82,7 @@ export default class GraphValidator {
    *
    * @returns {bool}
    */
-  isLinkFromStart = link => {
+  isLinkFromStart = (link) => {
     return link.data.sourceNode === "start";
   };
 
@@ -127,16 +127,16 @@ export default class GraphValidator {
     if (this.graph.invalidLinks.length) {
       warnings.push({
         ...WARNINGS[WARNING_TYPES.INVALID_LINKS],
-        onClick: data => {
+        onClick: (data) => {
           WARNINGS[WARNING_TYPES.INVALID_LINKS].onClick(
             data,
             // This is needed because somehow we're losing the
             // True interface context when we have invalid links
-            this.graph.mInterface
+            this.graph.mInterface,
           );
         },
         data: this.graph.invalidLinks,
-        callback: this.graph.clearInvalidLinks
+        callback: this.graph.clearInvalidLinks,
       });
     }
 
@@ -144,11 +144,11 @@ export default class GraphValidator {
   };
 
   addDeletedLinks = () => {
-    this.graph.invalidLinks.forEach(invalidLink => {
+    this.graph.invalidLinks.forEach((invalidLink) => {
       this.graph.addLink({
         ...invalidLink,
         From: `${invalidLink.sourceNode}/${invalidLink.sourcePort}`,
-        To: `${invalidLink.targetNode}/${invalidLink.targetPort}`
+        To: `${invalidLink.targetNode}/${invalidLink.targetPort}`,
       });
     });
   };
@@ -165,13 +165,13 @@ export default class GraphValidator {
     const invalidExposedPorts = [];
     const exposedPorts = Object.values(this.graph.exposedPorts);
 
-    exposedPorts.forEach(instExposedPorts => {
+    exposedPorts.forEach((instExposedPorts) => {
       Object.entries(instExposedPorts).forEach(
         ([instName, nodeExposedPorts]) => {
           const invalidPorts = [];
           const thisNode = this.graph.nodes.get(instName)?.obj;
           if (!thisNode) return;
-          nodeExposedPorts.forEach(exposedPort => {
+          nodeExposedPorts.forEach((exposedPort) => {
             if (!thisNode.ports.has(exposedPort)) {
               invalidPorts.push(exposedPort);
             }
@@ -180,16 +180,16 @@ export default class GraphValidator {
           invalidPorts.length &&
             invalidExposedPorts.push({
               nodeInst: thisNode,
-              invalidPorts
+              invalidPorts,
             });
-        }
+        },
       );
     });
 
     invalidExposedPorts.length &&
       warnings.push({
         ...WARNINGS[WARNING_TYPES.INVALID_EXPOSED_PORTS],
-        data: invalidExposedPorts
+        data: invalidExposedPorts,
       });
 
     return warnings;
@@ -207,10 +207,10 @@ export default class GraphValidator {
     const invalidParamsWarning = [];
     const containers = new Map(
       [...this.graph.nodes].filter(
-        ([_, node]) => node.obj.data.type === TYPES.CONTAINER
-      )
+        ([_, node]) => node.obj.data.type === TYPES.CONTAINER,
+      ),
     );
-    containers.forEach(container => {
+    containers.forEach((container) => {
       const containerNode = container.obj;
       const instanceParams = containerNode?.data?.Parameter ?? {};
       const templateParams = containerNode?._template?.Parameter ?? {};
@@ -226,14 +226,14 @@ export default class GraphValidator {
           id: containerNode.data.id,
           name: containerNode.data.name,
           containerNode,
-          invalidParams
+          invalidParams,
         });
     });
 
     invalidContainers.length &&
       invalidParamsWarning.push({
         ...WARNINGS[WARNING_TYPES.INVALID_PARAMETERS],
-        data: invalidContainers
+        data: invalidContainers,
       });
 
     // return containers id
@@ -256,7 +256,7 @@ export default class GraphValidator {
     const warnings = [
       ...invalidLinks,
       ...invalidExposedPorts,
-      ...invalidParams
+      ...invalidParams,
     ];
     return { warnings };
   };
@@ -275,25 +275,25 @@ export default class GraphValidator {
       if (!newName)
         throw new Error(
           i18n.t(MESSAGES.ERROR_MESSAGES.INSTANCE_NAME_IS_MANDATORY, {
-            instance: instType
-          })
+            instance: instType,
+          }),
         );
       if (!re.test(newName))
         throw new Error(
           i18n.t(MESSAGES.ERROR_MESSAGES.INVALID_INSTANCE_NAME, {
-            instance: instType
-          })
+            instance: instType,
+          }),
         );
       if (this.graph.nodes.has(newName))
         throw new Error(
-          i18n.t(MESSAGES.ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME)
+          i18n.t(MESSAGES.ERROR_MESSAGES.MULTIPLE_ENTRIES_WITH_SAME_NAME),
         );
 
       return { result: true, error: "" };
     } catch (err) {
       return {
         result: false,
-        error: err.message
+        error: err.message,
       };
     }
   };
@@ -305,7 +305,7 @@ export default class GraphValidator {
    * @returns
    */
   static extractLinkPortsPos = (link, nodes, parent) => {
-    const [sourceNode, targetNode] = ["sourceNode", "targetNode"].map(key => {
+    const [sourceNode, targetNode] = ["sourceNode", "targetNode"].map((key) => {
       const node =
         nodes.get(link[key]) ??
         nodes.get(`${parent?.name}${PARENT_NODE_SEP}${link[key]}`);
@@ -327,7 +327,7 @@ export default class GraphValidator {
   static validatePorts = (link, nodes) => {
     const { sourcePortPos, targetPortPos } = GraphValidator.extractLinkPortsPos(
       link,
-      nodes
+      nodes,
     );
 
     if (!sourcePortPos || !targetPortPos) {
@@ -344,7 +344,7 @@ export default class GraphValidator {
   static validateLinkMismatch = (link, nodes) => {
     const { sourcePortPos, targetPortPos } = GraphValidator.extractLinkPortsPos(
       link,
-      nodes
+      nodes,
     );
 
     // Check if it still has source/target ports
@@ -355,7 +355,7 @@ export default class GraphValidator {
       ? new MisMatchMessageLink(
           link,
           { source: sourcePortPos, target: targetPortPos },
-          () => defaultFunction("")
+          () => defaultFunction(""),
         )
       : null;
 

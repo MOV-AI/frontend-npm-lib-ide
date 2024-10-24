@@ -10,13 +10,13 @@ const BaseMode = function (id) {
     id: id,
     onEnter: new Subject(),
     onExit: new Subject(),
-    props: null
+    props: null,
   };
 };
 
 const _AddNodeMode = function () {
   return {
-    onClick: new Subject()
+    onClick: new Subject(),
   };
 };
 
@@ -30,7 +30,7 @@ const AddNodeMode = function (id) {
 
 const _DragMode = function () {
   return {
-    onDrag: new Subject()
+    onDrag: new Subject(),
   };
 };
 
@@ -41,7 +41,7 @@ const DragMode = function (id) {
 const _LinkingMode = function () {
   return {
     onClick: new Subject(),
-    onMouseMove: new Subject()
+    onMouseMove: new Subject(),
   };
 };
 

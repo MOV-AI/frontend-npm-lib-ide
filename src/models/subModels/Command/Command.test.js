@@ -20,13 +20,13 @@ test("Serialize to DB", () => {
 
 test("Serialize OF db", () => {
   const content = {
-    cmd1: { Value: "file.sh", Description: "test cmd1" }
+    cmd1: { Value: "file.sh", Description: "test cmd1" },
   };
 
   const expected = {
     name: "cmd1",
     value: content.cmd1.Value,
-    description: content.cmd1.Description
+    description: content.cmd1.Description,
   };
 
   const data = Command.serializeOfDB(content);

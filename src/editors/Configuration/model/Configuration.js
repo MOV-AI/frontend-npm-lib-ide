@@ -91,7 +91,7 @@ export default class Configuration extends Model {
     return {
       ...super.serialize(),
       code: this.getCode(),
-      extension: this.getExtension()
+      extension: this.getExtension(),
     };
   }
 
@@ -114,7 +114,7 @@ export default class Configuration extends Model {
       Label: name,
       Yaml: code,
       Type: extension,
-      LastUpdate: details
+      LastUpdate: details,
     };
   }
 
@@ -134,7 +134,7 @@ export default class Configuration extends Model {
       Yaml: code,
       LastUpdate: details,
       workspace,
-      version
+      version,
     } = json;
 
     return {
@@ -144,7 +144,7 @@ export default class Configuration extends Model {
       extension,
       details,
       workspace,
-      version
+      version,
     };
   }
 
@@ -156,7 +156,7 @@ export default class Configuration extends Model {
     NAME: "name",
     CODE: "code",
     DETAILS: "details",
-    EXTENSION: "extension"
+    EXTENSION: "extension",
   };
 
   static KEYS_TO_DISCONSIDER = [this.OBSERVABLE_KEYS.CODE];
@@ -164,5 +164,5 @@ export default class Configuration extends Model {
 
 // Default model values
 Configuration.defaults = {
-  extension: "yaml"
+  extension: "yaml",
 };

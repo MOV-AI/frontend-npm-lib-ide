@@ -9,12 +9,12 @@ class TreeNodePortLink {
     this.target = {
       port: link.targetPort,
       node: link.targetNode,
-      templatePath: link.targetTemplatePath
+      templatePath: link.targetTemplatePath,
     };
     this.source = {
       port: link.sourcePort,
       node: link.sourceNode,
-      templatePath: link.sourceTemplatePath
+      templatePath: link.sourceTemplatePath,
     };
     this.type = type;
     this.object = d3.create("svg").style("pointer-events", "none");
@@ -38,17 +38,17 @@ class TreeNodePortLink {
     const data = this.type === "Out" ? this.target : this.source;
     const templates = this.getTemplates(data);
     const [nodeName, nodePort] = this.parseNodePort(data);
-    templates.forEach(item => {
+    templates.forEach((item) => {
       BaseNode.getMiniature(
         item.templateData ?? item.name,
         item.type,
-        xPosition
-      ).then(miniature => {
+        xPosition,
+      ).then((miniature) => {
         this.object.append(() => {
           const mini = miniature.node();
           mini.style.pointerEvents = "all";
           // dblclick event
-          mini.ondblclick = evt => {
+          mini.ondblclick = (evt) => {
             // stop event propagation
             evt.stopPropagation();
             evt.preventDefault();
@@ -56,7 +56,7 @@ class TreeNodePortLink {
             this.parentNode.onDblClickMini(item);
           };
           // ignore click event
-          mini.onclick = evt => {
+          mini.onclick = (evt) => {
             // stop event propagation
             evt.stopPropagation();
             evt.preventDefault();
@@ -147,7 +147,7 @@ class TreeNodePortLink {
       const info = {
         flow: { model: "Flow", nodeType: TYPES.CONTAINER },
         node: { model: "Node", nodeType: TYPES.NODE },
-        start: {}
+        start: {},
       };
       return { name, type, ...info[type], data, templateData };
     });

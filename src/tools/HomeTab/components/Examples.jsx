@@ -9,7 +9,7 @@ import { examplesDocumentsStyles } from "../styles";
 
 const HOME_EXAMPLES = window.SERVER_DATA?.Examples || [];
 
-const Examples = props => {
+const Examples = (props) => {
   const classes = examplesDocumentsStyles();
   const { openExistingDocument } = props;
 
@@ -63,7 +63,7 @@ const Examples = props => {
 
 Examples.propTypes = {
   openExistingDocument: PropTypes.func,
-  on: PropTypes.func
+  on: PropTypes.func,
 };
 
 export default Examples;

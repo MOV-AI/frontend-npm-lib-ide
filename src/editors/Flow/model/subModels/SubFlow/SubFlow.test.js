@@ -17,8 +17,8 @@ test("Serialize OF db", () => {
       ContainerLabel: "subflow",
       ContainerFlow: "tugbot_actuators",
       Visualization: [0.01, 0.02],
-      Parameter: { varA: { Value: "5" } }
-    }
+      Parameter: { varA: { Value: "5" } },
+    },
   };
 
   const expected = {
@@ -26,8 +26,8 @@ test("Serialize OF db", () => {
     template: data.subflow.ContainerFlow,
     position: { x: 0.01, y: 0.02 },
     parameters: {
-      varA: { name: "varA", value: "5", type: undefined }
-    }
+      varA: { name: "varA", value: "5", type: undefined },
+    },
   };
 
   expect(SubFlow.serializeOfDB(data)).toMatchObject(expected);
@@ -43,8 +43,8 @@ test("Serialize TO db", () => {
       move_distance_to_car: {
         name: "move_distance_to_car",
         value: "0.30",
-      }
-    }
+      },
+    },
   };
 
   const expected = {
@@ -52,12 +52,12 @@ test("Serialize TO db", () => {
     ContainerLabel: "align",
     Visualization: {
       x: { Value: 0.01 },
-      y: { Value: 0.03 }
+      y: { Value: 0.03 },
     },
     Parameter: {
       camera: { Value: "back1" },
-      move_distance_to_car: { Value: "0.30" }
-    }
+      move_distance_to_car: { Value: "0.30" },
+    },
   };
 
   const obj = new SubFlow();
@@ -77,8 +77,8 @@ test("Create subflow", () => {
       move_distance_to_car: {
         name: "move_distance_to_car",
         value: "0.30",
-      }
-    }
+      },
+    },
   };
 
   const obj = new SubFlow();

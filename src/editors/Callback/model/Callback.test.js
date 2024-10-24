@@ -39,7 +39,7 @@ test("Create document of JSON", () => {
     LastUpdate: { user: "mj", date: "20/04/1981" },
     Code: "varA: 1",
     Message: "movai_msgs/Any",
-    Py3Lib: { math: { Module: "Math", Class: false } }
+    Py3Lib: { math: { Module: "Math", Class: false } },
   };
 
   const expected = {
@@ -48,7 +48,7 @@ test("Create document of JSON", () => {
     code: json.Code,
     message: json.Message,
     details: json.LastUpdate,
-    pyLibs: { math: { module: "Math", libClass: false } }
+    pyLibs: { math: { module: "Math", libClass: false } },
   };
 
   const obj = Callback.ofJSON(json);
@@ -67,7 +67,7 @@ test("Serialize to database", () => {
     LastUpdate: { user: "mj", date: "20/04/1981" },
     Code: "varA: 1",
     Message: "movai_msgs/Any",
-    Py3Lib: { math: { Module: "Math", Class: false } }
+    Py3Lib: { math: { Module: "Math", Class: false } },
   };
 
   const expected = {
@@ -75,7 +75,7 @@ test("Serialize to database", () => {
     Code: json.Code,
     Message: json.Message,
     Py3Lib: json.Py3Lib,
-    LastUpdate: json.LastUpdate
+    LastUpdate: json.LastUpdate,
   };
 
   const obj = Callback.ofJSON(json);
@@ -94,7 +94,7 @@ test("Verify serialize defaults to DB", () => {
     LastUpdate: undefined,
     Code: undefined,
     Message: undefined,
-    Py3Lib: undefined
+    Py3Lib: undefined,
   };
 
   const expected = {
@@ -102,7 +102,7 @@ test("Verify serialize defaults to DB", () => {
     Code: "",
     Message: "",
     Py3Lib: {},
-    LastUpdate: { user: "N/A", date: "N/A" }
+    LastUpdate: { user: "N/A", date: "N/A" },
   };
 
   const obj = Callback.ofJSON(json);

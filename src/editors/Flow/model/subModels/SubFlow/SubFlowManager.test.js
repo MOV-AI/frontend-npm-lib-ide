@@ -16,9 +16,9 @@ test("Serialize OF db", () => {
       Visualization: [0.01, 0.02],
       Parameter: {
         camera: { Value: "back1" },
-        move_distance_to_car: { Value: "0.30" }
-      }
-    }
+        move_distance_to_car: { Value: "0.30" },
+      },
+    },
   };
 
   const expected = {
@@ -31,9 +31,9 @@ test("Serialize OF db", () => {
         move_distance_to_car: {
           name: "move_distance_to_car",
           value: "0.30",
-        }
-      }
-    }
+        },
+      },
+    },
   };
 
   const data = Manager.serializeOfDB(content, SubFlow);
@@ -48,12 +48,12 @@ test("Serialize TO db", () => {
       ContainerLabel: "align",
       Visualization: {
         x: { Value: 0.01 },
-        y: { Value: 0.02 }
+        y: { Value: 0.02 },
       },
       Parameter: {
-        camera: { Value: "back1" }
-      }
-    }
+        camera: { Value: "back1" },
+      },
+    },
   };
 
   const data = Manager.serializeOfDB(content, SubFlow);
@@ -73,7 +73,7 @@ test("Get a subflow instance", () => {
   const content = {
     ContainerLabel: "test",
     ContainerFlow: "test",
-    Visualization: [9, 9]
+    Visualization: [9, 9],
   };
 
   obj.setItem({ name: content.ContainerLabel, content });
@@ -90,7 +90,7 @@ test("Add a subflow instance", () => {
   const content = {
     name: subflowName,
     template: "test",
-    position: { x: 5, y: 5 }
+    position: { x: 5, y: 5 },
   };
 
   nodes.setItem({ name: subflowName, content });
@@ -99,7 +99,7 @@ test("Add a subflow instance", () => {
   expect(nodes.getItem(subflowName).getName()).toBe(subflowName);
   expect(nodes.getItem(subflowName).getTemplate()).toBe(content.template);
   expect(nodes.getItem(subflowName).getPosition()).toMatchObject(
-    content.position
+    content.position,
   );
 });
 
@@ -110,7 +110,7 @@ test("Delete a subflow instance", () => {
   const content = {
     ContainerLabel: subflowName,
     ContainerFlow: "test",
-    Visualization: [5, 5]
+    Visualization: [5, 5],
   };
 
   nodes.setItem({ name: subflowName, content });
@@ -126,7 +126,7 @@ test("Update a subflow instance", () => {
   const content = {
     ContainerLabel: subflowName,
     ContainerFlow: "test",
-    Visualization: [5, 5]
+    Visualization: [5, 5],
   };
 
   const newPosition = { x: 99, y: 99 };
@@ -135,7 +135,7 @@ test("Update a subflow instance", () => {
 
   nodes.updateItem({
     name: subflowName,
-    content: { position: newPosition }
+    content: { position: newPosition },
   });
 
   expect(nodes.getItem(subflowName).getPosition()).toMatchObject(newPosition);

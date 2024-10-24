@@ -1,11 +1,11 @@
 const MAX_MOVING_PIXELS = 15000;
 const CANVAS_LIMITS = [
   [10, MAX_MOVING_PIXELS - 75],
-  [25, MAX_MOVING_PIXELS - 75]
+  [25, MAX_MOVING_PIXELS - 75],
 ];
 const FLOW_VIEW_MODE = {
   default: "default",
-  treeView: "treeView"
+  treeView: "treeView",
 };
 
 const MOVAI_FLOW_TYPES = {
@@ -19,27 +19,27 @@ const MOVAI_FLOW_TYPES = {
     MOVAI_SERVER: "MovAI/Server",
     MOVAI_FLOW: "MovAI/Flow",
     ROS2_NODE: "ROS2/Node",
-    ROS2_LIFECYCLENODE: "ROS2/LifecycleNode"
+    ROS2_LIFECYCLENODE: "ROS2/LifecycleNode",
   },
   LINKS: {
     TRANSITION: "movai_msgs/Transition",
-    NODELET: "movai_msgs/Nodelet"
-  }
+    NODELET: "movai_msgs/Nodelet",
+  },
 };
 
 const NODE_TYPES = {
   NODE: "NODE",
   CONTAINER: "CONTAINER",
   TREE_NODE: "TREE_NODE",
-  TREE_CONTAINER: "TREE_CONTAINER"
+  TREE_CONTAINER: "TREE_CONTAINER",
 };
 
 const TYPES = {
   NODE: "NodeInst",
-  CONTAINER: "Container"
+  CONTAINER: "Container",
 };
 
-const generateContainerId = flowId => {
+const generateContainerId = (flowId) => {
   return `base-${flowId?.replace(/\//g, "-")}`;
 };
 
@@ -53,5 +53,5 @@ export {
   FLOW_VIEW_MODE,
   MOVAI_FLOW_TYPES,
   NODE_TYPES,
-  TYPES
+  TYPES,
 };

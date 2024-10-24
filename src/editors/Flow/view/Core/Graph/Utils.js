@@ -20,12 +20,12 @@ const format = (obj, value) => {
  * @param {object} state :
  * @returns {array}
  */
-const normalize = state => {
+const normalize = (state) => {
   return Object.entries(flattenObject(state, "", SEPARATOR)).map(
     ([key, value]) => {
       // remove index added by flatten method
       return [...key.split(SEPARATOR).slice(0, -1), value].join(SEPARATOR);
-    }
+    },
   );
 };
 
@@ -37,8 +37,8 @@ const normalize = state => {
  */
 const arrDiff = (arr1, arr2) => {
   return arr1
-    .filter(v => !arr2.includes(v))
-    .concat(arr2.filter(v => !arr1.includes(v)));
+    .filter((v) => !arr2.includes(v))
+    .concat(arr2.filter((v) => !arr1.includes(v)));
 };
 
 /**
@@ -54,7 +54,7 @@ const shouldUpdateExposedPorts = (prevState, newState, updateAll) => {
     ? [...new Set([..._prevState, ..._newState])]
     : arrDiff(_prevState, _newState);
 
-  return state.map(key => format(key, _newState.includes(key)));
+  return state.map((key) => format(key, _newState.includes(key)));
 };
 
 export { shouldUpdateExposedPorts };

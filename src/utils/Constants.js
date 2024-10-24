@@ -16,62 +16,62 @@ export const DATA_TYPES = {
   NUMBER: "number",
   OBJECT: "object",
   ARRAY: "array",
-  ANY: "any"
+  ANY: "any",
 };
 
 export const SCOPES = {
   CALLBACK: "Callback",
   CONFIGURATION: "Configuration",
   NODE: "Node",
-  FLOW: "Flow"
+  FLOW: "Flow",
 };
 
 export const BOOKMARK_METHODS = {
   ADD_BOOKMARK: "addBookmark",
   SET_BOOKMARK: "setBookmark",
   REMOVE_BOOKMARK: "removeBookmark",
-  RESET_BOOKMARKS: "resetBookmarks"
+  RESET_BOOKMARKS: "resetBookmarks",
 };
 
 export const DRAWER = {
   VIEWS: {
     PLUGIN: "PLUGIN",
-    BOOKMARK: "BOOKMARK"
+    BOOKMARK: "BOOKMARK",
   },
   METHODS: {
     OPEN: "open",
     CLOSE: "close",
     TOGGLE: "toggle",
     ACTIVATE_PLUGIN_VIEW: "activatePluginView",
-    ACTIVATE_BOOKMARK_VIEW: "activateBookmarkView"
-  }
+    ACTIVATE_BOOKMARK_VIEW: "activateBookmarkView",
+  },
 };
 
 export const HOSTS = {
   ABSTRACT_HOST: {
-    NAME: "abstractHost"
+    NAME: "abstractHost",
   },
   TOP_BAR: {
-    NAME: "topBar"
+    NAME: "topBar",
   },
   LEFT_PANEL: {
-    NAME: "leftPanel"
+    NAME: "leftPanel",
   },
   MAIN_PANEL: {
-    NAME: "mainPanel"
+    NAME: "mainPanel",
   },
   LEFT_DRAWER: {
     NAME: "leftDrawer",
-    CALL: DRAWER.METHODS
+    CALL: DRAWER.METHODS,
   },
   BOTTOM_BAR: {
-    NAME: "bottomBar"
-  }
+    NAME: "bottomBar",
+  },
 };
 
 export const PLUGINS = {
   APP_KEYBINDINGS: {
-    NAME: "appKeybindings"
+    NAME: "appKeybindings",
   },
   DOC_MANAGER: {
     NAME: "docManager",
@@ -92,7 +92,7 @@ export const PLUGINS = {
       DELETE: "delete",
       CREATE: "create",
       SAVE_ACTIVE_EDITOR: "saveActiveEditor",
-      SAVE_DIRTIES: "saveDirties"
+      SAVE_DIRTIES: "saveDirties",
     },
     ON: {
       FLOW_EDITOR: "flowEditor",
@@ -101,8 +101,8 @@ export const PLUGINS = {
       UPDATE_DOCS: "updateDocs",
       LOAD_DOCS: "loadDocs",
       SAVE_DOC: "saveDoc",
-      BEFORE_SAVE_DOC: "beforeSaveDoc"
-    }
+      BEFORE_SAVE_DOC: "beforeSaveDoc",
+    },
   },
   TABS: {
     NAME: "tabs",
@@ -113,29 +113,29 @@ export const PLUGINS = {
       OPEN_EDITOR: "openEditor",
       UPDATE_TAB_ID: "updateTabId",
       FOCUS_ACTIVE_TAB: "focusActiveTab",
-      GET_ACTIVE_TAB: "getActiveTab"
+      GET_ACTIVE_TAB: "getActiveTab",
     },
     ON: {
       OPEN_EDITOR: "openEditor",
-      ACTIVE_TAB_CHANGE: "activeTabChange"
-    }
+      ACTIVE_TAB_CHANGE: "activeTabChange",
+    },
   },
   LEFT_DRAWER: {
     NAME: "leftDrawer",
     CALL: {
       ...BOOKMARK_METHODS,
-      ...DRAWER.METHODS
-    }
+      ...DRAWER.METHODS,
+    },
   },
   RIGHT_DRAWER: {
     NAME: "rightDrawer",
     CALL: {
       ...BOOKMARK_METHODS,
-      ...DRAWER.METHODS
+      ...DRAWER.METHODS,
     },
     ON: {
-      CHANGE_BOOKMARK: "changeBookmark"
-    }
+      CHANGE_BOOKMARK: "changeBookmark",
+    },
   },
   DIALOG: {
     NAME: "dialog",
@@ -149,44 +149,44 @@ export const PLUGINS = {
       CLOSE_DIRTY_DOC: "closeDirtyDocument",
       CUSTOM: "custom",
       CUSTOM_DIALOG: "customDialog",
-      ALERT: "alert"
-    }
+      ALERT: "alert",
+    },
   },
   ALERT: {
     NAME: "alert",
     CALL: {
-      SHOW: "show"
-    }
+      SHOW: "show",
+    },
   },
   MAIN_MENU: {
-    NAME: "mainMenu"
+    NAME: "mainMenu",
   },
   EXPLORER: {
-    NAME: "explorer"
+    NAME: "explorer",
   },
   PLACEHOLDER: {
-    NAME: "placeholder"
+    NAME: "placeholder",
   },
   FLOW_EXPLORER: {
     NAME: "FlowExplorer",
     CALL: {},
-    ON: { ADD_NODE: "addNode" }
+    ON: { ADD_NODE: "addNode" },
   },
   SYSTEM_BAR: {
-    NAME: "systemBar"
-  }
+    NAME: "systemBar",
+  },
 };
 
 export const KEYBIND_SCOPES = {
   APP: "all",
-  DIALOG: "dialog"
+  DIALOG: "dialog",
 };
 
 export const TABLE_KEYS_NAMES = {
   PARAMETERS: "parameters",
   ENVVARS: "envVars",
   CMDLINE: "commands",
-  CONTAINERCONF: "containerConf"
+  CONTAINERCONF: "containerConf",
 };
 
 export const EMPTY_MESSAGE = {
@@ -200,20 +200,20 @@ export const DIALOG_TITLE = {
   PARAMETERS: "Parameter",
   ENVVARS: "EnvironmentVariable",
   COMMANDS: "Command Line",
-  CONTAINERCONF: "Container Configuration"
+  CONTAINERCONF: "Container Configuration",
 };
 
 export const SAVE_OUTDATED_DOC_ACTIONS = {
   UPDATE_DOC: "updateDoc",
   OVERWRITE_DOC: "overwriteDoc",
-  CANCEL: "cancel"
+  CANCEL: "cancel",
 };
 
 export const DEFAULT_KEY_VALUE_DATA = {
   name: "",
   description: "",
   type: DATA_TYPES.ANY,
-  value: ""
+  value: "",
 };
 
 /**
@@ -223,7 +223,7 @@ export const DEFAULT_KEY_VALUE_DATA = {
  * but can’t have 2 underscores in a row;
  */
 export const ROS_VALID_NAMES = new RegExp(
-  /(?!.*__.*)^[a-zA-Z~/]{1}?[a-zA-Z0-9_/]*$/
+  /(?!.*__.*)^[a-zA-Z~/]{1}?[a-zA-Z0-9_/]*$/,
 );
 
 /**
@@ -234,37 +234,37 @@ export const ROS_VALID_NAMES = new RegExp(
  * but can’t have 2 underscores in a row;
  */
 export const ROS_VALID_NAMES_VARIATION = new RegExp(
-  /(?!.*__.*)^[a-zA-Z_~/]{1}?[a-zA-Z0-9_/]*$/
+  /(?!.*__.*)^[a-zA-Z_~/]{1}?[a-zA-Z0-9_/]*$/,
 );
 
 export const ALERT_SEVERITIES = {
   SUCCESS: "success",
   ERROR: "error",
   INFO: "info",
-  WARNING: "warning"
+  WARNING: "warning",
 };
 
 export const LINK_DEPENDENCY = {
   ALL_DEPENDENCIES: {
     LABEL: "AllDependenciesLabel",
     VALUE: 0,
-    COLOR: "white"
+    COLOR: "white",
   },
   ONLY_FROM: {
     LABEL: "OnlyFromLabel",
     VALUE: 1,
-    COLOR: "violet"
+    COLOR: "violet",
   },
   ONLY_TO: {
     LABEL: "OnlyToLabel",
     VALUE: 2,
-    COLOR: "steelblue"
+    COLOR: "steelblue",
   },
   NO_DEPENDENCIES: {
     LABEL: "NoDependenciesLabel",
     VALUE: 3,
-    COLOR: "darkseagreen"
-  }
+    COLOR: "darkseagreen",
+  },
 };
 
 /**
@@ -275,7 +275,7 @@ export const FLOW_CONTEXT_MODES = {
   SUBFLOW: TYPES.CONTAINER,
   LINK: "Link",
   PORT: "Port",
-  CANVAS: "Canvas"
+  CANVAS: "Canvas",
 };
 
 //========================================================================================
@@ -290,31 +290,31 @@ export const DOCK_POSITIONS = {
   DOCK: "dockbox",
   WINDOW: "windowbox",
   MAX: "maxbox",
-  FLOAT: "floatbox"
+  FLOAT: "floatbox",
 };
 
 export const DOCK_MODES = {
   MAXIMIZE: "maximize",
-  REMOVE: "remove"
+  REMOVE: "remove",
 };
 
 export const FLOW_EXPLORER_PROFILE = {
   name: "FlowExplorer",
-  title: "AddNodeOrSubFlow"
+  title: "AddNodeOrSubFlow",
 };
 
 export const HOMETAB_PROFILE = {
   name: "HomeTab",
-  title: i18n.t("HomeTabTitle")
+  title: i18n.t("HomeTabTitle"),
 };
 
 export const SHORTCUTS_PROFILE = {
   name: "ShortcutsTab",
-  title: i18n.t("ShortcutsTabTitle")
+  title: i18n.t("ShortcutsTabTitle"),
 };
 
 export const DEFAULT_TABS = new Map(
-  Object.entries({ [HOMETAB_PROFILE.name]: { id: HOMETAB_PROFILE.name } })
+  Object.entries({ [HOMETAB_PROFILE.name]: { id: HOMETAB_PROFILE.name } }),
 );
 
 export const DEFAULT_LAYOUT = {
@@ -324,15 +324,15 @@ export const DEFAULT_LAYOUT = {
       {
         tabs: [
           {
-            id: HOMETAB_PROFILE.name
-          }
-        ]
-      }
-    ]
+            id: HOMETAB_PROFILE.name,
+          },
+        ],
+      },
+    ],
   },
   windowbox: { children: [] },
   maxbox: { children: [] },
-  floatbox: { children: [] }
+  floatbox: { children: [] },
 };
 
 //========================================================================================
@@ -352,12 +352,12 @@ export const MOVAI_FLOW_TYPES = {
     MOVAI_SERVER: "MovAI/Server",
     MOVAI_FLOW: "MovAI/Flow",
     ROS2_NODE: "ROS2/Node",
-    ROS2_LIFECYCLENODE: "ROS2/LifecycleNode"
+    ROS2_LIFECYCLENODE: "ROS2/LifecycleNode",
   },
   LINKS: {
     TRANSITION: "movai_msgs/Transition",
-    NODELET: "movai_msgs/Nodelet"
-  }
+    NODELET: "movai_msgs/Nodelet",
+  },
 };
 
 //========================================================================================

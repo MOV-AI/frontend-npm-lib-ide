@@ -36,7 +36,7 @@ class Store extends BaseStore {
 
     // Add changes subscriber
     doc.subscribe((instance, prop, value) =>
-      this.onDocumentUpdate(instance, prop, value)
+      this.onDocumentUpdate(instance, prop, value),
     );
 
     // store the document
@@ -54,13 +54,13 @@ class Store extends BaseStore {
     return Document.delete({
       name,
       type: this.scope,
-      body: {}
+      body: {},
     })
-      .then(_ => {
+      .then((_) => {
         // delete only if successfully deleted from the database
         return this.deleteDocFromStore(name);
       })
-      .then(res => {
+      .then((res) => {
         this.observer.onDocumentDeleted(this.name, { name, url: docUrl });
         return res;
       });
@@ -76,7 +76,7 @@ class Store extends BaseStore {
     const payload = {
       type: scope,
       name: data.Label,
-      body: data
+      body: data,
     };
     return Document.create(payload);
   }
@@ -112,15 +112,15 @@ class Store extends BaseStore {
     // If is a new document => create document in DB
     // If is not a new document => update in DB
     const saveMethodByIsNew = {
-      true: _data => {
+      true: (_data) => {
         return this.saveNewDoc(_data);
       },
-      false: _data => {
+      false: (_data) => {
         return this.saveExistingDoc(name, _data);
-      }
+      },
     };
 
-    return saveMethodByIsNew[doc.getIsNew()](data).then(async res => {
+    return saveMethodByIsNew[doc.getIsNew()](data).then(async (res) => {
       if (res.success) {
         doc.setIsNew(false).setDirty(false).setIsCreatedByUser(true);
         this.observer.onDocumentDirty(this.name, doc, doc.getDirty());
@@ -146,7 +146,7 @@ class Store extends BaseStore {
    * @returns {Promise<Model>} Promise resolved after finish copying document
    */
   async copyDoc(name, newName) {
-    return this.readDoc(name).then(doc => {
+    return this.readDoc(name).then((doc) => {
       const newObj = this.model
         .ofJSON(doc.serializeToDB())
         .setIsNew(true)
@@ -157,7 +157,7 @@ class Store extends BaseStore {
 
       // Add subscriber to update dirty state
       newObj.subscribe((instance, prop, value) =>
-        this.onDocumentUpdate(instance, prop, value)
+        this.onDocumentUpdate(instance, prop, value),
       );
 
       // Return copied document
@@ -185,7 +185,7 @@ class Store extends BaseStore {
     if (!doc) {
       return this.observer.onDocumentDeleted(this.name, {
         name,
-        url: Utils.buildDocPath({ scope: this.name, name })
+        url: Utils.buildDocPath({ scope: this.name, name }),
       });
     }
 
@@ -201,7 +201,7 @@ class Store extends BaseStore {
       if (this.deleteDocFromStore(name)) {
         this.observer.onDocumentDeleted(this.name, {
           name,
-          url: Utils.buildDocPath(doc)
+          url: Utils.buildDocPath(doc),
         });
       }
     } else {
@@ -216,7 +216,7 @@ class Store extends BaseStore {
    * @returns {Array} Names of dirty documents from store
    */
   getDirties() {
-    return Array.from(this.data.values()).filter(obj => obj.getDirty());
+    return Array.from(this.data.values()).filter((obj) => obj.getDirty());
   }
 
   /**
@@ -232,7 +232,7 @@ class Store extends BaseStore {
    * @returns {Promise<>}
    */
   saveDirties() {
-    const promises = this.getDirties().map(obj => {
+    const promises = this.getDirties().map((obj) => {
       return this.saveDoc(obj.getName());
     });
 

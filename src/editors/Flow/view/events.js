@@ -18,12 +18,12 @@ const EVT_NAMES = {
   ON_PORT_CTX_MENU: "onPortCtxMenu",
   ON_PORT_MOUSE_OVER: "onPortMouseOver",
   ON_TOGGLE_WARNINGS: "onToggleWarnings",
-  SELECT_NODE: "selectNode"
+  SELECT_NODE: "selectNode",
 };
 
 const EVT_TYPES = {
   LINK: "Link",
-  PORT: "Port"
+  PORT: "Port",
 };
 
 export { EVT_NAMES, EVT_TYPES };

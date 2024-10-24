@@ -1,18 +1,18 @@
 import { makeStyles } from "@material-ui/styles";
 
-export const collapsibleHeaderStyles = makeStyles(_theme => ({
+export const collapsibleHeaderStyles = makeStyles((_theme) => ({
   root: {
     padding: "5px 0px 5px 0px",
-    width: "100%"
+    width: "100%",
   },
   heading: {
-    fontSize: "1.5rem"
+    fontSize: "1.5rem",
   },
   details: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   column: {
-    flexBasis: "90%"
-  }
+    flexBasis: "90%",
+  },
 }));

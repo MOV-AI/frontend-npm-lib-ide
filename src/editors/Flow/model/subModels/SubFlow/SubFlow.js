@@ -15,7 +15,7 @@ class SubFlow extends Model {
     //========================================================================================
 
     this.propEvents = {
-      onAny: (event, name, value) => this.propsUpdate(event, name, value)
+      onAny: (event, name, value) => this.propsUpdate(event, name, value),
     };
 
     //========================================================================================
@@ -74,7 +74,7 @@ class SubFlow extends Model {
     this.position.setData({ x, y });
     this.dispatch(
       SubFlow.OBSERVABLE_KEYS.POSITION,
-      this.getPosition().serialize()
+      this.getPosition().serialize(),
     );
 
     return this;
@@ -177,7 +177,7 @@ class SubFlow extends Model {
       name: this.getName(),
       template: this.getTemplate(),
       position: this.getPosition().serialize(),
-      parameters: this.getParameters().serialize()
+      parameters: this.getParameters().serialize(),
     };
   }
 
@@ -193,7 +193,7 @@ class SubFlow extends Model {
       ContainerLabel: name,
       ContainerFlow: template,
       Visualization: this.getPosition().serializeToDB(),
-      Parameter: this.getParameters().serializeToDB()
+      Parameter: this.getParameters().serializeToDB(),
     };
   }
 
@@ -215,21 +215,21 @@ class SubFlow extends Model {
     const {
       ContainerFlow: template,
       Visualization: position,
-      Parameter: parameters
+      Parameter: parameters,
     } = content;
 
     return {
       name,
       template,
       position: Position.serializeOfDB(position),
-      parameters: Manager.serializeOfDB(parameters, Parameter)
+      parameters: Manager.serializeOfDB(parameters, Parameter),
     };
   }
 
   static OBSERVABLE_KEYS = {
     NAME: "name",
     TEMPLATE: "template",
-    POSITION: "position"
+    POSITION: "position",
   };
 }
 

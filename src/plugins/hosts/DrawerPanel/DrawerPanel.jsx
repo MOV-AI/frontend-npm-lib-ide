@@ -5,7 +5,7 @@ import { DRAWER } from "../../../utils/Constants";
 import { withHostReactPlugin } from "../../../engine/ReactPlugin/HostReactPlugin";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import withBookmarks, {
-  exposedMethods
+  exposedMethods,
 } from "../../../decorators/withBookmarks";
 
 import { drawerPanelStyles } from "./styles";
@@ -19,7 +19,7 @@ const DrawerPanel = forwardRef((props, ref) => {
     initialOpenState,
     className,
     length,
-    children: bookmarkView
+    children: bookmarkView,
   } = props;
   const [open, setOpen] = useState(initialOpenState);
   const [activeView, setActiveView] = useState(DRAWER.VIEWS.PLUGIN);
@@ -36,7 +36,7 @@ const DrawerPanel = forwardRef((props, ref) => {
    * Toggle drawer
    */
   const toggleDrawer = () => {
-    setOpen(prevState => {
+    setOpen((prevState) => {
       return !prevState;
     });
   };
@@ -103,7 +103,7 @@ const DrawerPanel = forwardRef((props, ref) => {
     toggleDrawer,
     resetDrawer,
     openDrawer,
-    closeDrawer
+    closeDrawer,
   });
 
   //========================================================================================
@@ -130,19 +130,19 @@ const DrawerPanel = forwardRef((props, ref) => {
 
 DrawerPanel.pluginMethods = [
   ...exposedMethods,
-  ...Object.values(DRAWER.METHODS)
+  ...Object.values(DRAWER.METHODS),
 ];
 
 export default withHostReactPlugin(
   withBookmarks(DrawerPanel),
-  DrawerPanel.pluginMethods
+  DrawerPanel.pluginMethods,
 );
 
 DrawerPanel.propTypes = {
   hostName: PropTypes.string.isRequired,
-  initialOpenState: PropTypes.bool
+  initialOpenState: PropTypes.bool,
 };
 
 DrawerPanel.defaultProps = {
-  initialOpenState: false
+  initialOpenState: false,
 };

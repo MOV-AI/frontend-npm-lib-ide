@@ -15,7 +15,7 @@ export default class BaseNodeStruct {
       Remappable: data.Remappable,
       Launch: data.Launch,
       type: TYPES.NODE,
-      model: "Node"
+      model: "Node",
     };
   }
 
@@ -29,7 +29,7 @@ export default class BaseNodeStruct {
     "Parameter",
     "CmdLine",
     "EnvVar",
-    "Visualization"
+    "Visualization",
   ];
 
   _ports = new Map();
@@ -61,7 +61,7 @@ export default class BaseNodeStruct {
 
     return {
       xCenter: posX + width / 2,
-      yCenter: posY + height / 2
+      yCenter: posY + height / 2,
     };
   }
 
@@ -81,13 +81,13 @@ export default class BaseNodeStruct {
   getNrOfPorts = () => {
     const output = { In: 0, Out: 0 };
 
-    this._ports.forEach(port => {
+    this._ports.forEach((port) => {
       output[port.type] += 1;
     });
 
     return {
       Max: Math.max(output.In, output.Out),
-      ...output
+      ...output,
     };
   };
 
@@ -109,7 +109,7 @@ export default class BaseNodeStruct {
    * @param {*} type
    * @returns
    */
-  getPortsInitialPos = type => {
+  getPortsInitialPos = (type) => {
     const nrOfPorts = this.getNrOfPorts();
     const height = this.getHeight();
     const { width, portsSpacing } = this;
@@ -117,7 +117,7 @@ export default class BaseNodeStruct {
 
     const initX = {
       In: x / 2,
-      Out: width + x / 2
+      Out: width + x / 2,
     };
 
     const initY = height / 2 - ((nrOfPorts[type] - 1) * portsSpacing) / 2 + y;
@@ -125,7 +125,7 @@ export default class BaseNodeStruct {
     return [initX[type], initY];
   };
 
-  getPortPos = portName => {
+  getPortPos = (portName) => {
     return this._ports.get(portName)?.position;
   };
 }

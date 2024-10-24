@@ -7,10 +7,10 @@ const LogsTool = () => {
   const robotManager = useRef(new RobotManager());
   const [robots, setRobots] = useState({});
 
-  const updateRobots = useCallback(changedRobots => {
-    setRobots(prevState => {
+  const updateRobots = useCallback((changedRobots) => {
+    setRobots((prevState) => {
       const newState = {};
-      Object.keys(changedRobots).forEach(id => {
+      Object.keys(changedRobots).forEach((id) => {
         newState[id] = changedRobots[id];
       });
       return { ...prevState, ...newState };
@@ -26,7 +26,7 @@ const LogsTool = () => {
   useEffect(() => {
     const _robotManager = robotManager.current;
 
-    _robotManager.getAll(_robots => setRobots(_robots));
+    _robotManager.getAll((_robots) => setRobots(_robots));
     const subId = _robotManager.subscribeToChanges(updateRobots);
 
     return () => {
@@ -36,12 +36,12 @@ const LogsTool = () => {
 
   const formatRobotData = () => {
     const res = [];
-    Object.keys(robots).forEach(elem => {
+    Object.keys(robots).forEach((elem) => {
       const id = elem;
       res.push({
         id,
         name: robots?.[id].RobotName,
-        ip: robots?.[id].IP
+        ip: robots?.[id].IP,
       });
     });
     return res;
@@ -58,7 +58,7 @@ export default LogsPlugin;
 export const LOGS_PROFILE = {
   name: "Logs",
   title: "Logs",
-  plugin: LogsPlugin
+  plugin: LogsPlugin,
 };
 
 export const getLogsToolTab = () => {
@@ -68,6 +68,6 @@ export const getLogsToolTab = () => {
     name: LOGS_PROFILE.title,
     tabTitle: LOGS_PROFILE.title,
     scope: LOGS_PROFILE.name,
-    extension: ""
+    extension: "",
   };
 };

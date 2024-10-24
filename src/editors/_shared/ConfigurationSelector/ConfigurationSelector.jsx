@@ -6,14 +6,12 @@ import { SelectScopeModal } from "@mov-ai/mov-fe-lib-react";
 import CodeIcon from "@material-ui/icons/Code";
 
 function formatValue(value) {
-  return value.split('/').pop();
+  return value.split("/").pop();
 }
 
-const ConfigurationSelector = props => {
+const ConfigurationSelector = (props) => {
   // Props
-  const {
-    rowProps = {},
-  } = props;
+  const { rowProps = {} } = props;
   // State Hooks
   const [openModal, setOpenModal] = useState(false);
   const [selected, setSelected] = useState(rowProps.rowData?.value);
@@ -24,8 +22,8 @@ const ConfigurationSelector = props => {
    * On Configuration selected
    * @param {string} selectedConfiguration
    */
-  const onSubmit = selectedConfiguration => {
-    const formatted =  formatValue(selectedConfiguration);
+  const onSubmit = (selectedConfiguration) => {
+    const formatted = formatValue(selectedConfiguration);
     rowProps.onChange(formatted);
     setSelected(formatted);
     setOpenModal(false);
@@ -50,7 +48,7 @@ const ConfigurationSelector = props => {
       style={{ width: "100%" }}
       value={selected || ""}
       data-testid="selector-text-input"
-      onChange={evt => {
+      onChange={(evt) => {
         setSelected(evt.target.value);
         rowProps.onChange(evt.target.value);
       }}
@@ -63,7 +61,7 @@ const ConfigurationSelector = props => {
               aria-label="Select configuration"
               onClick={() => setOpenModal(true)}
               disabled={props.rowProps.disabled}
-              onMouseDown={evt => evt.preventDefault()}
+              onMouseDown={(evt) => evt.preventDefault()}
             >
               <CodeIcon></CodeIcon>
             </IconButton>
@@ -76,7 +74,7 @@ const ConfigurationSelector = props => {
               allowArchive={false}
             ></SelectScopeModal>
           </InputAdornment>
-        )
+        ),
       }}
     />
   );
@@ -90,6 +88,6 @@ ConfigurationSelector.propTypes = {
       value: PropTypes.string,
     }),
   },
-}
+};
 
 export default ConfigurationSelector;

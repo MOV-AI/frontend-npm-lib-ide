@@ -73,7 +73,7 @@ class TreeNode extends BaseNode {
       this.name,
       this.templateName,
       this._type,
-      this.data.endless
+      this.data.endless,
     );
 
     // append to the svg element
@@ -96,7 +96,7 @@ class TreeNode extends BaseNode {
         text: "PORTS",
         isExpanded: this._displayPorts,
         parent: this.parent,
-        onToggleCollapsePorts: this.onToggleCollapsePorts
+        onToggleCollapsePorts: this.onToggleCollapsePorts,
       });
       // Add ports header to node
       this.object.append(() => {
@@ -106,10 +106,10 @@ class TreeNode extends BaseNode {
       this._ports = new Map(
         [...this._ports.entries()].sort(([_aKey, a], [_bKey, b]) => {
           return a.data.type.localeCompare(b.data.type);
-        })
+        }),
       );
       // Add ports to header container
-      this._ports.forEach(port => {
+      this._ports.forEach((port) => {
         this._collapsablePorts.addChild(port);
       });
     }
@@ -188,7 +188,7 @@ class TreeNode extends BaseNode {
 
     return {
       xCenter: x + this.width / 2,
-      yCenter: y + this.height / 2
+      yCenter: y + this.height / 2,
     };
   }
 
@@ -205,13 +205,13 @@ class TreeNode extends BaseNode {
       x1: parentPos.x - offset.x + this.width / 2 + this.padding.x / 2,
       y1: parentPos.y - offset.y + this.height + this.padding.y,
       x2: parentPos.x - offset.x + this.width / 2 + this.padding.x / 2,
-      y2: childPos.y - offset.y + this.width / 2
+      y2: childPos.y - offset.y + this.width / 2,
     };
     const lineX = {
       x1: lineY.x2,
       y1: lineY.y2,
       x2: lineY.x2 + this.padding.x / 2,
-      y2: lineY.y2
+      y2: lineY.y2,
     };
     return [lineX, lineY];
   }
@@ -234,7 +234,7 @@ class TreeNode extends BaseNode {
    */
   getPreviousBrother() {
     const thisIndex = this.parent.children.findIndex(
-      n => n.data.id === this.data.id
+      (n) => n.data.id === this.data.id,
     );
     const previousBrother = thisIndex - 1;
     return this.parent.children[previousBrother] ?? this.parent;
@@ -255,16 +255,16 @@ class TreeNode extends BaseNode {
     const position = {
       Container: {
         x: previousBrotherPos.x,
-        y: parentPos.y
+        y: parentPos.y,
       },
       NodeInst: {
         x: parentPos.x,
-        y: previousBrotherPos.y
+        y: previousBrotherPos.y,
       },
       State: {
         x: parentPos.x,
-        y: previousBrotherPos.y
-      }
+        y: previousBrotherPos.y,
+      },
     };
     // Return position
     return position[this.data.type];
@@ -276,7 +276,7 @@ class TreeNode extends BaseNode {
    *
    * @param {function} fn function to call if the node's events are enabled
    */
-  eventsOn = fn => {
+  eventsOn = (fn) => {
     // Exit function if click is not on clickable area to select/unselect
     const targetClasses = d3.event?.target?.className?.baseVal;
     if (!targetClasses?.includes("node-inst-click-area")) return;
@@ -292,7 +292,7 @@ class TreeNode extends BaseNode {
    * Reload node to update cache
    */
   updateLinks = _debounce(() => {
-    this._links.forEach(link => {
+    this._links.forEach((link) => {
       this.addLink(link);
     });
   }, 500);
@@ -302,7 +302,7 @@ class TreeNode extends BaseNode {
    * @param {Object} link : Link info
    * @returns Source/Target ports objects
    */
-  getLinkPorts = link => {
+  getLinkPorts = (link) => {
     const sourceCount = link.sourceFullPath.length - 1;
     const targetCount = link.targetFullPath.length - 1;
     const finalSourcePort = this.formatPort(link, "sourcePort", sourceCount);
@@ -364,7 +364,7 @@ class TreeNode extends BaseNode {
   get headerPos() {
     return {
       x: this.width + this.padding.x,
-      y: 0
+      y: 0,
     };
   }
 
@@ -403,7 +403,7 @@ class TreeNode extends BaseNode {
    *
    * @param {string} templateName node's template name
    */
-  onTemplateUpdate = template => {
+  onTemplateUpdate = (template) => {
     const templateName = template.Label ?? template;
     if (templateName !== this.templateName) return; //not my template
     this._template = undefined;
@@ -425,7 +425,7 @@ class TreeNode extends BaseNode {
    * Removes all children and clears the array
    */
   removeAllChildren = () => {
-    this.children.forEach(child => child.destroy());
+    this.children.forEach((child) => child.destroy());
     this.children = [];
   };
 
@@ -442,13 +442,13 @@ class TreeNode extends BaseNode {
    *
    * @param {Object} mini : Miniature node object
    */
-  onDblClickMini = mini => {
+  onDblClickMini = (mini) => {
     // doesn't trigger dblclick if model is empty
     if (!mini.model) return;
     // get data to trigger dblclick
     const dummyNode = {
       _template: { url: mini.name, name: mini.name },
-      data: { model: mini.model, type: mini.nodeType }
+      data: { model: mini.model, type: mini.nodeType },
     };
     // set mode to double click
     this.canvas.setMode(EVT_NAMES.ON_DBL_CLICK, { node: dummyNode }, true);
@@ -525,7 +525,7 @@ class TreeNode extends BaseNode {
   updatePortsPosition() {
     // Render ports info
     let portsHeightSum = 0;
-    this._ports.forEach(port => {
+    this._ports.forEach((port) => {
       port.updateLinksPosition().setPosition(portsHeightSum);
       portsHeightSum += port.el.getBBox().height + 5;
     });
@@ -548,7 +548,7 @@ class TreeNode extends BaseNode {
    */
   removeBelongLine() {
     if (this._belongLine) this._belongLine.remove();
-    this.children.forEach(child => {
+    this.children.forEach((child) => {
       child.removeBelongLine();
     });
   }

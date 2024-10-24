@@ -5,9 +5,9 @@ const Helper = {};
 const subscribers = {};
 const callbackPatterns = {
   label: { Scope: "Callback", Name: "*", Label: "*" },
-  message: { Scope: "Callback", Name: "*", Message: "*" }
+  message: { Scope: "Callback", Name: "*", Message: "*" },
 };
-const EMPTY_ARROW_FN = name => console.log(`${name} not implemented`);
+const EMPTY_ARROW_FN = (name) => console.log(`${name} not implemented`);
 
 //========================================================================================
 /*                                                                                      *
@@ -23,7 +23,7 @@ const EMPTY_ARROW_FN = name => console.log(`${name} not implemented`);
  */
 const formCallbackObject = (messageData, labelData) => {
   const scopeCallback = {};
-  Object.keys(messageData.value.Callback).forEach(key => {
+  Object.keys(messageData.value.Callback).forEach((key) => {
     scopeCallback[key] = {};
     scopeCallback[key]["Message"] = messageData.value.Callback[key]["Message"];
 
@@ -53,11 +53,11 @@ Helper.getAllTransportProtocol = async () => {
       MasterDB.subscribe(
         portsPattern,
         () => EMPTY_ARROW_FN("updateScopePorts"),
-        res => {
+        (res) => {
           const scopePorts = res?.value?.Ports || {};
           data.scopePorts = scopePorts;
           resolve(scopePorts);
-        }
+        },
       );
     } catch (err) {
       reject(err);
@@ -77,15 +77,15 @@ Helper.getPortsData = async () => {
   // Call cloud function
   return Rest.cloudFunction({
     cbName: "backend.getPortsData",
-    func: ""
+    func: "",
   })
-    .then(response => {
+    .then((response) => {
       if (response) {
         data.scopeSystemPortsData = response;
         return data.scopeSystemPortsData;
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.warn("debug fail to get ports data", err);
     });
 };
@@ -102,18 +102,18 @@ Helper.getScopeCallback = async () => {
       MasterDB.subscribe(
         callbackPatterns.message,
         () => EMPTY_ARROW_FN("updateMessage"),
-        messageData => {
+        (messageData) => {
           subscribers["callbackLabels"] = callbackPatterns.label;
           MasterDB.subscribe(
             callbackPatterns.label,
             () => EMPTY_ARROW_FN("updateLabel"),
-            labelData => {
+            (labelData) => {
               const scopeCallback = formCallbackObject(messageData, labelData);
               data.scopeCallback = scopeCallback;
               resolve(scopeCallback);
-            }
+            },
           );
-        }
+        },
       );
     } catch (err) {
       reject(err);
@@ -132,7 +132,7 @@ Helper.getScopeCallback = async () => {
  * Destroy : unsubscribe to MasterDB patterns
  */
 Helper.destroy = () => {
-  Object.values(subscribers).forEach(pattern => {
+  Object.values(subscribers).forEach((pattern) => {
     MasterDB.unsubscribe(pattern);
   });
 };

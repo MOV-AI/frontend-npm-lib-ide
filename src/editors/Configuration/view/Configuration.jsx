@@ -23,13 +23,13 @@ export const Configuration = (props, ref) => {
     call,
     instance,
     saveDocument = () => defaultFunction("saveDocument"),
-    editable = true
+    editable = true,
   } = props;
   // Other Hooks
   const { data } = useDataSubscriber({
     instance,
     propsData: props.data,
-    keysToDisconsider: Model.KEYS_TO_DISCONSIDER
+    keysToDisconsider: Model.KEYS_TO_DISCONSIDER,
   });
   // Style Hooks
   const classes = configurationStyles();
@@ -53,13 +53,13 @@ export const Configuration = (props, ref) => {
         title: menuTitle,
         view: (
           <Menu id={id} name={name} details={details} model={instance}></Menu>
-        )
-      }
+        ),
+      },
     });
   }, [call, id, name, instance, props.data]);
 
   usePluginMethods(ref, {
-    renderRightMenu
+    renderRightMenu,
   });
 
   //========================================================================================
@@ -72,7 +72,7 @@ export const Configuration = (props, ref) => {
    * Updates the config extension
    * @param {String} value
    */
-  const updateConfigExtension = value => {
+  const updateConfigExtension = (value) => {
     if (instance.current) instance.current.setExtension(value);
   };
 
@@ -81,7 +81,7 @@ export const Configuration = (props, ref) => {
    * @param {String} value
    * @returns
    */
-  const updateConfigCode = value => {
+  const updateConfigCode = (value) => {
     if (value === instance.current.getCode()) return;
     if (instance.current) instance.current.setCode(value);
   };
@@ -106,7 +106,7 @@ export const Configuration = (props, ref) => {
    * Should be called when editor loads
    * @param {*} editor
    */
-  const onLoadEditor = editor => {
+  const onLoadEditor = (editor) => {
     if (!id) editor.focus();
   };
 
@@ -145,10 +145,7 @@ export const Configuration = (props, ref) => {
         position="static"
         className={classes.appBar}
       >
-        <Toolbar
-          data-testid="input-toolbar"
-          variant="dense"
-        >
+        <Toolbar data-testid="input-toolbar" variant="dense">
           <ToggleButtonGroup
             size="small"
             exclusive
@@ -174,7 +171,7 @@ Configuration.propTypes = {
   instance: PropTypes.object,
   data: PropTypes.object,
   editable: PropTypes.bool,
-  saveDocument: PropTypes.func
+  saveDocument: PropTypes.func,
 };
 
 export default withEditorPlugin(Configuration);

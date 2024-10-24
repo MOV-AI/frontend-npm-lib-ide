@@ -11,7 +11,7 @@ test("Serialize OF db", () => {
 
   const expected = {
     id: "0",
-    name: "data1"
+    name: "data1",
   };
 
   expect(IdBased.serializeOfDB(data)).toMatchObject(expected);
@@ -20,7 +20,7 @@ test("Serialize OF db", () => {
 test("Serialize TO db", () => {
   const data = {
     id: "0",
-    name: "data1"
+    name: "data1",
   };
 
   const expected = { name: "data1" };

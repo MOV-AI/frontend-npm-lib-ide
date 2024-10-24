@@ -5,7 +5,7 @@ import { TYPES } from "../../../Constants/constants";
 
 const RENDERING_MODE = {
   tree: 0,
-  spread: 1
+  spread: 1,
 };
 
 class TreeContainerNode extends TreeNode {
@@ -79,7 +79,7 @@ class TreeContainerNode extends TreeNode {
     this._collapsableItem = new CollapsableItem({
       text: "NODES",
       isExpanded: this._displayChildren,
-      parent: this.parent
+      parent: this.parent,
     });
     // Add header to main object
     this.object.append(() => {
@@ -95,7 +95,7 @@ class TreeContainerNode extends TreeNode {
    * @param {Map<string,TreeNode>} children : Map of children
    */
   updateChildrenBelongLines(children = this.children) {
-    children.forEach(child => {
+    children.forEach((child) => {
       child.updateBelongLines();
       this.updateChildrenBelongLines(child.children);
     });
@@ -115,13 +115,13 @@ class TreeContainerNode extends TreeNode {
       x1: parentPos.x - offset.x + this.width + this.padding.x / 2,
       y1: parentPos.y - offset.y + this.height / 2 + this.padding.y / 2,
       x2: childPos.x - offset.x + this.width / 2 + this.padding.x / 2,
-      y2: parentPos.y - offset.y + this.height / 2 + this.padding.y / 2
+      y2: parentPos.y - offset.y + this.height / 2 + this.padding.y / 2,
     };
     const lineY = {
       x1: lineX.x2,
       y1: lineX.y2,
       x2: lineX.x2,
-      y2: childPos.y - offset.y + this.padding.y
+      y2: childPos.y - offset.y + this.padding.y,
     };
     return [lineX, lineY];
   }
@@ -135,7 +135,7 @@ class TreeContainerNode extends TreeNode {
     const positioner = {
       [RENDERING_MODE.tree]: () => {
         let childrenHeightSum = 0;
-        this.children.forEach(node => {
+        this.children.forEach((node) => {
           node.updatePortsPosition();
           node.object.attr("y", childrenHeightSum);
           childrenHeightSum += node.el.getBBox().height + 20;
@@ -144,7 +144,7 @@ class TreeContainerNode extends TreeNode {
       [RENDERING_MODE.spread]: () => {
         let childrenHeightSum = 0;
         let maxWidthNode = 0;
-        this.children.forEach(node => {
+        this.children.forEach((node) => {
           node.updatePortsPosition();
           const nodeWidth = node.el.getBBox().width;
           const nodeHeight = node.el.getBBox().height;
@@ -157,7 +157,7 @@ class TreeContainerNode extends TreeNode {
           }
           childrenHeightSum += nodeHeight + 20;
         });
-      }
+      },
     };
     return positioner[mode]();
   }

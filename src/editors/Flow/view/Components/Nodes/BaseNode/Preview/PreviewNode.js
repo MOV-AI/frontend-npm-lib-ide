@@ -45,7 +45,7 @@ class PreviewNode extends BaseNode {
       this.name || this.templateName,
       this.templateName,
       this.template.Type,
-      this._type
+      this._type,
     );
 
     // append to the svg element
@@ -69,7 +69,7 @@ class PreviewNode extends BaseNode {
   get headerPos() {
     return {
       x: this.width + this.padding.x,
-      y: 0
+      y: 0,
     };
   }
 }

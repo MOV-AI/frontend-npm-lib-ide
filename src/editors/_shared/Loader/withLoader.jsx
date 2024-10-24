@@ -1,6 +1,6 @@
 import Loader from "./Loader";
 
-const withLoader = Component => {
+const withLoader = (Component) => {
   return (props, ref) => {
     const renderLoader = () => <Loader />;
 

@@ -12,7 +12,7 @@ class BaseContainerNode extends BaseNode {
       canvas,
       node,
       events,
-      template
+      template,
     });
     // container node's data
     this.data = {
@@ -24,7 +24,7 @@ class BaseContainerNode extends BaseNode {
       Parameter: node.Parameter || {},
       type: TYPES.CONTAINER,
       model: "Flow",
-      endless: node.endless ?? false
+      endless: node.endless ?? false,
     };
     this.requiredKeys = ["ContainerFlow", "ContainerLabel", "Visualization"];
   }

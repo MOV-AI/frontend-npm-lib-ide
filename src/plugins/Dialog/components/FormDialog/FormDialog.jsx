@@ -14,7 +14,7 @@ import { appDialogStyles } from "./styles";
 
 const DEFAULT_VALIDATION = () => ({ result: true, error: "" });
 
-const FormDialog = props => {
+const FormDialog = (props) => {
   // Props
   const {
     size,
@@ -31,7 +31,7 @@ const FormDialog = props => {
     closeOnBackdrop,
     onValidation = DEFAULT_VALIDATION,
     inputLabel = i18n.t("Name"),
-    submitText = i18n.t("Submit")
+    submitText = i18n.t("Submit"),
   } = props;
   // State hook
   const [open, setOpen] = useState(true);
@@ -39,7 +39,7 @@ const FormDialog = props => {
   const [value, setValue] = useState(defaultValue);
   const [validation, setValidation] = useState({
     error: false,
-    message: ""
+    message: "",
   });
   // Style hook
   const classes = appDialogStyles();
@@ -72,20 +72,20 @@ const FormDialog = props => {
    * @returns {ValidationResult}
    */
   const validateValue = useCallback(
-    _value => {
+    (_value) => {
       const res = onValidation(_value);
       // Set state
       setValidation({ error: !res.result, message: res.error });
       setValue(_value);
       if (onPostValidation && res.result) {
-        onPostValidation(_value).then(result => {
+        onPostValidation(_value).then((result) => {
           setValidation(result);
         });
       }
       // Return validation result
       return res;
     },
-    [onPostValidation, onValidation]
+    [onPostValidation, onValidation],
   );
 
   //========================================================================================
@@ -126,7 +126,7 @@ const FormDialog = props => {
    * Handle the onChange event of Textfield
    * @param {event} evt
    */
-  const handleOnChange = evt => {
+  const handleOnChange = (evt) => {
     validateValue(evt.target.value);
   };
 
@@ -135,7 +135,7 @@ const FormDialog = props => {
    * @param {event} event : event to be captured
    * @returns {ValidationResult}
    */
-  const handlePaste = event => {
+  const handlePaste = (event) => {
     event.preventDefault();
     // Get current value and current cursor position
     const oldValue = event.target.value;
@@ -149,7 +149,7 @@ const FormDialog = props => {
     const newValue = [
       oldValue?.slice(0, position),
       pastedText,
-      oldValue?.slice(position)
+      oldValue?.slice(position),
     ].join("");
     // Validate pasted text
     validateValue(newValue);
@@ -209,7 +209,7 @@ const FormDialog = props => {
             onChange={handleOnChange}
             inputProps={{
               "data-testid": "input_value",
-              maxLength: multiline ? "" : maxLength
+              maxLength: multiline ? "" : maxLength,
             }} // limit of characters here
             margin="normal"
           />
@@ -228,14 +228,14 @@ FormDialog.propTypes = {
   defaultValue: PropTypes.string,
   maxLength: PropTypes.number,
   multiline: PropTypes.bool,
-  size: PropTypes.string
+  size: PropTypes.string,
 };
 
 FormDialog.defaultProps = {
   onValidation: () => ({ result: true, error: "" }),
   defaultValue: "",
   multiline: false,
-  maxLength: 40
+  maxLength: 40,
 };
 
 export default withTheme(FormDialog, ApplicationTheme);

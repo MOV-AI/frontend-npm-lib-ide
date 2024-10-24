@@ -11,13 +11,13 @@ export const addEditor = ({ scope, store, plugin, props }) => {
  */
 
 const factory = (workspace, observer, docManager) => {
-  Object.keys(EDITORS).forEach(scope => {
+  Object.keys(EDITORS).forEach((scope) => {
     const editor = EDITORS[scope];
     const Store = editor.store;
     EDITORS[scope] = {
       store: new Store(workspace, observer, docManager),
       plugin: editor.plugin,
-      props: editor.props
+      props: editor.props,
     };
   });
   return EDITORS;

@@ -9,7 +9,7 @@ import buildMenus from "./builder/buildMenus";
 import { systemBarStyles, helpDialogStyles } from "./styles";
 import { PLUGINS } from "../../../utils/Constants";
 
-const SystemBar = props => {
+const SystemBar = (props) => {
   const { debugMode, call, on } = props;
   // State Hooks
   const [openedMenuId, setOpenedMenuId] = useState(null);
@@ -30,7 +30,7 @@ const SystemBar = props => {
   /**
    * @private function to handle the menu close
    */
-  const closeMenu = useCallback(evt => {
+  const closeMenu = useCallback((evt) => {
     const hasMenuId = evt.target.parentElement.dataset?.menuId;
     if (!hasMenuId) {
       setOpenedMenuId(null);
@@ -50,8 +50,8 @@ const SystemBar = props => {
    * @param {object} evt
    */
   const handleClickMenu = useCallback(
-    evt => {
-      setMenuOpen(_prevState => {
+    (evt) => {
+      setMenuOpen((_prevState) => {
         let newState = false;
         let newMenuId = null;
         let newAnchorEl = null;
@@ -68,7 +68,7 @@ const SystemBar = props => {
         return newState;
       });
     },
-    [openedMenuId]
+    [openedMenuId],
   );
 
   //========================================================================================
@@ -81,8 +81,8 @@ const SystemBar = props => {
    * Component Did Mount
    */
   useEffect(() => {
-    on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, tab => {
-      buildMenus(call, dialogClasses).then(data => {
+    on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, (tab) => {
+      buildMenus(call, dialogClasses).then((data) => {
         setSystemMenus(data);
       });
     });
@@ -92,7 +92,7 @@ const SystemBar = props => {
     <>
       {systemMenus && (
         <div data-testid="section_system-bar" className={classes.systemBar}>
-          {systemMenus.map(menu => {
+          {systemMenus.map((menu) => {
             const activeButtonClass =
               openedMenuId === menu.id ? classes.activeMenu : "";
             return (
@@ -112,7 +112,7 @@ const SystemBar = props => {
               data-testid="section_sub-menu"
               menuOpen={menuOpen}
               anchorEl={anchorEl}
-              data={systemMenus.find(menu => menu.id === openedMenuId)?.data}
+              data={systemMenus.find((menu) => menu.id === openedMenuId)?.data}
               closeMenu={closeMenu}
             />
           )}
@@ -127,5 +127,5 @@ export default withViewPlugin(SystemBar);
 SystemBar.propTypes = {
   call: PropTypes.func.isRequired,
   on: PropTypes.func.isRequired,
-  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };

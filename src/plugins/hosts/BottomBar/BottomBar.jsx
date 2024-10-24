@@ -14,5 +14,5 @@ function BottomBar(props) {
 export default withHostReactPlugin(BottomBar);
 
 BottomBar.propTypes = {
-  hostName: PropTypes.string.isRequired
+  hostName: PropTypes.string.isRequired,
 };

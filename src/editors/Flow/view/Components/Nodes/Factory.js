@@ -29,8 +29,8 @@ class Factory {
       PLUGINS.DOC_MANAGER.CALL.READ,
       {
         scope,
-        name
-      }
+        name,
+      },
     );
     const finalObject = obj.serializeToDB();
 
@@ -58,12 +58,12 @@ class Factory {
     const obj = new output.cls({
       ...args,
       template,
-      factory: { factory: Factory, docManager }
+      factory: { factory: Factory, docManager },
     });
 
     if (
       [Factory.OUTPUT.CONTAINER.cls, Factory.OUTPUT.TMP_CONTAINER.cls].includes(
-        output.cls
+        output.cls,
       )
     ) {
       await obj.aInit();
@@ -80,7 +80,7 @@ class Factory {
     TREE_NODE: { cls: TreeClassicNode, scope: "Node" },
     CONTAINER: { cls: ContainerNode, scope: "Flow" },
     TMP_CONTAINER: { cls: TemporaryContainerNode, scope: "Flow" },
-    TREE_CONTAINER: { cls: TreeContainerNode, scope: "Flow" }
+    TREE_CONTAINER: { cls: TreeContainerNode, scope: "Flow" },
   };
 }
 

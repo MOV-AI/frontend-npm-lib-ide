@@ -1,17 +1,17 @@
 import { makeStyles } from "@material-ui/styles";
 
-export const tabsStyles = makeStyles(theme => ({
+export const tabsStyles = makeStyles((theme) => ({
   "@global": {
     ".dock-dropdown-menu": {
-      background: theme.palette.background.default
+      background: theme.palette.background.default,
     },
     ".dock-dropdown-menu-item": {
       color: theme.palette.text.primary,
-      background: theme.palette.background.default
+      background: theme.palette.background.default,
     },
     ".dock-dropdown-menu-item-active:hover": {
-      background: theme.palette.background.primary
-    }
+      background: theme.palette.background.primary,
+    },
   },
   root: {
     position: "relative",
@@ -28,7 +28,7 @@ export const tabsStyles = makeStyles(theme => ({
           borderColor: theme.background,
           background: theme.palette.background.primary,
           "& .dock-nav-more": {
-            color: theme.palette.text.primary
+            color: theme.palette.text.primary,
           },
           "& .dock-tab": {
             borderTopLeftRadius: "5px",
@@ -37,35 +37,35 @@ export const tabsStyles = makeStyles(theme => ({
             color: theme.backdrop?.color,
             padding: "0 10px",
             "& .dock-tab-close-btn": {
-              right: "1px"
+              right: "1px",
             },
             "& > div": {
-              padding: "4px 15px 4px 5px"
-            }
+              padding: "4px 15px 4px 5px",
+            },
           },
           "& .dock-ink-bar": {
-            backgroundColor: theme.palette.primary.main
-          }
+            backgroundColor: theme.palette.primary.main,
+          },
         },
         "& .dock-drop-layer .dock-drop-square": {
           background: theme.palette.background.primary,
           color: theme.backdrop?.color,
-          borderColor: `${theme.backdrop?.color}95`
-        }
+          borderColor: `${theme.backdrop?.color}95`,
+        },
       },
       "& .dock-style-place-holder": {
-        background: theme.palette.background.default
+        background: theme.palette.background.default,
       },
       "& .dock-divider": {
-        background: `${theme.palette.background.primary}95`
-      }
-    }
+        background: `${theme.palette.background.primary}95`,
+      },
+    },
   },
   dockLayout: {
     position: "absolute",
     left: "10px",
     top: "10px",
     right: "10px",
-    bottom: "10px"
-  }
+    bottom: "10px",
+  },
 }));

@@ -10,7 +10,7 @@ let lastActiveTabName = undefined;
  * @param {*} Component : Editor React Component
  * @returns {ReactComponent} React component that receives props to handle menu actions
  */
-const withMenuHandler = Component => {
+const withMenuHandler = (Component) => {
   const RefComponent = getRefComponent(Component);
 
   return (props, ref) => {

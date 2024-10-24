@@ -13,7 +13,7 @@ import { openTool } from "../../../utils/generalFunctions";
 import { getQuickAccessTools } from "../../";
 import { quickAccessStyles } from "../styles";
 
-const QuickAccess = props => {
+const QuickAccess = (props) => {
   const { call } = props;
   const classes = quickAccessStyles();
 
@@ -66,9 +66,9 @@ const QuickAccess = props => {
    */
   useEffect(() => {
     call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.GET_DOC_TYPES).then(
-      _docTypes => {
+      (_docTypes) => {
         setDocTypes(_docTypes);
-      }
+      },
     );
   }, [call]);
 
@@ -84,21 +84,21 @@ const QuickAccess = props => {
               {i18n.t("CreateNewDoc")}
             </div>
           }
-          menuList={docTypes.map(docType => ({
+          menuList={docTypes.map((docType) => ({
             onClick: () =>
               call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.CREATE, {
-                scope: docType.scope
-              }).then(document => {
+                scope: docType.scope,
+              }).then((document) => {
                 call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
                   id: document.getUrl(),
                   name: document.getName(),
                   scope: docType.scope,
-                  isNew: true
+                  isNew: true,
                 });
               }),
             element: docType.name || docType.scope,
             icon: getIconByScope(docType.scope),
-            onClose: true
+            onClose: true,
           }))}
         ></ContextMenu>
         {AppSettings.HELP.DOCUMENTATION ? (
@@ -121,7 +121,7 @@ const QuickAccess = props => {
           <BuildIcon className={classes.linkIcon} />
           {i18n.t("App Configuration")}
         </div> */}
-        {getQuickAccessTools().map(tool => {
+        {getQuickAccessTools().map((tool) => {
           const Icon = tool.icon;
           const { name, title } = tool.profile;
           return (
@@ -142,7 +142,7 @@ const QuickAccess = props => {
 };
 
 QuickAccess.propTypes = {
-  call: PropTypes.func
+  call: PropTypes.func,
 };
 
 export default QuickAccess;

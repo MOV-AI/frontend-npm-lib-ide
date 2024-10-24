@@ -19,7 +19,9 @@ export const relaxPath = (src, trg) => {
   const upperCornerTrg = lowerCornerTrg.add(trgSize);
   const trgBox = box(lowerCornerTrg, upperCornerTrg);
 
-  let ans = [...Array(n)].map((_, i) => i).map(i => lerp(x0, x1, i / (n - 1)));
+  let ans = [...Array(n)]
+    .map((_, i) => i)
+    .map((i) => lerp(x0, x1, i / (n - 1)));
   let t = 50;
   let dt = 0.05;
   while (t > 0) {
@@ -27,7 +29,7 @@ export const relaxPath = (src, trg) => {
     ans = ans.map((p, i) => p.add(pathVel[i].scale(dt)));
     t--;
   }
-  return ans.map(z => z.toObject());
+  return ans.map((z) => z.toObject());
 };
 
 export const orthoPath = (src, trg) => {
@@ -80,13 +82,13 @@ export const orthoPath = (src, trg) => {
   if (dot0 < 0 && !isEntangled) ans.push(x02);
   if (dot1 < 0 && !isEntangled) ans.push(x12);
   ans.push(x11, x1);
-  return ans.map(z => z.toObject());
+  return ans.map((z) => z.toObject());
 };
 
 export const linePath = (src, trg) => {
   const x0 = new Vec2(src.x, src.y);
   const x1 = new Vec2(trg.x, trg.y);
-  return [x0, x1].map(z => z.toObject());
+  return [x0, x1].map((z) => z.toObject());
 };
 
 export const manhattanPath = (src, trg) => {
@@ -103,8 +105,8 @@ export const manhattanPath = (src, trg) => {
     xOut.add(dir.scale(srcSize.y)),
     xIn.add(dir.scale(-trgSize.y)),
     xIn,
-    x1
-  ].map(z => z.toObject());
+    x1,
+  ].map((z) => z.toObject());
 };
 
 export const simplePotentialV = (src, trg) => {
@@ -116,7 +118,7 @@ export const simplePotentialV = (src, trg) => {
       return state;
     },
     isFinalState: (state, { xIn }) =>
-      state.x.sub(xIn).length() > tooCloseDistance
+      state.x.sub(xIn).length() > tooCloseDistance,
   };
   return potential(src, trg, iterator);
 };
@@ -131,7 +133,7 @@ export const simplePotentialA = (src, trg) => {
       return state;
     },
     isFinalState: (state, { xIn }) =>
-      state.x.sub(xIn).length() > tooCloseDistance
+      state.x.sub(xIn).length() > tooCloseDistance,
   };
   return potential(src, trg, iterator);
 };
@@ -165,7 +167,7 @@ const relaxSpeed = (path, srcBox, trgBox) => {
 const potential = (
   src,
   trg,
-  { getInitialState, updateState, isFinalState }
+  { getInitialState, updateState, isFinalState },
 ) => {
   const maxIte = 200;
   const q = 1000;
@@ -173,11 +175,11 @@ const potential = (
   const sidePoints = [];
   const potentialVars = getBaseVars(src, trg);
   const { x0, x1, xIn, xOut, xSc, srcSize, trgSize } = potentialVars;
-  const d0 = x => x.sub(xSc).length() - srcSize.x / 3;
-  const d1 = x => x.sub(xIn).length() - trgSize.x / 3;
+  const d0 = (x) => x.sub(xSc).length() - srcSize.x / 3;
+  const d1 = (x) => x.sub(xIn).length() - trgSize.x / 3;
 
-  const forceSrc = x => x.sub(xSc).scale((5 * q) / (d0(x) * d0(x)));
-  const forceTrg = x => x.sub(xIn).scale((10 * -q) / (d1(x) * d1(x)));
+  const forceSrc = (x) => x.sub(xSc).scale((5 * q) / (d0(x) * d0(x)));
+  const forceTrg = (x) => x.sub(xIn).scale((10 * -q) / (d1(x) * d1(x)));
 
   let n = 0;
   let dt = 0.1;
@@ -213,20 +215,20 @@ const getBaseVars = (src, trg) => {
   return { x0, x1, xIn, xOut, xSc, xTc, srcSize, trgSize, isLink: trg_.isLink };
 };
 
-const bound = (min, max) => x => Math.max(min, Math.min(max, x));
+const bound = (min, max) => (x) => Math.max(min, Math.min(max, x));
 
 // Assumes node.x && node.y !== null
-const defaultNode = node => ({
+const defaultNode = (node) => ({
   ...node,
   center: Maybe.fromNull(node.center).orSome({
     xCenter: node.x,
-    yCenter: node.y
+    yCenter: node.y,
   }),
   nodeSize: Maybe.fromNull(node.nodeSize).orSome({
     width: 1,
-    height: 1
+    height: 1,
   }),
-  isLink: node.center ? false : true
+  isLink: node.center ? false : true,
 });
 
 const lerp = (x, y, t = 0) => {
@@ -241,11 +243,11 @@ const box = (min, max) => {
   const diagonal = max.sub(min);
   const width = diagonal.x;
   const height = diagonal.y;
-  const sdf = x => {
+  const sdf = (x) => {
     let v = x.sub(center);
-    v = v.map(z => Math.abs(z));
+    v = v.map((z) => Math.abs(z));
     v = v.sub(Vec2.of(width, height).scale(0.5));
-    v = v.map(z => Math.max(z, 0));
+    v = v.map((z) => Math.max(z, 0));
     return v.length();
   };
   const grad = (x, epsilon = 1e-2) => {
@@ -264,7 +266,7 @@ const box = (min, max) => {
     width,
     height,
     sdf,
-    grad
+    grad,
   };
 };
 

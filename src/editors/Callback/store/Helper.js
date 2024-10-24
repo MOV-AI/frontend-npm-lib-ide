@@ -9,15 +9,15 @@ const CB_NAME = "backend.CallbackEditor";
  * @param {string} functionName : Method name
  * @returns {Promise}
  */
-const cloudFunction = async functionName => {
+const cloudFunction = async (functionName) => {
   return Rest.cloudFunction({
     cbName: CB_NAME,
-    func: functionName
+    func: functionName,
   })
-    .then(response => {
+    .then((response) => {
       return response.success ? response.result : null;
     })
-    .catch(err => console.warn("debug err", err));
+    .catch((err) => console.warn("debug err", err));
 };
 
 /**
@@ -26,7 +26,7 @@ const cloudFunction = async functionName => {
  */
 Helper.getAllLibraries = async () => {
   if (data.pyLibs) return Promise.resolve(data.pyLibs);
-  return cloudFunction("get_all_libraries").then(libs => {
+  return cloudFunction("get_all_libraries").then((libs) => {
     data.pyLibs = libs;
     return data.pyLibs;
   });
@@ -38,7 +38,7 @@ Helper.getAllLibraries = async () => {
  */
 Helper.getAllMessages = async () => {
   if (data.messages) return Promise.resolve(data.messages);
-  return cloudFunction("get_messages").then(messages => {
+  return cloudFunction("get_messages").then((messages) => {
     data.messages = messages;
     return data.messages;
   });

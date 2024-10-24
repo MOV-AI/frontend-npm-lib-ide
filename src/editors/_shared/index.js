@@ -13,5 +13,5 @@ export {
   KeyValueTable,
   MaterialTable,
   Search,
-  MaterialTree
+  MaterialTree,
 };

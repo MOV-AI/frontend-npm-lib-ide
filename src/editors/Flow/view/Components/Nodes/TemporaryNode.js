@@ -9,9 +9,9 @@ class TemporaryNode extends BaseNode {
       Paramater: {},
       Visualization: {
         x: { Value: 50 },
-        y: { Value: 50 }
+        y: { Value: 50 },
       },
-      ...node
+      ...node,
     };
     super({ canvas, node: customNode, events: {}, template });
 

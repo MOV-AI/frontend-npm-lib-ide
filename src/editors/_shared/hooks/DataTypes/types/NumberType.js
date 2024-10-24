@@ -8,9 +8,13 @@ class NumberType extends DataType {
   default = 0;
 
   _validate(value) {
-    return value === undefined
-      || (value !== null && typeof value === this.key
-      && !isNaN(value) && !Array.isArray(value));
+    return (
+      value === undefined ||
+      (value !== null &&
+        typeof value === this.key &&
+        !isNaN(value) &&
+        !Array.isArray(value))
+    );
   }
 
   editComponent(props) {

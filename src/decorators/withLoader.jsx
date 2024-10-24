@@ -10,7 +10,7 @@ import { loaderStyles } from "./styles";
  * @param {*} Component
  * @returns
  */
-const withLoader = Component => {
+const withLoader = (Component) => {
   const RefComponent = getRefComponent(Component);
 
   return (props, ref) => {

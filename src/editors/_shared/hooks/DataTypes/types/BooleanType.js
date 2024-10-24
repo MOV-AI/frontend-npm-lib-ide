@@ -15,10 +15,14 @@ class BooleanType extends DataType {
 
   parse(value) {
     switch (value) {
-      case "": return undefined;
-      case "True": return true;
-      case "False": return false;
-      default: return null;
+      case "":
+        return undefined;
+      case "True":
+        return true;
+      case "False":
+        return false;
+      default:
+        return null;
     }
   }
 
@@ -34,9 +38,7 @@ class BooleanType extends DataType {
         color={"primary"}
         style={{ width: "fit-content" }}
         checked={this.inputParsing.parse(rowData.value) === true}
-        onChange={evt => onChange(
-          evt.target.checked
-        )}
+        onChange={(evt) => onChange(evt.target.checked)}
         disabled={disabled}
       />
     );

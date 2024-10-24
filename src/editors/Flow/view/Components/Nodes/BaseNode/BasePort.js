@@ -18,8 +18,8 @@ class BasePortStruct {
       Package,
       Parameter,
       Exposed,
-      origin
-    }
+      origin,
+    },
   ) {
     this.node = node;
     this.data = {
@@ -31,7 +31,7 @@ class BasePortStruct {
       package: Package || "",
       parameters: Parameter || {},
       exposed: Exposed || false,
-      origin: origin || null
+      origin: origin || null,
     };
   }
 
@@ -60,7 +60,7 @@ class BasePort extends BasePortStruct {
         `${portConvertTypeCss(this.data.message)} ${this.cssExposed}`,
       unlinkeable: () => `port-disabled ${this.cssExposed}`,
       //mouseover: ()=>`port-over ${this.cssExposed}`,
-      opacity: { default: 1, unlinkeable: 0.5 }
+      opacity: { default: 1, unlinkeable: 0.5 },
     };
 
     this.render().addEvents();
@@ -144,7 +144,7 @@ class BasePort extends BasePortStruct {
       nodeSize: { height: node.height, width: node.width },
       center: node.center,
       x: node.posX + this.cx,
-      y: node.posY + this.cy
+      y: node.posY + this.cy,
     };
   }
 
@@ -173,7 +173,7 @@ class BasePort extends BasePortStruct {
   }
 
   checkAny = (msgPA, msgPB) => {
-    return [msgPA, msgPB].some(msg => portsAny.includes(msg));
+    return [msgPA, msgPB].some((msg) => portsAny.includes(msg));
   };
 
   setPosition(x = this.cx, y = this.cy, r = this.radius) {
@@ -183,7 +183,7 @@ class BasePort extends BasePortStruct {
     this.object.attr("cx", this.cx).attr("cy", this.cy).attr("r", this.radius);
   }
 
-  setClass = value => {
+  setClass = (value) => {
     this.object.attr("class", value);
   };
 
@@ -191,7 +191,7 @@ class BasePort extends BasePortStruct {
    * while linking set port opacity if message is not equal
    * @param {string} data port data; undefined sets default opacity
    */
-  setLinking = data => {
+  setLinking = (data) => {
     const message = data?.message ?? this.data.message;
     const type = data?.type ?? "";
 
@@ -208,7 +208,7 @@ class BasePort extends BasePortStruct {
    * Delete node if true
    */
   isValid = () => {
-    return this.requiredKeys.every(key => !!this.data[key]);
+    return this.requiredKeys.every((key) => !!this.data[key]);
   };
 
   /**
@@ -222,11 +222,11 @@ class BasePort extends BasePortStruct {
     if (typeof fn === "function") return fn(...otherArgs);
   };
 
-  static parsePortname = name => {
+  static parsePortname = (name) => {
     const arr = name.split("/");
     const [p1, p2] = [arr.slice(0, -1).join("/"), arr.slice(-1).join()];
     const out1 = ["in", "out"].includes(p2.toLowerCase()) ? null : p2;
-    return [p1, out1].filter(val => val !== null).join("/");
+    return [p1, out1].filter((val) => val !== null).join("/");
   };
 }
 

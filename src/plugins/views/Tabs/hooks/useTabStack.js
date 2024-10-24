@@ -4,7 +4,7 @@ import { runBeforeUnload } from "../../../../utils/Utils";
 
 const useTabStack = (workspaceManager) => {
   const tabStack = useRef({});
-  
+
   //========================================================================================
   /*                                                                                      *
    *                                    Private Methods                                   *
@@ -19,7 +19,7 @@ const useTabStack = (workspaceManager) => {
     const newStack = {};
     for (const dock in thisStack) {
       const dockStack = thisStack[dock];
-      newStack[dock] = dockStack.filter(tab => !tab.isNew);
+      newStack[dock] = dockStack.filter((tab) => !tab.isNew);
     }
     workspaceManager.setTabStack(newStack);
   }, [workspaceManager]);
@@ -38,11 +38,11 @@ const useTabStack = (workspaceManager) => {
   const removeTabFromStack = useCallback(
     (tabId, dock = DOCK_POSITIONS.DOCK) => {
       const thisStack = tabStack.current[dock] || [];
-      const newStack = thisStack.filter(tab => tab.id !== tabId);
+      const newStack = thisStack.filter((tab) => tab.id !== tabId);
       tabStack.current[dock] = newStack;
       workspaceManager.setTabStack(tabStack.current);
     },
-    [workspaceManager]
+    [workspaceManager],
   );
 
   /**
@@ -60,9 +60,9 @@ const useTabStack = (workspaceManager) => {
       tabStack.current[dock] = thisStack;
       workspaceManager.setTabStack(tabStack.current);
     },
-    [workspaceManager, removeTabFromStack]
+    [workspaceManager, removeTabFromStack],
   );
-  
+
   /**
    * Get next tab from stack
    */
@@ -78,7 +78,7 @@ const useTabStack = (workspaceManager) => {
   //========================================================================================
 
   useEffect(() => {
-    if(!workspaceManager) return;
+    if (!workspaceManager) return;
     tabStack.current = workspaceManager.getTabStack();
     // Before unload app, remove all "untitled" tabs from stack
     runBeforeUnload(removeNewTabsFromStack);
@@ -93,7 +93,7 @@ const useTabStack = (workspaceManager) => {
   return {
     addTabToStack,
     removeTabFromStack,
-    getNextTabFromStack
+    getNextTabFromStack,
   };
 };
 

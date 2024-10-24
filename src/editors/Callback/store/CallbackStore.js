@@ -10,7 +10,7 @@ class CallbackStore extends Store {
       name: Model.SCOPE,
       title: "Callbacks",
       plugins: [DBSubscriber],
-      observer
+      observer,
     });
 
     // Set protectedDocs list
@@ -20,7 +20,7 @@ class CallbackStore extends Store {
       "backend.DataValidation",
       "backend.FlowTopBar",
       "backend.getPortsData",
-      "backend.viewer"
+      "backend.viewer",
     ];
   }
 

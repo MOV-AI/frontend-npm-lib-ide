@@ -11,7 +11,7 @@ const useHelper = () => {
    */
   const getAllCallbacksWithMessage = (allCallbacks, message) => {
     const result = [];
-    Object.values(allCallbacks).forEach(cb => {
+    Object.values(allCallbacks).forEach((cb) => {
       if (cb.Message === message) {
         result.push(cb.Label);
       }
