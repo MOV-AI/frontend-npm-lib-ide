@@ -61,5 +61,5 @@ export default SystemMenu;
 SystemMenu.propTypes = {
   data: PropTypes.array.isRequired,
   anchorEl: PropTypes.object.isRequired,
-  menuOpened: PropTypes.bool
+  menuOpened: PropTypes.bool,
 };

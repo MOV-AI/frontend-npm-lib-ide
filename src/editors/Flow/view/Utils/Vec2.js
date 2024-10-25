@@ -1,7 +1,7 @@
 //immutable class, not managing exceptions
 class Vec2 {
   constructor(x, y) {
-    this.vec = [x, y].map(z => (z ? z : 0));
+    this.vec = [x, y].map((z) => (z ? z : 0));
   }
 
   get x() {
@@ -61,7 +61,7 @@ class Vec2 {
   }
 
   scale(r) {
-    return this.map(z => z * r);
+    return this.map((z) => z * r);
   }
 
   map(lambda) {

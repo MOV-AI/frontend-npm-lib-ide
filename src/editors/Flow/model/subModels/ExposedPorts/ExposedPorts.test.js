@@ -9,8 +9,8 @@ test("smoke test", () => {
 test("serialize OF db", () => {
   const data = {
     aa: {
-      teste: ["p1/in"]
-    }
+      teste: ["p1/in"],
+    },
   };
 
   const expected = { name: "teste", ports: ["p1/in"] };

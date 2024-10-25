@@ -1,6 +1,6 @@
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../src/themes";
- 
+
 export const decorators = [
   (Story) => {
     const ThemedStory = withTheme(Story, ApplicationTheme);
@@ -16,4 +16,4 @@ export const parameters = {
       date: /Date$/,
     },
   },
-}
+};

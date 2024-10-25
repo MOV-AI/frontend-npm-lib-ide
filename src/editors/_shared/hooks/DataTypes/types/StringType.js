@@ -4,7 +4,7 @@ import DataType from "../AbstractDataType";
 class StringType extends DataType {
   key = DATA_TYPES.STRING;
   label = "String";
-  default = '';
+  default = "";
 
   parse(string) {
     return string;

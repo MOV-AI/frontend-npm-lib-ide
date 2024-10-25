@@ -11,25 +11,25 @@ test("Serialize OF db", () => {
   const content = {
     Duration: {
       Module: "rospy",
-      Class: "Duration"
+      Class: "Duration",
     },
     math: {
       Module: "math",
-      Class: false
-    }
+      Class: false,
+    },
   };
 
   const expected = {
     Duration: {
       name: "Duration",
       module: "rospy",
-      libClass: "Duration"
+      libClass: "Duration",
     },
     math: {
       name: "math",
       module: "math",
-      libClass: false
-    }
+      libClass: false,
+    },
   };
 
   const data = Manager.serializeOfDB(content, PyLib);
@@ -41,12 +41,12 @@ test("Serialize TO db", () => {
   const content = {
     Duration: {
       Module: "rospy",
-      Class: "Duration"
+      Class: "Duration",
     },
     math: {
       Module: "math",
-      Class: false
-    }
+      Class: false,
+    },
   };
 
   const data = Manager.serializeOfDB(content, PyLib);

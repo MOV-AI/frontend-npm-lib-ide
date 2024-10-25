@@ -6,7 +6,7 @@ import Factory from "../Nodes/Factory";
 import { generateContainerId } from "../../Constants/constants";
 import { previewStyles } from "./styles";
 
-const Preview = props => {
+const Preview = (props) => {
   const { flowId, node, call } = props;
   const classes = previewStyles();
   const containerId = useRef(`preview_${generateContainerId(flowId)}`);
@@ -26,7 +26,7 @@ const Preview = props => {
       if (!name || !scope) return;
       const factoryOutput = {
         Node: Factory.OUTPUT.PREV_NODE,
-        Flow: Factory.OUTPUT.PREV_FLOW
+        Flow: Factory.OUTPUT.PREV_FLOW,
       };
       // Add temp node
       Factory.create(call, factoryOutput[scope], {
@@ -34,13 +34,13 @@ const Preview = props => {
           containerId: containerId.current,
           setMode: () => {
             /* empty */
-          }
+          },
         },
         node: {
-          Template: name
+          Template: name,
         },
-        events: {}
-      }).then(obj => {
+        events: {},
+      }).then((obj) => {
         if (svg.current) {
           svg.current.innerHTML = "";
           d3.select(obj.el)
@@ -55,7 +55,7 @@ const Preview = props => {
         }
       });
     },
-    [call]
+    [call],
   );
 
   //========================================================================================
@@ -87,5 +87,5 @@ export default Preview;
 Preview.propTypes = {
   flowId: PropTypes.string,
   node: PropTypes.object,
-  call: PropTypes.func
+  call: PropTypes.func,
 };

@@ -9,7 +9,7 @@ import {
   IconButton,
   Typography,
   Tooltip,
-  Divider
+  Divider,
 } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
@@ -28,10 +28,10 @@ import { menuStyles } from "./styles";
 
 const ACTIVE_ITEM = {
   IMPORTS: 1,
-  MESSAGE: 2
+  MESSAGE: 2,
 };
 
-const Menu = props => {
+const Menu = (props) => {
   // Props
   const { call, scope, name, instance, editable = true } = props;
   // State hook
@@ -41,7 +41,7 @@ const Menu = props => {
   const { data } = useDataSubscriber({
     instance,
     propsData: props.data,
-    keysToDisconsider: Model.KEYS_TO_DISCONSIDER
+    keysToDisconsider: Model.KEYS_TO_DISCONSIDER,
   });
 
   //========================================================================================
@@ -55,10 +55,10 @@ const Menu = props => {
    * @param {*} pyLib
    */
   const deleteImport = useCallback(
-    pyLib => {
+    (pyLib) => {
       if (instance.current) instance.current.getPyLibs().deleteItem(pyLib.key);
     },
-    [instance]
+    [instance],
   );
 
   /**
@@ -66,11 +66,11 @@ const Menu = props => {
    * @param {*} pyLibs
    */
   const addImports = useCallback(
-    pyLibs => {
+    (pyLibs) => {
       if (instance.current) instance.current.getPyLibs().setData(pyLibs);
       setActiveItem(ACTIVE_ITEM.IMPORTS);
     },
-    [instance]
+    [instance],
   );
 
   /**
@@ -78,11 +78,11 @@ const Menu = props => {
    * @param {string} msg
    */
   const setMessage = useCallback(
-    msg => {
+    (msg) => {
       if (instance.current) instance.current.setMessage(msg);
       setActiveItem(ACTIVE_ITEM.MESSAGE);
     },
-    [instance]
+    [instance],
   );
 
   //========================================================================================
@@ -95,7 +95,7 @@ const Menu = props => {
    * Open dialog to set callback message
    */
   const handleEditMessageClick = useCallback(
-    evt => {
+    (evt) => {
       evt.stopPropagation();
 
       call(
@@ -105,19 +105,19 @@ const Menu = props => {
           onSubmit: setMessage,
           selectedMessage: data.message,
           scope: scope,
-          call: call
+          call: call,
         },
-        EditMessageDialog
+        EditMessageDialog,
       );
     },
-    [scope, data.message, call, setMessage]
+    [scope, data.message, call, setMessage],
   );
 
   /**
    * Open dialog to add imports
    */
   const handleAddImportsClick = useCallback(
-    evt => {
+    (evt) => {
       evt.stopPropagation();
 
       call(
@@ -126,12 +126,12 @@ const Menu = props => {
         {
           onSubmit: addImports,
           scope: scope,
-          call: call
+          call: call,
         },
-        AddImportDialog
+        AddImportDialog,
       );
     },
-    [scope, addImports, call]
+    [scope, addImports, call],
   );
 
   /**
@@ -140,9 +140,9 @@ const Menu = props => {
    *  If item is expanded  : Collapse item and let all others collapsed as well
    * @param {*} evt
    */
-  const handleExpandClick = useCallback(evt => {
+  const handleExpandClick = useCallback((evt) => {
     const currentActiveItem = parseInt(evt.currentTarget.dataset.activeItem);
-    setActiveItem(prevState => {
+    setActiveItem((prevState) => {
       if (prevState === currentActiveItem) return 0;
       else return currentActiveItem;
     });
@@ -169,10 +169,10 @@ const Menu = props => {
    * @returns {boolean} True if collapse item is expanded, False otherwise
    */
   const isActive = useCallback(
-    _item => {
+    (_item) => {
       return activeItem === _item;
     },
-    [activeItem]
+    [activeItem],
   );
 
   /**
@@ -203,7 +203,7 @@ const Menu = props => {
     const pyLibs = data.pyLibs || {};
     const importList = [];
 
-    Object.keys(pyLibs).forEach(key => {
+    Object.keys(pyLibs).forEach((key) => {
       const lib = pyLibs[key];
       const libModule = lib.module ? lib.module : undefined;
       const libClass = lib.libClass ? lib.libClass : undefined;

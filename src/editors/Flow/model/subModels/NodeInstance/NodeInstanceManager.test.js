@@ -19,13 +19,13 @@ test("Serialize OF db", () => {
       EnvVar: { path: { Value: "/opt/movai" } },
       Visualization: {
         x: { Value: 0.01 },
-        y: { Value: 0.02 }
+        y: { Value: 0.02 },
       },
       Parameter: {
         camera: { Value: "back1" },
-        move_distance_to_car: { Value: "0.30" }
-      }
-    }
+        move_distance_to_car: { Value: "0.30" },
+      },
+    },
   };
 
   const expected = {
@@ -43,9 +43,9 @@ test("Serialize OF db", () => {
         move_distance_to_car: {
           name: "move_distance_to_car",
           value: "0.30",
-        }
-      }
-    }
+        },
+      },
+    },
   };
 
   const data = Manager.serializeOfDB(content, NodeInstance);

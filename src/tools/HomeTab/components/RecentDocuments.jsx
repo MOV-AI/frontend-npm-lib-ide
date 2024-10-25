@@ -13,13 +13,13 @@ import { recentDocumentsStyles } from "../styles";
 
 const MAX_RECENT_DOCS = 10;
 
-const RecentDocuments = props => {
+const RecentDocuments = (props) => {
   const classes = recentDocumentsStyles();
   const { workspaceManager, openRecentDocument, on, off } = props;
 
   // State
   const [recentDocs, setRecentDocs] = useState(
-    workspaceManager.getRecentDocuments()
+    workspaceManager.getRecentDocuments(),
   );
 
   //========================================================================================
@@ -29,28 +29,28 @@ const RecentDocuments = props => {
   //========================================================================================
 
   const setRecentDocuments = useCallback(
-    documents => {
+    (documents) => {
       workspaceManager.setRecentDocuments(documents);
       setRecentDocs(documents);
     },
-    [workspaceManager]
+    [workspaceManager],
   );
 
   const filterRecentDocuments = useCallback(
-    id => {
+    (id) => {
       const storagedDocs = workspaceManager.getRecentDocuments();
-      return storagedDocs.filter(doc => doc.id !== id);
+      return storagedDocs.filter((doc) => doc.id !== id);
     },
-    [workspaceManager]
+    [workspaceManager],
   );
 
   const removeRecentDocument = useCallback(
-    id => {
+    (id) => {
       const documents = filterRecentDocuments(id);
 
       setRecentDocuments(documents);
     },
-    [setRecentDocuments, filterRecentDocuments]
+    [setRecentDocuments, filterRecentDocuments],
   );
 
   const addRecentDocument = useCallback(
@@ -62,18 +62,18 @@ const RecentDocuments = props => {
       documents.push({
         id: id,
         name: name,
-        scope: scope
+        scope: scope,
       });
 
       setRecentDocuments(documents);
     },
-    [setRecentDocuments, filterRecentDocuments]
+    [setRecentDocuments, filterRecentDocuments],
   );
 
   const setDeletedRecentDocument = useCallback(
-    id => {
+    (id) => {
       const documents = workspaceManager.getRecentDocuments();
-      const deletedDoc = documents.find(doc => doc.id === id);
+      const deletedDoc = documents.find((doc) => doc.id === id);
 
       if (deletedDoc) {
         deletedDoc.isDeleted = true;
@@ -81,7 +81,7 @@ const RecentDocuments = props => {
 
       setRecentDocuments(documents);
     },
-    [workspaceManager, setRecentDocuments]
+    [workspaceManager, setRecentDocuments],
   );
 
   //========================================================================================
@@ -109,15 +109,15 @@ const RecentDocuments = props => {
   useEffect(() => {
     setRecentDocs(workspaceManager.getRecentDocuments());
 
-    on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.OPEN_EDITOR, data => {
+    on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.OPEN_EDITOR, (data) => {
       if (!data.isNew) addRecentDocument(data.id, data.name, data.scope);
     });
 
-    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.DELETE_DOC, data => {
+    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.DELETE_DOC, (data) => {
       setDeletedRecentDocument(data.url);
     });
 
-    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.SAVE_DOC, data => {
+    on(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.ON.SAVE_DOC, (data) => {
       if (data.newName) {
         const { workspace, type: scope } = data.doc;
         const id = `${workspace}/${scope}/${data.newName}`;
@@ -151,7 +151,7 @@ const RecentDocuments = props => {
       </div>
       <Divider />
       <div className={`${classes.columnBody} ${classes.recentPaper}`}>
-        {[...recentDocs]?.reverse().map(doc => (
+        {[...recentDocs]?.reverse().map((doc) => (
           <HomeLink
             key={doc.id}
             doc={doc}
@@ -167,7 +167,7 @@ const RecentDocuments = props => {
 RecentDocuments.propTypes = {
   workspace: PropTypes.object,
   openRecentDocument: PropTypes.func,
-  on: PropTypes.func
+  on: PropTypes.func,
 };
 
 export default RecentDocuments;

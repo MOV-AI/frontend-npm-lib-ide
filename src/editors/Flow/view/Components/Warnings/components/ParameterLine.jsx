@@ -8,7 +8,7 @@ import { SCOPES, PLUGINS } from "../../../../../../utils/Constants";
 
 import { parameterLineStyles } from "../styles";
 
-const ParameterLine = props => {
+const ParameterLine = (props) => {
   const { subFlowInfo, call, closeModal } = props;
 
   // Style hooks
@@ -35,7 +35,7 @@ const ParameterLine = props => {
         <br />
         <strong>{i18n.t("Parameters-Colon")}</strong>
         <ul className={classes.paramsList}>
-          {params.map(param => (
+          {params.map((param) => (
             <li key={`${node}_${param}`}>{param}</li>
           ))}
         </ul>
@@ -59,7 +59,7 @@ const ParameterLine = props => {
     const template = {
       id,
       name,
-      scope
+      scope,
     };
 
     call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, template);
@@ -76,7 +76,7 @@ const ParameterLine = props => {
       title={buildTooltipTitle(
         subFlowInfo.containerNode.templateName,
         subFlowInfo.name,
-        subFlowInfo.invalidParams
+        subFlowInfo.invalidParams,
       )}
     >
       <div
@@ -86,7 +86,7 @@ const ParameterLine = props => {
         <div>
           <strong>{subFlowInfo.name}</strong>
           <ul className={classes.paramsList}>
-            {subFlowInfo.invalidParams.map(param => (
+            {subFlowInfo.invalidParams.map((param) => (
               <li key={`${subFlowInfo.id}_${param}`}>
                 <strong>{param}</strong>
               </li>
@@ -101,7 +101,7 @@ const ParameterLine = props => {
           >
             <Tooltip
               title={i18n.t("CloseModalOpenTemplate", {
-                templateName: subFlowInfo.containerNode.templateName
+                templateName: subFlowInfo.containerNode.templateName,
               })}
             >
               <strong>{subFlowInfo.containerNode.templateName}</strong>
@@ -116,7 +116,7 @@ const ParameterLine = props => {
 ParameterLine.propTypes = {
   subFlowInfo: PropTypes.object.isRequired,
   call: PropTypes.func.isRequired,
-  closeModal: PropTypes.func.isRequired
+  closeModal: PropTypes.func.isRequired,
 };
 
 export default ParameterLine;

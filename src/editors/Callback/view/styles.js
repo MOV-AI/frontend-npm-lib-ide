@@ -1,17 +1,17 @@
 import { makeStyles } from "@material-ui/styles";
 
-export const menuStyles = makeStyles(_theme => ({
+export const menuStyles = makeStyles((_theme) => ({
   itemValue: {
     padding: "15px 15px 15px 25px",
-    fontSize: "14px"
+    fontSize: "14px",
   },
   itemLibValue: {
     paddingLeft: "10px",
     "& span": {
-      fontSize: "14px"
-    }
+      fontSize: "14px",
+    },
   },
   disabled: {
-    color: "gray"
-  }
+    color: "gray",
+  },
 }));

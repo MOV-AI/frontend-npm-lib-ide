@@ -13,23 +13,23 @@ test("Serialize OF db", () => {
   const content = {
     [id1]: {
       From: "test2/p2/out",
-      To: "test/p1/in"
+      To: "test/p1/in",
     },
     [id2]: {
       From: "test1/p1/out",
-      To: "test2/p2/in"
-    }
+      To: "test2/p2/in",
+    },
   };
 
   const expected = {
     [id1]: {
       from: content[id1].From,
-      to: content[id1].To
+      to: content[id1].To,
     },
     [id2]: {
       from: content[id2].From,
-      to: content[id2].To
-    }
+      to: content[id2].To,
+    },
   };
 
   const data = Manager.serializeOfDB(content, Link);
@@ -44,8 +44,8 @@ test("Get a link instance", () => {
   const content = {
     [id]: {
       From: "test2/p2/out",
-      To: "test/p1/in"
-    }
+      To: "test/p1/in",
+    },
   };
 
   obj.setItem({ name: id, content });

@@ -59,7 +59,7 @@ class ExposedPorts extends Model {
    * @returns {ExposedPorts}
    */
   removePort(value) {
-    this.ports = this.ports.filter(v => v !== value);
+    this.ports = this.ports.filter((v) => v !== value);
     return this.ports;
   }
 
@@ -95,7 +95,7 @@ class ExposedPorts extends Model {
   serialize() {
     return {
       name: this.getName(),
-      ports: this.getPorts()
+      ports: this.getPorts(),
     };
   }
 
@@ -108,7 +108,7 @@ class ExposedPorts extends Model {
     const { name, ports } = this.serialize();
 
     return {
-      [name]: ports
+      [name]: ports,
     };
   }
 
@@ -133,7 +133,7 @@ class ExposedPorts extends Model {
 
   static OBSERVABLE_KEYS = {
     NAME: "name",
-    PORTS: "ports"
+    PORTS: "ports",
   };
 }
 

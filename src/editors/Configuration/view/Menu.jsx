@@ -6,7 +6,7 @@ const Menu = ({ name, model, details: detailsProp }) => {
   // State hook
   const { details } = useDataSubscriber({
     instance: model,
-    propsData: detailsProp
+    propsData: detailsProp,
   });
 
   //========================================================================================
