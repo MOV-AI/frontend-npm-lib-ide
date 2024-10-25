@@ -5,7 +5,11 @@ import { SelectScopeModal, withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "./../../themes";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { PLUGINS, SAVE_OUTDATED_DOC_ACTIONS, KEYBIND_SCOPES } from "../../utils/Constants";
+import {
+  PLUGINS,
+  SAVE_OUTDATED_DOC_ACTIONS,
+  KEYBIND_SCOPES,
+} from "../../utils/Constants";
 import { getCurrentUrl, setUrl } from "../../utils/keybinds";
 import AlertBeforeAction from "./components/AlertDialog/AlertBeforeAction";
 import AlertDialog from "./components/AlertDialog/AlertDialog";

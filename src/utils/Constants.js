@@ -223,7 +223,7 @@ export const DEFAULT_KEY_VALUE_DATA = {
  * but can’t have 2 underscores in a row;
  */
 export const ROS_VALID_NAMES = new RegExp(
-  /(?!.*__.*)^[a-zA-Z~/]{1}?[a-zA-Z0-9_/]*$/
+  /(?!.*__.*)^[a-zA-Z~/]{1}?[a-zA-Z0-9_/]*$/,
 );
 
 /**
@@ -234,7 +234,7 @@ export const ROS_VALID_NAMES = new RegExp(
  * but can’t have 2 underscores in a row;
  */
 export const ROS_VALID_NAMES_VARIATION = new RegExp(
-  /(?!.*__.*)^[a-zA-Z_~/]{1}?[a-zA-Z0-9_/]*$/
+  /(?!.*__.*)^[a-zA-Z_~/]{1}?[a-zA-Z0-9_/]*$/,
 );
 
 export const ALERT_SEVERITIES = {
@@ -314,7 +314,7 @@ export const SHORTCUTS_PROFILE = {
 };
 
 export const DEFAULT_TABS = new Map(
-  Object.entries({ [HOMETAB_PROFILE.name]: { id: HOMETAB_PROFILE.name } })
+  Object.entries({ [HOMETAB_PROFILE.name]: { id: HOMETAB_PROFILE.name } }),
 );
 
 export const DEFAULT_LAYOUT = {

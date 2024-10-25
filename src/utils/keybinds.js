@@ -14,7 +14,7 @@ export function useKeyBinds(url) {
         addKeyBind(keys, callback, scope, url),
       removeKeyBind: (keys, scope) => removeKeyBind(keys, scope, url),
     }),
-    [url]
+    [url],
   );
 }
 
@@ -74,7 +74,7 @@ globalThis.addEventListener("keydown", (evt) => {
         ...a,
         [i]: true,
       }),
-      {}
+      {},
     );
 
     if (
