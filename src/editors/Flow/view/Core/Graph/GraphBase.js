@@ -14,12 +14,12 @@ import GraphValidator from "./GraphValidator";
 const NODE_DATA = {
   NODE: {
     LABEL: "NodeLabel",
-    TYPE: NODE_TYPES.NODE
+    TYPE: NODE_TYPES.NODE,
   },
   CONTAINER: {
     LABEL: "ContainerLabel",
-    TYPE: NODE_TYPES.CONTAINER
-  }
+    TYPE: NODE_TYPES.CONTAINER,
+  },
 };
 
 export default class GraphBase {
@@ -85,17 +85,17 @@ export default class GraphBase {
   addSubscribers = () => {
     // Canvas subscribers
     this.mode.default.onEnter.subscribe({
-      next: () => this.reset()
+      next: () => this.reset(),
     });
     this.mode.addNode.onEnter.subscribe({
-      next: () => this.reset()
+      next: () => this.reset(),
     });
     // Subscribe to node/containers template update
     this.docManager(
       PLUGINS.DOC_MANAGER.NAME,
       PLUGINS.DOC_MANAGER.CALL.SUBSCRIBE_TO_CHANGES,
       this.id,
-      this.onTemplateUpdate
+      this.onTemplateUpdate,
     );
 
     return this;
@@ -128,10 +128,10 @@ export default class GraphBase {
    */
   clear = () => {
     // Clear nodes
-    this.nodes.forEach(node => node.obj.destroy());
+    this.nodes.forEach((node) => node.obj.destroy());
     this.nodes.clear();
     // Clear links
-    this.links.forEach(link => link.destroy());
+    this.links.forEach((link) => link.destroy());
     this.links.clear();
   };
 
@@ -143,7 +143,7 @@ export default class GraphBase {
     this.docManager(
       PLUGINS.DOC_MANAGER.NAME,
       PLUGINS.DOC_MANAGER.CALL.UNSUBSCRIBE_TO_CHANGES,
-      this.id
+      this.id,
     );
   };
 
@@ -182,17 +182,17 @@ export default class GraphBase {
   /**
    * @private Clear invalid links property
    */
-  clearInvalidExposedPorts = invalidExposedPorts => {
+  clearInvalidExposedPorts = (invalidExposedPorts) => {
     // We'll cycle all Nodes with exposedPorts
-    Object.values(this.exposedPorts).forEach(ep => {
+    Object.values(this.exposedPorts).forEach((ep) => {
       // And then cycle all Nodes with Invalid Ports
-      invalidExposedPorts.forEach(iep => {
+      invalidExposedPorts.forEach((iep) => {
         // If this Exposed Port Node exists in the list of Nodes with Invalid Ports
         if (ep[iep.nodeInst.data.id]) {
           // We'll filter all invalidPorts from this Node and assign it back to it
           // thus removing all invalidPOrts from this Node
           ep[iep.nodeInst.data.id] = ep[iep.nodeInst.data.id].filter(
-            port => !iep.invalidPorts.includes(port)
+            (port) => !iep.invalidPorts.includes(port),
           );
         }
       });
@@ -209,10 +209,10 @@ export default class GraphBase {
     const updates = shouldUpdateExposedPorts(
       this.exposedPorts,
       exposedPorts,
-      updateAll
+      updateAll,
     );
 
-    updates.forEach(obj => {
+    updates.forEach((obj) => {
       const node = this.nodes.get(obj.node);
       node
         ? node.obj.setExposedPort(obj.port, obj.value)
@@ -241,22 +241,22 @@ export default class GraphBase {
     }
 
     if (this.canvas.inBoundaries(d.x, d.y)) {
-      this.selectedNodes.forEach(node => {
+      this.selectedNodes.forEach((node) => {
         node.setPositionDelta(d.dx, d.dy);
       });
     }
 
     function update() {
-      nodes.forEach(node => {
+      nodes.forEach((node) => {
         const nodeLinks = allNodes.get(node.data.id)?.links || [];
-        nodeLinks.forEach(linkId => {
+        nodeLinks.forEach((linkId) => {
           const _link = allLinks.get(linkId);
           const sourceNode = allNodes.get(_link.data.sourceNode);
           const targetNode = allNodes.get(_link.data.targetNode);
           if (sourceNode && targetNode) {
             _link.update(
               sourceNode.obj.getPortPos(_link.data.sourcePort),
-              targetNode.obj.getPortPos(_link.data.targetPort)
+              targetNode.obj.getPortPos(_link.data.targetPort),
             );
           }
         });
@@ -269,24 +269,24 @@ export default class GraphBase {
    * On flow update data
    * @param {*} data
    */
-  onFlowUpdate = data => {
+  onFlowUpdate = (data) => {
     if (this.viewMode !== FLOW_VIEW_MODE.default) {
       // TODO: Update the TreeView when a flow is saved. This function is triggered with onTempladeUpdate
       // which was designed for when a node template is updated we should update the node instances on the flow.
       // A line was added to update the Flow when we save a flow. When we have 2 users working on the same flow
       // this is useful. But if we were on treeView mode, this.deleteNode(nodeId) was deleting all the nodes in the
       // tree view. So I added this if to prevent that. In the future, updateNodes(), deleteNode(), updateLinks(), etc..
-      // should be generic for either default view or tree view. 
+      // should be generic for either default view or tree view.
       return;
     }
 
     // Add missing nodes and update existing
     this.updateNodes(data.NodeInst, NODE_TYPES.NODE);
     this.updateNodes(data.Container, NODE_TYPES.CONTAINER);
-    
+
     // Get nodes to remove on update
     const flowNodes = { ...data.NodeInst, ...data.Container };
-    [...this.nodes.keys()].forEach(nodeId => {
+    [...this.nodes.keys()].forEach((nodeId) => {
       if (
         !Object.prototype.hasOwnProperty.call(flowNodes, nodeId) &&
         nodeId !== "start"
@@ -302,19 +302,18 @@ export default class GraphBase {
     this.loadExposedPorts(data.ExposedPorts || {}, true);
     // Let's re-validate the flow
     this.validateFlow();
-
   };
 
   /**
    *
    * @param {*} data
    */
-  onTemplateUpdate = data => {
+  onTemplateUpdate = (data) => {
     if (data.Label === this.id) this.onFlowUpdate(data);
     else {
       const nodesArray = [...this.nodes.values()];
-      const templateUpdatePromises = nodesArray.map(node =>
-        node.obj.onTemplateUpdate(data)
+      const templateUpdatePromises = nodesArray.map((node) =>
+        node.obj.onTemplateUpdate(data),
       );
 
       Promise.all(templateUpdatePromises).then(() => {
@@ -329,9 +328,9 @@ export default class GraphBase {
    *  Fade out all other links
    * @param {BaseLink} link : hovered link
    */
-  onMouseOverLink = link => {
+  onMouseOverLink = (link) => {
     this.links.forEach(
-      value => (value.transparent = value.id !== link.data.id)
+      (value) => (value.transparent = value.id !== link.data.id),
     );
   };
 
@@ -340,7 +339,7 @@ export default class GraphBase {
    *  Remove transparency from all links (let all active)
    */
   onMouseOutLink = () => {
-    this.links.forEach(value => (value.transparent = false));
+    this.links.forEach((value) => (value.transparent = false));
   };
 
   /**
@@ -374,7 +373,7 @@ export default class GraphBase {
    * @param {string<NODE_TYPES>} nodeType
    */
   updateNodes = (nodes, nodeType) => {
-    Object.values(nodes).forEach(node => {
+    Object.values(nodes).forEach((node) => {
       this.updateNode(node, nodeType);
     });
   };
@@ -396,7 +395,7 @@ export default class GraphBase {
       const currentNodeData = {
         ...data,
         ...node.obj.data,
-        Visualization: node.obj.visualizationToDB
+        Visualization: node.obj.visualizationToDB,
       };
       const updatedNodeData = { ...node.obj.data, ...data };
       if (!_isEqual(currentNodeData, updatedNodeData)) {
@@ -418,7 +417,7 @@ export default class GraphBase {
    * @param {string} nodeId : The node id
    * @returns {boolean} : True on success, false otherwise
    */
-  deleteNode = nodeId => {
+  deleteNode = (nodeId) => {
     const node = this.nodes.get(nodeId);
 
     // Delete the links connected with the node
@@ -433,7 +432,7 @@ export default class GraphBase {
    * Update exposed ports in canvas
    * @param {*} exposedPorts
    */
-  updateExposedPorts = exposedPorts => {
+  updateExposedPorts = (exposedPorts) => {
     this.loadExposedPorts(exposedPorts, true);
   };
 
@@ -441,10 +440,10 @@ export default class GraphBase {
    * Update links : Remove deleted and add missing
    * @param {*} links
    */
-  updateLinks = links => {
+  updateLinks = (links) => {
     // Remove deleted links
     const linksToRemove = [...this.links.keys()].filter(
-      link => !Object.prototype.hasOwnProperty.call(links, link)
+      (link) => !Object.prototype.hasOwnProperty.call(links, link),
     );
     this.deleteLinks(linksToRemove);
     // Add missing links
@@ -473,19 +472,18 @@ export default class GraphBase {
       const inst = await Factory.create(
         this.docManager,
         Factory.OUTPUT[nodeType],
-        { canvas: this.canvas, node, events }
+        { canvas: this.canvas, node, events },
       );
       this.nodes.set(node.id, { obj: inst, links: [] });
 
-      if (parent?.addChild)
-        parent.addChild(inst);
+      if (parent?.addChild) parent.addChild(inst);
       return inst;
     } catch (error) {
       console.warn("Error creating node", error);
     }
   }
 
-  addLink = data => {
+  addLink = (data) => {
     // link already exists, update
     const link = this.links.get(data.id);
     if (link) {
@@ -509,7 +507,7 @@ export default class GraphBase {
         targetPortPos,
         parsedLink,
         this.flowDebugging,
-        this.toggleTooltip
+        this.toggleTooltip,
       );
 
       // add link to map
@@ -528,11 +526,13 @@ export default class GraphBase {
         return obj.el;
       }, "links");
 
-      this.invalidLinks = this.invalidLinks.filter(l => l.id !== parsedLink.id);
+      this.invalidLinks = this.invalidLinks.filter(
+        (l) => l.id !== parsedLink.id,
+      );
     } catch (error) {
       if (
         error instanceof InvalidLink &&
-        !this.invalidLinks.find(l => l.id === error.link.id)
+        !this.invalidLinks.find((l) => l.id === error.link.id)
       ) {
         this.invalidLinks.push(error.link);
       }
@@ -544,16 +544,18 @@ export default class GraphBase {
    * Deletes the links and remove references in nodes
    * @param {array} linksToDelete : Array of link ids to delete
    */
-  deleteLinks = linksToDelete => {
+  deleteLinks = (linksToDelete) => {
     // delete the links
-    linksToDelete.forEach(linkId => {
+    linksToDelete.forEach((linkId) => {
       this.links.get(linkId)?.destroy();
       this.links.delete(linkId);
     });
 
     // delete the reference to the links
-    this.nodes.forEach(node => {
-      node.links = node.links.filter(linkId => !linksToDelete.includes(linkId));
+    this.nodes.forEach((node) => {
+      node.links = node.links.filter(
+        (linkId) => !linksToDelete.includes(linkId),
+      );
     });
   };
 
@@ -565,7 +567,7 @@ export default class GraphBase {
     this.canvas.events.next({
       name: "onChangeMouseOver",
       type: type,
-      data
+      data,
     });
   };
 
@@ -573,7 +575,7 @@ export default class GraphBase {
    * Set all temporary warnings as permanents
    */
   setPermanentWarnings = () => {
-    this.warnings = this.warnings.map(wn => ({ ...wn, isPersistent: true }));
+    this.warnings = this.warnings.map((wn) => ({ ...wn, isPersistent: true }));
     this.onFlowValidated.next({ warnings: this.warnings });
   };
 
@@ -587,7 +589,7 @@ export default class GraphBase {
     container?.obj?.setParams(params);
   };
 
-  updateWarningsVisibility = isVisible => {
+  updateWarningsVisibility = (isVisible) => {
     this.warningsVisibility = isVisible;
   };
 
@@ -625,23 +627,19 @@ export default class GraphBase {
     if (rest.length)
       for (let i = 0; i < rest.length; i++) {
         const nodeParent = this.getNodeParent(rest, i, parent);
-        if (nodeParent)
-          parent = nodeParent;
-        else
-          return;
+        if (nodeParent) parent = nodeParent;
+        else return;
       }
 
-    if (!parent)
-      return;
+    if (!parent) return;
 
-    if (parent.obj)
-      parent.obj.status = status == 1;
+    if (parent.obj) parent.obj.status = status == 1;
     parent.status = status == 1;
   };
 
   reset() {
     // Reset all selected nodes
-    this.nodes.forEach(node => {
+    this.nodes.forEach((node) => {
       node.obj.selected = false;
     });
     // Reset selected link
@@ -652,7 +650,7 @@ export default class GraphBase {
   }
 
   reStrokeLinks = () => {
-    this.links?.forEach(linkData => {
+    this.links?.forEach((linkData) => {
       linkData.flowDebugging = this.flowDebugging;
       linkData.changeStrokeColor();
     });
@@ -665,11 +663,10 @@ export default class GraphBase {
    */
   getSearchOptions = () => {
     return Array.from(this.nodes.values())
-      .map(el => ({
+      .map((el) => ({
         ...el.obj.data,
-        parent: this.id
+        parent: this.id,
       }))
-      .filter(el => el.id !== StartNode.model);
+      .filter((el) => el.id !== StartNode.model);
   };
-
 }

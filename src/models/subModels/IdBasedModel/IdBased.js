@@ -55,7 +55,7 @@ class IdBased extends Model {
   serialize() {
     return {
       id: this.getId(),
-      name: this.getName()
+      name: this.getName(),
     };
   }
 
@@ -68,7 +68,7 @@ class IdBased extends Model {
     const { name } = this.serialize();
 
     return {
-      name
+      name,
     };
   }
 
@@ -92,7 +92,7 @@ class IdBased extends Model {
   }
 
   static OBSERVABLE_KEYS = {
-    NAME: "name"
+    NAME: "name",
   };
 }
 

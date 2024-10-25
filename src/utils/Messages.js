@@ -23,8 +23,8 @@ const MESSAGES = {
     SAVED_SUCCESSFULLY: "SavedSuccessfully",
     DOC_DELETE_SUCCESSFULLY: "DocDeleteSuccessfully",
     CALLBACK_CREATED: "CallbackCreated",
-    NODE_IS_ACTION: "NodeIsAction"
-  }
+    NODE_IS_ACTION: "NodeIsAction",
+  },
 };
 
 export const ERROR_MESSAGES = MESSAGES.ERROR_MESSAGES;

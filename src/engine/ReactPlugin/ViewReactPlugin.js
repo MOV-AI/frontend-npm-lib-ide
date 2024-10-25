@@ -18,7 +18,7 @@ export class ViewReactPlugin extends IDEPlugin {
         this.profile.location,
         "addView",
         this.profile,
-        this.render()
+        this.render(),
       );
     super.activate();
   }
@@ -36,7 +36,7 @@ export class ViewPlugin extends ViewReactPlugin {
     if (existingPlugin) return existingPlugin;
     super({
       ...profile,
-      methods: ["render", ...methods]
+      methods: ["render", ...methods],
     });
 
     this.methods = methods;
@@ -46,7 +46,7 @@ export class ViewPlugin extends ViewReactPlugin {
   }
 
   initMethods = () => {
-    this.methods.forEach(name => {
+    this.methods.forEach((name) => {
       this[name] = (...a) => {
         if (!this.ref.current) {
           return console.warn("debug method not implemented in component");
@@ -99,9 +99,13 @@ export function withViewPlugin(ReactComponent, methods = []) {
  * @param {Object} methods : Object maping all the methods to be exported in the plugin
  */
 export const usePluginMethods = (ref, methods) => {
-  React.useImperativeHandle(ref, () => ({
-    ...methods
-  }), [methods]);
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      ...methods,
+    }),
+    [methods],
+  );
 };
 
 /**
@@ -109,7 +113,7 @@ export const usePluginMethods = (ref, methods) => {
  * @param {*} value : Value to get previous state
  * @returns {*} Previous value
  */
-export const usePrevious = value => {
+export const usePrevious = (value) => {
   const ref = React.useRef();
   React.useEffect(() => {
     ref.current = value;

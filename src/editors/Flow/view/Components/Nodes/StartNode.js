@@ -12,8 +12,8 @@ class StartNode extends BaseNode {
       Template: START_NAME,
       Visualization: {
         x: { Value: 20 },
-        y: { Value: 20 }
-      }
+        y: { Value: 20 },
+      },
     };
     const template = {
       Label: START_NAME,
@@ -21,13 +21,13 @@ class StartNode extends BaseNode {
         start: {
           Out: {
             start: {
-              Message: MOVAI_FLOW_TYPES.LINKS.TRANSITION
-            }
+              Message: MOVAI_FLOW_TYPES.LINKS.TRANSITION,
+            },
           },
           Template: "MovAI/TransitionFor",
-          Package: "movai_msgs"
-        }
-      }
+          Package: "movai_msgs",
+        },
+      },
     };
 
     super({ ...args, node, template });
@@ -54,7 +54,7 @@ class StartNode extends BaseNode {
    */
   portEvents = () => {
     return {
-      onClick: port => this.onPortClick(port),
+      onClick: (port) => this.onPortClick(port),
       onMouseOver: () => {
         // Empty
       },
@@ -63,14 +63,14 @@ class StartNode extends BaseNode {
       },
       onContext: () => {
         // Empty
-      }
+      },
     };
   };
 
   get headerPos() {
     return {
       x: this.width / 2 + this.padding.x / 2,
-      y: this.height + 15
+      y: this.height + 15,
     };
   }
 

@@ -9,14 +9,14 @@ const DEFAULT_PLUGIN = {
   emit: () => defaultFunction("emit"),
   on: () => defaultFunction("on"),
   off: () => defaultFunction("off"),
-  onTopic: () => defaultFunction("onTopic")
+  onTopic: () => defaultFunction("onTopic"),
 };
 
 export class HostReactPlugin extends IDEPlugin {
   constructor(profile) {
     // Remove duplicated if needed
     const methods = Array.from(
-      new Set([...(profile.methods ?? []), "addView", "removeView", "update"])
+      new Set([...(profile.methods ?? []), "addView", "removeView", "update"]),
     );
     super({ ...profile, methods });
   }
@@ -53,15 +53,15 @@ export class HostReactPlugin extends IDEPlugin {
  * @returns {ReactComponent}
  */
 export function withHostReactPlugin(ReactComponent, methods = []) {
-  const InnerHost = props => {
+  const InnerHost = (props) => {
     const ref = React.useRef();
     const RefComponent = getRefComponent(ReactComponent);
     const { viewPlugins, plugin } = useHostReactPlugin(
       {
         name: props.hostName,
-        methods
+        methods,
       },
-      ref
+      ref,
     );
 
     return (
@@ -79,7 +79,7 @@ export function withHostReactPlugin(ReactComponent, methods = []) {
   };
 
   InnerHost.propTypes = {
-    hostName: PropTypes.string.isRequired
+    hostName: PropTypes.string.isRequired,
   };
   return InnerHost;
 }
@@ -96,7 +96,7 @@ export const useHostReactPlugin = ({ name, methods }, componentRef) => {
       }
 
       initMethods = () => {
-        methods.forEach(_name => {
+        methods.forEach((_name) => {
           this[_name] = (...args) => componentRef.current[_name](...args);
         });
       };
@@ -130,5 +130,5 @@ export const useHostReactPlugin = ({ name, methods }, componentRef) => {
 };
 
 useHostReactPlugin.propTypes = {
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
 };

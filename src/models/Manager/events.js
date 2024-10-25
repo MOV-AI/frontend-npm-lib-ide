@@ -2,7 +2,7 @@ const EVENTS = {
   UPDATE: "onUpdate",
   CREATE: "onCreate",
   DELETE: "onDelete",
-  ANY: "onAny"
+  ANY: "onAny",
 };
 
 export default EVENTS;

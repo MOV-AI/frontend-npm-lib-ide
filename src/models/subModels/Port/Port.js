@@ -16,7 +16,7 @@ class Port extends Model {
   //========================================================================================
 
   events = {
-    onAny: (event, name, value) => this.propsUpdate(event, name, value)
+    onAny: (event, name, value) => this.propsUpdate(event, name, value),
   };
 
   //========================================================================================
@@ -151,7 +151,7 @@ class Port extends Model {
       msgPackage,
       message,
       portIn,
-      portOut
+      portOut,
     } = json;
 
     super.setData({
@@ -160,7 +160,7 @@ class Port extends Model {
       description,
       template,
       msgPackage,
-      message
+      message,
     });
 
     this.portIn.setData(portIn);
@@ -206,7 +206,7 @@ class Port extends Model {
       msgPackage: this.getPackage(),
       message: this.getMessage(),
       portIn: this.getPortIn().serialize(),
-      portOut: this.getPortOut().serialize()
+      portOut: this.getPortOut().serialize(),
     };
   }
 
@@ -225,7 +225,7 @@ class Port extends Model {
       Package: msgPackage,
       Message: message,
       In: this.portIn.serializeToDB(),
-      Out: this.portOut.serializeToDB()
+      Out: this.portOut.serializeToDB(),
     };
   }
 
@@ -246,7 +246,7 @@ class Port extends Model {
       Message: message,
       Package: msgPackage,
       In: portIn,
-      Out: portOut
+      Out: portOut,
     } = content;
 
     return {
@@ -257,7 +257,7 @@ class Port extends Model {
       message,
       msgPackage,
       portIn: Manager.serializeOfDB(portIn, PortType),
-      portOut: Manager.serializeOfDB(portOut, PortType)
+      portOut: Manager.serializeOfDB(portOut, PortType),
     };
   }
 }

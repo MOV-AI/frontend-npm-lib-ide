@@ -11,7 +11,7 @@ import useMainInterface from "./hooks/useMainInterface";
 
 import { baseFlowStyles } from "./styles";
 
-const BaseFlow = props => {
+const BaseFlow = (props) => {
   const {
     call,
     instance,
@@ -28,7 +28,7 @@ const BaseFlow = props => {
     flowDebugging,
     viewMode,
     graphClass,
-    loading
+    loading,
   } = props;
   const readOnly = false;
 
@@ -36,7 +36,7 @@ const BaseFlow = props => {
   const classes = baseFlowStyles();
   const containerId = useMemo(
     () => `${viewMode}-${generateContainerId(id)}`,
-    [viewMode, id]
+    [viewMode, id],
   );
 
   const { mainInterface } = useMainInterface({
@@ -51,34 +51,39 @@ const BaseFlow = props => {
     containerId,
     model,
     readOnly,
-    call
+    call,
   });
 
   const getMainInterface = useCallback(
     () => mainInterface.current,
-    [mainInterface]
+    [mainInterface],
   );
 
   // Enter in add node/sub-flow mode
   useEffect(() => {
-    on(PLUGINS.FLOW_EXPLORER.NAME, PLUGINS.FLOW_EXPLORER.ON.ADD_NODE, node => {
-      // event emitter is latching thus we need to skip
-      // it while flow is loading
-      const currMode = getMainInterface()?.mode.current.id ?? EVT_NAMES.LOADING;
-      if (currMode === EVT_NAMES.LOADING) return;
+    on(
+      PLUGINS.FLOW_EXPLORER.NAME,
+      PLUGINS.FLOW_EXPLORER.ON.ADD_NODE,
+      (node) => {
+        // event emitter is latching thus we need to skip
+        // it while flow is loading
+        const currMode =
+          getMainInterface()?.mode.current.id ?? EVT_NAMES.LOADING;
+        if (currMode === EVT_NAMES.LOADING) return;
 
-      const scopes = {
-        [SCOPES.NODE]: EVT_NAMES.ADD_NODE,
-        [SCOPES.FLOW]: EVT_NAMES.ADD_FLOW
-      };
-      const templateId = node.name;
-      const isSubFlow = node.scope === SCOPES.FLOW;
-      // If user tries to add the flow as a sub-flow to itself,
-      //  it's considered a forbidden operation
-      if (dataFromDB.Label === templateId && isSubFlow) return;
-      // Add interface mode to add node/sub-flow
-      getMainInterface()?.setMode(scopes[node.scope], { templateId }, true);
-    });
+        const scopes = {
+          [SCOPES.NODE]: EVT_NAMES.ADD_NODE,
+          [SCOPES.FLOW]: EVT_NAMES.ADD_FLOW,
+        };
+        const templateId = node.name;
+        const isSubFlow = node.scope === SCOPES.FLOW;
+        // If user tries to add the flow as a sub-flow to itself,
+        //  it's considered a forbidden operation
+        if (dataFromDB.Label === templateId && isSubFlow) return;
+        // Add interface mode to add node/sub-flow
+        getMainInterface()?.setMode(scopes[node.scope], { templateId }, true);
+      },
+    );
 
     return () =>
       off(PLUGINS.FLOW_EXPLORER.NAME, PLUGINS.FLOW_EXPLORER.ON.ADD_NODE);
@@ -119,11 +124,11 @@ BaseFlow.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
   model: PropTypes.string,
-  dataFromDB: PropTypes.object
+  dataFromDB: PropTypes.object,
 };
 
 BaseFlow.defaultProps = {
-  onReady: () => console.warning("On ready prop not received")
+  onReady: () => console.warning("On ready prop not received"),
 };
 
 export default memo(BaseFlow);

@@ -29,18 +29,18 @@ export const getToolTabData = (tab, props = {}) => {
   return { ...data, ...tab };
 };
 
-export const hasTool = name => {
+export const hasTool = (name) => {
   return name in APP_TOOLS;
 };
 
 export const getMainMenuTools = () => {
-  return Object.values(APP_TOOLS).filter(tool => tool.mainMenu);
+  return Object.values(APP_TOOLS).filter((tool) => tool.mainMenu);
 };
 
 export const getSystemBarTools = () => {
-  return Object.values(APP_TOOLS).filter(tool => tool.toolBar);
+  return Object.values(APP_TOOLS).filter((tool) => tool.toolBar);
 };
 
 export const getQuickAccessTools = () => {
-  return Object.values(APP_TOOLS).filter(tool => tool.quickAccess);
+  return Object.values(APP_TOOLS).filter((tool) => tool.quickAccess);
 };

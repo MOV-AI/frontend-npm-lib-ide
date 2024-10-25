@@ -3,7 +3,7 @@ import schema from "./schema";
 
 const SEPARATOR = {
   SUBFLOW: "__",
-  NODE: "/"
+  NODE: "/",
 };
 
 class Link extends Model {
@@ -59,7 +59,7 @@ class Link extends Model {
   }
 
   getNodes() {
-    return [this.getFrom(), this.getTo()].map(value => {
+    return [this.getFrom(), this.getTo()].map((value) => {
       return value.split(SEPARATOR.NODE)[0].split(SEPARATOR.SUBFLOW)[0];
     });
   }
@@ -75,7 +75,7 @@ class Link extends Model {
       id: this.getId(),
       from: this.getFrom(),
       to: this.getTo(),
-      dependency: this.getDependency()
+      dependency: this.getDependency(),
     };
   }
 
@@ -85,7 +85,7 @@ class Link extends Model {
     return {
       From: from,
       To: to,
-      Dependency: dependency
+      Dependency: dependency,
     };
   }
 
@@ -107,7 +107,7 @@ class Link extends Model {
     ID: "id",
     FROM: "from",
     TO: "to",
-    DEPENDENCY: "dependency"
+    DEPENDENCY: "dependency",
   };
 }
 

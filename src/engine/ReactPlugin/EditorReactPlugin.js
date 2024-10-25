@@ -23,15 +23,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
    * Component responsible to handle common editor lifecycle
    */
   const EditorComponent = forwardRef((props, ref) => {
-    const {
-      id,
-      on,
-      off,
-      call,
-      scope,
-      save,
-      updateRightMenu,
-    } = props;
+    const { id, on, off, call, scope, save, updateRightMenu } = props;
 
     const editorContainer = useRef();
 
@@ -44,12 +36,12 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       setUrl(id);
       updateMenusOnTabOrEditorChange();
     }, [id]);
-    
+
     const updateMenusOnTabOrEditorChange = async (tabId) => {
       const validTab = await call(
         PLUGINS.TABS.NAME,
         PLUGINS.TABS.CALL.FIND_TAB,
-        tabId
+        tabId,
       );
 
       // This check goes through every open tab checking it's id
@@ -61,11 +53,9 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         updateRightMenu();
 
         // We only need to activate the editor when it's an Active Tab Change
-        if(tabId)
-          activateEditor();
+        if (tabId) activateEditor();
       }
-
-    }
+    };
 
     /**
      * Component did mount
@@ -73,8 +63,8 @@ export function withEditorPlugin(ReactComponent, methods = []) {
     useEffect(() => {
       addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
 
-      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async data => {
-        updateMenusOnTabOrEditorChange(data.id)
+      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async (data) => {
+        updateMenusOnTabOrEditorChange(data.id);
       });
 
       // Remove key bind on component unmount
@@ -91,7 +81,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       save,
       call,
       updateRightMenu,
-      activateEditor
+      activateEditor,
     ]);
 
     return (
@@ -101,11 +91,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         className={`container-${scope}`}
         onFocus={activateEditor}
       >
-        <RefComponent
-          {...props}
-          saveDocument={save}
-          ref={ref}
-        />
+        <RefComponent {...props} saveDocument={save} ref={ref} />
       </div>
     );
   });
@@ -115,7 +101,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
     withAlerts,
     withLoader,
     withDataHandler,
-    withMenuHandler
+    withMenuHandler,
   ]);
 
   /**

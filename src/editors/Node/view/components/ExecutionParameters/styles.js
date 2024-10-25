@@ -1,59 +1,59 @@
 import { makeStyles } from "@material-ui/styles";
 
-export const executionParamStyles = makeStyles(theme => ({
+export const executionParamStyles = makeStyles((theme) => ({
   root: {
     padding: "5px 0px 5px 0px",
-    width: "100%"
+    width: "100%",
   },
   heading: {
-    fontSize: "1.5rem"
+    fontSize: "1.5rem",
   },
   details: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   column: {
-    flexBasis: "90%"
+    flexBasis: "90%",
   },
   input: {
     margin: theme.spacing(1),
     fontFamily: "inherit",
     width: "80%",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   text: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   row: {
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   center: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
   },
   centerCheckboxTooltip: {
     justifyContent: "center",
     display: "flex",
     flexDirection: "row",
-    flexGrow: 1
+    flexGrow: 1,
   },
   logo: {
     margin: "12px 12px 12px 12px",
-    padding: "0px"
+    padding: "0px",
   },
   formControlLabel: {
-    margin: "0%"
+    margin: "0%",
   },
   textField: {
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   noMargin: {
-    margin: 0
-  }
+    margin: 0,
+  },
 }));

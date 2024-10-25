@@ -9,13 +9,13 @@ import {
   PLUGINS,
   TABLE_KEYS_NAMES,
   DIALOG_TITLE,
-  DEFAULT_VALUE
+  DEFAULT_VALUE,
 } from "../../../../../utils/Constants";
 import ParameterEditorDialog from "../../../../_shared/KeyValueTable/ParametersEditorDialog";
 import KeyValuesSection from "./sub-components/collapsibleSections/KeyValuesSection";
 import MenuDetails from "./sub-components/MenuDetails";
 
-const ContainerMenu = props => {
+const ContainerMenu = (props) => {
   // Props
   const { nodeInst, call, openDoc, flowModel, editable } = props;
   // State hooks
@@ -46,14 +46,14 @@ const ContainerMenu = props => {
       PLUGINS.DOC_MANAGER.CALL.READ,
       {
         scope: "Flow",
-        name: nodeInst.parent.data.ContainerFlow
-      }
+        name: nodeInst.parent.data.ContainerFlow,
+      },
     );
 
     return subFlowInst.getSubFlowItem(data.name);
   }, [data.name, nodeInst, flowModel, call]);
 
-  const setFlowDataInst = containerInstance => {
+  const setFlowDataInst = (containerInstance) => {
     setFlowData(containerInstance.serialize());
   };
 
@@ -61,7 +61,7 @@ const ContainerMenu = props => {
    * @param {Object} formData : Data to Save
    */
   const handleSubmitParameter = useCallback(
-    async formData => {
+    async (formData) => {
       const varName = formData.varName;
       const containerInstance = await getFlowData();
 
@@ -76,7 +76,7 @@ const ContainerMenu = props => {
       }
       setFlowDataInst(containerInstance);
     },
-    [getFlowData]
+    [getFlowData],
   );
 
   /**
@@ -90,7 +90,7 @@ const ContainerMenu = props => {
       containerInstance.deleteKeyValue(varName, paramName);
       setFlowDataInst(containerInstance);
     },
-    [getFlowData]
+    [getFlowData],
   );
 
   //========================================================================================
@@ -103,7 +103,7 @@ const ContainerMenu = props => {
    * Toggle expanded state of Parameter collapsible section
    */
   const toggleExpanded = useCallback(() => {
-    setExpanded(prevState => !prevState);
+    setExpanded((prevState) => !prevState);
   }, []);
 
   /**
@@ -120,7 +120,7 @@ const ContainerMenu = props => {
         varName: varName,
         type: keyValueData.type ?? DATA_TYPES.ANY,
         name: keyValueData.key,
-        paramType
+        paramType,
       };
 
       const args = {
@@ -135,17 +135,17 @@ const ContainerMenu = props => {
         disableDescription: true,
         preventRenderType: varName !== TABLE_KEYS_NAMES.PARAMETERS,
         disabled: viewOnly,
-        call
+        call,
       };
 
       call(
         PLUGINS.DIALOG.NAME,
         PLUGINS.DIALOG.CALL.CUSTOM_DIALOG,
         args,
-        ParameterEditorDialog
+        ParameterEditorDialog,
       );
     },
-    [call, handleSubmitParameter]
+    [call, handleSubmitParameter],
   );
 
   /**
@@ -160,10 +160,10 @@ const ContainerMenu = props => {
         submitText: i18n.t("Delete"),
         title: i18n.t("DeleteDocConfirmationTitle"),
         onSubmit: () => handleDeleteParameter(paramName, varName),
-        message: i18n.t("DeleteKeyConfirmationMessage", { key: paramName })
+        message: i18n.t("DeleteKeyConfirmationMessage", { key: paramName }),
       });
     },
-    [call, handleDeleteParameter]
+    [call, handleDeleteParameter],
   );
 
   //========================================================================================
@@ -192,8 +192,8 @@ const ContainerMenu = props => {
     // Read node template
     call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.READ, {
       name,
-      scope: data.model
-    }).then(doc => {
+      scope: data.model,
+    }).then((doc) => {
       setTemplateData(doc.serialize());
     });
   }, [data, call]);
@@ -244,11 +244,11 @@ ContainerMenu.propTypes = {
   call: PropTypes.func.isRequired,
   openDoc: PropTypes.func.isRequired,
   nodeInst: PropTypes.object.isRequired,
-  editable: PropTypes.bool
+  editable: PropTypes.bool,
 };
 
 ContainerMenu.defaultProps = {
-  editable: false
+  editable: false,
 };
 
 export default ContainerMenu;

@@ -11,7 +11,7 @@ class FlowStore extends Store {
       title: "Flows",
       plugins: [DBSubscriber],
       docManager,
-      observer
+      observer,
     });
   }
 

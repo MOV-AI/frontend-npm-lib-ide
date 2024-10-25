@@ -3,30 +3,31 @@ import { Table, snackbar, withNotification } from "@mov-ai/mov-fe-lib-react";
 import { MenuItem, Select } from "@material-ui/core";
 import useDataTypes from "../../editors/_shared/hooks/useDataTypes";
 
-const Component = props => {
+const Component = (props) => {
   const [data, setData] = useState([]);
-  const { getDataTypes, getType } =
-    useDataTypes();
+  const { getDataTypes, getType } = useDataTypes();
 
-  const validateRow = async rowData => {
+  const validateRow = async (rowData) => {
     const rowType = rowData.type;
-    return getType(rowType).validate(rowData.value).then(paramValidation => {
-      if (paramValidation.success)
-        snackbar({ message: "Valid data", severity: "success" });
-      else snackbar({ message: "Invalid data", severity: "error" });
-      // Return row validation results
-      return { result: paramValidation.success, value: rowValue };
-    });
+    return getType(rowType)
+      .validate(rowData.value)
+      .then((paramValidation) => {
+        if (paramValidation.success)
+          snackbar({ message: "Valid data", severity: "success" });
+        else snackbar({ message: "Invalid data", severity: "error" });
+        // Return row validation results
+        return { result: paramValidation.success, value: rowValue };
+      });
   };
 
-  const onRowAdd = newData => {
+  const onRowAdd = (newData) => {
     return new Promise((resolve, reject) => {
       try {
-        validateRow(newData).then(validParams => {
+        validateRow(newData).then((validParams) => {
           if (!validParams.result) return;
 
           // add key value
-          setData(prevState => [...prevState, newData]);
+          setData((prevState) => [...prevState, newData]);
           resolve();
         });
       } catch (err) {
@@ -40,7 +41,7 @@ const Component = props => {
     return new Promise((resolve, reject) => {
       try {
         // Validate port name
-        validateRow(newData).then(validParams => {
+        validateRow(newData).then((validParams) => {
           if (!validParams.result) return;
 
           // update key value
@@ -52,7 +53,7 @@ const Component = props => {
     });
   };
 
-  const renderValueEditor = _props => {
+  const renderValueEditor = (_props) => {
     const editComponent = getType(_props.rowData.type).getEditComponent();
     if (!editComponent) return <></>;
     // Pass alert method to edit component through props
@@ -64,30 +65,30 @@ const Component = props => {
     {
       title: "Type",
       field: "type",
-      render: rowData => getType(rowData.type).getLabel(),
-      editComponent: _props => (
+      render: (rowData) => getType(rowData.type).getLabel(),
+      editComponent: (_props) => (
         <Select
           value={_props.rowData.type || ""}
-          onChange={async evt => {
+          onChange={async (evt) => {
             const _data = { ..._props.rowData };
             _data.type = evt.target.value;
             _data.value = await getValidValue(_data.type, "");
             _props.onRowDataChange(_data);
           }}
         >
-          {getDataTypes([]).map(key => (
+          {getDataTypes([]).map((key) => (
             <MenuItem key={key} value={key}>
               {getType(key).getLabel()}
             </MenuItem>
           ))}
         </Select>
-      )
+      ),
     },
     {
       title: "Value",
       field: "value",
-      editComponent: renderValueEditor
-    }
+      editComponent: renderValueEditor,
+    },
   ];
 
   return (
@@ -97,13 +98,13 @@ const Component = props => {
       data={data}
       editable={{
         isEditable: () => true,
-        onRowAdd: newData => onRowAdd(newData),
-        onRowUpdate: onParametersRowUpdate
+        onRowAdd: (newData) => onRowAdd(newData),
+        onRowUpdate: onParametersRowUpdate,
       }}
       options={{
         paging: false,
         actionsColumnIndex: -1,
-        searchFieldAlignment: "left"
+        searchFieldAlignment: "left",
       }}
     />
   );
@@ -111,9 +112,9 @@ const Component = props => {
 
 export default {
   title: "Data Types",
-  component: Component
+  component: Component,
 };
 
-const Template = args => <Component {...args} />;
+const Template = (args) => <Component {...args} />;
 
 export const Types = withNotification(Template).bind({});

@@ -16,7 +16,7 @@ import {
   ROS_VALID_NAMES_VARIATION,
   PLUGINS,
   SCOPES,
-  ALERT_SEVERITIES
+  ALERT_SEVERITIES,
 } from "../../../utils/Constants";
 import { ERROR_MESSAGES } from "../../../utils/Messages";
 import ParameterEditorDialog from "../../_shared/KeyValueTable/ParametersEditorDialog";
@@ -41,7 +41,7 @@ export const Node = (props, ref) => {
   const { data } = useDataSubscriber({
     instance,
     propsData: props.data,
-    keysToDisconsider: Model.KEYS_TO_DISCONSIDER
+    keysToDisconsider: Model.KEYS_TO_DISCONSIDER,
   });
   const defaultColumns = getColumns();
 
@@ -67,17 +67,19 @@ export const Node = (props, ref) => {
       try {
         if (!paramName)
           throw new Error(
-            i18n.t(ERROR_MESSAGES.TYPE_NAME_IS_MANDATORY, { typeName })
+            i18n.t(ERROR_MESSAGES.TYPE_NAME_IS_MANDATORY, { typeName }),
           );
         else if (!re.test(newName)) {
-          throw new Error(i18n.t(ERROR_MESSAGES.INVALID_TYPE_NAME, { typeName }));
+          throw new Error(
+            i18n.t(ERROR_MESSAGES.INVALID_TYPE_NAME, { typeName }),
+          );
         }
       } catch (error) {
         return { result: false, error: error.message };
       }
       return { result: true, error: "" };
     },
-    [data]
+    [data],
   );
 
   //========================================================================================
@@ -86,7 +88,7 @@ export const Node = (props, ref) => {
    *                                                                                      */
   //========================================================================================
 
-  const updateDescription = useCallback(value => {
+  const updateDescription = useCallback((value) => {
     if (instance.current) instance.current.setDescription(value);
   }, []);
 
@@ -94,14 +96,13 @@ export const Node = (props, ref) => {
     if (instance.current) instance.current.setExecutionParameter(param, value);
   }, []);
 
-  const updatePath = useCallback(value => {
+  const updatePath = useCallback((value) => {
     if (instance.current) instance.current.setPath(value);
   }, []);
 
   const setPort = useCallback((value, resolve, reject, previousData) => {
     try {
-      if (!instance.current)
-        throw new Error("NoInstance");
+      if (!instance.current) throw new Error("NoInstance");
 
       // Trim name
       value.name = value.name.trim();
@@ -145,7 +146,7 @@ export const Node = (props, ref) => {
     (ioConfigId, portName, callback) => {
       instance.current.setPortCallback(ioConfigId, portName, callback);
     },
-    [instance]
+    [instance],
   );
 
   const updateIOPortInputs = useCallback(
@@ -164,10 +165,10 @@ export const Node = (props, ref) => {
         direction,
         ioPortKey,
         paramName,
-        value
+        value,
       );
     },
-    []
+    [],
   );
 
   const updateKeyValue = useCallback(
@@ -192,7 +193,7 @@ export const Node = (props, ref) => {
           alert({ message: err.message, severity: ALERT_SEVERITIES.ERROR });
       }
     },
-    [instance, alert, validateName]
+    [instance, alert, validateName],
   );
 
   const deleteKeyValue = useCallback(
@@ -203,7 +204,7 @@ export const Node = (props, ref) => {
         else resolve();
       });
     },
-    [instance]
+    [instance],
   );
 
   //========================================================================================
@@ -224,13 +225,13 @@ export const Node = (props, ref) => {
         title: menuTitle,
         view: (
           <Menu id={id} name={name} details={details} model={instance}></Menu>
-        )
-      }
+        ),
+      },
     });
   }, [call, id, name, props.data, instance]);
 
   usePluginMethods(ref, {
-    renderRightMenu
+    renderRightMenu,
   });
 
   //========================================================================================
@@ -254,28 +255,28 @@ export const Node = (props, ref) => {
         varName: param,
         type: objData.type ?? DATA_TYPES.ANY,
         name: objData.key || dataId,
-        paramType
+        paramType,
       };
       const args = {
-        onSubmit: formData => {
+        onSubmit: (formData) => {
           return updateKeyValue(param, formData, obj, isNew);
         },
-        nameValidation: newData =>
+        nameValidation: (newData) =>
           Promise.resolve(validateName(newData, param, obj.name)),
         title: i18n.t("EditParamType", { paramType }),
         data: obj,
         preventRenderType: param !== TABLE_KEYS_NAMES.PARAMETERS,
-        call
+        call,
       };
 
       call(
         PLUGINS.DIALOG.NAME,
         PLUGINS.DIALOG.CALL.CUSTOM_DIALOG,
         args,
-        ParameterEditorDialog
+        ParameterEditorDialog,
       );
     },
-    [data, validateName, updateKeyValue, call]
+    [data, validateName, updateKeyValue, call],
   );
 
   /**
@@ -294,24 +295,24 @@ export const Node = (props, ref) => {
           scope,
           name: " new_callback ",
           data: {
-            message: defaultMsg
-          }
+            message: defaultMsg,
+          },
         },
-        res => {
+        (res) => {
           if (res.success) {
             const newTabData = {
               id: `${res.model.workspace}/${scope}/${res.name}`,
               name: res.name,
-              scope
+              scope,
             };
             call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, newTabData);
             // Set new callback in Node Port
             updatePortCallback(ioConfigName, portName, res.name);
           }
-        }
+        },
       );
     },
-    [call, updatePortCallback]
+    [call, updatePortCallback],
   );
 
   /**
@@ -319,23 +320,23 @@ export const Node = (props, ref) => {
    * @param {string} callbackName : Callback name
    */
   const handleOpenCallback = useCallback(
-    callbackName => {
+    (callbackName) => {
       // If no callback name is passed -> returns
       if (!callbackName) return;
       // Open existing callback
       const scope = CallbackModel.SCOPE;
       call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.READ, {
         scope,
-        name: callbackName
-      }).then(doc => {
+        name: callbackName,
+      }).then((doc) => {
         call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
           id: doc.getUrl(),
           name: doc.getName(),
-          scope
+          scope,
         });
       });
     },
-    [call]
+    [call],
   );
 
   /**
@@ -348,15 +349,15 @@ export const Node = (props, ref) => {
     (modalData, ioConfigName, portName) => {
       call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.SELECT_SCOPE_MODAL, {
         ...modalData,
-        onSubmit: selectedCallback => {
+        onSubmit: (selectedCallback) => {
           const splitURL = selectedCallback.split("/");
           const callback = splitURL.length > 1 ? splitURL[2] : selectedCallback;
           // Set new callback in Node Port
           updatePortCallback(ioConfigName, portName, callback);
-        }
+        },
       });
     },
-    [call, updatePortCallback]
+    [call, updatePortCallback],
   );
 
   //========================================================================================
@@ -369,8 +370,8 @@ export const Node = (props, ref) => {
     call(
       PLUGINS.DOC_MANAGER.NAME,
       PLUGINS.DOC_MANAGER.CALL.GET_STORE,
-      SCOPES.CALLBACK
-    ).then(store => {
+      SCOPES.CALLBACK,
+    ).then((store) => {
       setProtectedCallbacks(store.protectedDocs);
     });
   }, [call]);
@@ -463,7 +464,7 @@ Node.propTypes = {
   call: PropTypes.func.isRequired,
   data: PropTypes.object,
   instance: PropTypes.object,
-  editable: PropTypes.bool
+  editable: PropTypes.bool,
 };
 
 export default withEditorPlugin(Node);

@@ -8,14 +8,14 @@ import { convertToValidString } from "../../../../../utils/Utils";
 
 import { dependencyInfoStyles } from "./styles";
 
-const DependencyInfo = props => {
+const DependencyInfo = (props) => {
   const [minified, setMinified] = useState(false);
 
   // Style hook
   const classes = dependencyInfoStyles();
 
   const toggleMinify = useCallback(() => {
-    setMinified(prevState => !prevState);
+    setMinified((prevState) => !prevState);
   }, []);
 
   return (
@@ -30,7 +30,7 @@ const DependencyInfo = props => {
             : i18n.t("DependencyInfoTitle")}
           <ArrowDropDownIcon />
         </h3>
-        {Object.values(LINK_DEPENDENCY).map(dep => {
+        {Object.values(LINK_DEPENDENCY).map((dep) => {
           return (
             <div
               key={convertToValidString(dep.LABEL)}

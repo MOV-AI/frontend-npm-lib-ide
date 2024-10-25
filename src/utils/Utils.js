@@ -23,7 +23,7 @@ export const defaultFunction = (name, logToConsole = true) => {
  * Tries to find the next increment on an array of numbers
  * @param {Number[]} numArray
  */
-export const findNextIncrement = numArray => {
+export const findNextIncrement = (numArray) => {
   if (!numArray || numArray.length < 2)
     return numArray[0] ? numArray[0] + 1 : 1;
 
@@ -44,14 +44,14 @@ export const findNextIncrement = numArray => {
  * @param {SvgIcon} Icon
  * @returns {function} Icon with props
  */
-export const getIconFn = Icon => props => <Icon {...props}></Icon>;
+export const getIconFn = (Icon) => (props) => <Icon {...props}></Icon>;
 
 /**
  * Checks if it's a React Component or Functional Component to return it's ref
  * @param {*} Component
  * @returns {Component} RefComponent
  */
-export const getRefComponent = Component => {
+export const getRefComponent = (Component) => {
   let RefComponent = Component;
   if (typeof Component === "function")
     RefComponent = forwardRef((props, ref) => Component(props, ref));
@@ -64,13 +64,13 @@ export const getRefComponent = Component => {
  * @param {string} scope : Document type (Callback, Configuration, ...)
  * @returns {string} Color by document type
  */
-export const getTabIconColor = scope => {
+export const getTabIconColor = (scope) => {
   const TAB_ICON_COLORS = {
     Callback: "cadetblue",
     Layout: "darkred",
     Flow: "orchid",
     Node: "khaki",
-    Configuration: "goldenrod"
+    Configuration: "goldenrod",
   };
   // Return color by scope
   return scope in TAB_ICON_COLORS ? TAB_ICON_COLORS[scope] : "inherit";
@@ -97,7 +97,7 @@ export const getIconByScope = (scope, style) => {
     Configuration: <BuildIcon style={{ color, ...style }} />,
     HomeTab: homeTabIcon,
     ShortcutsTab: <KeyboardIcon style={{ color, ...style }} />,
-    Default: <></>
+    Default: <></>,
   };
 
   return icon[scope];
@@ -136,15 +136,15 @@ export function stopPropagation(e) {
  * @param {*} element
  */
 export function simulateMouseClick(element) {
-  ["mousedown", "click", "mouseup"].forEach(mouseEventType =>
+  ["mousedown", "click", "mouseup"].forEach((mouseEventType) =>
     element.dispatchEvent(
       new MouseEvent(mouseEventType, {
         view: window,
         bubbles: true,
         cancelable: true,
-        buttons: 1
-      })
-    )
+        buttons: 1,
+      }),
+    ),
   );
 }
 
@@ -156,7 +156,7 @@ export function runBeforeUnload(callback, ...args) {
   // Previous beforeunload method
   const onAppUnload = window.onbeforeunload;
   // Set new beforeunload method with given callback
-  window.onbeforeunload = event => {
+  window.onbeforeunload = (event) => {
     callback?.(event, ...args);
     return onAppUnload(event);
   };
@@ -173,7 +173,7 @@ export const composeDecorators = (Component, decorators) => {
 
   const [withFirstDecorator, ...otherDecorators] = decorators;
   const composed = forwardRef((props, ref) =>
-    withFirstDecorator(Component)(props, ref)
+    withFirstDecorator(Component)(props, ref),
   );
   if (otherDecorators.length)
     return composeDecorators(composed, otherDecorators);
