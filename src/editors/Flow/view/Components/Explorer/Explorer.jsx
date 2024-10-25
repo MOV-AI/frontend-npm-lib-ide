@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import { Typography } from "@material-ui/core";
 import ListItemsTreeWithSearch, {
-  toggleExpandRow
+  toggleExpandRow,
 } from "./../../../../../plugins/views/Explorer/components/ListItemTree/ListItemsTreeWithSearch";
 import { withViewPlugin } from "../../../../../engine/ReactPlugin/ViewReactPlugin";
 import { PLUGINS } from "../../../../../utils/Constants";
@@ -11,7 +11,7 @@ import Preview from "./Preview";
 
 import { explorerStyles } from "./styles";
 
-const Explorer = props => {
+const Explorer = (props) => {
   const { flowId, call, on, emit, mainInterface } = props;
   const classes = explorerStyles();
   const [data, setData] = useState([]);
@@ -39,7 +39,7 @@ const Explorer = props => {
    * @param {{id: String, deepness: String, url: String, name: String, scope: String}} node : Clicked node
    */
   const requestScopeVersions = useCallback(
-    node => {
+    (node) => {
       if (node.children?.length) {
         setData(toggleExpandRow(node, data));
       } else {
@@ -48,7 +48,7 @@ const Explorer = props => {
         emit(PLUGINS.FLOW_EXPLORER.ON.ADD_NODE, node);
       }
     },
-    [data, emit]
+    [data, emit],
   );
 
   //========================================================================================
@@ -61,7 +61,7 @@ const Explorer = props => {
    * Handle Mouse Enter on Node
    * @param {NodeObject} node
    */
-  const handleMouseEnterNode = useCallback(node => {
+  const handleMouseEnterNode = useCallback((node) => {
     if (shouldUpdatePreview.current) {
       setSelectedNode(node);
     }
@@ -71,7 +71,7 @@ const Explorer = props => {
    * Handle Mouse Leave on Node
    * @param {NodeObject} node
    */
-  const handleMouseLeaveNode = useCallback(_node => {
+  const handleMouseLeaveNode = useCallback((_node) => {
     if (shouldUpdatePreview.current) {
       setSelectedNode({});
     }
@@ -88,14 +88,14 @@ const Explorer = props => {
    * @param {DocManager} docManager
    */
   const loadDocs = useCallback(
-    docManager => {
-      return setData(_node =>
+    (docManager) => {
+      return setData((_node) =>
         [docManager.getStore("Node"), docManager.getStore("Flow")].map(
           (store, id) => {
             const { name, title } = store;
             const filteredChildren = store
               .getDocs()
-              .filter(d => !d.isNew && d.id !== Utils.getNameFromURL(flowId));
+              .filter((d) => !d.isNew && d.id !== Utils.getNameFromURL(flowId));
             return {
               id,
               name,
@@ -106,15 +106,15 @@ const Explorer = props => {
                   name: doc.getName(),
                   title: doc.getName(),
                   scope: doc.getScope(),
-                  url: doc.getUrl()
+                  url: doc.getUrl(),
                 };
-              })
+              }),
             };
-          }
-        )
+          },
+        ),
       );
     },
-    [flowId]
+    [flowId],
   );
 
   //========================================================================================
@@ -160,5 +160,5 @@ export default withViewPlugin(Explorer);
 
 Explorer.propTypes = {
   call: PropTypes.func.isRequired,
-  on: PropTypes.func.isRequired
+  on: PropTypes.func.isRequired,
 };

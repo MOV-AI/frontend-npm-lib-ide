@@ -98,7 +98,7 @@ class TreeNodePort extends BasePort {
    */
   updateLinksPosition() {
     let linksHeightSum = 0;
-    this.links.forEach(link => {
+    this.links.forEach((link) => {
       link.object.attr("y", linksHeightSum);
       linksHeightSum += link.el.getBBox().height + 5;
     });

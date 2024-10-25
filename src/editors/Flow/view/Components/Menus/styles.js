@@ -6,11 +6,11 @@ const common = {
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
     overflow: "hidden",
-    fontSize: "14px"
+    fontSize: "14px",
   },
   disabled: {
-    color: "gray"
-  }
+    color: "gray",
+  },
 };
 
 const parameters = {
@@ -19,8 +19,8 @@ const parameters = {
     overflowX: "hidden",
     padding: "0px 6px 0px 6px",
     flexGrow: 1,
-    minHeight: 0
-  }
+    minHeight: 0,
+  },
 };
 
 const infoContainer = {
@@ -28,108 +28,108 @@ const infoContainer = {
   alignItems: "center",
   justifyContent: "space-between",
   "& > p": {
-    margin: "0"
-  }
+    margin: "0",
+  },
 };
 
-const menuStyles = makeStyles(_theme => ({
+const menuStyles = makeStyles((_theme) => ({
   ...common,
   ...parameters,
   description: {
     whiteSpace: "normal !important",
-    textAlign: "justify"
+    textAlign: "justify",
   },
   link: {
     fontSize: "1rem",
-    wordBreak: "break-word"
-  }
+    wordBreak: "break-word",
+  },
 }));
 
-export const propertiesStyles = makeStyles(_theme => ({
+export const propertiesStyles = makeStyles((_theme) => ({
   gridAlign: {
     textAlign: "left",
-    marginBottom: "15px"
-  }
+    marginBottom: "15px",
+  },
 }));
 
-export const menuDetailsStyles = makeStyles(_theme => ({
+export const menuDetailsStyles = makeStyles((_theme) => ({
   header: {
     textAlign: "center",
     padding: "16px",
     wordWrap: "break-word",
     fontSize: "2rem",
-    fontWeight: "500"
+    fontWeight: "500",
   },
   label: {
     flexShrink: 0,
-    marginRight: "16px"
-  }
+    marginRight: "16px",
+  },
 }));
 
-export const nodeMenuStyles = makeStyles(_theme => ({
+export const nodeMenuStyles = makeStyles((_theme) => ({
   root: {
-    width: "100%"
+    width: "100%",
   },
   gridContainer: {
-    padding: "10px 20px 20px"
-  }
+    padding: "10px 20px 20px",
+  },
 }));
 
-export const linkMenuStyles = makeStyles(_theme => ({
+export const linkMenuStyles = makeStyles((_theme) => ({
   listHolder: {
     width: "100%",
     "& p": {
       textOverflow: "ellipsis",
       maxWidth: "calc(100% - 50px)",
-      overflow: "hidden"
-    }
+      overflow: "hidden",
+    },
   },
   dependencyContainer: {
-    padding: "5px 25px"
+    padding: "5px 25px",
   },
   directionContainer: {
-    padding: "0 10px"
+    padding: "0 10px",
   },
   selectHolder: {
     "& > div": {
-      ...infoContainer
-    }
+      ...infoContainer,
+    },
   },
   infoContainer: {
-    ...infoContainer
+    ...infoContainer,
   },
   colorChip: {
     width: "40px",
-    height: "4px"
-  }
+    height: "4px",
+  },
 }));
 
-export const portStyles = makeStyles(_theme => ({
+export const portStyles = makeStyles((_theme) => ({
   ...common,
   portIcon: {
-    paddingLeft: "30px"
+    paddingLeft: "30px",
   },
   portRow: {
     display: "flex",
     flexDirection: "column",
-    padding: "0 16px"
+    padding: "0 16px",
   },
   portName: {
     textAlign: "end",
     fontSize: "0.875rem",
     marginTop: "6px",
-    paddingRight: "6px"
+    paddingRight: "6px",
   },
   portCallbackLink: {
     textAlign: "end",
     fontSize: "0.875rem",
     padding: "6px",
-    alignSelf: "flex-end"
+    alignSelf: "flex-end",
   },
   detailsSection: {
     paddingLeft: "20px",
     fontSize: "1rem",
-    paddingTop: "15px"
+    paddingTop: "15px",
   },
   detailsContent: {
     display: "flex",
@@ -137,37 +137,37 @@ export const portStyles = makeStyles(_theme => ({
     marginTop: "10px",
     overflowY: "auto",
     overflowX: "hidden",
-    "& .content": { fontSize: "0.95rem", paddingLeft: "8px" }
+    "& .content": { fontSize: "0.95rem", paddingLeft: "8px" },
   },
   detailRow: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 }));
 
-export const keyValueSectionStyles = makeStyles(_theme => ({
+export const keyValueSectionStyles = makeStyles((_theme) => ({
   ...common,
-  ...parameters
+  ...parameters,
 }));
 
-export const tableKeyValueStyles = makeStyles(_theme => ({
+export const tableKeyValueStyles = makeStyles((_theme) => ({
   root: {
     height: "100%",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   searchHolder: {
-    padding: "5px 10px 15px"
-  }
+    padding: "5px 10px 15px",
+  },
 }));
 
-export const rowKeyValueStyles = makeStyles(_theme => ({
+export const rowKeyValueStyles = makeStyles((_theme) => ({
   rowContainer: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   keyContainer: {
     flexGrow: 1,
@@ -176,7 +176,7 @@ export const rowKeyValueStyles = makeStyles(_theme => ({
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     overflow: "hidden",
-    maxWidth: "60%"
+    maxWidth: "60%",
   },
   valueContainer: {
     textAlign: "center",
@@ -186,16 +186,16 @@ export const rowKeyValueStyles = makeStyles(_theme => ({
     overflow: "hidden",
     padding: "0px 12px 0px 12px",
     maxWidth: "40%",
-    width: "40%"
+    width: "40%",
   },
   valueDefault: {
     color: "grey",
-    padding: "0 5px"
+    padding: "0 5px",
   },
   valueNone: {
     color: "grey",
-    textDecoration: "line-through"
-  }
+    textDecoration: "line-through",
+  },
 }));
 
 export default menuStyles;

@@ -7,7 +7,7 @@ import {
   Grid,
   ListItem,
   ListItemText,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
@@ -17,7 +17,7 @@ import {
   DIALOG_TITLE,
   PLUGINS,
   SCOPES,
-  DEFAULT_VALUE
+  DEFAULT_VALUE,
 } from "../../../../../utils/Constants";
 import ParameterEditorDialog from "../../../../_shared/KeyValueTable/ParametersEditorDialog";
 import MenuDetails from "./sub-components/MenuDetails";
@@ -37,7 +37,7 @@ const ACTIVE_ITEM = {
   PROPERTIES: 1,
   PARAMETERS: 2,
   ENVVARS: 3,
-  CMDLINE: 4
+  CMDLINE: 4,
 };
 
 /**
@@ -67,10 +67,10 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
    *  If item is expanded  : Collapse item and let all others collapsed as well
    * @param {Event} evt
    */
-  const handleExpandClick = useCallback(evt => {
+  const handleExpandClick = useCallback((evt) => {
     const newActiveItem = parseInt(evt.currentTarget.dataset.menuId);
 
-    setActiveItem(prevState => {
+    setActiveItem((prevState) => {
       return prevState === newActiveItem ? 0 : newActiveItem;
     });
   }, []);
@@ -96,14 +96,14 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
       PLUGINS.DOC_MANAGER.CALL.READ,
       {
         scope: "Flow",
-        name: nodeInst.parent.data.ContainerFlow
-      }
+        name: nodeInst.parent.data.ContainerFlow,
+      },
     );
 
     return subFlowInst.getNodeInstanceItem(data.name);
   }, [data.name, nodeInst, flowModel, call]);
 
-  const setNodeDataInst = nodeInstance => {
+  const setNodeDataInst = (nodeInstance) => {
     setNodeData(nodeInstance.serialize());
   };
 
@@ -112,7 +112,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
    * @param {Object} formData : Data to Save
    */
   const handleSubmitParameter = useCallback(
-    async formData => {
+    async (formData) => {
       const varName = formData.varName;
       const nodeInstance = await getNodeData();
 
@@ -128,7 +128,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
 
       setNodeDataInst(nodeInstance);
     },
-    [getNodeData]
+    [getNodeData],
   );
 
   /**
@@ -142,7 +142,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
       nodeInstance.deleteKeyValue(varName, keyName);
       setNodeDataInst(nodeInstance);
     },
-    [getNodeData]
+    [getNodeData],
   );
 
   //========================================================================================
@@ -167,8 +167,8 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
     call(
       PLUGINS.DOC_MANAGER.NAME,
       PLUGINS.DOC_MANAGER.CALL.GET_STORE,
-      SCOPES.CALLBACK
-    ).then(store => {
+      SCOPES.CALLBACK,
+    ).then((store) => {
       setProtectedDocs(store.protectedDocs);
     });
   }, [getNodeData, call]);
@@ -179,8 +179,8 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
     // Read node template
     call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.READ, {
       name,
-      scope: data.model
-    }).then(doc => {
+      scope: data.model,
+    }).then((doc) => {
       setTemplateData(doc.serialize());
     });
   }, [data, call]);
@@ -203,7 +203,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
 
       setNodeDataInst(nodeInstance);
     },
-    [getNodeData]
+    [getNodeData],
   );
 
   /**
@@ -220,7 +220,7 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
         varName: param,
         type: objData.type ?? DATA_TYPES.ANY,
         name: objData.key,
-        paramType
+        paramType,
       };
 
       const args = {
@@ -235,17 +235,17 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
         disableDescription: true,
         preventRenderType: param !== TABLE_KEYS_NAMES.PARAMETERS,
         disabled: viewOnly,
-        call
+        call,
       };
 
       call(
         PLUGINS.DIALOG.NAME,
         PLUGINS.DIALOG.CALL.CUSTOM_DIALOG,
         args,
-        ParameterEditorDialog
+        ParameterEditorDialog,
       );
     },
-    [call, handleSubmitParameter]
+    [call, handleSubmitParameter],
   );
 
   /**
@@ -260,10 +260,10 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
         submitText: i18n.t("Delete"),
         title: i18n.t("DeleteDocConfirmationTitle"),
         onSubmit: () => handleDeleteParameter(paramName, varName),
-        message: i18n.t("DeleteKeyConfirmationMessage", { key: paramName })
+        message: i18n.t("DeleteKeyConfirmationMessage", { key: paramName }),
       });
     },
-    [call, handleDeleteParameter]
+    [call, handleDeleteParameter],
   );
 
   //========================================================================================
@@ -277,10 +277,10 @@ const NodeMenu = memo(({ nodeInst, call, openDoc, editable, flowModel }) => {
    * @param {string} thisItem : to check if this is the active item
    */
   const renderExpandIcon = useCallback(
-    thisItem => {
+    (thisItem) => {
       return activeItem === thisItem ? <ExpandLess /> : <ExpandMore />;
     },
-    [activeItem]
+    [activeItem],
   );
 
   return (
@@ -400,11 +400,11 @@ NodeMenu.propTypes = {
   flowModel: PropTypes.object.isRequired,
   call: PropTypes.func.isRequired,
   openDoc: PropTypes.func.isRequired,
-  editable: PropTypes.bool
+  editable: PropTypes.bool,
 };
 
 NodeMenu.defaultProps = {
-  editable: true
+  editable: true,
 };
 
 export default NodeMenu;

@@ -69,7 +69,7 @@ class ContainerNode extends BaseContainerNode {
 
     // node already has ports; probably an update request
     if (this._ports.size > 0) {
-      this._ports.forEach(port => {
+      this._ports.forEach((port) => {
         port.destroy();
       });
       this._ports.clear();
@@ -83,14 +83,14 @@ class ContainerNode extends BaseContainerNode {
       // flatten data
       Object.entries(expTemplates).forEach(([templateName, templateValue]) => {
         Object.entries(templateValue).forEach(([nodeName, nodeVal]) => {
-          nodeVal.forEach(async portInstName => {
+          nodeVal.forEach(async (portInstName) => {
             flattenData.push({ templateName, nodeName, portInstName });
           });
         });
       });
 
       await Promise.allSettled(
-        flattenData.map(async value => {
+        flattenData.map(async (value) => {
           const { templateName, nodeName, portInstName } = value;
 
           // check if templateName is a node template or is a reference to a sub flow
@@ -108,34 +108,34 @@ class ContainerNode extends BaseContainerNode {
           const portsInst = await this.getPort(
             portInstName,
             docPath,
-            isSubFlow
+            isSubFlow,
           );
 
           if (!portsInst) {
             console.error(
-              `Could not find port ${portInstName} in node instance "${nodeName}" of sub flow "${this.data.ContainerFlow}"`
+              `Could not find port ${portInstName} in node instance "${nodeName}" of sub flow "${this.data.ContainerFlow}"`,
             );
             return;
           }
 
-          Object.keys(portsInst).forEach(type => {
+          Object.keys(portsInst).forEach((type) => {
             if (!["in", "out"].includes(type.toLocaleLowerCase())) return;
 
             const portObj = failSafe(portsInst?.[type], {});
 
-            Object.keys(portObj).forEach(port => {
+            Object.keys(portObj).forEach((port) => {
               if (portInstName.search(`${portsInst.PortsLabel}/${port}`) < 0)
                 return;
 
               const data = failSafe(portsInst?.[type], {});
 
-              Object.keys(data).forEach(portName => {
+              Object.keys(data).forEach((portName) => {
                 const portData = {
                   name: `${nodeName}${joinStr}${portInstName}`,
                   type: type,
                   Template: failSafe(portsInst?.Template, ""),
                   origin: nodeName,
-                  ...data[portName]
+                  ...data[portName],
                 };
 
                 // create port instance
@@ -148,8 +148,8 @@ class ContainerNode extends BaseContainerNode {
               });
             });
           });
-        })
-      ).catch(error => {
+        }),
+      ).catch((error) => {
         console.error(error);
       });
     } catch (error) {
@@ -169,7 +169,7 @@ class ContainerNode extends BaseContainerNode {
    *
    * @returns {object} PortsInst
    */
-  isFlow = name => {
+  isFlow = (name) => {
     return name?.startsWith("__") || false;
   };
 
@@ -218,7 +218,7 @@ class ContainerNode extends BaseContainerNode {
    *
    * @param {String} nodeName node instance name
    */
-  isNodeInst = nodeName => {
+  isNodeInst = (nodeName) => {
     return nodeName.split("__").length <= 1;
   };
 
@@ -234,7 +234,7 @@ class ContainerNode extends BaseContainerNode {
 
         if (!nodeInst)
           throw new Error(
-            `Node instance "${nodeName}" does not exist in flow "${flowName}".`
+            `Node instance "${nodeName}" does not exist in flow "${flowName}".`,
           );
 
         // return the nodeInst Template

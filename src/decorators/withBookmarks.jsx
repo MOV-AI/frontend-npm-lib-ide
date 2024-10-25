@@ -5,7 +5,7 @@ import BookmarkTab from "./Components/BookmarkTab";
 
 import { bookmarkStyles } from "./styles";
 
-const withBookmarks = Component => {
+const withBookmarks = (Component) => {
   /**
    * Small extract method to return the oposite side of the anchor
    * @param {string} anchor : side
@@ -52,7 +52,7 @@ const withBookmarks = Component => {
      * @param {String} name : Bookmark name
      */
     const selectBookmark = useCallback(
-      name => {
+      (name) => {
         const drawerView = drawerRef.current.getActiveView();
         if (active === name && drawerView === DRAWER.VIEWS.BOOKMARK) {
           drawerRef.current.toggleDrawer();
@@ -64,7 +64,7 @@ const withBookmarks = Component => {
         drawerRef.current.activateBookmarkView();
         emit(PLUGINS.RIGHT_DRAWER.ON.CHANGE_BOOKMARK, { name });
       },
-      [active, emit]
+      [active, emit],
     );
 
     /**
@@ -81,7 +81,7 @@ const withBookmarks = Component => {
       (data, activeBookmark, isDefault = false, shouldOpen = false) => {
         const name = data.name;
         let newActive = isDefault && name;
-        setBookmarks(prevState => {
+        setBookmarks((prevState) => {
           const newBookmarks = { ...prevState, [name]: data };
           newActive = getValidBookmark(newBookmarks, activeBookmark);
 
@@ -91,7 +91,7 @@ const withBookmarks = Component => {
         setActive(newActive);
         if (shouldOpen) drawerRef.current.openDrawer();
       },
-      []
+      [],
     );
 
     /**
@@ -101,7 +101,7 @@ const withBookmarks = Component => {
      */
     const removeBookmark = useCallback(
       (name, activeBookmark) => {
-        setBookmarks(prevState => {
+        setBookmarks((prevState) => {
           // *BEWARE* This is making just a shallow clone, so deep properties are still mutable
           const otherBookmarks = { ...prevState };
           delete otherBookmarks[name];
@@ -110,13 +110,13 @@ const withBookmarks = Component => {
         });
 
         // Reset active bookmark
-        setActive(prevActiveState => {
+        setActive((prevActiveState) => {
           if (prevActiveState !== name) return prevActiveState;
 
           return getValidBookmark(bookmarks, activeBookmark);
         });
       },
-      [bookmarks]
+      [bookmarks],
     );
 
     /**
@@ -128,8 +128,7 @@ const withBookmarks = Component => {
       // It turns out that we shouldn't close the drawer on reset,
       // If it comes back that we need to close the drawer on tab change
       // This needs to be revisited.
-      if (anchor === "left")
-        drawerRef.current.resetDrawer();
+      if (anchor === "left") drawerRef.current.resetDrawer();
     }, [anchor]);
 
     /**
@@ -176,7 +175,7 @@ const withBookmarks = Component => {
       activatePluginView: () => {
         setActive();
         drawerRef.current.activatePluginView();
-      }
+      },
     });
 
     //========================================================================================
@@ -191,11 +190,11 @@ const withBookmarks = Component => {
      * @returns {Element} : Bookmark panel
      */
     const renderBookmarks = useCallback(
-      side => {
+      (side) => {
         return (
           side === anchor && (
             <div className={classes.panel}>
-              {Object.values(bookmarks).map(bookmark => (
+              {Object.values(bookmarks).map((bookmark) => (
                 <BookmarkTab
                   data-testid="section_bookmark-tab"
                   key={bookmark.name}
@@ -209,13 +208,17 @@ const withBookmarks = Component => {
           )
         );
       },
-      [active, anchor, bookmarks, classes, selectBookmark]
+      [active, anchor, bookmarks, classes, selectBookmark],
     );
 
     return (
       <div className={classes.bookmarksContainer}>
         {renderBookmarks("left")}
-        <Component {...props} ref={drawerRef} length={Object.keys(bookmarks || {}).length}>
+        <Component
+          {...props}
+          ref={drawerRef}
+          length={Object.keys(bookmarks || {}).length}
+        >
           <div className={classes.bookmarkHolder}>{renderedView}</div>
         </Component>
         {renderBookmarks("right")}

@@ -6,12 +6,15 @@ let url = "/";
 /**
  * get url-bound addKeyBind and removeKeyBind functions
  */
-export
-function useKeyBinds(url) {
-  return useMemo(() => ({
-    addKeyBind: (keys, callback, scope) => addKeyBind(keys, callback, scope, url),
-    removeKeyBind: (keys, scope) => removeKeyBind(keys, scope, url),
-  }), [url]);
+export function useKeyBinds(url) {
+  return useMemo(
+    () => ({
+      addKeyBind: (keys, callback, scope) =>
+        addKeyBind(keys, callback, scope, url),
+      removeKeyBind: (keys, scope) => removeKeyBind(keys, scope, url),
+    }),
+    [url],
+  );
 }
 
 /**
@@ -19,8 +22,7 @@ function useKeyBinds(url) {
  * provide a scope and/or a url to have that keybind apply only
  * in a certain context
  */
-export
-function addKeyBind(keys, callback, scope = '', url = '') {
+export function addKeyBind(keys, callback, scope = "", url = "") {
   const path = url + "/" + scope;
   const local = keybinds[path] ?? {};
 
@@ -33,13 +35,11 @@ function addKeyBind(keys, callback, scope = '', url = '') {
 /**
  * remove a keyBind
  */
-export
-function removeKeyBind(keys, scope = '', url = '') {
+export function removeKeyBind(keys, scope = "", url = "") {
   const path = url + "/" + scope;
   const local = keybinds[path] ?? {};
 
-  for (const name of Array.isArray(keys) ? keys : [keys])
-    delete local[name];
+  for (const name of Array.isArray(keys) ? keys : [keys]) delete local[name];
 
   keybinds[path] = local;
 }
@@ -48,9 +48,8 @@ function removeKeyBind(keys, scope = '', url = '') {
  * set the current url so that we can trigger
  * the right callbacks when the user presses key combinations
  */
-export
-function setUrl(local_url = 'global', scope = '') {
-  url = local_url + '/' + scope;
+export function setUrl(local_url = "global", scope = "") {
+  url = local_url + "/" + scope;
 }
 
 /**
@@ -59,22 +58,26 @@ function setUrl(local_url = 'global', scope = '') {
  */
 globalThis.addEventListener("keydown", (evt) => {
   const dataScope = evt.target.getAttribute("data-scope");
-  const path = url + (dataScope ?? '');
+  const path = url + (dataScope ?? "");
   const kbs = { ...(keybinds[path] ?? {}), ...keybinds["/"] };
 
-  if (evt.key === "Control" || evt.key === "Alt")
-    return;
+  if (evt.key === "Control" || evt.key === "Alt") return;
 
   for (const key of Object.keys(kbs)) {
-    const splits = key.split("+").reduce((a, i) => ({
-      ...a,
-      [i]: true,
-    }), {});
+    const splits = key.split("+").reduce(
+      (a, i) => ({
+        ...a,
+        [i]: true,
+      }),
+      {},
+    );
 
-    if (!splits[evt.key]
-      || (splits.Control && !evt.ctrlKey)
-      || (splits.Alt && !evt.altKey)
-    ) continue;
+    if (
+      !splits[evt.key] ||
+      (splits.Control && !evt.ctrlKey) ||
+      (splits.Alt && !evt.altKey)
+    )
+      continue;
 
     kbs[key].callback(evt);
   }

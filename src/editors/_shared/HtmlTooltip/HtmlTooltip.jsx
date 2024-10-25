@@ -1,7 +1,7 @@
 import Tooltip from "@material-ui/core/Tooltip";
 import { withStyles } from "@material-ui/styles";
 
-export const HtmlTooltip = withStyles(theme => ({
+export const HtmlTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: theme.palette.accent?.background,
     borderColor: theme.palette.accent?.border,
@@ -9,6 +9,6 @@ export const HtmlTooltip = withStyles(theme => ({
     padding: theme.spacing(1),
     maxWidth: 220,
     fontSize: theme.typography.pxToRem(12),
-    border: "1px solid"
-  }
+    border: "1px solid",
+  },
 }))(Tooltip);

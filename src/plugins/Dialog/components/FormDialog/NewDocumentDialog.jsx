@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import useNewDocument from "./hooks/useNewDocument";
 import FormDialog from "./FormDialog";
 
-const NewDocumentDialog = props => {
+const NewDocumentDialog = (props) => {
   const {
     call,
     title = "New",
@@ -12,7 +12,7 @@ const NewDocumentDialog = props => {
     scope,
     onSubmit,
     onClose,
-    loadingMessage
+    loadingMessage,
   } = props;
   const { onValidation, onPostValidation } = useNewDocument({ scope, call });
 
@@ -39,7 +39,7 @@ NewDocumentDialog.propTypes = {
   loadingMessage: PropTypes.string,
   submitText: PropTypes.string,
   placeholder: PropTypes.string,
-  title: PropTypes.string
+  title: PropTypes.string,
 };
 
 export default NewDocumentDialog;

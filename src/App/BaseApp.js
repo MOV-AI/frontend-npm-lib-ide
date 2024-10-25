@@ -32,7 +32,7 @@ import AppSettings, {
   setName,
   setLinks,
   setAppProps,
-  setShortcuts
+  setShortcuts,
 } from "./AppSettings";
 
 import "./App.css";
@@ -52,7 +52,7 @@ function BaseApp(props) {
     handleLogOut,
     handleToggleTheme,
     dependencies,
-    version
+    version,
   } = props;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -82,13 +82,13 @@ function BaseApp(props) {
       isMenuOpen,
       onCloseMenu,
       selectedTheme: theme,
-      isDarkTheme: theme === "dark"
+      isDarkTheme: theme === "dark",
     }),
-    [handleLogOut, isMenuOpen, theme, onToggleTheme]
+    [handleLogOut, isMenuOpen, theme, onToggleTheme],
   );
 
   const addAppKeybinds = () => {
-    Object.values(KEYBINDINGS.GENERAL.KEYBINDS).forEach(shortcut => {
+    Object.values(KEYBINDINGS.GENERAL.KEYBINDS).forEach((shortcut) => {
       const callback =
         genFunctions[shortcut.DEFAULT_CALLBACK] ?? defaultFunction;
       addKeyBind(shortcut.SHORTCUTS, () => {
@@ -104,7 +104,7 @@ function BaseApp(props) {
    *                                                                                      */
   //========================================================================================
 
-  const onContextMenu = event => event.preventDefault();
+  const onContextMenu = (event) => event.preventDefault();
 
   //========================================================================================
   /*                                                                                      *
@@ -144,7 +144,7 @@ function BaseApp(props) {
 
   useEffect(() => {
     AppSettings.APP_INFORMATION.VERSION = version;
-  }, [version])
+  }, [version]);
 
   //========================================================================================
   /*                                                                                      *
@@ -170,7 +170,7 @@ export function installEditor(editor) {
   const { scope, store, editorPlugin, otherPlugins = [], props = {} } = editor;
   addEditor({ scope, store, plugin: editorPlugin, props });
   // Install other plugins relead to editor
-  otherPlugins.forEach(pluginDescription => {
+  otherPlugins.forEach((pluginDescription) => {
     const plugin = pluginDescription.factory(pluginDescription.profile);
     PluginManagerIDE.install(pluginDescription.profile.name, plugin);
   });
@@ -187,7 +187,7 @@ export function installTool(tool) {
     tool.tabData.content = viewPlugin.render();
     addTool(id, tool);
   });
-  dependencies.forEach(dependency => {
+  dependencies.forEach((dependency) => {
     const { id: depID, Plugin: DepPlugin, profile: depProfile } = dependency;
     const plugin = new DepPlugin(depProfile);
     PluginManagerIDE.install(depID, plugin);
@@ -199,18 +199,18 @@ function installAppPlugins() {
   const plugins = [
     {
       profile: { name: PLUGINS.DOC_MANAGER.NAME },
-      factory: profile => new DocManager(profile)
+      factory: (profile) => new DocManager(profile),
     },
     {
       profile: { name: PLUGINS.DIALOG.NAME },
-      factory: profile => new Dialog(profile)
+      factory: (profile) => new Dialog(profile),
     },
     {
       profile: { name: PLUGINS.ALERT.NAME },
-      factory: profile => new Alerts(profile)
-    }
+      factory: (profile) => new Alerts(profile),
+    },
   ];
-  plugins.forEach(pluginDescription => {
+  plugins.forEach((pluginDescription) => {
     const plugin = pluginDescription.factory(pluginDescription.profile);
     PluginManagerIDE.install(pluginDescription.profile.name, plugin);
   });
@@ -222,34 +222,34 @@ function installViewPlugins(dependencies) {
     {
       profile: {
         name: PLUGINS.MAIN_MENU.NAME,
-        location: HOSTS.LEFT_PANEL.NAME
+        location: HOSTS.LEFT_PANEL.NAME,
       },
-      factory: profile => new MainMenu(profile, cProps)
+      factory: (profile) => new MainMenu(profile, cProps),
     },
     {
       profile: {
         name: PLUGINS.EXPLORER.NAME,
-        location: HOSTS.LEFT_DRAWER.NAME
+        location: HOSTS.LEFT_DRAWER.NAME,
       },
-      factory: profile => new Explorer(profile, cProps)
+      factory: (profile) => new Explorer(profile, cProps),
     },
     {
       profile: { name: PLUGINS.TABS.NAME, location: HOSTS.MAIN_PANEL.NAME },
-      factory: profile => new Tabs(profile, cProps)
+      factory: (profile) => new Tabs(profile, cProps),
     },
     {
       profile: {
         name: PLUGINS.PLACEHOLDER.NAME,
-        location: PLUGINS.RIGHT_DRAWER.NAME
+        location: PLUGINS.RIGHT_DRAWER.NAME,
       },
-      factory: profile => new Placeholder(profile, cProps)
+      factory: (profile) => new Placeholder(profile, cProps),
     },
     {
       profile: { name: PLUGINS.SYSTEM_BAR.NAME, location: HOSTS.TOP_BAR.NAME },
-      factory: profile => new SystemBar(profile, cProps)
-    }
+      factory: (profile) => new SystemBar(profile, cProps),
+    },
   ];
-  plugins.forEach(pluginDescription => {
+  plugins.forEach((pluginDescription) => {
     const plugin = pluginDescription.factory(pluginDescription.profile);
     PluginManagerIDE.install(pluginDescription.profile.name, plugin);
   });

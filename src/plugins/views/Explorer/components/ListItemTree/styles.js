@@ -1,55 +1,55 @@
 import { makeStyles } from "@material-ui/styles";
 import { DEFAULT_EXPLORER_ROW_HEIGHT } from "../../../../../utils/Constants";
 
-export const listItemsTreeWithSearchStyles = makeStyles(_theme => ({
+export const listItemsTreeWithSearchStyles = makeStyles((_theme) => ({
   list: {
     paddingLeft: "0px",
     paddingRight: "0px",
     height: "100%",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   searchHolder: {
-    marginBottom: "10px"
+    marginBottom: "10px",
   },
   listHolder: {
     height: "100%",
-    paddingBottom: "10px"
-  }
+    paddingBottom: "10px",
+  },
 }));
 
-export const itemRowStyles = makeStyles(theme => ({
+export const itemRowStyles = makeStyles((theme) => ({
   listItem: {
     height: DEFAULT_EXPLORER_ROW_HEIGHT,
-    cursor: "pointer"
+    cursor: "pointer",
   },
   spaceBetween: {
     display: "flex",
     width: "100%",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   preContainer: {
     paddingLeft: "20px",
     boxSizing: "border-box",
     justifyContent: "space-between",
     "& button": {
-      display: "none"
+      display: "none",
     },
     "&:hover": {
       backgroundColor: `${theme.palette.primary.main}26`,
       "& button": {
-        display: "inline-flex"
-      }
-    }
+        display: "inline-flex",
+      },
+    },
   },
   ellipsis: {
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    flex: 2
+    flex: 2,
   },
   displayContents: {
-    display: "contents"
+    display: "contents",
   },
   iconSpace: {
     flex: 1,
@@ -58,11 +58,11 @@ export const itemRowStyles = makeStyles(theme => ({
     "& button": {
       position: "relative",
       bottom: 7,
-      padding: 7
-    }
+      padding: 7,
+    },
   },
   contextMenuIcon: {
     color: "white",
-    fontSize: 18
-  }
+    fontSize: 18,
+  },
 }));

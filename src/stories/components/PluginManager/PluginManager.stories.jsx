@@ -5,19 +5,19 @@ import { ALERT_SEVERITIES, PLUGINS } from "../../../utils/Constants";
 import Alerts from "../../../plugins/Alerts/Alerts";
 import Dialog from "../../../plugins/Dialog/Dialog";
 
-const TestPluginManager = props => {
+const TestPluginManager = (props) => {
   useEffect(() => {
     const plugins = [
       {
         profile: { name: PLUGINS.DIALOG.NAME },
-        factory: profile => new Dialog(profile)
+        factory: (profile) => new Dialog(profile),
       },
       {
         profile: { name: PLUGINS.ALERT.NAME },
-        factory: profile => new Alerts(profile)
-      }
+        factory: (profile) => new Alerts(profile),
+      },
     ];
-    plugins.forEach(pluginDescription => {
+    plugins.forEach((pluginDescription) => {
       const plugin = pluginDescription.factory(pluginDescription.profile);
       PluginManagerIDE.install(pluginDescription.profile.name, plugin);
     });
@@ -26,7 +26,7 @@ const TestPluginManager = props => {
   const showAlert = () => {
     PluginManagerIDE.call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
       message: "Testing success message",
-      severity: ALERT_SEVERITIES.SUCCESS
+      severity: ALERT_SEVERITIES.SUCCESS,
     });
   };
 
@@ -39,10 +39,10 @@ const TestPluginManager = props => {
         title: "Dialog Title",
         message: "My dialog long text description:",
         onSubmit: () => {
-          alert("Hello world!")
-        }
+          alert("Hello world!");
+        },
       },
-      Component
+      Component,
     );
   };
 
@@ -52,7 +52,7 @@ const TestPluginManager = props => {
         background: "#202020",
         color: "white",
         margin: "-1rem",
-        height: "100vh"
+        height: "100vh",
       }}
     >
       <h1>Test Plugin Manager</h1>
@@ -69,9 +69,9 @@ const TestPluginManager = props => {
 
 export default {
   title: "Plugin Manager",
-  component: TestPluginManager
+  component: TestPluginManager,
 };
 
-const Template = args => <TestPluginManager {...args} />;
+const Template = (args) => <TestPluginManager {...args} />;
 
 export const Manager = withNotification(Template).bind({});

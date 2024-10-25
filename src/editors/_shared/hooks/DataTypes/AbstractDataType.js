@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/styles";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
 import { DISABLED_VALUE } from "./../../../../utils/Constants.js";
 
-const identity = a => a;
+const identity = (a) => a;
 
 /*
  * Handles initial value and onChange for data types that use strings as input
@@ -14,15 +14,21 @@ export function useTextEdit(props) {
   const { rowData = {}, dataType, onChange = () => {} } = props;
   const initialValue = useMemo(
     () => dataType.inputParsing.unparse(rowData.value),
-    [dataType]
+    [dataType],
   );
-  const placeholder = useMemo(() => dataType.unparse(dataType.default), [dataType]);
+  const placeholder = useMemo(
+    () => dataType.unparse(dataType.default),
+    [dataType],
+  );
   const [value, setValue] = useState(initialValue || placeholder);
 
-  const handleOnChange = useCallback((value) => {
-    onChange(dataType.inputParsing.parse(value));
-    setValue(value);
-  }, [onChange, setValue, dataType]);
+  const handleOnChange = useCallback(
+    (value) => {
+      onChange(dataType.inputParsing.parse(value));
+      setValue(value);
+    },
+    [onChange, setValue, dataType],
+  );
 
   useEffect(() => {
     if (rowData.value !== null)
@@ -35,13 +41,15 @@ export function useTextEdit(props) {
 function StringEdit(props) {
   const { onChange, dataType, ...rest } = useTextEdit(props);
 
-  return (<TextField
-    type={dataType.inputType}
-    inputProps={{ "data-testid": "input_value" }}
-    fullWidth
-    onChange={evt => onChange(evt.target.value)}
-    { ...rest }
-  />);
+  return (
+    <TextField
+      type={dataType.inputType}
+      inputProps={{ "data-testid": "input_value" }}
+      fullWidth
+      onChange={(evt) => onChange(evt.target.value)}
+      {...rest}
+    />
+  );
 }
 
 const useCodeEditStyles = makeStyles(() => ({
@@ -52,23 +60,24 @@ function CodeEdit(props) {
   const { isNew, disabled, dataType, ...rest } = useTextEdit(props);
   const classes = useCodeEditStyles();
 
-  return (<Typography
-    data-testid="section_data-type-code-editor"
-    component="div"
-    className={classes.root}
-  >
-    <MonacoCodeEditor
-      onLoad={editor => {
-        if (!isNew)
-          editor.focus();
-      }}
-      language="python"
-      disableMinimap={true}
-      options={{ readOnly: disabled }}
-      theme={dataType._theme?.codeEditor?.theme ?? "dark"}
-      { ...rest }
-    />
-  </Typography>);
+  return (
+    <Typography
+      data-testid="section_data-type-code-editor"
+      component="div"
+      className={classes.root}
+    >
+      <MonacoCodeEditor
+        onLoad={(editor) => {
+          if (!isNew) editor.focus();
+        }}
+        language="python"
+        disableMinimap={true}
+        options={{ readOnly: disabled }}
+        theme={dataType._theme?.codeEditor?.theme ?? "dark"}
+        {...rest}
+      />
+    </Typography>
+  );
 }
 
 /**
@@ -86,7 +95,7 @@ class AbstractDataType {
   inputType = "text";
   _theme = {};
 
-   /**
+  /**
    * Constructor
    *
    * stringOutput: When true, the output is a string (e.g. stringified dictionary)
@@ -113,8 +122,7 @@ class AbstractDataType {
   }
 
   editComponent(props) {
-    if (this._stringOutput)
-      return this.stringEditComponent(props);
+    if (this._stringOutput) return this.stringEditComponent(props);
 
     return this.realEditComponent(props);
   }
@@ -123,8 +131,7 @@ class AbstractDataType {
    * parsing strings into real objects
    */
   parse(value) {
-    if (value === '')
-      return undefined;
+    if (value === "") return undefined;
     try {
       return JSON.parse(value);
     } catch (e) {
@@ -136,7 +143,7 @@ class AbstractDataType {
    * unparsing real objects into strings
    */
   unparse(value) {
-    return typeof(value) === "string" ? value : JSON.stringify(value);
+    return typeof value === "string" ? value : JSON.stringify(value);
   }
 
   /**
@@ -165,8 +172,7 @@ class AbstractDataType {
    */
   async validate(value) {
     // "None" indicates a disabled value
-    if (value === DISABLED_VALUE)
-      return { success: true };
+    if (value === DISABLED_VALUE) return { success: true };
 
     try {
       const parsed = this._validationParse(value);
@@ -183,14 +189,14 @@ class AbstractDataType {
    * @private Real object editor
    */
   realEditComponent(props) {
-    return <StringEdit dataType={this} { ...props } />;
+    return <StringEdit dataType={this} {...props} />;
   }
 
   /**
    * @private String editor
    */
   stringEditComponent = (props) => {
-    return <CodeEdit dataType={this} { ...props } />;
+    return <CodeEdit dataType={this} {...props} />;
   };
 }
 

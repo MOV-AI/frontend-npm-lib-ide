@@ -75,7 +75,7 @@ class Position extends Model {
     return {
       name: this.getName(),
       x: this.getX(),
-      y: this.getY()
+      y: this.getY(),
     };
   }
 
@@ -89,7 +89,7 @@ class Position extends Model {
 
     return {
       x: { Value: x },
-      y: { Value: y }
+      y: { Value: y },
     };
   }
 
@@ -122,7 +122,7 @@ class Position extends Model {
 
   static OBSERVABLE_KEYS = {
     X: "x",
-    Y: "y"
+    Y: "y",
   };
 }
 

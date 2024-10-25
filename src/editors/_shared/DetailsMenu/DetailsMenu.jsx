@@ -5,7 +5,7 @@ import {
   List,
   ListItem,
   ListItemText,
-  Typography
+  Typography,
 } from "@material-ui/core";
 
 import { detailsMenuStyles } from "./styles";

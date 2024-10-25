@@ -18,7 +18,7 @@ const useKeyValueMethods = () => {
    *                                                                                      */
   //========================================================================================
 
-  const renderInfoIcon = rowData => {
+  const renderInfoIcon = (rowData) => {
     return (
       <HtmlTooltip
         title={
@@ -42,7 +42,7 @@ const useKeyValueMethods = () => {
    * @param {*} rowData
    * @returns Row value column
    */
-  const renderValue = rowData => {
+  const renderValue = (rowData) => {
     if (rowData.type === DATA_TYPES.STRING)
       return (
         <span data-testid="output_value">{JSON.stringify(rowData.value)}</span>
@@ -71,7 +71,7 @@ const useKeyValueMethods = () => {
         width: "5%",
         cellStyle: { padding: "10px", textAlign: "start" },
         sorting: false,
-        render: renderInfoIcon
+        render: renderInfoIcon,
       },
       {
         title: i18n.t("Name"),
@@ -81,9 +81,11 @@ const useKeyValueMethods = () => {
         cellStyle: {
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
-          overflow: "hidden"
+          overflow: "hidden",
         },
-        render: rowData => <span data-testid="parameters_output_name">{rowData.name}</span>
+        render: (rowData) => (
+          <span data-testid="parameters_output_name">{rowData.name}</span>
+        ),
       },
       {
         title: i18n.t("Value"),
@@ -93,10 +95,10 @@ const useKeyValueMethods = () => {
           maxWidth: 200,
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
-          overflow: "hidden"
+          overflow: "hidden",
         },
-        render: renderValue
-      }
+        render: renderValue,
+      },
     ];
   };
 

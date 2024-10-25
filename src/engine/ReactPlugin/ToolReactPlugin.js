@@ -11,8 +11,8 @@ import { ViewPlugin } from "./ViewReactPlugin";
 
 export const useStyles = makeStyles(() => ({
   root: {
-    height: "100%"
-  }
+    height: "100%",
+  },
 }));
 
 /**
@@ -70,7 +70,7 @@ export function withToolPlugin(ReactComponent, methods = []) {
   const DecoratedToolComponent = composeDecorators(ToolComponent, [
     withTheme,
     withAlerts,
-    withMenuHandler
+    withMenuHandler,
   ]);
 
   /**

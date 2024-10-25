@@ -8,7 +8,7 @@ export default class TemporaryLink extends BaseLink {
       sourcePort: "",
       targetNode: "",
       targetPort: "",
-      dependency: ""
+      dependency: "",
     };
     super(canvas, src, trg, _data);
     this.path.attr("stroke-dasharray", "3,3");

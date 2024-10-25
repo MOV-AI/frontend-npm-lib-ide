@@ -4,7 +4,7 @@ import {
   EnvVar,
   ContainerConf,
   Parameter,
-  Port
+  Port,
 } from "../../../models/subModels";
 import schema from "./schema";
 
@@ -19,7 +19,7 @@ class Node extends Model {
      *                                                                                      */
     //========================================================================================
     this.events = {
-      onAny: (event, name, value) => this.propsUpdate(event, name, value)
+      onAny: (event, name, value) => this.propsUpdate(event, name, value),
     };
 
     //========================================================================================
@@ -41,7 +41,7 @@ class Node extends Model {
     this.containerConf = new Manager(
       "containerConf",
       ContainerConf,
-      this.events
+      this.events,
     );
     this.ports = new Manager("ports", Port, this.events);
 
@@ -353,8 +353,8 @@ class Node extends Model {
    */
   setPortParameter(portId, direction, portName, parameterName, value) {
     this.getPorts()
-      .getItem(portId)[direction]
-      .getItem(portName)
+      .getItem(portId)
+      [direction].getItem(portName)
       .setParameter(parameterName, value);
 
     return this;
@@ -396,7 +396,7 @@ class Node extends Model {
       envVars,
       commands,
       containerConf,
-      ports
+      ports,
     } = json;
 
     super.setData({
@@ -408,7 +408,7 @@ class Node extends Model {
       persistent,
       packageDep,
       launch,
-      remappable
+      remappable,
     });
 
     this.parameters.setData(parameters);
@@ -464,7 +464,7 @@ class Node extends Model {
       envVars: this.getEnvVars().serialize(),
       commands: this.getCommands().serialize(),
       containerConf: this.getContainerConf().serialize(),
-      ports: this.getPorts().serialize()
+      ports: this.getPorts().serialize(),
     };
   }
 
@@ -484,7 +484,7 @@ class Node extends Model {
       persistent,
       packageDep,
       launch,
-      remappable
+      remappable,
     } = this.serialize();
 
     return {
@@ -501,7 +501,7 @@ class Node extends Model {
       EnvVar: this.getEnvVars().serializeToDB(),
       CmdLine: this.getCommands().serializeToDB(),
       ContainerConf: this.getContainerConf().serializeToDB(),
-      PortsInst: this.getPorts().serializeToDB()
+      PortsInst: this.getPorts().serializeToDB(),
     };
   }
 
@@ -535,7 +535,7 @@ class Node extends Model {
       EnvVar: envVars,
       CmdLine: commands,
       ContainerConf: containerConf,
-      PortsInst: ports
+      PortsInst: ports,
     } = json;
 
     return {
@@ -555,7 +555,7 @@ class Node extends Model {
       envVars: Manager.serializeOfDB(envVars, EnvVar),
       commands: Manager.serializeOfDB(commands, Command),
       containerConf: Manager.serializeOfDB(containerConf, ContainerConf),
-      ports: Manager.serializeOfDB(ports, Port)
+      ports: Manager.serializeOfDB(ports, Port),
     };
   }
   static SCOPE = "Node";
@@ -571,13 +571,13 @@ class Node extends Model {
     PERSISTENT: "persistent",
     LAUNCH: "launch",
     REMAPPABLE: "remappable",
-    PACKAGE_DEP: "packageDep"
+    PACKAGE_DEP: "packageDep",
   };
 
   static KEYS_TO_DISCONSIDER = [
     this.OBSERVABLE_KEYS.NAME,
     this.OBSERVABLE_KEYS.DESCRIPTION,
-    this.OBSERVABLE_KEYS.PATH
+    this.OBSERVABLE_KEYS.PATH,
   ];
 }
 
@@ -588,7 +588,7 @@ Node.defaults = {
   persistent: false,
   launch: true,
   remappable: true,
-  packageDep: ""
+  packageDep: "",
 };
 
 export default Node;

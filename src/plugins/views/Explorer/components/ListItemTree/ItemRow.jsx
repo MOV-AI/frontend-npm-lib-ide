@@ -15,7 +15,7 @@ import { stopPropagation } from "../../../../../utils/Utils";
 
 import { itemRowStyles } from "./styles";
 
-const ItemRow = props => {
+const ItemRow = (props) => {
   const { showIcons, style, node } = props;
 
   const textElementRef = useRef();
@@ -97,7 +97,11 @@ const ItemRow = props => {
 
   return (
     <div
-      data-testid={"explorer_" + (node.name === node.scope ? "" : node.scope + "_") + node.title}
+      data-testid={
+        "explorer_" +
+        (node.name === node.scope ? "" : node.scope + "_") +
+        node.title
+      }
       style={style}
       onMouseEnter={handleNodeMouseEnter}
       onMouseLeave={handleNodeMouseLeave}
@@ -136,12 +140,12 @@ const ItemRow = props => {
                   styledMenuProps={{
                     anchorOrigin: {
                       vertical: "bottom",
-                      horizontal: "center"
+                      horizontal: "center",
                     },
                     transformOrigin: {
                       vertical: "top",
-                      horizontal: "center"
-                    }
+                      horizontal: "center",
+                    },
                   }}
                   element={
                     <IconButton onClick={stopPropagation}>
@@ -150,21 +154,21 @@ const ItemRow = props => {
                   }
                   menuList={[
                     {
-                      onClick: _evt => {
+                      onClick: (_evt) => {
                         props.handleCopyClick(node);
                       },
                       icon: (
                         <FileCopyIcon className={classes.contextMenuIcon} />
                       ),
-                      element: i18n.t("Copy")
+                      element: i18n.t("Copy"),
                     },
                     {
                       onClick: () => {
                         props.handleDeleteClick(node);
                       },
                       icon: <DeleteIcon className={classes.contextMenuIcon} />,
-                      element: i18n.t("Delete")
-                    }
+                      element: i18n.t("Delete"),
+                    },
                     // {
                     //   onClick: () => {
                     //     props.handleCompareClick(node);
@@ -186,7 +190,7 @@ const ItemRow = props => {
 ItemRow.propTypes = {
   style: PropTypes.object.isRequired,
   node: PropTypes.object.isRequired,
-  showIcons: PropTypes.bool
+  showIcons: PropTypes.bool,
 };
 
 export default ItemRow;
