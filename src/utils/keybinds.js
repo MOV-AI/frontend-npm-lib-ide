@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { KEYBIND_SCOPES } from "./Constants";
 
 const keybinds = { "/": {} };
 let url = "/";
@@ -48,8 +49,12 @@ export function removeKeyBind(keys, scope = "", url = "") {
  * set the current url so that we can trigger
  * the right callbacks when the user presses key combinations
  */
-export function setUrl(local_url = "global", scope = "") {
+export function setUrl(local_url = KEYBIND_SCOPES.APP, scope = "") {
   url = local_url + "/" + scope;
+}
+
+export function getCurrentUrl() {
+  return url;
 }
 
 /**
