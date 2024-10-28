@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect } from "react";
+import React, { forwardRef, useCallback, useEffect, useRef } from "react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { makeStyles } from "@material-ui/core";
 import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
@@ -56,11 +56,7 @@ export function withToolPlugin(ReactComponent, methods = []) {
     }, [off, on, profile.name]);
 
     return (
-      <div
-        tabIndex="-1"
-        className={`container-${profile.name}`}
-        onFocus={activateTool}
-      >
+      <div tabIndex="-1" style={{ height: "100%" }} onFocus={activateTool}>
         <RefComponent {...props} ref={ref} />
       </div>
     );
