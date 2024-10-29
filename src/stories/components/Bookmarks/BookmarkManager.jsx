@@ -19,7 +19,7 @@ import {
 
 export const BOOKMARKS_PROFILE = {
   name: "BookmarkManager",
-  title: "Bookmark Manager"
+  title: "Bookmark Manager",
 };
 
 //========================================================================================
@@ -38,7 +38,7 @@ const getIcon = () => {
     AccessibleForwardIcon,
     AddIcCallIcon,
     AirplanemodeActiveIcon,
-    AssignmentIndIcon
+    AssignmentIndIcon,
   ];
 
   const Icon = icons[Math.floor(Math.random() * icons.length)];
@@ -51,7 +51,7 @@ const getIcon = () => {
  *                                                                                      */
 //========================================================================================
 
-const BookmarkManager = props => {
+const BookmarkManager = (props) => {
   const theme = useTheme();
 
   /**
@@ -59,14 +59,14 @@ const BookmarkManager = props => {
    *    Always set newly added menu as active and make it visible (open drawer if necessary)
    * @param {*} position : Either "leftDrawer" or "rightDrawer"
    */
-  const localAddBookmark = position => () => {
+  const localAddBookmark = (position) => () => {
     if (!position) return;
     const id = Utils.randomId();
     const bookmark = {
       icon: getIcon(),
       name: id,
       title: `Random ${id} Bookmark`,
-      view: <h2>{id}</h2>
+      view: <h2>{id}</h2>,
     };
     drawerSub.add(id, bookmark);
   };
@@ -106,6 +106,6 @@ export const getTabData = () => {
     name: BOOKMARKS_PROFILE.name,
     tabTitle: BOOKMARKS_PROFILE.title,
     extension: "",
-    content: <BookmarkManager />
+    content: <BookmarkManager />,
   };
 };

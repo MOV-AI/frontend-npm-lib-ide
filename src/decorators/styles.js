@@ -1,7 +1,7 @@
 import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 
 export const bookmarkStyles = (side, oppositeSide) =>
-  makeStyles(theme => ({
+  makeStyles((theme) => ({
     bookmarksContainer: { position: "relative", height: "100%" },
     bookmarkHolder: { height: "100%" },
     panel: {
@@ -10,7 +10,7 @@ export const bookmarkStyles = (side, oppositeSide) =>
       background: "#fff0",
       top: "60px",
       width: "40px",
-      zIndex: "99",
+      zIndex: theme.zIndex?.drawer,
     },
     bookmark: {
       width: "40px",
@@ -21,24 +21,24 @@ export const bookmarkStyles = (side, oppositeSide) =>
       borderRadius: "0px !important",
       background: `${theme.palette.background.secondary} !important`,
       "& p": {
-        marginTop: "10px"
-      }
+        marginTop: "10px",
+      },
     },
     unselectedBookmark: {
       color: theme.palette.text.primary,
-    }
+    },
   }));
 
-export const loaderStyles = makeStyles(_theme => ({
+export const loaderStyles = makeStyles((_theme) => ({
   root: {
     height: "100%",
     display: "flex",
     flexDirection: "column",
     "& > div[class^='container-']": {
-      height: "100%"
+      height: "100%",
     },
     "& > div.container-Node": {
-      overflow: "auto"
-    }
-  }
+      overflow: "auto",
+    },
+  },
 }));

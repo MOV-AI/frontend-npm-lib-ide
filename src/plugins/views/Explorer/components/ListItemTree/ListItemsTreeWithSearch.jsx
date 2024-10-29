@@ -13,22 +13,22 @@ export function toggleExpandRow(node, data) {
   const isExpanded = data[node.id]?.state?.expanded ?? false;
   nextData[node.id].state = {
     ...nextData[node.id].state,
-    expanded: !isExpanded
+    expanded: !isExpanded,
   };
 
   // Close other panels
   data
-    .filter(elem => elem.id !== node.id)
-    .forEach(panel => {
+    .filter((elem) => elem.id !== node.id)
+    .forEach((panel) => {
       nextData[panel.id].state = {
         ...nextData[panel.id].state,
-        expanded: false
+        expanded: false,
       };
     });
   return nextData;
 }
 
-const ListItemsTreeWithSearch = props => {
+const ListItemsTreeWithSearch = (props) => {
   const { data } = props;
 
   // State hooks
@@ -52,16 +52,16 @@ const ListItemsTreeWithSearch = props => {
   function normalizeData(dataToNormalize) {
     const finalData = [];
 
-    dataToNormalize.forEach(node => {
+    dataToNormalize.forEach((node) => {
       finalData.push(node);
       if (node.state?.expanded && node.children) {
         node.children
           // We'll sort the children array first to avoid opened file being set in first position
           .sort((a, b) => a.name.localeCompare(b.name))
-          .forEach(childNode => {
+          .forEach((childNode) => {
             finalData.push({
               ...childNode,
-              id: `${childNode.scope}_${childNode.id}`
+              id: `${childNode.scope}_${childNode.id}`,
             });
           });
       }
@@ -80,22 +80,22 @@ const ListItemsTreeWithSearch = props => {
     const valueLower = value.toLowerCase();
     const filteredNodes = searchData
       .filter(
-        node =>
-          node.children.findIndex(ch =>
-            ch.name.toLowerCase().includes(valueLower)
-          ) >= 0
+        (node) =>
+          node.children.findIndex((ch) =>
+            ch.name.toLowerCase().includes(valueLower),
+          ) >= 0,
       )
-      .map(node => {
+      .map((node) => {
         return {
           ...node,
           children: (node.children ?? []).filter(
-            ch => ch.name && ch.name.toLowerCase().includes(valueLower)
-          )
+            (ch) => ch.name && ch.name.toLowerCase().includes(valueLower),
+          ),
         };
       });
 
     // Add children id if missing
-    filteredNodes.forEach(node => {
+    filteredNodes.forEach((node) => {
       node.children.forEach((child, i) => {
         child.id = child.id ?? i;
         child.url = child.url ?? child.id;
@@ -121,7 +121,7 @@ const ListItemsTreeWithSearch = props => {
    * Search handler
    * @param {String} searchValue : String used to search
    */
-  const handleOnSearch = searchValue => {
+  const handleOnSearch = (searchValue) => {
     setSearchInput(searchValue);
     setItemData(searchFilter(data, searchValue));
   };
@@ -150,7 +150,7 @@ const ListItemsTreeWithSearch = props => {
    * @param {*} rowProps
    * @returns {JSX<ItemRow>} To be rendered
    */
-  const renderRow = rowProps => {
+  const renderRow = (rowProps) => {
     const { index, style, data: rowData } = rowProps;
     const node = rowData[index];
 
@@ -171,7 +171,7 @@ const ListItemsTreeWithSearch = props => {
 };
 
 ListItemsTreeWithSearch.propTypes = {
-  data: PropTypes.array.isRequired
+  data: PropTypes.array.isRequired,
 };
 
 export default ListItemsTreeWithSearch;

@@ -11,7 +11,7 @@ function HomeTabCard(props) {
 
   const handleOnClick = useCallback(
     () => openDocument({ id: example.url, scope: example.scope }),
-    [example, openDocument]
+    [example, openDocument],
   );
 
   return (

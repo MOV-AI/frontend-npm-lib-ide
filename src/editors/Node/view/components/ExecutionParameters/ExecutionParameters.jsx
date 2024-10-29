@@ -9,9 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mov-ai/mov-fe-lib-react";
-import {
-  InfoIcon,
-} from "@mov-ai/mov-fe-lib-react";
+import { InfoIcon } from "@mov-ai/mov-fe-lib-react";
 import _isEqual from "lodash/isEqual";
 import CollapsibleHeader from "../../../../_shared/CollapsibleHeader/CollapsibleHeader";
 import { HtmlTooltip } from "../../../../_shared/HtmlTooltip/HtmlTooltip";
@@ -22,10 +20,10 @@ const TOOLTIP = {
   close: 0,
   persistent: 1,
   remappable: 2,
-  launch: 3
+  launch: 3,
 };
 
-const ExecutionParameters = props => {
+const ExecutionParameters = (props) => {
   const {
     persistent,
     remappable,
@@ -33,7 +31,7 @@ const ExecutionParameters = props => {
     path,
     onChangePath,
     onChangeExecutionParams,
-    editable
+    editable,
   } = props;
   // Handle tooltip open state
   const [openTooltip, setOpenTooltip] = useState(TOOLTIP.close);
@@ -50,18 +48,18 @@ const ExecutionParameters = props => {
    * Handle tooltip close
    */
   const handleTooltipClose = useCallback(
-    triggeredBy => {
+    (triggeredBy) => {
       if (triggeredBy !== openTooltip) return;
       setOpenTooltip(TOOLTIP.close);
     },
-    [openTooltip]
+    [openTooltip],
   );
 
   /**
    * Handle tooltip toggle
    */
-  const handleTooltipToggle = useCallback(newState => {
-    setOpenTooltip(prevState => {
+  const handleTooltipToggle = useCallback((newState) => {
+    setOpenTooltip((prevState) => {
       if (prevState === newState) return TOOLTIP.close;
       else return newState;
     });
@@ -134,19 +132,19 @@ const ExecutionParameters = props => {
         {renderCheckbox("persistent", i18n.t("Persistent"), persistent, {
           id: TOOLTIP.persistent,
           title: i18n.t("PersistentNodeTitle"),
-          description: i18n.t("PersistentNodeDescription")
+          description: i18n.t("PersistentNodeDescription"),
         })}
         {/* ---------------- Remappable -------------------*/}
         {renderCheckbox("remappable", i18n.t("Remappable"), remappable, {
           id: TOOLTIP.remappable,
           title: i18n.t("Remappable"),
-          description: i18n.t("RemappableDescription")
+          description: i18n.t("RemappableDescription"),
         })}
         {/* ---------------- Launch -------------------*/}
         {renderCheckbox("launch", i18n.t("Launch"), launch, {
           id: TOOLTIP.launch,
           title: i18n.t("Launch"),
-          description: i18n.t("LaunchDescription")
+          description: i18n.t("LaunchDescription"),
         })}
       </Typography>
       <TextField
@@ -155,7 +153,7 @@ const ExecutionParameters = props => {
         disabled={!editable}
         className={classes.textField}
         defaultValue={path}
-        onChange={evt => onChangePath(evt.target.value)}
+        onChange={(evt) => onChangePath(evt.target.value)}
         margin="normal"
         variant="outlined"
       />
@@ -170,7 +168,7 @@ ExecutionParameters.propTypes = {
   path: PropTypes.string,
   onChangePath: PropTypes.func,
   onChangeExecutionParams: PropTypes.func,
-  editable: PropTypes.bool
+  editable: PropTypes.bool,
 };
 
 ExecutionParameters.defaultProps = {
@@ -178,9 +176,9 @@ ExecutionParameters.defaultProps = {
   remappable: true,
   launch: true,
   path: "",
-  onChangePath: text => console.log(text),
+  onChangePath: (text) => console.log(text),
   onChangeExecutionParams: (param, value) => console.log(param, value),
-  editable: true
+  editable: true,
 };
 
 //The function returns true when the compared props equal, preventing the component from re-rendering

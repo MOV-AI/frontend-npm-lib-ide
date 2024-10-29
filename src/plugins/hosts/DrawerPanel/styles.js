@@ -1,13 +1,13 @@
 import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 
 export const drawerPanelStyles = (isLeft, isOpen) =>
-  makeStyles(theme => ({
+  makeStyles((theme) => ({
     content: {
       background: theme.palette.background.primary,
       color: theme.textColor,
       height: "100%",
       display: "flex",
-      flexDirection: "column"
+      flexDirection: "column",
     },
     drawer: {
       overflow: "hidden",
@@ -18,7 +18,7 @@ export const drawerPanelStyles = (isLeft, isOpen) =>
       "& > *": {
         width: 340,
         position: "absolute",
-        transition: "none !important"
-      }
-    }
+        transition: "none !important",
+      },
+    },
   }));

@@ -1,95 +1,120 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import _toString from "lodash/toString";
 import { TextField, Typography } from "@mov-ai/mov-fe-lib-react";
+import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
-import { DATA_TYPES } from "../../../../utils/Constants";
+import { DISABLED_VALUE } from "./../../../../utils/Constants.js";
 
-const identity = a => a;
+const identity = (a) => a;
 
-// for inputs that use strings as input
-// although they might output real things like numbers
-export function useEdit(props) {
-  const { rowData = {}, dataType, onChange: innerOnChange = () => {} } = props;
+/*
+ * Handles initial value and onChange for data types that use strings as input
+ * Although they might output real objects
+ */
+export function useTextEdit(props) {
+  const { rowData = {}, dataType, onChange = () => {} } = props;
   const initialValue = useMemo(
-    () => dataType.parsing.unparse(rowData.value),
-    [dataType]
+    () => dataType.inputParsing.unparse(rowData.value),
+    [dataType],
   );
-  const placeholder = useMemo(() => dataType.unparse(dataType.default), [dataType]);
+  const placeholder = useMemo(
+    () => dataType.unparse(dataType.default),
+    [dataType],
+  );
   const [value, setValue] = useState(initialValue || placeholder);
 
-  const onChange = useCallback((value) => {
-    innerOnChange(dataType.parsing.parse(value));
-    setValue(value);
-  }, [innerOnChange, setValue, dataType]);
+  const handleOnChange = useCallback(
+    (value) => {
+      onChange(dataType.inputParsing.parse(value));
+      setValue(value);
+    },
+    [onChange, setValue, dataType],
+  );
 
   useEffect(() => {
     if (rowData.value !== null)
-      setValue(dataType.parsing.unparse(rowData.value));
-  }, [onChange, rowData.value]);
+      setValue(dataType.inputParsing.unparse(rowData.value));
+  }, [handleOnChange, rowData.value]);
 
-  return { ...props, onChange, value };
+  return { ...props, onChange: handleOnChange, value };
 }
 
 function StringEdit(props) {
-  const { onChange, dataType, ...rest } = useEdit(props);
+  const { onChange, dataType, ...rest } = useTextEdit(props);
 
-  return (<TextField
-    type={dataType.inputType}
-    inputProps={{ "data-testid": "input_value" }}
-    fullWidth
-    onChange={evt => onChange(evt.target.value)}
-    { ...rest }
-  />);
+  return (
+    <TextField
+      type={dataType.inputType}
+      inputProps={{ "data-testid": "input_value" }}
+      fullWidth
+      onChange={(evt) => onChange(evt.target.value)}
+      {...rest}
+    />
+  );
 }
 
-function CodeEdit(props) {
-  const { isNew, disabled, dataType, ...rest } = useEdit(props);
+const useCodeEditStyles = makeStyles(() => ({
+  root: { width: "100%", height: "100px" },
+}));
 
-  return (<Typography
-    data-testid="section_data-type-code-editor"
-    component="div"
-    style={{ height: "100px", width: "100%" }}
-  >
-    <MonacoCodeEditor
-      onLoad={editor => {
-        if (!isNew)
-          editor.focus();
-      }}
-      language="python"
-      disableMinimap={true}
-      options={{ readOnly: disabled }}
-      theme={dataType._theme?.codeEditor?.theme ?? "dark"}
-      { ...rest }
-    />
-  </Typography>);
+function CodeEdit(props) {
+  const { isNew, disabled, dataType, ...rest } = useTextEdit(props);
+  const classes = useCodeEditStyles();
+
+  return (
+    <Typography
+      data-testid="section_data-type-code-editor"
+      component="div"
+      className={classes.root}
+    >
+      <MonacoCodeEditor
+        onLoad={(editor) => {
+          if (!isNew) editor.focus();
+        }}
+        language="python"
+        disableMinimap={true}
+        options={{ readOnly: disabled }}
+        theme={dataType._theme?.codeEditor?.theme ?? "dark"}
+        {...rest}
+      />
+    </Typography>
+  );
 }
 
 /**
- * Abstract Data Type Class
+ * Class that provides generic data type functionality
+ * - parsing and unparsing
+ * - validation
+ * - basic data type components
+ *
+ * When a value is undefined, the default value is used
  */
 class AbstractDataType {
   key = "";
   label = "";
   default = "";
   inputType = "text";
-
-  // hooks
   _theme = {};
 
-  constructor({ theme, onlyStrings, textInput = true } = {}) {
-    // Set hooks to be used in abstract renders
+  /**
+   * Constructor
+   *
+   * stringOutput: When true, the output is a string (e.g. stringified dictionary)
+   * stringInput: When true, the input returns a string (e.g. false for boolean type)
+   */
+  constructor({ theme, stringOutput = false, stringInput = true } = {}) {
     this._theme = theme;
-    this._onlyStrings = onlyStrings;
+    this._stringOutput = stringOutput;
 
-    const parsing = {
-      parse: this.parse.bind(this),
-      unparse: this.unparse.bind(this),
-    }, noParsing = { parse: identity, unparse: identity };
+    // when input and output are strings, no parsing is needed
+    // when input and output are not strings, no parsing is needed
+    // otherwise, parsing is needed
+    const noInputParsing = stringOutput === stringInput;
+    this.inputParsing = noInputParsing
+      ? { parse: identity, unparse: identity }
+      : { parse: this.parse, unparse: this.unparse };
 
-    const doInputParsing = (onlyStrings ? !textInput : textInput);
-    this.parsing = doInputParsing ? parsing : noParsing;
-    this._validationParse = onlyStrings ? parsing.parse : identity;
-    this.getSaveable = onlyStrings ? parsing.unparse : identity;
+    this._validationParse = stringOutput ? this.parse : identity;
+    this.getSaveable = stringOutput ? this.unparse : identity;
   }
 
   getEditComponent() {
@@ -97,16 +122,16 @@ class AbstractDataType {
   }
 
   editComponent(props) {
-    if (this._onlyStrings)
-      return this.codeEditComponent(props);
+    if (this._stringOutput) return this.stringEditComponent(props);
 
-    return this.stringEditComponent(props);
+    return this.realEditComponent(props);
   }
 
-  // parsing strings into real objects
+  /**
+   * parsing strings into real objects
+   */
   parse(value) {
-    if (value === '')
-      return undefined;
+    if (value === "") return undefined;
     try {
       return JSON.parse(value);
     } catch (e) {
@@ -114,14 +139,15 @@ class AbstractDataType {
     }
   }
 
-  // unparsing real objects into strings
+  /**
+   * unparsing real objects into strings
+   */
   unparse(value) {
-    return typeof(value) === "string" ? value : JSON.stringify(value);
+    return typeof value === "string" ? value : JSON.stringify(value);
   }
 
   /**
    * Get Data type key
-   * @returns
    */
   getKey() {
     return this.key;
@@ -129,7 +155,6 @@ class AbstractDataType {
 
   /**
    * Get data type label
-   * @returns
    */
   getLabel() {
     return this.label;
@@ -137,7 +162,6 @@ class AbstractDataType {
 
   /**
    * Abstract validation : validation for simple types
-   * @returns
    */
   _validate(value) {
     return value === undefined || typeof value === this.key;
@@ -145,48 +169,34 @@ class AbstractDataType {
 
   /**
    * Abstract validation : validation for simple types
-   * @returns
    */
-  validate(value) {
-    if (value === "None")
-      return Promise.resolve({ success: true });
+  async validate(value) {
+    // "None" indicates a disabled value
+    if (value === DISABLED_VALUE) return { success: true };
 
     try {
       const parsed = this._validationParse(value);
-      return Promise.resolve({
-        success: this._validate(parsed),
+      return {
+        success: await this._validate(parsed),
         parsed,
-      });
+      };
     } catch (_e) {
-      return Promise.resolve({ success: false });
+      return { success: false };
     }
   }
 
   /**
-   * Get Default data type value
-   * @param {*} options
-   * @returns {any} Default value
+   * @private Real object editor
    */
-  getDefault(options) {
-    return this.unparse(this.default);
+  realEditComponent(props) {
+    return <StringEdit dataType={this} {...props} />;
   }
 
   /**
-   * @private Gets common text editor for regular inputs (strings, arrays, objects, any, default)
-   * @param {*} props : Material table row props
-   * @returns {ReactComponent} Text input for editing common strings
+   * @private String editor
    */
-  stringEditComponent(props) {
-    return <StringEdit dataType={this} { ...props } />;
-  }
-
-  /**
-   * @private Render code editor
-   * @param {{rowData: {value: string}}, onChange: function, isNew: boolean} props : input props
-   * @returns {ReactComponent} Code Editor Component
-   */
-  codeEditComponent = (props) => {
-    return <CodeEdit dataType={this} { ...props } />;
+  stringEditComponent = (props) => {
+    return <CodeEdit dataType={this} {...props} />;
   };
 }
 

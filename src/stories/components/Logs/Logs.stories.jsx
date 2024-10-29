@@ -4,7 +4,7 @@ import AppCE from "../../AppCE";
 import { getLogsToolTab, LOGS_PROFILE } from "./Logs";
 import { MoneyIcon } from "@mov-ai/mov-fe-lib-react";
 
-const LogsStory = props => {
+const LogsStory = (props) => {
   useEffect(() => {
     // Logs
     installTool({
@@ -15,7 +15,7 @@ const LogsStory = props => {
       icon: MoneyIcon,
       mainMenu: true,
       toolBar: true,
-      quickAccess: true
+      quickAccess: true,
     });
   }, []);
 
@@ -25,10 +25,10 @@ const LogsStory = props => {
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: "Logs",
-  component: LogsStory
+  component: LogsStory,
 };
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template = args => <LogsStory {...args} />;
+const Template = (args) => <LogsStory {...args} />;
 
 export const Logs = Template.bind({});

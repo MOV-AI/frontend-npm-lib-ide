@@ -6,12 +6,13 @@ import {
   TextField,
   InputAdornment,
   IconButton,
-  Popper
+  Popper,
 } from "@mov-ai/mov-fe-lib-react";
+import { KEYBINDINGS } from "../../../../../utils/shortcuts";
 import { flowTopBarStyles } from "./styles";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 
-const FlowSearch = props => {
+const FlowSearch = (props) => {
   const { options, onChange, onEnabled, onDisabled, visible } = props;
   const classes = flowTopBarStyles();
 
@@ -26,7 +27,7 @@ const FlowSearch = props => {
    * @param {object} option : Node Data
    * @returns {string} Option label
    */
-  const getOptionLabel = option => {
+  const getOptionLabel = (option) => {
     const template = option.Template || option.ContainerFlow;
     return `${option.name} [${template}]`;
   };
@@ -41,7 +42,7 @@ const FlowSearch = props => {
     (_e, node) => {
       return onChange(node);
     },
-    [onChange]
+    [onChange],
   );
 
   const handleSearchToggle = useCallback(() => {
@@ -59,18 +60,18 @@ const FlowSearch = props => {
   //========================================================================================
 
   const renderSearchPopup = useCallback(
-    _popperProps => (
+    (_popperProps) => (
       <Popper
         {..._popperProps}
         className={classes.searchPopup}
         placement="bottom-start"
       />
     ),
-    [classes.searchPopup]
+    [classes.searchPopup],
   );
 
   const renderSearchInput = useCallback(
-    params => {
+    (params) => {
       return (
         <TextField
           {...params}
@@ -87,12 +88,16 @@ const FlowSearch = props => {
                 </InputAdornment>
                 {params.InputProps.startAdornment}
               </>
-            )
+            ),
+          }}
+          inputProps={{
+            ...params.inputProps,
+            "data-scope": KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SCOPE,
           }}
         />
       );
     },
-    [classes.searchInputText]
+    [classes.searchInputText],
   );
 
   if (!visible) {
@@ -116,7 +121,7 @@ const FlowSearch = props => {
       onChange={handleSearchNode}
       onBlur={handleSearchToggle}
       onFocus={onEnabled}
-      groupBy={option => option.parent}
+      groupBy={(option) => option.parent}
       PopperComponent={renderSearchPopup}
       renderInput={renderSearchInput}
     />
@@ -128,7 +133,7 @@ FlowSearch.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object),
   onChange: PropTypes.func,
   onEnabled: PropTypes.func,
-  onDisabled: PropTypes.func
+  onDisabled: PropTypes.func,
 };
 
 export default FlowSearch;

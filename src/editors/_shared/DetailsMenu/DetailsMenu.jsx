@@ -5,7 +5,7 @@ import {
   List,
   ListItem,
   ListItemText,
-  Typography
+  Typography,
 } from "@mov-ai/mov-fe-lib-react";
 
 import { detailsMenuStyles } from "./styles";

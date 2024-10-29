@@ -5,7 +5,7 @@ import {
   PARENT_NODE_SEP,
   FLOW_VIEW_MODE,
   NODE_TYPES,
-  TYPES
+  TYPES,
 } from "../../Constants/constants";
 import { InvalidLink } from "../../Components/Links/Errors";
 import GraphBase from "./GraphBase";
@@ -133,7 +133,7 @@ export default class GraphTreeView extends GraphBase {
     this.updateAllPositions();
   };
 
-  isEndlessChild = baseFlowInst => {
+  isEndlessChild = (baseFlowInst) => {
     let parent = this.nodes.get(baseFlowInst.parent.data.id);
 
     while (Boolean(parent)) {
@@ -172,7 +172,7 @@ export default class GraphTreeView extends GraphBase {
     try {
       const thisNode = {
         parent,
-        templateName: node.ContainerFlow
+        templateName: node.ContainerFlow,
       };
 
       if (
@@ -185,7 +185,7 @@ export default class GraphTreeView extends GraphBase {
       const inst = await Factory.create(
         this.docManager,
         Factory.OUTPUT[nodeType],
-        { canvas: this.canvas, node, parent }
+        { canvas: this.canvas, node, parent },
       );
 
       this.nodes.set(node.id, { obj: inst, links: [] });
@@ -207,7 +207,7 @@ export default class GraphTreeView extends GraphBase {
   reset(node = this.rootNode) {
     if (!node) return;
     node.selected = false;
-    node.children.forEach(child => {
+    node.children.forEach((child) => {
       this.reset(child);
     });
   }
@@ -219,7 +219,7 @@ export default class GraphTreeView extends GraphBase {
   resetStatus(node = this.rootNode) {
     if (!node) return;
     node.status = false;
-    node.children.forEach(child => {
+    node.children.forEach((child) => {
       this.resetStatus(child);
     });
   }
@@ -255,10 +255,10 @@ export default class GraphTreeView extends GraphBase {
         targetPortPos,
         parsedLink,
         this.flowDebugging,
-        this.toggleTooltip
+        this.toggleTooltip,
       );
 
-      parent.children.forEach(child => {
+      parent.children.forEach((child) => {
         this._addLinkToNode(child, obj);
       });
       // add links to target children
@@ -292,8 +292,9 @@ export default class GraphTreeView extends GraphBase {
   //========================================================================================
 
   getNodeParent(nodePath, i, parent = this.rootNode) {
-    return (parent.children ?? this.rootNode.children)
-      .find(n => n.data.name === nodePath[i]);
+    return (parent.children ?? this.rootNode.children).find(
+      (n) => n.data.name === nodePath[i],
+    );
   }
 
   /**
@@ -306,7 +307,7 @@ export default class GraphTreeView extends GraphBase {
    */
   loadLinks(links, parent) {
     const _links = links || {};
-    Object.keys(_links).forEach(linkId => {
+    Object.keys(_links).forEach((linkId) => {
       const linksData = { id: linkId, name: linkId, ..._links[linkId] };
       this.addLink(linksData, parent);
     });
@@ -324,7 +325,7 @@ export default class GraphTreeView extends GraphBase {
     const parentId = link.data.targetFullPath[level];
     const container = node.children.get(parentId);
     if (container?.children) {
-      container.children.forEach(child => {
+      container.children.forEach((child) => {
         this._addLinkToNode(child, link);
       });
       if (link.data.targetFullPath[level + 1])
@@ -347,10 +348,10 @@ export default class GraphTreeView extends GraphBase {
       linkData.sourceFullPath.includes(childId)
     ) {
       linkData.sourceTemplatePath = linkData.sourceFullPath.map(
-        nodeName => this.nodes.get(nodeName)?.obj?.templateName || nodeName
+        (nodeName) => this.nodes.get(nodeName)?.obj?.templateName || nodeName,
       );
       linkData.targetTemplatePath = linkData.targetFullPath.map(
-        nodeName => this.nodes.get(nodeName)?.obj?.templateName || nodeName
+        (nodeName) => this.nodes.get(nodeName)?.obj?.templateName || nodeName,
       );
       child.addLink(linkData);
     }
@@ -399,14 +400,14 @@ export default class GraphTreeView extends GraphBase {
       ContainerFlow: flow.url ?? flow.Label,
       NodeInst: flow.NodeInst,
       State: flow.state,
-      Container: flow.Container
+      Container: flow.Container,
     };
 
     try {
       const inst = await Factory.create(
         this.docManager,
         Factory.OUTPUT[NODE_TYPES.TREE_CONTAINER],
-        { canvas: this.canvas, node }
+        { canvas: this.canvas, node },
       );
 
       this.nodes.set(node.id, { obj: inst, links: [], rootNode: true });
@@ -435,7 +436,7 @@ export default class GraphTreeView extends GraphBase {
    */
   update(parent) {
     // Render parent children
-    parent.children.forEach(node => {
+    parent.children.forEach((node) => {
       node.addToCanvas();
     });
   }
@@ -450,10 +451,10 @@ export default class GraphTreeView extends GraphBase {
    */
   getSearchOptions = () => {
     return Array.from(this.nodes.values())
-      .map(el => ({
+      .map((el) => ({
         ...el.obj.data,
-        parent: el.obj.parent?.data?.id || this.id
+        parent: el.obj.parent?.data?.id || this.id,
       }))
-      .filter(el => el.id !== StartNode.model && el.id !== this.id);
+      .filter((el) => el.id !== StartNode.model && el.id !== this.id);
   };
 }

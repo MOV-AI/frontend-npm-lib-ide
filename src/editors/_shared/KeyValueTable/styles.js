@@ -1,23 +1,23 @@
 import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 
-export const parametersDialogStyles = makeStyles(_theme => ({
+export const parametersDialogStyles = makeStyles((_theme) => ({
   marginTop: { marginTop: "15px" },
   valueOptions: {
-    flexDirection: "row"
+    flexDirection: "row",
   },
   disabledValue: {
     color: "grey",
-    fontStyle: "italic"
-  }
+    fontStyle: "italic",
+  },
 }));
 
-export const keyValueEditorDialogStyles = makeStyles(_theme => ({
+export const keyValueEditorDialogStyles = makeStyles((_theme) => ({
   input: { fontSize: "13px" },
   label: {
     fontSize: "16px",
     transform: "translate(0, 1.5px) scale(0.75)",
     transformOrigin: "top left",
-    color: "rgba(255, 255, 255, .7)"
+    color: "rgba(255, 255, 255, .7)",
   },
   paper: { minWidth: "50%" },
   container: {
@@ -28,10 +28,10 @@ export const keyValueEditorDialogStyles = makeStyles(_theme => ({
   },
   codeContainer: {
     height: "200px",
-    width: "100%"
+    width: "100%",
   },
   accordion: {
-    margin: "0px !important"
+    margin: "0px !important",
   },
   accordionSummary: {
     paddingLeft: "0px",
@@ -41,11 +41,11 @@ export const keyValueEditorDialogStyles = makeStyles(_theme => ({
 
     "& > div": {
       margin: "0px !important",
-      padding: "0px"
-    }
+      padding: "0px",
+    },
   },
   noHorizontalPadding: {
     paddingLeft: 0,
-    paddingRight: 0
-  }
+    paddingRight: 0,
+  },
 }));

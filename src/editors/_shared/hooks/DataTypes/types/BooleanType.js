@@ -1,7 +1,6 @@
 import React from "react";
 import { Checkbox } from "@mov-ai/mov-fe-lib-react";
 import { DATA_TYPES } from "../../../../../utils/Constants";
-import { pythonToBool, boolToPython } from "../../../../../utils/Utils";
 import DataType from "../AbstractDataType";
 
 class BooleanType extends DataType {
@@ -9,22 +8,22 @@ class BooleanType extends DataType {
   label = "Boolean";
   default = false;
 
-  // boolType does parsing in reverse, since it only
-  // wants to parse values when we're in onlyStrings.
-  // it also uses a non-text input
-
   constructor(opts) {
-    super({ ...opts, textInput: false });
+    // the check box returns a boolean value, so no need to parse the input
+    super({ ...opts, stringInput: false });
   }
 
   parse(value) {
-    if (value === "")
-      return undefined;
-    if (value === "True")
-      return true;
-    if (value === "False")
-      return false;
-    return null;
+    switch (value) {
+      case "":
+        return undefined;
+      case "True":
+        return true;
+      case "False":
+        return false;
+      default:
+        return null;
+    }
   }
 
   unparse(value) {
@@ -35,14 +34,11 @@ class BooleanType extends DataType {
     const { label, disabled, onChange, rowData = {} } = props;
     return (
       <Checkbox
-        inputProps={{ "data-testid": "bool-checkbox" }}
-        data-testid={"Type=boolean-" + (label ?? this.label)}
+        inputProps={{ "data-testid": "input_bool-checkbox" }}
         color={"primary"}
         style={{ width: "fit-content" }}
-        checked={this.parsing.parse(rowData.value) === true}
-        onChange={evt => onChange(
-          evt.target.checked
-        )}
+        checked={this.inputParsing.parse(rowData.value) === true}
+        onChange={(evt) => onChange(evt.target.checked)}
         disabled={disabled}
       />
     );

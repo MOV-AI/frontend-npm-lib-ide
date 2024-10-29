@@ -3,13 +3,13 @@ import React, {
   Children,
   useEffect,
   useState,
-  useRef
+  useRef,
 } from "react";
 import { getRefComponent } from "../../utils/Utils";
 import { PLUGINS } from "../../utils/Constants";
 import { drawerSub } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
 
-const DataHandler = props => {
+const DataHandler = (props) => {
   const { children, call, scope, name } = props;
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
@@ -19,12 +19,12 @@ const DataHandler = props => {
    * Save document
    * @param {String} newName : Document name (used to set document name when creating a new document)
    */
-  const save = event => {
-    const [ _workspace, scope, name ] = drawerSub._value.url.split("/");
+  const save = (event) => {
+    const [_workspace, scope, name] = drawerSub._value.url.split("/");
     event.preventDefault();
     call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.SAVE, {
       scope,
-      name
+      name,
     });
   };
 
@@ -34,20 +34,20 @@ const DataHandler = props => {
   useEffect(() => {
     call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.READ, {
       scope,
-      name
-    }).then(model => {
+      name,
+    }).then((model) => {
       setData(model.serialize());
       modelRef.current = model;
       setLoading(false);
     });
   }, [call, scope, name]);
 
-  return Children.map(children, el =>
-    cloneElement(el, { data, save, instance: modelRef, loading })
+  return Children.map(children, (el) =>
+    cloneElement(el, { data, save, instance: modelRef, loading }),
   );
 };
 
-const withDataHandler = Component => {
+const withDataHandler = (Component) => {
   const RefComponent = getRefComponent(Component);
 
   return (props, ref) => {

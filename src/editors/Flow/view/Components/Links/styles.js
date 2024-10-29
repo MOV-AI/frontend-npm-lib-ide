@@ -1,6 +1,6 @@
 import {
   LINK_DEPENDENCY,
-  MOVAI_FLOW_TYPES
+  MOVAI_FLOW_TYPES,
 } from "../../../../../utils/Constants";
 
 const ONLY_FROM = `dependency_${LINK_DEPENDENCY.ONLY_FROM.VALUE}`;
@@ -13,8 +13,8 @@ export const baseLinkStyles = {
       default: "white",
       warning: "#ffc107",
       overWidth: 5,
-      width: 3
-    }
+      width: 3,
+    },
   },
   get [MOVAI_FLOW_TYPES.LINKS.TRANSITION]() {
     return { stroke: { ...this._default.stroke, default: "#a74165" } };
@@ -30,5 +30,5 @@ export const baseLinkStyles = {
   },
   get [NO_DEPENDENCIES]() {
     return { color: LINK_DEPENDENCY.NO_DEPENDENCIES.COLOR };
-  }
+  },
 };

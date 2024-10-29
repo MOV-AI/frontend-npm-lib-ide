@@ -6,7 +6,7 @@ import {
   Dialog,
   DialogContent,
   BaseButton,
-  DialogActions
+  DialogActions,
 } from "@mov-ai/mov-fe-lib-react";
 import { PLUGINS } from "../../../../utils/Constants";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
@@ -18,13 +18,13 @@ import Search from "../../../_shared/Search/Search";
 import { EXCLUDED_PATHS, searchImports } from "./utils";
 import { ERROR_MESSAGES } from "../../../../utils/Messages";
 
-const useStyles = makeStyles(_theme => ({
+const useStyles = makeStyles((_theme) => ({
   paper: {
-    minWidth: "40%"
-  }
+    minWidth: "40%",
+  },
 }));
 
-const AddImportDialog = props => {
+const AddImportDialog = (props) => {
   // Props
   const { call, scope, onClose, onSubmit } = props;
   // State hooks
@@ -46,9 +46,9 @@ const AddImportDialog = props => {
     call(
       PLUGINS.DOC_MANAGER.NAME,
       PLUGINS.DOC_MANAGER.CALL.GET_STORE,
-      scope
-    ).then(store => {
-      store.helper.getAllLibraries().then(libs => {
+      scope,
+    ).then((store) => {
+      store.helper.getAllLibraries().then((libs) => {
         if (libs) {
           setPyLibs(libs);
           setFilteredLibs(libs);
@@ -68,11 +68,13 @@ const AddImportDialog = props => {
    * On chage selected Lib
    * @param {*} _selectedLibs
    */
-  const onSelectLib = _selectedLibs => {
+  const onSelectLib = (_selectedLibs) => {
     const pyLibSelected = {};
-    _selectedLibs.forEach(libPath => {
+    _selectedLibs.forEach((libPath) => {
       const path = libPath.split(".");
-      const modulePath = path.filter(_path => !EXCLUDED_PATHS.includes(_path));
+      const modulePath = path.filter(
+        (_path) => !EXCLUDED_PATHS.includes(_path),
+      );
       const name = modulePath.pop();
       if (name === libPath || modulePath.length === 0) {
         pyLibSelected[name] = { module: name, libClass: false };
@@ -88,7 +90,7 @@ const AddImportDialog = props => {
    * On search imports
    * @param {*} value
    */
-  const onSearch = _debounce(value => {
+  const onSearch = _debounce((value) => {
     const result = searchImports(value, pyLibs);
     setFilteredLibs(result);
   }, 500);

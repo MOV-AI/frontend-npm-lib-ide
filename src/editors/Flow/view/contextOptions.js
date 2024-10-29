@@ -11,13 +11,13 @@ import { FLOW_CONTEXT_MODES } from "../../../utils/Constants";
 import { FLOW_VIEW_MODE } from "./Constants/constants";
 import { insertIf } from "../../../utils/Utils";
 
-export const baseContextOptions = data => {
+export const baseContextOptions = (data) => {
   const callbackName = data?.data?.callback;
   const nodeOptions = ({
     handleCopyNode,
     handleDeleteNode,
     nodeDebug,
-    viewMode = FLOW_VIEW_MODE.default
+    viewMode = FLOW_VIEW_MODE.default,
   }) => {
     if (viewMode === FLOW_VIEW_MODE.treeView) {
       return [
@@ -25,14 +25,14 @@ export const baseContextOptions = data => {
           label: "Start",
           icon: <PlayCircleOutlineIcon />,
           disabled: nodeDebug.startNode.disabled,
-          onClick: () => nodeDebug.startNode.func(data)
+          onClick: () => nodeDebug.startNode.func(data),
         },
         {
           label: "Stop",
           icon: <PauseCircleOutlineIcon />,
           disabled: nodeDebug.stopNode.disabled,
-          onClick: () => nodeDebug.stopNode.func(data)
-        }
+          onClick: () => nodeDebug.stopNode.func(data),
+        },
       ];
     }
 
@@ -40,13 +40,13 @@ export const baseContextOptions = data => {
       {
         label: "Copy",
         icon: <FileCopyIcon />,
-        onClick: () => handleCopyNode(data)
+        onClick: () => handleCopyNode(data),
       },
       {
         label: "Delete",
         icon: <DeleteOutlineIcon />,
-        onClick: () => handleDeleteNode(data)
-      }
+        onClick: () => handleDeleteNode(data),
+      },
     ];
   };
 
@@ -54,36 +54,36 @@ export const baseContextOptions = data => {
 
   const linkOptions = ({
     handleDeleteLink,
-    viewMode = FLOW_VIEW_MODE.default
+    viewMode = FLOW_VIEW_MODE.default,
   }) => [
     {
       label: "Delete",
       icon: <DeleteOutlineIcon />,
-      onClick: () => handleDeleteLink(data)
-    }
+      onClick: () => handleDeleteLink(data),
+    },
   ];
 
   const portOptions = ({
     handleToggleExposedPort,
     handleOpenCallback,
-    viewMode = FLOW_VIEW_MODE.default
+    viewMode = FLOW_VIEW_MODE.default,
   }) => [
     {
       label: "ToggleExposed",
       icon: <ToggleOnIcon />,
-      onClick: () => handleToggleExposedPort(data)
+      onClick: () => handleToggleExposedPort(data),
     },
     ...insertIf(callbackName, {
       label: "OpenCallbackName",
       labelVars: { callbackName: callbackName },
       icon: <OpenInNewIcon />,
-      onClick: () => handleOpenCallback(callbackName)
-    })
+      onClick: () => handleOpenCallback(callbackName),
+    }),
   ];
 
   const canvasOptions = ({
     handlePasteNodes,
-    viewMode = FLOW_VIEW_MODE.default
+    viewMode = FLOW_VIEW_MODE.default,
   }) => {
     if (viewMode === FLOW_VIEW_MODE.treeView) {
       return null;
@@ -92,8 +92,8 @@ export const baseContextOptions = data => {
       {
         label: "Paste",
         icon: <NoteAddIcon />,
-        onClick: () => handlePasteNodes(data)
-      }
+        onClick: () => handlePasteNodes(data),
+      },
     ];
   };
 
@@ -102,7 +102,7 @@ export const baseContextOptions = data => {
     [FLOW_CONTEXT_MODES.LINK]: linkOptions,
     [FLOW_CONTEXT_MODES.SUBFLOW]: subFlowOptions,
     [FLOW_CONTEXT_MODES.PORT]: portOptions,
-    [FLOW_CONTEXT_MODES.CANVAS]: canvasOptions
+    [FLOW_CONTEXT_MODES.CANVAS]: canvasOptions,
   };
 };
 

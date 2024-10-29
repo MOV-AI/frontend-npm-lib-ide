@@ -7,7 +7,7 @@ import menuStyles from "../styles";
  * @param {*} props: Component props
  * @returns {ReactElement}
  */
-const NodeLink = props => {
+const NodeLink = (props) => {
   const { scope, name, openDoc, children } = props;
   const classes = menuStyles();
 
@@ -22,14 +22,14 @@ const NodeLink = props => {
    * @param {Event} event : Click event
    */
   const onClickLink = useCallback(
-    event => {
+    (event) => {
       openDoc({
         name,
         scope,
-        ctrlKey: event.ctrlKey
+        ctrlKey: event.ctrlKey,
       });
     },
-    [openDoc, name, scope]
+    [openDoc, name, scope],
   );
 
   //========================================================================================

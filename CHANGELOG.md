@@ -1,15 +1,32 @@
 # TBD
 
+- [FP-2976](https://movai.atlassian.net/browse/FP-2976): IDE - Infinite modals
+- [FP-2979](https://movai.atlassian.net/browse/FP-2979): Paste parameters using context menu or CTRL+V not working
+- [FP-2919](https://movai.atlassian.net/browse/FP-2919): Configure husky, lint-staged and prettier for lib-ide
+
+# 1.4.0 - This version contains breaking changes in the lib-ide <-> IDE keybindings interface
+
+- [FP-2981](https://movai.atlassian.net/browse/FP-2981): IDE - Copy subFlow doesn't work
+- [FP-2770](https://movai.atlassian.net/browse/FP-2770): Scene closing button not working when with changes \*
+- [FP-2932](https://movai.atlassian.net/browse/FP-2932): Save doesn't work well in split screen
+
+# 1.3.0 - This version contains breaking changes in the lib-ide <-> IDE DataTypes and useDataTypes interface
+
 - [FP-2716](https://movai.atlassian.net/browse/FP-2716): Annotations imported cannot be edited
 - [FP-2711](https://movai.atlassian.net/browse/FP-2711): Corrupted data in Annotation
 - [FP-2927](https://movai.atlassian.net/browse/FP-2927): IDE - Validate user input data string/array/object and only try to transform when needed
+- [FP-2972](https://movai.atlassian.net/browse/FP-2972): Opening flow when nodes don't exist results in stacktrace
+
+# 1.2.9
+
 - [FP-2926](https://movai.atlassian.net/browse/FP-2926): Clear console and app errors
+- [FP-2937](https://movai.atlassian.net/browse/FP-2937): Initial storybook fixes
+- [FP-2930](https://movai.atlassian.net/browse/FP-2930): Update node and pnpm versions
 
 # v1.2.8
 
 - [FP-2935](https://movai.atlassian.net/browse/FP-2935): Default flow parameters not showing when clicking the edit button
 - [FP-2946](https://movai.atlassian.net/browse/FP-2946): Deleting the "Label" filter from lib-ide BaseStore results in a 500 response in certain conditions
-- [FP-2937](https://movai.atlassian.net/browse/FP-2937): Initial storybook fixes
 
 # v1.2.7
 

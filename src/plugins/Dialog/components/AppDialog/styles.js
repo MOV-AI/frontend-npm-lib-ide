@@ -1,6 +1,6 @@
 import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 
-export const appDialogTitleStyles = makeStyles(theme => ({
+export const appDialogTitleStyles = makeStyles((theme) => ({
   root: {
     margin: 0,
     padding: theme.spacing(2),
@@ -12,9 +12,9 @@ export const appDialogTitleStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   closeButton: {
-    color: theme.palette.grey[500]
-  }
+    color: theme.palette.grey[500],
+  },
 }));
-export const appDialogStyles = makeStyles(_theme => ({
-  dialogContent: { minWidth: 450 }
+export const appDialogStyles = makeStyles((_theme) => ({
+  dialogContent: { minWidth: 450 },
 }));

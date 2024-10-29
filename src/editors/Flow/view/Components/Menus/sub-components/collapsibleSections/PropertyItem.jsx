@@ -6,7 +6,7 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  BaseSelect
+  BaseSelect,
 } from "@mov-ai/mov-fe-lib-react";
 import { convertToValidString } from "../../../../../../../utils/Utils";
 
@@ -19,7 +19,7 @@ const PropertyItem = ({
   value,
   templateValue,
   editable,
-  onChangeProperties
+  onChangeProperties,
 }) => {
   // Other hooks
   const classes = propertiesStyles();
@@ -35,11 +35,11 @@ const PropertyItem = ({
    * @param {object} evt : Event
    */
   const handleOnChange = useCallback(
-    evt => {
-      const prop = evt.target.dataset.prop;
-      onChangeProperties(prop, evt.target.dataset.value);
+    (evt) => {
+      const prop = evt.currentTarget.dataset.prop;
+      onChangeProperties(prop, evt.target.value);
     },
-    [onChangeProperties]
+    [onChangeProperties],
   );
 
   //========================================================================================
@@ -54,29 +54,26 @@ const PropertyItem = ({
    * @returns {string} string to concatenate with label
    */
   const getDefaultText = useCallback(
-    isDefault => (isDefault ? `(${i18n.t("Default")})` : ""),
-    []
+    (isDefault) => (isDefault ? `(${i18n.t("Default")})` : ""),
+    [],
   );
 
   return (
     <Grid item xs={12} className={classes.gridAlign}>
       <FormControl fullWidth={true}>
         <InputLabel>{title}</InputLabel>
-        <BaseSelect
-          value={value ?? templateValue}
-          disabled={!editable}
-        >
-          {options.map(option => (
+        <BaseSelect value={value ?? templateValue} disabled={!editable}>
+          {options.map((option) => (
             <MenuItem
               onClick={handleOnChange}
               key={`properties-options-${convertToValidString(
-                option.text
+                option.text,
               )}_${convertToValidString(option.value)}`}
               value={option.value}
               data-prop={name}
             >
               {`${option.text} ${getDefaultText(
-                option.value === templateValue
+                option.value === templateValue,
               )}`}
             </MenuItem>
           ))}
@@ -93,7 +90,7 @@ PropertyItem.propTypes = {
   name: PropTypes.string,
   options: PropTypes.array,
   templateValue: PropTypes.any,
-  editable: PropTypes.bool
+  editable: PropTypes.bool,
 };
 
 export default PropertyItem;

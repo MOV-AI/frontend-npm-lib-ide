@@ -5,7 +5,12 @@ import { SelectScopeModal, withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "./../../themes";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { PLUGINS, SAVE_OUTDATED_DOC_ACTIONS } from "../../utils/Constants";
+import {
+  PLUGINS,
+  SAVE_OUTDATED_DOC_ACTIONS,
+  KEYBIND_SCOPES,
+} from "../../utils/Constants";
+import { getCurrentUrl, setUrl } from "../../utils/keybinds";
 import AlertBeforeAction from "./components/AlertDialog/AlertBeforeAction";
 import AlertDialog from "./components/AlertDialog/AlertDialog";
 import AppDialog from "./components/AppDialog/AppDialog";
@@ -19,10 +24,12 @@ class Dialog extends IDEPlugin {
     const methods = Array.from(
       new Set([
         ...(profile.methods ?? []),
-        ...Object.values(PLUGINS.DIALOG.CALL)
-      ])
+        ...Object.values(PLUGINS.DIALOG.CALL),
+      ]),
     );
     super({ ...profile, methods });
+
+    this.currentKeybindUrl = KEYBIND_SCOPES.APP;
   }
 
   //========================================================================================
@@ -43,7 +50,7 @@ class Dialog extends IDEPlugin {
         message={data.message}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -61,7 +68,7 @@ class Dialog extends IDEPlugin {
         submitText={data.submitText}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -81,7 +88,7 @@ class Dialog extends IDEPlugin {
         onSubmit={data.onSubmit}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -101,7 +108,7 @@ class Dialog extends IDEPlugin {
         onSubmit={data.onSubmit}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -122,7 +129,7 @@ class Dialog extends IDEPlugin {
       inputLabel,
       value,
       onValidation,
-      onPostValidation
+      onPostValidation,
     } = data;
     ReactDOM.render(
       <FormDialog
@@ -139,7 +146,7 @@ class Dialog extends IDEPlugin {
         onPostValidation={onPostValidation}
         onClose={() => this._handleDialogClose(targetElement, onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -155,12 +162,12 @@ class Dialog extends IDEPlugin {
     const title = i18n.t("SaveChangesConfirmationTitle");
     const message = i18n.t("SaveChangesConfirmationMessage", {
       scope: data.scope,
-      name: data.name
+      name: data.name,
     });
     const actions = {
       dontSave: { label: i18n.t("DontSave"), testId: "input_dont-save" },
       cancel: { label: i18n.t("Cancel"), testId: "input_close" },
-      save: { label: i18n.t("Save"), testId: "input_save" }
+      save: { label: i18n.t("Save"), testId: "input_save" },
     };
     ReactDOM.render(
       <AlertBeforeAction
@@ -170,7 +177,7 @@ class Dialog extends IDEPlugin {
         onSubmit={data.onSubmit}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -178,26 +185,26 @@ class Dialog extends IDEPlugin {
     const targetElement = this._handleDialogOpen();
     // Set dialog message
     const title = i18n.t("SaveOutdatedDocTitle", {
-      docName: data.name
+      docName: data.name,
     });
     const message = i18n.t("SaveOutdatedDocMessage", {
       docType: data.scope,
-      docName: data.name
+      docName: data.name,
     });
     // Set dialog actions
     const actions = {
       [SAVE_OUTDATED_DOC_ACTIONS.UPDATE_DOC]: {
         label: i18n.t("UpdateDoc"),
-        testId: "input_update"
+        testId: "input_update",
       },
       [SAVE_OUTDATED_DOC_ACTIONS.OVERWRITE_DOC]: {
         label: i18n.t("OverwriteDoc"),
-        testId: "input_overwrite"
+        testId: "input_overwrite",
       },
       [SAVE_OUTDATED_DOC_ACTIONS.CANCEL]: {
         label: i18n.t("Cancel"),
-        testId: "input_cancel"
-      }
+        testId: "input_cancel",
+      },
     };
     // Show dialog
     ReactDOM.render(
@@ -208,7 +215,7 @@ class Dialog extends IDEPlugin {
         onSubmit={data.onSubmit}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -242,7 +249,7 @@ class Dialog extends IDEPlugin {
         {message}
         <Component {...props} closeModal={closeModal} />
       </AppDialog>,
-      targetElement
+      targetElement,
     );
     return closeModal;
   }
@@ -260,7 +267,7 @@ class Dialog extends IDEPlugin {
         {...data}
         onClose={() => this._handleDialogClose(targetElement, data.onClose)}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -274,7 +281,7 @@ class Dialog extends IDEPlugin {
     const ThemedModal = withTheme(SelectScopeModal, ApplicationTheme);
 
     // Handle submit
-    const handleDialogSubmit = selectedItem => {
+    const handleDialogSubmit = (selectedItem) => {
       onSubmit(selectedItem);
       this._handleDialogClose(targetElement, onClose);
     };
@@ -290,7 +297,7 @@ class Dialog extends IDEPlugin {
         onCancel={() => this._handleDialogClose(targetElement, onClose)}
         onSubmit={handleDialogSubmit}
       />,
-      targetElement
+      targetElement,
     );
   }
 
@@ -305,6 +312,10 @@ class Dialog extends IDEPlugin {
    * @returns {DOMElement} Target element to render dialog
    */
   _handleDialogOpen() {
+    // Save the current keybind url
+    this.currentKeybindUrl = getCurrentUrl();
+    setUrl(KEYBIND_SCOPES.DIALOG);
+
     document.body.classList.add(Dialog.BODY_CLASS_NAME);
     const containerElement = document.getElementById("alertPanel");
     const targetElement = document.createElement("div");
@@ -318,11 +329,13 @@ class Dialog extends IDEPlugin {
    * @private Handle dialog close : Unmount dialog component and remove target element
    */
   _handleDialogClose(targetElement, onClose) {
+    // Give back the scope to the old keybind url
+    setUrl(this.currentKeybindUrl);
+
     document.body.classList.remove(Dialog.BODY_CLASS_NAME);
     ReactDOM.unmountComponentAtNode(targetElement);
     const pnode = targetElement.parentNode;
-    if (pnode)
-      pnode.removeChild(targetElement);
+    if (pnode) pnode.removeChild(targetElement);
     this.call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_ACTIVE_TAB);
 
     onClose?.();

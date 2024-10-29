@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useState,
   useMemo,
-  useRef
+  useRef,
 } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
@@ -22,17 +22,13 @@ import {
   Tooltip,
   Typography,
 } from "@mov-ai/mov-fe-lib-react";
-import {
-  GrainIcon,
-  PlayArrowIcon,
-  StopIcon,
-} from "@mov-ai/mov-fe-lib-react";
+import { GrainIcon, PlayArrowIcon, StopIcon } from "@mov-ai/mov-fe-lib-react";
 import Workspace from "../../../../../utils/Workspace";
 import {
   SCOPES,
   PLUGINS,
   ALERT_SEVERITIES,
-  ROBOT_BLACKLIST
+  ROBOT_BLACKLIST,
 } from "../../../../../utils/Constants";
 import { ERROR_MESSAGES } from "../../../../../utils/Messages";
 import { defaultFunction } from "../../../../../utils/Utils";
@@ -64,7 +60,7 @@ const ButtonTopBar = forwardRef((props, ref) => {
   );
 });
 
-const FlowTopBar = props => {
+const FlowTopBar = (props) => {
   // Props
   const {
     call,
@@ -79,7 +75,7 @@ const FlowTopBar = props => {
     viewMode,
     searchProps,
     confirmationAlert,
-    canRun
+    canRun,
   } = props;
   // State hooks
   const [actionLoading, setActionLoading] = useState(false);
@@ -110,11 +106,11 @@ const FlowTopBar = props => {
    * @param {String} robotId : New selected robot
    */
   const changeRobotSubscriber = useCallback(
-    robotId => {
+    (robotId) => {
       robotUnsubscribe();
       robotSubscribe(robotId);
     },
-    [robotSubscribe, robotUnsubscribe]
+    [robotSubscribe, robotUnsubscribe],
   );
 
   /**
@@ -124,9 +120,10 @@ const FlowTopBar = props => {
     return call(
       PLUGINS.DOC_MANAGER.NAME,
       PLUGINS.DOC_MANAGER.CALL.GET_STORE,
-      scope
-    ).then(store => {
-      return helperRef.current = store?.helper;
+      scope,
+    ).then((store) => {
+      helperRef.current = store.helper;
+      return store.helper;
     });
   }, [call, scope]);
 
@@ -136,8 +133,8 @@ const FlowTopBar = props => {
   const initFlowInstance = useCallback(() => {
     return call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.READ, {
       scope,
-      name
-    }).then(document => {
+      name,
+    }).then((document) => {
       flowInstanceRef.current = document;
       return document;
     });
@@ -148,12 +145,12 @@ const FlowTopBar = props => {
    * @param {string} robotId : Robot ID
    */
   const initSelectedRobot = useCallback(
-    robotId => {
+    (robotId) => {
       setRobotSelected(robotId);
       robotSubscribe(robotId);
       onRobotChange(robotId);
     },
-    [onRobotChange, robotSubscribe]
+    [onRobotChange, robotSubscribe],
   );
 
   /**
@@ -166,17 +163,16 @@ const FlowTopBar = props => {
       if (currentRobot) initSelectedRobot(currentRobot);
       // Call callback to get default robot
       const helper = helperRef.current;
-      if (!helper)
-        return;
+      if (!helper) return;
       helper
         .getDefaultRobot()
-        .then(robotId => {
+        .then((robotId) => {
           // Update default robot in state and set as selected if there's none
           if (robotId) {
-            setRobotList(prevState => {
+            setRobotList((prevState) => {
               return {
                 ...prevState,
-                [robotId]: { ...prevState[robotId], isDefault: true }
+                [robotId]: { ...prevState[robotId], isDefault: true },
               };
             });
             // Update Flow selected robot if none is selected yet
@@ -190,17 +186,17 @@ const FlowTopBar = props => {
             setRobotSelected(robotToSelect);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.warn("getRunningRobot error", err);
           alert({
             message: i18n.t(ERROR_MESSAGES.ERROR_RUNNING_SPECIFIC_CALLBACK, {
-              callbackName: BACKEND_CALLBACK_NAME
+              callbackName: BACKEND_CALLBACK_NAME,
             }),
-            severity: ALERT_SEVERITIES.ERROR
+            severity: ALERT_SEVERITIES.ERROR,
           });
         });
     },
-    [initSelectedRobot, workspaceManager, alert]
+    [initSelectedRobot, workspaceManager, alert],
   );
 
   //========================================================================================
@@ -214,10 +210,10 @@ const FlowTopBar = props => {
    * @param {object} robots : All robots load from robotManager
    */
   const onLoadRobotList = useCallback(
-    robots => {
+    (robots) => {
       const currentSelected = workspaceManager.getSelectedRobot();
       // Remove blacklisted robots
-      Object.keys(robots).forEach(robotId => {
+      Object.keys(robots).forEach((robotId) => {
         if (ROBOT_BLACKLIST.includes(robots[robotId].RobotName))
           delete robots[robotId];
       });
@@ -226,7 +222,7 @@ const FlowTopBar = props => {
       // Get running Robot
       getRunningRobot(currentSelected, robots);
     },
-    [getRunningRobot, workspaceManager]
+    [getRunningRobot, workspaceManager],
   );
 
   /**
@@ -255,7 +251,7 @@ const FlowTopBar = props => {
     initStoreHelper,
     onLoadRobotList,
     robotManager,
-    robotUnsubscribe
+    robotUnsubscribe,
   ]);
 
   /**
@@ -278,25 +274,25 @@ const FlowTopBar = props => {
    * @returns {boolean} True if can run flow and False otherwise
    */
   const canRunFlow = useCallback(
-    action => {
+    (action) => {
       const graph = mainInterface.current?.graph;
       // let's validate flow before continuing
       graph?.validateFlow();
 
       const warnings = graph.warnings || [];
       const warningsVisibility = graph.warningsVisibility;
-      const runtimeWarnings = warnings.filter(wn => wn.isRuntime);
-      runtimeWarnings.forEach(warning => {
+      const runtimeWarnings = warnings.filter((wn) => wn.isRuntime);
+      runtimeWarnings.forEach((warning) => {
         graph.setPermanentWarnings(warning);
         if (!warningsVisibility)
           alert({
             message: runtimeWarnings[0].message,
-            severity: runtimeWarnings[0].type
+            severity: runtimeWarnings[0].type,
           });
       });
       return !(runtimeWarnings.length && action === "START");
     },
-    [alert, mainInterface]
+    [alert, mainInterface],
   );
 
   //========================================================================================
@@ -310,8 +306,8 @@ const FlowTopBar = props => {
    * @param {Event} event : Change native event
    */
   const handleChangeRobot = useCallback(
-    event => {
-      setRobotSelected(prevState => {
+    (event) => {
+      setRobotSelected((prevState) => {
         const robotId = event.target.value;
         if (robotId !== prevState) {
           // Set in local storage
@@ -324,7 +320,7 @@ const FlowTopBar = props => {
         return prevState;
       });
     },
-    [changeRobotSubscriber, onRobotChange, workspaceManager]
+    [changeRobotSubscriber, onRobotChange, workspaceManager],
   );
 
   /**
@@ -342,9 +338,9 @@ const FlowTopBar = props => {
         .sendToRobot({
           action,
           flowPath: flowPath || getFlowPath(),
-          robotId: robotSelected
+          robotId: robotSelected,
         })
-        .then(res => {
+        .then((res) => {
           if (!res) return;
           commandRobotTimeoutRef.current = setTimeout(() => {
             // If flow reloads (creation of a new) the old is unmounted
@@ -353,31 +349,31 @@ const FlowTopBar = props => {
             setActionLoading(false);
             alert({
               message: i18n.t("FailedFlowAction", {
-                action: i18n.t(action.toLowerCase())
+                action: i18n.t(action.toLowerCase()),
               }),
-              severity: ALERT_SEVERITIES.ERROR
+              severity: ALERT_SEVERITIES.ERROR,
             });
           }, FEEDBACK_TIMEOUT);
         })
-        .catch(err => {
+        .catch((err) => {
           console.warn("Error sending action to robot", err);
           alert({
             message: i18n.t(ERROR_MESSAGES.ERROR_RUNNING_SPECIFIC_CALLBACK, {
-              callbackName: BACKEND_CALLBACK_NAME
+              callbackName: BACKEND_CALLBACK_NAME,
             }),
-            severity: ALERT_SEVERITIES.ERROR
+            severity: ALERT_SEVERITIES.ERROR,
           });
         });
       if (buttonDOMRef.current) buttonDOMRef.current.blur();
     },
-    [alert, canRunFlow, getFlowPath, robotSelected, setActionLoading]
+    [alert, canRunFlow, getFlowPath, robotSelected, setActionLoading],
   );
 
   /**
    * Handle Start flow button click
    */
   const handleStartFlow = useCallback(
-    saveResponse => {
+    (saveResponse) => {
       // Start Flow if there's no active flow
       const flowUrl = saveResponse?.model?.getUrl();
       if (robotStatus.activeFlow === "") {
@@ -388,13 +384,13 @@ const FlowTopBar = props => {
         const message = i18n.t("AnotherFlowRunningConfirmationMessage", {
           robotName: robotList[robotSelected].RobotName,
           activeFlow: robotStatus.activeFlow,
-          id: id
+          id: id,
         });
         confirmationAlert({
           title,
           message,
           submitText: i18n.t("Run"),
-          onSubmit: () => sendActionToRobot("START", flowUrl)
+          onSubmit: () => sendActionToRobot("START", flowUrl),
         });
       }
     },
@@ -404,8 +400,8 @@ const FlowTopBar = props => {
       robotList,
       robotSelected,
       id,
-      confirmationAlert
-    ]
+      confirmationAlert,
+    ],
   );
 
   /**
@@ -426,9 +422,9 @@ const FlowTopBar = props => {
         PLUGINS.DOC_MANAGER.CALL.SAVE,
         {
           scope,
-          name
+          name,
         },
-        handleStartFlow
+        handleStartFlow,
       );
     } else {
       handleStartFlow();
@@ -445,7 +441,7 @@ const FlowTopBar = props => {
     (_event, newViewMode) => {
       onViewModeChange(newViewMode);
     },
-    [onViewModeChange]
+    [onViewModeChange],
   );
 
   //========================================================================================
@@ -502,7 +498,7 @@ const FlowTopBar = props => {
               startAdornment={<i className="icon-Happy"></i>}
               onChange={handleChangeRobot}
             >
-              {Object.keys(robotList).map(robotId => {
+              {Object.keys(robotList).map((robotId) => {
                 const isDefaultRobot = robotList[robotId].isDefault;
                 return (
                   <MenuItem
@@ -594,8 +590,8 @@ FlowTopBar.propTypes = {
     options: PropTypes.arrayOf(PropTypes.object),
     onChange: PropTypes.func,
     onEnabled: PropTypes.func,
-    onDisabled: PropTypes.func
-  })
+    onDisabled: PropTypes.func,
+  }),
 };
 
 FlowTopBar.defaultProps = {
@@ -606,7 +602,7 @@ FlowTopBar.defaultProps = {
   nodeStatusUpdated: () => defaultFunction("nodeStatusUpdated"),
   workspace: CONSTANTS.GLOBAL_WORKSPACE,
   type: SCOPES.FLOW,
-  version: "__UNVERSIONED__"
+  version: "__UNVERSIONED__",
 };
 
 export default FlowTopBar;

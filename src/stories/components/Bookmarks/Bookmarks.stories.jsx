@@ -4,10 +4,10 @@ import { installTool } from "../../../App/BaseApp";
 import { BookmarkIcon } from "@mov-ai/mov-fe-lib-react";
 import BookmarkManager, {
   BOOKMARKS_PROFILE,
-  getTabData
+  getTabData,
 } from "./BookmarkManager";
 
-const BookmarkManagerStory = props => {
+const BookmarkManagerStory = (props) => {
   useEffect(() => {
     installTool({
       id: BOOKMARKS_PROFILE.name,
@@ -17,7 +17,7 @@ const BookmarkManagerStory = props => {
       icon: BookmarkIcon,
       quickAccess: true,
       toolBar: true,
-      mainMenu: true
+      mainMenu: true,
     });
   }, []);
 
@@ -27,10 +27,10 @@ const BookmarkManagerStory = props => {
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: "Bookmark Manager",
-  component: BookmarkManagerStory
+  component: BookmarkManagerStory,
 };
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template = args => <BookmarkManagerStory {...args} />;
+const Template = (args) => <BookmarkManagerStory {...args} />;
 
 export const Bookmarks = Template.bind({});

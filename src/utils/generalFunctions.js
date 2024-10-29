@@ -67,7 +67,7 @@ export function aboutPopup(call, classes = {}) {
       </>
     ),
     message: renderPopupInfo(classes),
-    submitText: i18n.t("Ok")
+    submitText: i18n.t("Ok"),
   });
 }
 
@@ -81,8 +81,8 @@ export function openTool(call, scope = getHomeTab().scope, props = {}) {
 
   if (Object.hasOwn(tabData, "tabIncrement")) {
     const thisTabIds = [...workspaceManager.getTabs().values()]
-      .filter(tab => tab.scope === tabData.scope)
-      .map(tab => tab.tabIncrement);
+      .filter((tab) => tab.scope === tabData.scope)
+      .map((tab) => tab.tabIncrement);
 
     const currentIncrement = findNextIncrement(thisTabIds);
     tabData.tabIncrement = currentIncrement;

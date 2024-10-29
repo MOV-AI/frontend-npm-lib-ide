@@ -10,22 +10,21 @@ import InterfaceModes from "./InterfaceModes";
 import Events from "./Events";
 import Canvas from "./canvas";
 
-export
-let cachedNodeStatus = {};
+export let cachedNodeStatus = {};
 
 const NODE_PROPS = {
   Node: {
     LABEL: "NodeLabel",
     MODEL_ADD_METHOD: "addNode",
     MODEL_DEL_METHOD: "deleteNode",
-    TYPE: NODE_TYPES.NODE
+    TYPE: NODE_TYPES.NODE,
   },
   Flow: {
     LABEL: "ContainerLabel",
     MODEL_ADD_METHOD: "addSubFlow",
     MODEL_DEL_METHOD: "deleteSubFlow",
-    TYPE: NODE_TYPES.CONTAINER
-  }
+    TYPE: NODE_TYPES.CONTAINER,
+  },
 };
 
 // thanks, ChatGPT
@@ -49,7 +48,7 @@ function _set(obj, value, splits = []) {
 // ensure parents of lit nodes are lit
 function _marks(obj) {
   const result = {};
-  const stack = [{ obj: obj, prefix: '' }];
+  const stack = [{ obj: obj, prefix: "" }];
 
   while (stack.length > 0) {
     const { obj, prefix } = stack.pop();
@@ -60,8 +59,8 @@ function _marks(obj) {
 
       result[newPrefix] = value ? 1 : 0;
 
-      if (typeof value === 'object' && value !== null)
-        stack.push({ obj: value, prefix: newPrefix + '__' });
+      if (typeof value === "object" && value !== null)
+        stack.push({ obj: value, prefix: newPrefix + "__" });
     }
   }
 
@@ -74,15 +73,14 @@ function ensureParents(json) {
   const newStatus = {};
 
   for (const [key, value] of Object.entries(json))
-    _set(newStatus, value, key.split("__"))
+    _set(newStatus, value, key.split("__"));
 
   const marks = _marks(newStatus);
   const ret = { ...marks };
 
   // turn off child nodes if parent is turned off
   for (const key of Object.keys(initial)) {
-    if (!ret[key])
-      ret[key] = 0;
+    if (!ret[key]) ret[key] = 0;
     else
       for (const key2 of Object.keys(marks))
         if (key.startsWith(key2) && !marks[key2]) {
@@ -104,7 +102,7 @@ export default class MainInterface {
     data,
     classes,
     call,
-    graphCls
+    graphCls,
   }) {
     //========================================================================================
     /*                                                                                      *
@@ -138,14 +136,14 @@ export default class MainInterface {
       width,
       height,
       classes,
-      docManager: call
+      docManager: call,
     });
 
     this.graph = new this.graphCls({
       id,
       mInterface: this,
       canvas: this.canvas,
-      docManager: call
+      docManager: call,
     });
 
     // Load document and add subscribers
@@ -220,18 +218,18 @@ export default class MainInterface {
     }
   };
 
-  deleteLink = linkId => {
+  deleteLink = (linkId) => {
     this.modelView.current.deleteLink(linkId);
     this.graph.deleteLinks([linkId]);
     this.graph.validateFlow();
   };
 
-  addNode = name => {
+  addNode = (name) => {
     const node = {
       ...this.mode.current.props.node.data,
       NodeLabel: name,
       name: name,
-      id: name
+      id: name,
     };
     this.modelView.current.addNode(node);
     this.graph.addNode(node, NODE_TYPES.NODE).then(() => {
@@ -242,12 +240,12 @@ export default class MainInterface {
     return this;
   };
 
-  addFlow = name => {
+  addFlow = (name) => {
     const node = {
       ...this.mode.current.props.node.data,
       ContainerLabel: name,
       name: name,
-      id: name
+      id: name,
     };
     this.modelView.current.addSubFlow(node);
     this.graph.addNode(node, NODE_TYPES.CONTAINER).then(() => {
@@ -275,12 +273,15 @@ export default class MainInterface {
       // the following line exists because nodeData is outdated.
       // which results in props and params not getting copied properly
       // it has to do with Proxy / original instance inconsistencies
-      ...this.modelView.current.serializeToDB(this.modelView.current.serialize()).NodeInst[nodeData.id],
+      ...nodeData,
+      ...this.modelView.current.serializeToDB(
+        this.modelView.current.serialize(),
+      ).NodeInst[nodeData.id],
       Visualization: nodePos,
       [NODE_PROP_DATA.LABEL]: name,
       Label: name,
       name: name,
-      id: name
+      id: name,
     };
     // Add node to model data
     this.modelView.current[NODE_PROP_DATA.MODEL_ADD_METHOD](node);
@@ -295,7 +296,7 @@ export default class MainInterface {
    * Delete Nodes/Sub-Flows
    * @param {*} node : Node data
    */
-  deleteNode = node => {
+  deleteNode = (node) => {
     // Gather information from model
     const NODE_PROP_DATA = NODE_PROPS[node.model];
     // Delete from model data
@@ -304,21 +305,25 @@ export default class MainInterface {
     this.graph.deleteNode(node.id);
     // Remove from selected nodes
     this.selectedNodes = this.selectedNodes.filter(
-      el => el.data.id !== node.id
+      (el) => el.data.id !== node.id,
     );
   };
 
-  toggleExposedPort = port => {
+  toggleExposedPort = (port) => {
     const templateName = port.node.getExposedName();
     const nodeName = port.node.name;
     const portName = port.name;
 
     this.graph.updateExposedPorts(
-      this.modelView.current.toggleExposedPort(templateName, nodeName, portName)
+      this.modelView.current.toggleExposedPort(
+        templateName,
+        nodeName,
+        portName,
+      ),
     );
   };
 
-  searchNode = node => {
+  searchNode = (node) => {
     const nodeName = node.parent !== this.id ? node.id : node.name;
     return nodeName && this.graph.nodes.get(nodeName)?.obj;
   };
@@ -354,7 +359,7 @@ export default class MainInterface {
     // Canvas events (not modes)
     // toggle warnings
     this.canvas.events
-      .pipe(filter(event => event.name === EVT_NAMES.ON_TOGGLE_WARNINGS))
+      .pipe(filter((event) => event.name === EVT_NAMES.ON_TOGGLE_WARNINGS))
       .subscribe(this.onToggleWarnings);
 
     return this;
@@ -367,7 +372,7 @@ export default class MainInterface {
   //========================================================================================
 
   hideLinks = (node, visitedLinks) => {
-    node.links.forEach(linkId => {
+    node.links.forEach((linkId) => {
       const link = this.graph.links.get(linkId);
       if (
         // link was not yet visited or is visible
@@ -390,11 +395,11 @@ export default class MainInterface {
     this.selectedNodes.length = 0;
   };
 
-  onDragEnd = draggedNode => {
+  onDragEnd = (draggedNode) => {
     const selectedNodesSet = new Set([draggedNode].concat(this.selectedNodes));
-    const nodes = Array.from(selectedNodesSet).filter(obj => obj);
+    const nodes = Array.from(selectedNodesSet).filter((obj) => obj);
 
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       const { id } = node.data;
       const nodeName = getNodeNameFromId(id);
       const [x, y] = node.data.Visualization;
@@ -408,8 +413,8 @@ export default class MainInterface {
     });
   };
 
-  onLinking = data => {
-    this.graph.nodes.forEach(node => node.obj.linking(data));
+  onLinking = (data) => {
+    this.graph.nodes.forEach((node) => node.obj.linking(data));
   };
 
   onLinkingEnter = () => {
@@ -422,28 +427,28 @@ export default class MainInterface {
     this.addLink();
   };
 
-  onSelectNode = data => {
+  onSelectNode = (data) => {
     const { nodes, shiftKey } = data;
     const { selectedNodes } = this;
-    const filterNodes = nodes.filter(n => n.data.model !== StartNode.model);
+    const filterNodes = nodes.filter((n) => n.data.model !== StartNode.model);
 
     this.selectedLink = null;
 
     if (!shiftKey) selectedNodes.length = 0;
 
-    filterNodes.forEach(node => {
+    filterNodes.forEach((node) => {
       node.selected
         ? selectedNodes.push(node)
         : lodash.pull(selectedNodes, node);
     });
   };
 
-  onToggleWarnings = event => {
+  onToggleWarnings = (event) => {
     // show/hide warnings
     this.graph.updateWarningsVisibility(event.data);
   };
 
-  onStateChange = fn => {
+  onStateChange = (fn) => {
     return this.stateSub.subscribe(fn);
   };
 
@@ -458,14 +463,14 @@ export default class MainInterface {
     this.canvas.onResetZoom();
   };
 
-  onMoveNode = event => {
+  onMoveNode = (event) => {
     const currentZoom = this.canvas.currentZoom?.k ?? 1;
     const step = 2 / currentZoom + 1;
     const delta = {
       ArrowRight: [1 * step, 0],
       ArrowLeft: [-1 * step, 0],
       ArrowUp: [0, -1 * step],
-      ArrowDown: [0, 1 * step]
+      ArrowDown: [0, 1 * step],
     };
     const [dx, dy] = delta[event.code];
     const [x, y] = [50, 50]; // skip boundaries validation used when dragging a node
@@ -473,7 +478,7 @@ export default class MainInterface {
     this.onDragEnd();
   };
 
-  onFocusNode = node => {
+  onFocusNode = (node) => {
     const { xCenter, yCenter } = node.getCenter();
     this.setMode(EVT_NAMES.DEFAULT, null, true);
     node.selected = true;
@@ -481,7 +486,7 @@ export default class MainInterface {
       this.setMode(
         EVT_NAMES.SELECT_NODE,
         { nodes: [node], shiftKey: false },
-        true
+        true,
       );
     }
     this.canvas.zoomToCoordinates(xCenter, yCenter);

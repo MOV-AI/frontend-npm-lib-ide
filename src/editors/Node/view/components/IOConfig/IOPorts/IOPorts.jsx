@@ -11,14 +11,14 @@ import Parameters from "./components/Parameters";
 
 import { IOPortStyles } from "../styles";
 
-const IOPorts = props => {
+const IOPorts = (props) => {
   // Props
   const {
     editable,
     handleOpenCallback,
     protectedCallbacks,
     handleNewCallback,
-    handleOpenSelectScopeModal
+    handleOpenSelectScopeModal,
   } = props;
   // Hooks
   const classes = IOPortStyles();
@@ -28,10 +28,10 @@ const IOPorts = props => {
    * @param {*} direction
    * @returns
    */
-  const getPortIcon = direction => {
+  const getPortIcon = (direction) => {
     const iconClass = {
       portIn: "icon-in",
-      portOut: "icon-out"
+      portOut: "icon-out",
     };
 
     return <i className={`${classes.portBase} ${iconClass[direction]}`}></i>;
@@ -42,7 +42,7 @@ const IOPorts = props => {
    * @param {string} direction : One of options: "portIn" or "portOut"
    * @returns {ReactElement} Input/Output Port
    */
-  const renderIoPort = direction => {
+  const renderIoPort = (direction) => {
     return (
       <div>
         {props.rowData[direction] !== undefined &&

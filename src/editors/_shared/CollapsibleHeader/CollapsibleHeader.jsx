@@ -11,12 +11,12 @@ import { ExpandMoreIcon } from "@mov-ai/mov-fe-lib-react";
 
 import { collapsibleHeaderStyles } from "./styles";
 
-const CollapsibleHeader = props => {
+const CollapsibleHeader = (props) => {
   const {
     title,
     children,
     defaultExpanded,
-    testId = "section_accordion"
+    testId = "section_accordion",
   } = props;
   const classes = collapsibleHeaderStyles();
 
@@ -39,12 +39,12 @@ const CollapsibleHeader = props => {
 
 CollapsibleHeader.propTypes = {
   title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
-  defaultExpanded: PropTypes.bool
+  defaultExpanded: PropTypes.bool,
 };
 
 CollapsibleHeader.defaultProps = {
   title: <div>Title</div>,
-  defaultExpanded: false
+  defaultExpanded: false,
 };
 
 export default CollapsibleHeader;

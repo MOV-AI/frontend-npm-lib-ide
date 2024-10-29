@@ -6,7 +6,7 @@ import { ArrowRightIcon } from "@mov-ai/mov-fe-lib-react";
 
 import { shortcutsListStyles } from "../styles";
 
-const ShortcutsList = props => {
+const ShortcutsList = (props) => {
   const { scopes, selectedScope, setSelectedScope } = props;
   const classes = shortcutsListStyles();
 
@@ -16,7 +16,7 @@ const ShortcutsList = props => {
    *                                                                                      */
   //========================================================================================
 
-  const isSelectedScope = scopeId => {
+  const isSelectedScope = (scopeId) => {
     return selectedScope === scopeId;
   };
 
@@ -26,7 +26,7 @@ const ShortcutsList = props => {
    *                                                                                      */
   //========================================================================================
 
-  const handleChangeScope = evt => {
+  const handleChangeScope = (evt) => {
     const newScope = evt.currentTarget.id;
 
     setSelectedScope(newScope);
@@ -37,7 +37,7 @@ const ShortcutsList = props => {
       <div className={classes.columnTitle}>{i18n.t("Scope")}</div>
       <Divider />
       <div className={classes.columnBody}>
-        {scopes.map(scope => (
+        {scopes.map((scope) => (
           <MenuItem
             data-testid="input_shortcut-scope"
             key={scope.id}
@@ -61,7 +61,7 @@ const ShortcutsList = props => {
 };
 
 ShortcutsList.propTypes = {
-  call: PropTypes.func
+  call: PropTypes.func,
 };
 
 export default ShortcutsList;

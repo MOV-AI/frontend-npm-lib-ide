@@ -27,27 +27,23 @@ const SystemMenu = ({ data, menuOpen, anchorEl, closeMenu }) => {
       anchorEl={anchorEl}
       placement={"bottom-start"}
     >
-          <ClickAwayListener onClickAway={closeMenu}>
-            <Paper className={classes.listHolder}>
-              <List component="nav" className={classes.list}>
-                {data &&
-                  data.map((item, index) => {
-                    if (item.id)
-                      return (
-                        <MenuItem
-                          key={item.id}
-                          item={item}
-                          closeMenu={closeMenu}
-                        />
-                      );
-                    else
-                      return (
-                        <Divider key={index} className={classes.menuDivider} />
-                      );
-                  })}
-              </List>
-            </Paper>
-          </ClickAwayListener>
+      <ClickAwayListener onClickAway={closeMenu}>
+        <Paper className={classes.listHolder}>
+          <List component="nav" className={classes.list}>
+            {data &&
+              data.map((item, index) => {
+                if (item.id)
+                  return (
+                    <MenuItem key={item.id} item={item} closeMenu={closeMenu} />
+                  );
+                else
+                  return (
+                    <Divider key={index} className={classes.menuDivider} />
+                  );
+              })}
+          </List>
+        </Paper>
+      </ClickAwayListener>
     </Popper>
   );
 };
@@ -57,5 +53,5 @@ export default SystemMenu;
 SystemMenu.propTypes = {
   data: PropTypes.array.isRequired,
   anchorEl: PropTypes.object.isRequired,
-  menuOpened: PropTypes.bool
+  menuOpened: PropTypes.bool,
 };

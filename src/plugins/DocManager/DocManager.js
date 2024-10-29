@@ -3,7 +3,7 @@ import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
   PLUGINS,
   ALERT_SEVERITIES,
-  SAVE_OUTDATED_DOC_ACTIONS
+  SAVE_OUTDATED_DOC_ACTIONS,
 } from "../../utils/Constants";
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "../../utils/Messages";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
@@ -18,15 +18,15 @@ class DocManager extends IDEPlugin {
     const methods = Array.from(
       new Set([
         ...(profile.methods ?? []),
-        ...Object.values(PLUGINS.DOC_MANAGER.CALL)
-      ])
+        ...Object.values(PLUGINS.DOC_MANAGER.CALL),
+      ]),
     );
     super({ ...profile, methods });
     // Used to debug docManager in console
-    window.DocManager = this;
+    globalThis.DocManager = this;
     // Add unload events
-    window.onbeforeunload = this.onBeforeUnload;
-    window.onunload = this.onUnload;
+    globalThis.onbeforeunload = this.onBeforeUnload;
+    globalThis.onunload = this.onUnload;
     // Subscriber
     this.docSubscriptions = new Map();
     this.saveStack = new Map();
@@ -38,21 +38,21 @@ class DocManager extends IDEPlugin {
 
   activate() {
     const observer = {
-      onLoad: store => this.onStoreLoad(store),
+      onLoad: (store) => this.onStoreLoad(store),
       onUpdate: (store, doc, action) => this.onStoreUpdate(store, doc, action),
       onDocumentDirty: (store, instance, value) => {
         return this.onDocumentDirty(store, instance, value);
       },
       onDocumentDeleted: (store, name) => {
         return this.onDocumentDeleted(store, name);
-      }
+      },
     };
 
     this.docsMap = docsFactory(CONSTANTS.GLOBAL_WORKSPACE, observer, this);
   }
 
   onDocumentUpdate(doc) {
-    this.docSubscriptions.forEach(callback => {
+    this.docSubscriptions.forEach((callback) => {
       callback(doc.serializeToDB());
     });
   }
@@ -91,10 +91,10 @@ class DocManager extends IDEPlugin {
    * @returns {Array<{name: String, title: String, scope: String}>}
    */
   getDocTypes() {
-    return Object.values(this.docsMap).map(docFactory => ({
+    return Object.values(this.docsMap).map((docFactory) => ({
       name: docFactory.store.name,
       title: docFactory.store.title,
-      scope: docFactory.store.scope
+      scope: docFactory.store.scope,
     }));
   }
 
@@ -103,7 +103,7 @@ class DocManager extends IDEPlugin {
    * @returns {Array<Store>} List of stores
    */
   getStores() {
-    return Object.values(this.docsMap).map(i => i.store);
+    return Object.values(this.docsMap).map((i) => i.store);
   }
 
   /**
@@ -149,10 +149,10 @@ class DocManager extends IDEPlugin {
    * @param {{name: String, scope: String}} modelKey
    */
   reloadDoc(modelKey) {
-    this.read(modelKey).then(doc => {
+    this.read(modelKey).then((doc) => {
       this.call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
         ...modelKey,
-        id: doc.getUrl()
+        id: doc.getUrl(),
       });
     });
   }
@@ -198,7 +198,7 @@ class DocManager extends IDEPlugin {
     this.emit(PLUGINS.DOC_MANAGER.ON.BEFORE_SAVE_DOC, {
       docManager: this,
       doc: Document.parsePath(name, scope),
-      thisDoc
+      thisDoc,
     });
 
     if (!isDirty) return;
@@ -215,7 +215,7 @@ class DocManager extends IDEPlugin {
         {
           name,
           scope,
-          onSubmit: async action => {
+          onSubmit: async (action) => {
             switch (action) {
               case SAVE_OUTDATED_DOC_ACTIONS.UPDATE_DOC: {
                 this.discardDocChanges(modelKey);
@@ -223,7 +223,7 @@ class DocManager extends IDEPlugin {
 
                 if (this.docSubscriptions.has(thisDoc.id)) {
                   this.docSubscriptions.get(thisDoc.id)(
-                    updatedDoc.serializeToDB()
+                    updatedDoc.serializeToDB(),
                   );
                 }
 
@@ -238,8 +238,8 @@ class DocManager extends IDEPlugin {
                 return;
             }
           },
-          onClose: () => this.saveStack.delete(`${name}_${scope}`)
-        }
+          onClose: () => this.saveStack.delete(`${name}_${scope}`),
+        },
       );
     }
 
@@ -248,8 +248,11 @@ class DocManager extends IDEPlugin {
     return this.call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.NEW_DOC, {
       scope,
       placeholder: name,
-      onSubmit: newName => this.doSave(modelKey, callback, newName, opts),
-      onClose: () => this.saveStack.delete(`${name}_${scope}`)
+      onSubmit: (newName) => {
+        this.doSave(modelKey, callback, newName, opts);
+        this.discardDocChanges({ scope, name: newName });
+      },
+      onClose: () => this.saveStack.delete(`${name}_${scope}`),
     });
   }
 
@@ -270,12 +273,12 @@ class DocManager extends IDEPlugin {
       this.emit(PLUGINS.DOC_MANAGER.ON.SAVE_DOC, {
         docManager: this,
         doc: Document.parsePath(name, scope),
-        newName
+        newName,
       });
       if (!opts?.preventAlert) {
         this.call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
           message: i18n.t(SUCCESS_MESSAGES.SAVED_SUCCESSFULLY),
-          severity: ALERT_SEVERITIES.SUCCESS
+          severity: ALERT_SEVERITIES.SUCCESS,
         });
       }
 
@@ -286,7 +289,7 @@ class DocManager extends IDEPlugin {
 
       this.call(PLUGINS.ALERT.NAME, PLUGINS.ALERT.CALL.SHOW, {
         message: i18n.t(ERROR_MESSAGES.FAILED_TO_SAVE),
-        severity: ALERT_SEVERITIES.ERROR
+        severity: ALERT_SEVERITIES.ERROR,
       });
     }
 
@@ -299,8 +302,8 @@ class DocManager extends IDEPlugin {
    * Saves the tab that is currently active
    */
   saveActiveEditor() {
-    this.call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.GET_ACTIVE_TAB).then(tab =>
-      this.save({ name: tab.name, scope: tab.scope }, tab.isNew)
+    this.call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.GET_ACTIVE_TAB).then((tab) =>
+      this.save({ name: tab.name, scope: tab.scope }),
     );
   }
 
@@ -338,7 +341,7 @@ class DocManager extends IDEPlugin {
    * @returns {Boolean}
    */
   hasDirties() {
-    return this.getStores().some(store => store.hasDirties());
+    return this.getStores().some((store) => store.hasDirties());
   }
 
   /**
@@ -346,8 +349,8 @@ class DocManager extends IDEPlugin {
    * @returns {Promise<Array>}
    */
   saveDirties() {
-    this.getStores().forEach(store => {
-      store.getDirties().forEach(obj => {
+    this.getStores().forEach((store) => {
+      store.getDirties().forEach((obj) => {
         const { name, isNew } = obj;
         const scope = obj.getScope();
         this.save({ name, scope }, isNew);
@@ -380,13 +383,13 @@ class DocManager extends IDEPlugin {
    */
   onStoreUpdate(_, doc, action = "set") {
     if (doc.document && !doc.document.isCreatedByUser) {
-        doc.document.isDirty = false;
-        doc.document.isNew = false;
+      doc.document.isDirty = false;
+      doc.document.isNew = false;
     }
 
     this.emit(PLUGINS.DOC_MANAGER.ON.UPDATE_DOCS, this, {
       action,
-      ...doc
+      ...doc,
     });
   }
 
@@ -400,7 +403,7 @@ class DocManager extends IDEPlugin {
     this.emit(PLUGINS.DOC_MANAGER.ON.UPDATE_DOC_DIRTY, {
       id: `${CONSTANTS.GLOBAL_WORKSPACE}/${store}/${instance.id}`,
       instance,
-      value
+      value,
     });
   }
 
@@ -418,7 +421,7 @@ class DocManager extends IDEPlugin {
    * Event triggered before unloading app (before close or before refreshing)
    * @param {Event} event
    */
-  onBeforeUnload = event => {
+  onBeforeUnload = (event) => {
     if (this.hasDirties()) {
       event.preventDefault();
       return "You have unsaved documents. Are you sure you want to quit?";
@@ -432,10 +435,10 @@ class DocManager extends IDEPlugin {
    * @param {Event} event
    */
   onUnload = () => {
-    this.getStores().forEach(store => {
+    this.getStores().forEach((store) => {
       const dirtyDocs = store.getDirties();
 
-      dirtyDocs.forEach(doc => {
+      dirtyDocs.forEach((doc) => {
         const { url, name, scope } = doc.serialize();
         // Discard dirty document changes
         this.discardDocChanges({ scope, name });

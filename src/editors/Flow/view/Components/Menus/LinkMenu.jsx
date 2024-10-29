@@ -12,18 +12,18 @@ import {
   MenuItem,
   BaseSelect,
   Typography,
-  Tooltip
+  Tooltip,
 } from "@mov-ai/mov-fe-lib-react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
   LINK_DEPENDENCY,
-  MOVAI_FLOW_TYPES
+  MOVAI_FLOW_TYPES,
 } from "../../../../../utils/Constants";
 import BasePort from "../Nodes/BaseNode/BasePort";
 
 import { linkMenuStyles } from "./styles";
 
-const LinkMenu = props => {
+const LinkMenu = (props) => {
   // Props
   const { link, editable, sourceMessage, flowModel } = props;
   const linkData = link.data;
@@ -45,7 +45,7 @@ const LinkMenu = props => {
    * @param {string} name : Port Name
    * @returns {string} Formatted port name
    */
-  const parsePortName = useCallback(name => {
+  const parsePortName = useCallback((name) => {
     return BasePort.parsePortname(name);
   }, []);
 
@@ -60,14 +60,14 @@ const LinkMenu = props => {
    * @param {Event} evt : Change event
    */
   const onChangeDependency = useCallback(
-    evt => {
+    (evt) => {
       const value = evt.target.value;
       flowModel.current.setLinkDependency(link.data.id, value);
       setDependencyLevel(value);
       // Let's change the link color temporarily
       link.setTemporaryDependency(value).changeStrokeColor();
     },
-    [flowModel, link]
+    [flowModel, link],
   );
 
   //========================================================================================
@@ -154,7 +154,7 @@ const LinkMenu = props => {
                     disabled={!editable}
                     className={classes.selectHolder}
                   >
-                    {Object.values(LINK_DEPENDENCY).map(dep => {
+                    {Object.values(LINK_DEPENDENCY).map((dep) => {
                       return (
                         <MenuItem
                           key={dep.VALUE}
@@ -187,12 +187,12 @@ LinkMenu.propTypes = {
   flowModel: PropTypes.object.isRequired,
   link: PropTypes.object.isRequired,
   editable: PropTypes.bool,
-  sourceMessage: PropTypes.string
+  sourceMessage: PropTypes.string,
 };
 
 LinkMenu.defaultProps = {
   editable: true,
-  sourceMessage: ""
+  sourceMessage: "",
 };
 
 export default LinkMenu;

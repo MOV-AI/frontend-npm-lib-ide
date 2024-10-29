@@ -3,15 +3,15 @@ import lodash from "lodash";
 
 const commonColors = {
   black: "#000000",
-  white: "#ffffff"
+  white: "#ffffff",
 };
 
 const overrides = {
   MuiAppBar: {
     positionStatic: {
-      zIndex: 10
-    }
-  }
+      zIndex: 10,
+    },
+  },
 };
 
 const terciaryBackground = "#303030";
@@ -23,18 +23,22 @@ const overrideTheme = {
     background: commonColors.black,
     topBarColor: terciaryBackground,
     dockLayout: {
-      background: commonColors.white
+      background: commonColors.white,
+    },
+    backdrop: {
+      color: Themes.dark.textColor,
+      background: Themes.dark.palette.background.secondary,
     },
     saveBar: { backgroundColor: Themes.dark.palette.background.secondary },
     nodeEditor: { backgroundColor: "#292929", stripeColor: "#3b3b3b" },
     robotDetails: {
       interfaceColor: Themes.dark.palette.background.primary,
       backgroundColor: "#292929",
-      stripeColor: "#3b3b3b"
+      stripeColor: "#3b3b3b",
     },
     codeEditor: { theme: "vs-dark" },
     flowEditor: {
-      interfaceColor: Themes.dark.palette.background.primary
+      interfaceColor: Themes.dark.palette.background.primary,
     },
     diffTool: {
       background: "#505050",
@@ -44,48 +48,48 @@ const overrideTheme = {
       jsonEditor: {
         background: "#363946",
         color: Themes.dark.textColor,
-        readOnly: "#acacac"
-      }
+        readOnly: "#acacac",
+      },
     },
     layoutEditor: {
       background: Themes.dark.palette.background.secondary,
       gridItemDev: "#ffdeb7",
       gridItemPreview: commonColors.white,
       itemBoxColor: "#969696",
-      itemBoxColorHover: commonColors.white
-    }
+      itemBoxColorHover: commonColors.white,
+    },
   },
   // Override light theme
   light: {
     terciaryBackground: Themes.light.palette.background.primary,
     dockLayout: {
-      background: commonColors.black
+      background: commonColors.black,
     },
     background: Themes.light.palette.background.primary,
     topBarColor: Themes.light.palette.background.secondary,
     backdrop: {
       color: Themes.light.textColor,
-      background: Themes.light.palette.background.secondary
+      background: Themes.light.palette.background.secondary,
     },
     saveBar: { backgroundColor: Themes.light.palette.background.secondary },
     nodeEditor: {
       backgroundColor: "whitesmoke",
-      stripeColor: "#cfcfcf"
+      stripeColor: "#cfcfcf",
     },
     robotDetails: {
       interfaceColor: "#afafaf",
       backgroundColor: "whitesmoke",
-      stripeColor: "#cfcfcf"
+      stripeColor: "#cfcfcf",
     },
     flowEditor: {
-      interfaceColor: "#afafaf"
+      interfaceColor: "#afafaf",
     },
     layoutEditor: {
       background: Themes.light.palette.background.primary,
       gridItemDev: "lightgrey",
       gridItemPreview: commonColors.white,
       itemBoxColor: "#3e3e3e",
-      itemBoxColorHover: commonColors.black
+      itemBoxColorHover: commonColors.black,
     },
     diffTool: {
       background: Themes.light.palette.background.secondary,
@@ -96,21 +100,21 @@ const overrideTheme = {
       jsonEditor: {
         background: "lightslategray",
         color: Themes.light.textColor,
-        readOnly: "#d8d6d6"
-      }
+        readOnly: "#d8d6d6",
+      },
     },
-    codeEditor: { theme: "light" }
+    codeEditor: { theme: "light" },
   },
   indigo: {
     codeEditor: { theme: "vs-dark" },
-  }
+  },
 };
 
 // add common component overrides for all themes
-Object.keys(overrideTheme).forEach(theme => {
+Object.keys(overrideTheme).forEach((theme) => {
   overrideTheme[theme].overrides = {
     ...(overrideTheme[theme].overrides ?? {}),
-    ...overrides
+    ...overrides,
   };
 });
 // Merge app theme with base theme

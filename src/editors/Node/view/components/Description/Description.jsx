@@ -18,10 +18,10 @@ const NODE_COLORS = {
   [MOVAI_FLOW_TYPES.NODES.MOVAI_SERVER]: "#dec5e3",
   [MOVAI_FLOW_TYPES.NODES.MOVAI_FLOW]: "#252125",
   [MOVAI_FLOW_TYPES.NODES.ROS2_NODE]: "#f7b05b",
-  [MOVAI_FLOW_TYPES.NODES.ROS2_LIFECYCLENODE]: "#a5907e"
+  [MOVAI_FLOW_TYPES.NODES.ROS2_LIFECYCLENODE]: "#a5907e",
 };
 
-const Description = props => {
+const Description = (props) => {
   // Props
   const { onChangeDescription, value, nodeType, editable } = props;
   // Hooks
@@ -74,7 +74,7 @@ const Description = props => {
         minRows="4"
         multiline
         defaultValue={value}
-        onChange={evt => onChangeDescription(evt.target.value)}
+        onChange={(evt) => onChangeDescription(evt.target.value)}
         margin="normal"
         variant="outlined"
       />
@@ -86,14 +86,14 @@ Description.propTypes = {
   value: PropTypes.string,
   nodeType: PropTypes.string,
   onChangeDescription: PropTypes.func,
-  editable: PropTypes.bool
+  editable: PropTypes.bool,
 };
 
 Description.defaultProps = {
   nodeType: "",
   value: "",
   onChangeDescription: (evt, text) => console.log(evt.target.value, text),
-  editable: false
+  editable: false,
 };
 
 //The function returns true when the compared props equal, preventing the component from re-rendering

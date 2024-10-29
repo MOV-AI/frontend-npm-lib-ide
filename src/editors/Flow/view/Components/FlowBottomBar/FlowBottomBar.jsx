@@ -7,7 +7,7 @@ import {
   Typography,
   Tooltip,
   FormControlLabel,
-  Switch
+  Switch,
 } from "@mov-ai/mov-fe-lib-react";
 import { RobotManager, Document } from "@mov-ai/mov-fe-lib-core";
 import { defaultFunction } from "../../../../../utils/Utils";
@@ -15,7 +15,7 @@ import styles from "./styles";
 
 const useStyles = makeStyles(styles);
 
-const FlowBottomBar = props => {
+const FlowBottomBar = (props) => {
   // State(s)
   const [barStatus, setBarStatus] = useState("default");
   const [allRobots, setRobots] = useState({});
@@ -29,7 +29,7 @@ const FlowBottomBar = props => {
     warnings,
     warningVisibility,
     flowDebugging = false,
-    toggleFlowDebug
+    toggleFlowDebug,
   } = props;
 
   // Hook(s)
@@ -41,21 +41,21 @@ const FlowBottomBar = props => {
    *                                                                                      */
   //========================================================================================
 
-  const updateRobots = useCallback(changedRobots => {
-    setRobots(prevState => {
+  const updateRobots = useCallback((changedRobots) => {
+    setRobots((prevState) => {
       const newState = {};
-      Object.keys(changedRobots).forEach(id => {
+      Object.keys(changedRobots).forEach((id) => {
         newState[id] = changedRobots[id];
       });
       return { ...prevState, ...newState };
     });
   }, []);
 
-  const parseFlowName = flowName => {
+  const parseFlowName = (flowName) => {
     return flowName.replace("/__UNVERSIONED__", "");
   };
 
-  const handleOpenFlow = event => {
+  const handleOpenFlow = (event) => {
     const doc = new Document({ path: runningFlow });
     const { workspace, type, name, version } = doc;
 
@@ -65,7 +65,7 @@ const FlowBottomBar = props => {
       workspace,
       name,
       version,
-      ctrlKey: event.ctrlKey
+      ctrlKey: event.ctrlKey,
     });
   };
 
@@ -86,7 +86,7 @@ const FlowBottomBar = props => {
 
   useEffect(() => {
     const robotManager = new RobotManager();
-    robotManager.getAll(robots => setRobots(robots));
+    robotManager.getAll((robots) => setRobots(robots));
     const subscriberId = robotManager.subscribeToChanges(updateRobots);
     // Unsubscribe to changes on component unmount
     return () => {
@@ -141,14 +141,14 @@ const FlowBottomBar = props => {
           <Tooltip
             classes={{ tooltip: classes.tooltip }}
             title={`The selected robot is running: ${parseFlowName(
-              runningFlow
+              runningFlow,
             )}`}
           >
             <Typography
               data-testid="input_open-flow"
               component="div"
               className={classes.action}
-              onClick={evt => handleOpenFlow(evt)}
+              onClick={(evt) => handleOpenFlow(evt)}
             >
               <i className="icon-Happy"></i>
               {selectedRobotName} : {parseFlowName(runningFlow)}
@@ -177,13 +177,13 @@ FlowBottomBar.propTypes = {
   toggleFlowDebug: PropTypes.func,
   robotSelected: PropTypes.string,
   runningFlow: PropTypes.string,
-  flowDebugging: PropTypes.bool
+  flowDebugging: PropTypes.bool,
 };
 
 FlowBottomBar.defaultProps = {
   openFlow: () => defaultFunction("openFlow"),
   robotSelected: "",
-  runningFlow: ""
+  runningFlow: "",
 };
 
 export default FlowBottomBar;

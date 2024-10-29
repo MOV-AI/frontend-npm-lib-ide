@@ -4,7 +4,7 @@ import translationPT from "./languages/pt.js";
 
 export const Translations = {
   pt: translationPT,
-  en: translationEN
+  en: translationEN,
 };
 
 i18n.addResourceBundle("en", "translation", Translations.en, true, true);

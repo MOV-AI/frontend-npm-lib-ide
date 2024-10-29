@@ -9,14 +9,14 @@ import { InfoIcon } from "@mov-ai/mov-fe-lib-react";
 import { drawerSub } from "../../../plugins/hosts/DrawerPanel/DrawerPanel";
 import Menu from "./Menu";
 
-const useStyles = makeStyles(_theme => ({
+const useStyles = makeStyles((_theme) => ({
   container: {
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
     height: "100%",
-    maxHeight: "100%"
-  }
+    maxHeight: "100%",
+  },
 }));
 
 export const Callback = (props, ref) => {
@@ -29,7 +29,7 @@ export const Callback = (props, ref) => {
     data = {},
     saveDocument,
     editable = true,
-    useLanguageServer=false
+    useLanguageServer = false,
   } = props;
 
   const { pyLibs = {} } = data;
@@ -48,19 +48,23 @@ export const Callback = (props, ref) => {
     const menuName = `detail-menu`;
     const menuTitle = i18n.t("CallbackDetailsMenuTitle");
     // add bookmark
-    drawerSub.add(menuName, {
-      icon: <InfoIcon />,
-      name: menuName,
-      url: "global/Callback/" + name,
-      suffix: "right",
-      select: true,
-      title: menuTitle,
-      view: <Menu id={id} call={call} name={name} scope={scope} />
-    }, [name]);
+    drawerSub.add(
+      menuName,
+      {
+        icon: <InfoIcon />,
+        name: menuName,
+        url: "global/Callback/" + name,
+        suffix: "right",
+        select: true,
+        title: menuTitle,
+        view: <Menu id={id} call={call} name={name} scope={scope} />,
+      },
+      [name],
+    );
   }, [call, id, name, scope]);
 
   usePluginMethods(ref, {
-    renderRightMenu
+    renderRightMenu,
   });
 
   //========================================================================================
@@ -69,12 +73,12 @@ export const Callback = (props, ref) => {
    *                                                                                      */
   //========================================================================================
 
-  const updateCallbackCode = value => {
+  const updateCallbackCode = (value) => {
     if (value === instance.current.getCode()) return;
     if (instance.current) instance.current.setCode(value);
   };
 
-  const onEditorLoad = editor => {
+  const onEditorLoad = (editor) => {
     if (!id) editor.focus();
   };
 
@@ -94,7 +98,7 @@ export const Callback = (props, ref) => {
         onSave={saveDocument}
         onLoad={onEditorLoad}
         useLanguageServer={useLanguageServer}
-        builtins={Object.values(pyLibs).map(libs => libs.name)}
+        builtins={Object.values(pyLibs).map((libs) => libs.name)}
       />
     </div>
   );
@@ -109,7 +113,7 @@ Callback.propTypes = {
   instance: PropTypes.object,
   editable: PropTypes.bool,
   useLanguageServer: PropTypes.bool,
-  saveDocument: PropTypes.func
+  saveDocument: PropTypes.func,
 };
 
 export default withEditorPlugin(Callback);

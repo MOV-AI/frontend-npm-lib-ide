@@ -8,7 +8,7 @@ module.exports = function (app) {
       logLevel: "debug",
       secure: false,
       pathFilter: ["/lsp/languageServer/**"],
-    })
+    }),
   );
 
   app.use(
@@ -27,8 +27,8 @@ module.exports = function (app) {
         "/logout/**",
         "/static/maps/**",
         "/static/meshes/**",
-        "/static/point_clouds/**"
+        "/static/point_clouds/**",
       ],
-    })
+    }),
   );
 };

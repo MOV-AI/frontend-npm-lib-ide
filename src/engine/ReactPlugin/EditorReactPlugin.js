@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef } from "react";
+import React, { forwardRef, useCallback, useEffect, useRef } from "react";
 import withAlerts from "../../decorators/withAlerts";
 import withMenuHandler from "../../decorators/withMenuHandler";
 import withLoader from "../../decorators/withLoader";
@@ -6,6 +6,7 @@ import { withDataHandler } from "../../plugins/DocManager/DataHandler";
 import { drawerSub } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
 import { KEYBINDINGS } from "../../utils/shortcuts";
 import { PLUGINS } from "../../utils/Constants";
+import { useKeyBinds, setUrl } from "../../utils/keybinds";
 import { composeDecorators } from "../../utils/Utils";
 import { ViewPlugin } from "./ViewReactPlugin";
 
@@ -22,60 +23,58 @@ export function withEditorPlugin(ReactComponent, methods = []) {
    * Component responsible to handle common editor lifecycle
    */
   const EditorComponent = forwardRef((props, ref) => {
-    const {
-      id,
-      on,
-      off,
-      call,
-      scope,
-      save,
-      updateRightMenu,
-    } = props;
-
-    useEffect(() => {
-      updateRightMenu();
-    }, []);
+    const { id, on, off, call, scope, save, updateRightMenu } = props;
 
     const editorContainer = useRef();
+
+    const { addKeyBind, removeKeyBind } = useKeyBinds(id);
+
+    /**
+     * Activate editor : activate editor's keybinds and update right menu
+     */
+    const activateEditor = useCallback(() => {
+      setUrl(id);
+      drawerSub.url = id;
+    }, [id]);
 
     /**
      * Component did mount
      */
     useEffect(() => {
-      drawerSub.addKeyBind(
-        KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS,
-        save,
-        undefined,
-        { global: true }
-      );
+      addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
 
-      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async data => {
+      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async (data) => {
         const validTab = await call(
           PLUGINS.TABS.NAME,
           PLUGINS.TABS.CALL.FIND_TAB,
-          data.id
+          data.id,
         );
 
-        if (validTab && data.id === id) {
+        // This check goes through every open tab checking it's id
+        // towards data.id (which comes from the ACTIVE_TAB_CHANGE broadcast)
+        // When we find the tab with the id that we want to reset, we reset it
+        if (!validTab || (validTab && data.id === id)) {
+          // We should reset bookmarks when changing tabs. Right? And Left too :D
           updateRightMenu();
+          activateEditor();
         }
       });
 
       // Remove key bind on component unmount
       return () => {
-        drawerSub.removeKeyBind(
-          KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS,
-          { global: true },
-        );
+        removeKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS);
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
       };
     }, [
       id,
+      addKeyBind,
+      removeKeyBind,
       on,
       off,
       save,
       call,
       updateRightMenu,
+      activateEditor,
     ]);
 
     return (
@@ -83,13 +82,10 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         tabIndex="-1"
         ref={editorContainer}
         className={`container-${scope}`}
-        onClick={() => { drawerSub.url = id }}
+        onClick={activateEditor}
+        onFocus={activateEditor}
       >
-        <RefComponent
-          {...props}
-          saveDocument={save}
-          ref={ref}
-        />
+        <RefComponent {...props} saveDocument={save} ref={ref} />
       </div>
     );
   });
@@ -99,7 +95,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
     withAlerts,
     withLoader,
     withDataHandler,
-    withMenuHandler
+    withMenuHandler,
   ]);
 
   /**

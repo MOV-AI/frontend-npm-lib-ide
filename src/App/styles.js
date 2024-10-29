@@ -1,7 +1,7 @@
 import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 
-export const appStyles = debugMode =>
-  makeStyles(theme => ({
+export const appStyles = (debugMode) =>
+  makeStyles((theme) => ({
     app: {
       height: "100%",
     },
@@ -10,7 +10,7 @@ export const appStyles = debugMode =>
       border: debugMode ? "solid 5px red" : "",
       borderRight: debugMode ? "" : `1px solid ${theme.background}`,
       display: "flex",
-      position: "relative"
+      position: "relative",
     },
     mainGrid: {
       height: "calc(100% - 26px)",
@@ -24,7 +24,7 @@ export const appStyles = debugMode =>
     rightDrawer: {
       border: debugMode ? "solid 5px blue" : "",
       borderLeft: debugMode ? "" : `1px solid ${theme.background}`,
-      position: "relative"
+      position: "relative",
     },
-    bottomBar: { border: debugMode ? "solid 5px orange" : "", width: "100%" }
+    bottomBar: { border: debugMode ? "solid 5px orange" : "", width: "100%" },
   }));

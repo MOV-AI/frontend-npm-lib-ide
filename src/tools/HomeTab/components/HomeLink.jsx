@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { IconButton, Tooltip } from "@mov-ai/mov-fe-lib-react";
-import { DeleteIcon }from "@mov-ai/mov-fe-lib-react";
+import { DeleteIcon } from "@mov-ai/mov-fe-lib-react";
 import { getIconByScope } from "../../../utils/Utils";
 
 import { homeTabLinkStyles } from "../styles";
@@ -14,15 +14,15 @@ function HomeLink(props) {
 
   const handleOpenDocument = useCallback(
     () => openRecentDocument(doc),
-    [doc, openRecentDocument]
+    [doc, openRecentDocument],
   );
 
   const handleDeleteDocument = useCallback(
-    e => {
+    (e) => {
       removeRecentDocument(id);
       e.stopPropagation();
     },
-    [id, removeRecentDocument]
+    [id, removeRecentDocument],
   );
 
   return (

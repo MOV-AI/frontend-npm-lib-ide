@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import {
   VerticalBar,
   ProfileMenu,
   ContextMenu,
-  HomeMenuPopper
+  HomeMenuPopper,
 } from "@mov-ai/mov-fe-lib-react";
 import { DescriptionIcon, AddBoxIcon } from "@mov-ai/mov-fe-lib-react";
 import { Tooltip } from "@mov-ai/mov-fe-lib-react";
@@ -22,7 +22,7 @@ import movaiIcon from "../../../Branding/movai-logo-transparent.png";
 
 import { mainMenuStyles } from "./styles";
 
-const MainMenu = props => {
+const MainMenu = (props) => {
   const { call } = props;
   // State hooks
   const [docTypes, setDocTypes] = useState([]);
@@ -34,7 +34,7 @@ const MainMenu = props => {
     isMenuOpen,
     onCloseMenu,
     handleLogOut,
-    handleToggleTheme
+    handleToggleTheme,
   } = useContext(MainContext);
   // Refs
   const MENUS = [
@@ -43,17 +43,15 @@ const MainMenu = props => {
       icon: getIconFn(DescriptionIcon),
       title: "Explorer",
       isActive: true,
-      getOnClick: () => { 
-        drawerSub.suffix = "left"; 
+      getOnClick: () => {
+        drawerSub.suffix = "left";
         const active = drawerSub.active;
         drawerSub.setActive(null);
-        if (active)
-          drawerSub.open = !drawerSub.open;
-        else
-          drawerSub.open = true; 
+        if (active) drawerSub.open = !drawerSub.open;
+        else drawerSub.open = true;
       },
     },
-    ...getMainMenuTools().map(tool => {
+    ...getMainMenuTools().map((tool) => {
       return {
         name: tool.id,
         icon: getIconFn(tool.icon),
@@ -62,9 +60,9 @@ const MainMenu = props => {
         getOnClick: () => {
           // Open tool
           openTool(call, tool.profile.name);
-        }
+        },
       };
-    })
+    }),
   ];
 
   //========================================================================================
@@ -76,9 +74,9 @@ const MainMenu = props => {
   // To run when component is initiated
   useEffect(() => {
     call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.GET_DOC_TYPES).then(
-      _docTypes => {
+      (_docTypes) => {
         setDocTypes(_docTypes);
-      }
+      },
     );
   }, [call]);
 
@@ -110,35 +108,40 @@ const MainMenu = props => {
                   ></AddBoxIcon>
                 </Tooltip>
               }
-              menuList={docTypes.map(docType => ({
+              menuList={docTypes.map((docType) => ({
                 onClick: () =>
                   call(
                     PLUGINS.DOC_MANAGER.NAME,
                     PLUGINS.DOC_MANAGER.CALL.CREATE,
                     {
-                      scope: docType.scope
-                    }
-                  ).then(document => {
+                      scope: docType.scope,
+                    },
+                  ).then((document) => {
                     call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.OPEN_EDITOR, {
                       id: document.getUrl(),
                       name: document.getName(),
                       scope: docType.scope,
-                      isNew: true
+                      isNew: true,
                     });
                   }),
                 element: docType.name || docType.scope,
                 icon: getIconByScope(docType.scope),
-                onClose: true
+                onClose: true,
               }))}
             />
           </>
         }
         navigationList={MENUS.map((menu, index) => (
-          <Tooltip key={menu.name + index} title={menu.title} placement="right" arrow>
+          <Tooltip
+            key={menu.name + index}
+            title={menu.title}
+            placement="right"
+            arrow
+          >
             <span>
               {menu.icon({
                 className: classes.icon,
-                onClick: () => menu.getOnClick()
+                onClick: () => menu.getOnClick(),
               })}
             </span>
           </Tooltip>
@@ -160,7 +163,7 @@ const MainMenu = props => {
             src={movaiIcon}
             className={classes.movaiIcon}
             alt="MOV.AI"
-          />
+          />,
         ]}
       ></VerticalBar>
     </div>
@@ -170,7 +173,7 @@ const MainMenu = props => {
 MainMenu.propTypes = {
   call: PropTypes.func.isRequired,
   emit: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
 };
 
 export default withViewPlugin(MainMenu);

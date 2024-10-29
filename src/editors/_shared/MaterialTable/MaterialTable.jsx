@@ -9,13 +9,13 @@ import { materialTableStyles } from "./styles";
 const MaterialTable = forwardRef((props, ref) => {
   const {
     columns,
-    actions,
+    actions = [],
     data,
     editable,
     options,
     title = "",
     detailPanel,
-    components
+    components,
   } = props;
   // Hooks
   const theme = useTheme();
@@ -41,7 +41,7 @@ const MaterialTable = forwardRef((props, ref) => {
   const getRowStyle = (_, rowIndex) => {
     return (
       rowIndex % 2 !== 0 && {
-        backgroundColor: theme.nodeEditor?.stripeColor
+        backgroundColor: theme.nodeEditor?.stripeColor,
       }
     );
   };
@@ -113,20 +113,20 @@ const MaterialTable = forwardRef((props, ref) => {
           searchFieldAlignment: "left",
           actionsCellStyle: {
             textAlign: "right",
-            color: theme.palette.primary.main
+            color: theme.palette.primary.main,
           },
           actionsColumnIndex: -1,
           draggable: false,
           grouping: false,
-          paging: false
+          paging: false,
         }}
         localization={{
           toolbar: { searchPlaceholder: i18n.t("Search") },
           pagination: {
-            labelDisplayedRows: "{from}-{to} of {count}"
+            labelDisplayedRows: "{from}-{to} of {count}",
           },
           header: {
-            actions: i18n.t("Actions")
+            actions: i18n.t("Actions"),
           },
           body: {
             emptyDataSourceMessage: i18n.t("NoRecordsMessage"),
@@ -135,9 +135,9 @@ const MaterialTable = forwardRef((props, ref) => {
             addTooltip: i18n.t("Add"),
             editRow: {
               cancelTooltip: i18n.t("Cancel"),
-              saveTooltip: i18n.t("Confirm")
-            }
-          }
+              saveTooltip: i18n.t("Confirm"),
+            },
+          },
         }}
       />
     </div>
@@ -146,12 +146,12 @@ const MaterialTable = forwardRef((props, ref) => {
 
 MaterialTable.propTypes = {
   data: PropTypes.array,
-  options: PropTypes.object
+  options: PropTypes.object,
 };
 
 MaterialTable.defaultProps = {
   options: {},
-  data: []
+  data: [],
 };
 
 export default memo(MaterialTable);

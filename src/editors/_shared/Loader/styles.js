@@ -1,13 +1,13 @@
 import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 
-export const loaderStyles = makeStyles(_theme => ({
+export const loaderStyles = makeStyles((_theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
     flexGrow: 1,
     maxHeight: "100%",
     minHeight: "300px",
-    position: "relative"
+    position: "relative",
   },
   loaderContainer: {
     height: "100%",
@@ -16,13 +16,13 @@ export const loaderStyles = makeStyles(_theme => ({
     top: 0,
     left: 0,
     width: "100%",
-    zIndex: 1051 // Must be greater than 1050 to be on top of floating buttons
+    zIndex: 1051, // Must be greater than 1050 to be on top of floating buttons
   },
   loaderImage: {
     position: "absolute",
     left: "50%",
     top: "50%",
-    transform: "translate(-50%, -50%)"
+    transform: "translate(-50%, -50%)",
   },
-  linearProgress: { marginTop: 20 }
+  linearProgress: { marginTop: 20 },
 }));

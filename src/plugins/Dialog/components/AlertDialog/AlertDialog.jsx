@@ -5,7 +5,7 @@ import AppDialog from "../AppDialog/AppDialog";
 
 import { alertDialogStyles } from "./styles";
 
-const AlertDialog = props => {
+const AlertDialog = (props) => {
   // Props
   const { title, message, onClose } = props;
   // Hooks
@@ -23,12 +23,12 @@ const AlertDialog = props => {
 AlertDialog.propTypes = {
   title: PropTypes.string,
   message: PropTypes.string.isRequired,
-  onClose: PropTypes.func
+  onClose: PropTypes.func,
 };
 
 AlertDialog.defaultProps = {
   title: "Alert",
-  onClose: () => console.log("Not Implemented")
+  onClose: () => console.log("Not Implemented"),
 };
 
 export default AlertDialog;

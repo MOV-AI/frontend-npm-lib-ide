@@ -7,7 +7,7 @@ import NodeLink from "./NodeLink";
 
 import { menuDetailsStyles } from "../styles";
 
-const MenuDetails = props => {
+const MenuDetails = (props) => {
   // Props
   const { id, name, template, model, type, openDoc, label } = props;
   // Other hooks
@@ -21,9 +21,7 @@ const MenuDetails = props => {
 
   return (
     <>
-      <h2 className={classes.header}>
-        {name ?? id}
-      </h2>
+      <h2 className={classes.header}>{name ?? id}</h2>
       <ListItem divider>
         <ListItemText primary={i18n.t(label)} className={classes.label} />
         <NodeLink
@@ -53,7 +51,7 @@ MenuDetails.propTypes = {
   label: PropTypes.string,
   model: PropTypes.string,
   type: PropTypes.string,
-  openDoc: PropTypes.func
+  openDoc: PropTypes.func,
 };
 
 MenuDetails.defaultProps = {
@@ -62,7 +60,7 @@ MenuDetails.defaultProps = {
   model: "-",
   type: "-",
   label: "NameColon",
-  openDoc: () => defaultFunction("openDoc")
+  openDoc: () => defaultFunction("openDoc"),
 };
 
 export default MenuDetails;

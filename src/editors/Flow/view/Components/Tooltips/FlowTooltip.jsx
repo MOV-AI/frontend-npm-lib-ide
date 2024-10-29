@@ -4,14 +4,14 @@ import PropTypes from "prop-types";
 import { withStyles } from "@mov-ai/mov-fe-lib-react";
 import { Card, CardContent, Typography, Grid } from "@mov-ai/mov-fe-lib-react";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     opacity: 0.9,
-    backgroundColor: theme.palette.background.secondary
+    backgroundColor: theme.palette.background.secondary,
   },
   tooltip: {
-    whiteSpace: "pre"
-  }
+    whiteSpace: "pre",
+  },
 });
 
 class Tooltip extends Component {
@@ -29,7 +29,7 @@ class Tooltip extends Component {
 
   state = {
     open: false,
-    message: "" // tooltip text
+    message: "", // tooltip text
   };
 
   updateEl = () => {
@@ -46,7 +46,7 @@ class Tooltip extends Component {
 
     this.setState({
       open,
-      message: text
+      message: text,
     });
   };
 
@@ -87,12 +87,12 @@ class Tooltip extends Component {
 Tooltip.propTypes = {
   domNode: PropTypes.object.isRequired,
   classes: PropTypes.object,
-  theme: PropTypes.object
+  theme: PropTypes.object,
 };
 
 Tooltip.defaultProps = {
   classes: {},
-  theme: {}
+  theme: {},
 };
 
 export default withStyles(styles, { withTheme: true })(Tooltip);

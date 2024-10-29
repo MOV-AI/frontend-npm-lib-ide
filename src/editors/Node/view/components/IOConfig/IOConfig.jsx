@@ -13,7 +13,7 @@ import IOPorts from "./IOPorts/IOPorts";
 
 import { ioConfigStyles } from "./styles";
 
-const IOConfig = props => {
+const IOConfig = (props) => {
   // Refs
   const tableRef = useRef();
   const tableContainerRef = useRef();
@@ -31,7 +31,7 @@ const IOConfig = props => {
     handleOpenCallback,
     handleNewCallback,
     autoFocus,
-    editable
+    editable,
   } = props;
 
   // State hooks
@@ -45,7 +45,7 @@ const IOConfig = props => {
   const { getColumns } = useIOConfigColumns({
     scopeSystemPortsData,
     scopePorts,
-    autoFocus
+    autoFocus,
   });
 
   //========================================================================================
@@ -78,18 +78,18 @@ const IOConfig = props => {
    * @returns {array} Formatted data
    */
   const formatData = useCallback(
-    _data => {
+    (_data) => {
       const newData = Array.isArray(_data)
         ? _data
-        : Object.values(_data).map(item => ({
+        : Object.values(_data).map((item) => ({
             ...item,
-            name: item.name
+            name: item.name,
           }));
-      setIOData(prevState =>
-        _isEqual(prevState, newData) ? prevState : newData
+      setIOData((prevState) =>
+        _isEqual(prevState, newData) ? prevState : newData,
       );
     },
-    [setIOData]
+    [setIOData],
   );
 
   /**
@@ -107,14 +107,14 @@ const IOConfig = props => {
       if (direction === "portOut") return rowData;
       return rowData;
     },
-    [getEffectiveMessage]
+    [getEffectiveMessage],
   );
 
   /**
    * Set in port data from template
    */
   const setPortDataIn = useCallback(
-    rowData => {
+    (rowData) => {
       const portIn = scopePorts[rowData.template]?.In;
 
       if (!portIn) {
@@ -125,19 +125,19 @@ const IOConfig = props => {
       rowData.portIn = portIn;
 
       // Update CallbackOptions and EffectiveMessage = (pkg/msg) of in ioport
-      Object.keys(rowData.portIn).forEach(key => {
+      Object.keys(rowData.portIn).forEach((key) => {
         rowData = formatPortData(rowData, "portIn", key);
       });
       return rowData;
     },
-    [scopePorts, formatPortData]
+    [scopePorts, formatPortData],
   );
 
   /**
    * Set out port data from template
    */
   const setPortDataOut = useCallback(
-    rowData => {
+    (rowData) => {
       const portOut = scopePorts[rowData.template]?.Out;
 
       if (!portOut) {
@@ -148,12 +148,12 @@ const IOConfig = props => {
       rowData.portOut = portOut;
 
       // Update CallbackOptions and EffectiveMessage = (pkg/msg) of out ioport
-      Object.keys(rowData.portOut).forEach(key => {
+      Object.keys(rowData.portOut).forEach((key) => {
         rowData = formatPortData(rowData, "portOut", key);
       });
       return rowData;
     },
-    [scopePorts, formatPortData]
+    [scopePorts, formatPortData],
   );
 
   //========================================================================================
@@ -168,7 +168,7 @@ const IOConfig = props => {
    * @returns
    */
   const handleRowAdd = useCallback(
-    newData => {
+    (newData) => {
       return new Promise((resolve, reject) => {
         // Set port in/out
         newData = setPortDataIn(newData);
@@ -177,7 +177,7 @@ const IOConfig = props => {
         onIOConfigRowSet(newData, resolve, reject);
       });
     },
-    [onIOConfigRowSet, setPortDataIn, setPortDataOut]
+    [onIOConfigRowSet, setPortDataIn, setPortDataOut],
   );
 
   /**
@@ -195,7 +195,7 @@ const IOConfig = props => {
         onIOConfigRowSet(newData, resolve, reject, oldData);
       });
     },
-    [onIOConfigRowSet, setPortDataIn, setPortDataOut]
+    [onIOConfigRowSet, setPortDataIn, setPortDataOut],
   );
 
   /**
@@ -204,12 +204,12 @@ const IOConfig = props => {
    * @returns
    */
   const handleRowDelete = useCallback(
-    value => {
-      return new Promise(resolve => {
+    (value) => {
+      return new Promise((resolve) => {
         onIOConfigRowDelete(value, resolve);
       });
     },
-    [onIOConfigRowDelete]
+    [onIOConfigRowDelete],
   );
 
   //========================================================================================
@@ -223,14 +223,14 @@ const IOConfig = props => {
     call(
       PLUGINS.DOC_MANAGER.NAME,
       PLUGINS.DOC_MANAGER.CALL.GET_STORE,
-      scope
-    ).then(store => {
+      scope,
+    ).then((store) => {
       // Get All transport / protocol to fill first selector
-      store.helper.getAllTransportProtocol().then(res => {
+      store.helper.getAllTransportProtocol().then((res) => {
         if (res) setScopePorts(res);
       });
       // Get All ports data to fill second selector
-      store.helper.getPortsData().then(res => {
+      store.helper.getPortsData().then((res) => {
         if (res) setScopeSystemPortsData(res);
       });
     });
@@ -251,7 +251,7 @@ const IOConfig = props => {
    * @param {*} _props
    * @returns
    */
-  const renderCustomToolbar = _props => {
+  const renderCustomToolbar = (_props) => {
     return (
       <Typography component="div" className={classes.toolbar}>
         <Typography component="div" className={classes.toolbarComponents}>
@@ -266,12 +266,12 @@ const IOConfig = props => {
    * @param {*} _props
    * @returns
    */
-  const renderCustomEditRow = _props => {
+  const renderCustomEditRow = (_props) => {
     updateLockRows();
     return (
       <MTableEditRow
         {..._props}
-        onEditingCanceled={mode => {
+        onEditingCanceled={(mode) => {
           _props.onEditingCanceled(mode);
           updateLockRows();
         }}
@@ -289,7 +289,7 @@ const IOConfig = props => {
    * @returns
    */
   const renderDetailPanel = useCallback(
-    panelData => {
+    (panelData) => {
       return (
         <IOPorts
           classNames="child-row"
@@ -309,8 +309,8 @@ const IOConfig = props => {
       handleIOPortsInputs,
       handleOpenCallback,
       handleNewCallback,
-      handleOpenSelectScopeModal
-    ]
+      handleOpenSelectScopeModal,
+    ],
   );
 
   //========================================================================================
@@ -340,11 +340,11 @@ const IOConfig = props => {
             isDeletable: () => editable,
             onRowAdd: editable ? handleRowAdd : null,
             onRowUpdate: handleRowUpdate,
-            onRowDelete: handleRowDelete
+            onRowDelete: handleRowDelete,
           }}
           components={{
             Toolbar: renderCustomToolbar,
-            EditRow: renderCustomEditRow
+            EditRow: renderCustomEditRow,
           }}
         />
       </Typography>
@@ -361,12 +361,12 @@ IOConfig.propTypes = {
   handleOpenCallback: PropTypes.func.isRequired,
   handleNewCallback: PropTypes.func.isRequired,
   protectedCallbacks: PropTypes.array,
-  editable: PropTypes.bool
+  editable: PropTypes.bool,
 };
 
 IOConfig.defaultProps = {
   editable: true,
-  protectedCallbacks: []
+  protectedCallbacks: [],
 };
 
 //The function returns true when the compared props equal, preventing the component from re-rendering
@@ -374,7 +374,7 @@ function arePropsEqual(prevProps, nextProps) {
   const sameConfig = _isEqual(prevProps.ioConfig, nextProps.ioConfig);
   const sameProtectedDocs = _isEqual(
     prevProps.protectedCallbacks,
-    nextProps.protectedCallbacks
+    nextProps.protectedCallbacks,
   );
   return sameConfig && sameProtectedDocs;
 }

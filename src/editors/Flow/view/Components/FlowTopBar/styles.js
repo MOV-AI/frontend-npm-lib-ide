@@ -1,44 +1,44 @@
 import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 
-export const buttonStyles = makeStyles(_theme => ({
+export const buttonStyles = makeStyles((_theme) => ({
   buttonPill: {
     borderRadius: "99px",
     padding: "4px",
-  }
+  },
 }));
 
-export const flowTopBarStyles = makeStyles(theme => ({
+export const flowTopBarStyles = makeStyles((theme) => ({
   flowLink: {
     textDecoration: "underline",
-    cursor: "pointer"
+    cursor: "pointer",
   },
   defaultRobot: {
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   formControl: {
     margin: theme.spacing(1),
     minWidth: 170,
     maxWidth: 350,
     "& i": {
-      marginRight: 15
-    }
+      marginRight: 15,
+    },
   },
   whichFlowText: {
     marginLeft: theme.spacing(5),
     fontSize: "15px",
-    flexGrow: 1
+    flexGrow: 1,
   },
   searchFlowArea: {
-    marginRight: theme.spacing(3)
+    marginRight: theme.spacing(3),
   },
   searchInputText: {
-    width: "400px"
+    width: "400px",
   },
   searchPopup: {
-    width: "fit-content"
+    width: "fit-content",
   },
   visualizationToggle: {
-    marginRight: "10px"
+    marginRight: "10px",
   },
   grow: {
     flexGrow: 1,
@@ -46,6 +46,6 @@ export const flowTopBarStyles = makeStyles(theme => ({
     alignItems: "center",
   },
   treeIcon: {
-    fontSize: "1.2rem"
-  }
+    fontSize: "1.2rem",
+  },
 }));

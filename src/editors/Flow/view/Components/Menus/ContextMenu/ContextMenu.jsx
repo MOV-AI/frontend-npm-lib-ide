@@ -1,19 +1,24 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
-import { Menu, MenuItem, ListItemIcon, ListItemText } from "@mov-ai/mov-fe-lib-react";
+import {
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mov-ai/mov-fe-lib-react";
 import {
   defaultFunction,
-  convertToValidString
+  convertToValidString,
 } from "../../../../../../utils/Utils";
 
-const ContextMenu = props => {
+const ContextMenu = (props) => {
   const { anchorPosition, menuList, onClose, readOnly } = props;
 
   /**
    * Caputure context menu click event and dispatch it for the rightful element
    * @param {Event} event : contextmenu event
    */
-  const onContextMenu = useCallback(event => {
+  const onContextMenu = useCallback((event) => {
     const { clientX, clientY } = event;
     // Get all elements from clicked point
     const allElementsFromPoint = document.elementsFromPoint(clientX, clientY);
@@ -23,7 +28,7 @@ const ContextMenu = props => {
       bubbles: true,
       cancelable: true,
       clientX,
-      clientY
+      clientY,
     });
     // first element is the same event.target
     // second element is the pop-up menu overlay
@@ -41,7 +46,7 @@ const ContextMenu = props => {
       onClose={onClose}
       disabled={readOnly}
     >
-      {menuList.map(item => (
+      {menuList.map((item) => (
         <MenuItem
           data-testid="input_context-option"
           key={`key_${convertToValidString(item.label)}`}
@@ -63,16 +68,16 @@ ContextMenu.propTypes = {
       icon: PropTypes.element,
       element: PropTypes.element,
       label: PropTypes.string,
-      onClick: PropTypes.func
-    })
+      onClick: PropTypes.func,
+    }),
   ),
   onClose: PropTypes.func,
-  readOnly: PropTypes.bool
+  readOnly: PropTypes.bool,
 };
 ContextMenu.defaultProps = {
   menuList: [],
   readOnly: false,
-  onClose: () => defaultFunction("onClose")
+  onClose: () => defaultFunction("onClose"),
 };
 
 export default ContextMenu;

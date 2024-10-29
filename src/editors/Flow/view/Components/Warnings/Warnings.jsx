@@ -1,7 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { SnackbarContent } from "@mov-ai/mov-fe-lib-react";
-import { WarningIcon, CheckCircleIcon, ErrorIcon, InfoIcon } from "@mov-ai/mov-fe-lib-react";
+import {
+  WarningIcon,
+  CheckCircleIcon,
+  ErrorIcon,
+  InfoIcon,
+} from "@mov-ai/mov-fe-lib-react";
 
 import { warningsStyles } from "./styles";
 
@@ -9,10 +14,10 @@ const variantIcon = {
   success: CheckCircleIcon,
   warning: WarningIcon,
   error: ErrorIcon,
-  info: InfoIcon
+  info: InfoIcon,
 };
 
-const Warnings = props => {
+const Warnings = (props) => {
   // Props
   const { warnings = [], isVisible } = props;
   // Other hooks
@@ -72,7 +77,7 @@ const Warnings = props => {
 
 Warnings.propTypes = {
   warnings: PropTypes.array.isRequired,
-  isVisible: PropTypes.bool
+  isVisible: PropTypes.bool,
 };
 
 export default Warnings;

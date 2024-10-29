@@ -6,16 +6,16 @@ const menuButtonStyles = {
   lineHeight: "26px !important",
   textTransform: "none !important",
   borderRadius: "0px",
-  "& > .MuiTouchRipple-root": { borderRadius: "0px" }
+  "& > .MuiTouchRipple-root": { borderRadius: "0px" },
 };
 
-export const systemBarStyles = debugMode =>
-  makeStyles(theme => ({
+export const systemBarStyles = (debugMode) =>
+  makeStyles((theme) => ({
     systemBar: {
       background: theme.topBarColor,
       height: "26px",
       borderBottom: debugMode ? "solid 5px purple" : "1px solid #000",
-      width: "100%"
+      width: "100%",
     },
     menuButton: {
       ...menuButtonStyles,
@@ -24,30 +24,30 @@ export const systemBarStyles = debugMode =>
       borderRadius: "0px !important",
       color: theme.palette.text.primary + " !important",
       "&:first-child": {
-        marginLeft: "5px !important"
-      }
+        marginLeft: "5px !important",
+      },
     },
   }));
 
-export const systemMenuStyles = makeStyles(theme => ({
+export const systemMenuStyles = makeStyles((theme) => ({
   popper: {
-    zIndex: 999999
+    zIndex: 999999,
   },
   listHolder: {
     minWidth: "300px",
     borderRadius: "0px 0px 5px 5px",
-    background: theme.topBarColor
+    background: theme.topBarColor,
   },
   list: {
     ...menuButtonStyles,
-    marginTop: "1px"
+    marginTop: "1px",
   },
   menuDivider: {
-    background: theme.palette.grey[200]
-  }
+    background: theme.palette.grey[200],
+  },
 }));
 
-export const systemMenuItemStyles = makeStyles(theme => ({
+export const systemMenuItemStyles = makeStyles((theme) => ({
   listItem: {
     ...menuButtonStyles,
     paddingLeft: "10px !important",
@@ -65,8 +65,8 @@ export const systemMenuItemStyles = makeStyles(theme => ({
       },
     },
     "&:last-of-type > button": {
-      borderRadius: "0px 0px 5px 5px"
-    }
+      borderRadius: "0px 0px 5px 5px",
+    },
   },
   menuButton: {
     ...menuButtonStyles,
@@ -80,21 +80,21 @@ export const systemMenuItemStyles = makeStyles(theme => ({
     "&:hover": {
       "& > .MuiButton-label > ul": {
         opacity: "1",
-        maxWidth: "500px"
-      }
-    }
+        maxWidth: "500px",
+      },
+    },
   },
   icon: {
     verticalAlign: "text-top",
     marginRight: "10px",
     "& > svg": {
-      fontSize: "1rem"
-    }
+      fontSize: "1rem",
+    },
   },
   keybind: {
     paddingRight: "10px",
     fontStyle: "italic",
-    color: theme.palette.grey[400]
+    color: theme.palette.grey[400],
   },
   subMenuHolder: {
     position: "absolute",
@@ -110,19 +110,19 @@ export const systemMenuItemStyles = makeStyles(theme => ({
     color: theme.palette.text.primary + " !important",
     background: theme.topBarColor + " !important",
     transform: "translate(99%)",
-    transition: "opacity .3s, max-width .3s"
-  }
+    transition: "opacity .3s, max-width .3s",
+  },
 }));
 
-export const helpDialogStyles = makeStyles(_theme => ({
+export const helpDialogStyles = makeStyles((_theme) => ({
   movaiIcon: {
     height: "24px",
     verticalAlign: "sub",
-    marginRight: "5px"
+    marginRight: "5px",
   },
   contentHolder: {
     "& > p": {
-      margin: "0px"
-    }
-  }
+      margin: "0px",
+    },
+  },
 }));

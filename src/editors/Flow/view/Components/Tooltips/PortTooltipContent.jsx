@@ -7,32 +7,32 @@ import { portTooltipContentStyles } from "./styles";
 
 const ITEMS_INDEX = "tooltip-fragment-row";
 
-const PortTooltipContent = props => {
+const PortTooltipContent = (props) => {
   const { name, message, template, callback } = props;
   const classes = portTooltipContentStyles();
   const text = {
     name: i18n.t("Name"),
     message: i18n.t("Message"),
     protocol: i18n.t("Protocol"),
-    callback: i18n.t("Callback")
+    callback: i18n.t("Callback"),
   };
 
   const itemTextProps = {
     variant: "caption",
-    className: classes.item
+    className: classes.item,
   };
 
   const data = [
     { primary: text.name, secondary: name },
     { primary: text.message, secondary: message },
-    { primary: text.protocol, secondary: template }
+    { primary: text.protocol, secondary: template },
   ];
 
   if (callback) {
     data.push({ primary: text.callback, secondary: callback });
   }
 
-  return data.map(item => {
+  return data.map((item) => {
     return (
       <ListItem
         className={classes.listItem}
@@ -53,14 +53,14 @@ PortTooltipContent.propTypes = {
   name: PropTypes.string,
   message: PropTypes.string,
   template: PropTypes.string,
-  callback: PropTypes.string
+  callback: PropTypes.string,
 };
 
 PortTooltipContent.defaultProps = {
   name: "",
   message: "",
   template: "",
-  callback: null
+  callback: null,
 };
 
 export default PortTooltipContent;

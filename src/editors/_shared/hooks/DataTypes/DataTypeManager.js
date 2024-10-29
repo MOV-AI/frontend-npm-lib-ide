@@ -7,21 +7,20 @@ import ObjectType from "./types/ObjectType";
 import StringType from "./types/StringType";
 
 class DataTypeManager {
-  constructor({ theme, selfProvision = true, onlyStrings = false } = {}) {
-    this.onlyStrings = onlyStrings;
+  constructor({ theme, stringOutput = false } = {}) {
+    this.stringOutput = stringOutput;
     // Hooks
     this.theme = theme;
     // Initiate types
     this.dataTypes = new Map();
-    if (selfProvision) {
-      this.setDataType(StringType);
-      this.setDataType(NumberType);
-      this.setDataType(BooleanType);
-      this.setDataType(ObjectType);
-      this.setDataType(ArrayType);
-      this.setDataType(ConfigurationType);
-      this.setDataType(AnyType);
-    }
+
+    this.setDataType(StringType);
+    this.setDataType(NumberType);
+    this.setDataType(BooleanType);
+    this.setDataType(ObjectType);
+    this.setDataType(ArrayType);
+    this.setDataType(ConfigurationType);
+    this.setDataType(AnyType);
   }
 
   /**
@@ -29,7 +28,10 @@ class DataTypeManager {
    * @param {DataType} DataType : DataType class
    */
   setDataType(DataType) {
-    const dataTypeInstance = new DataType({ theme: this.theme, onlyStrings: this.onlyStrings });
+    const dataTypeInstance = new DataType({
+      theme: this.theme,
+      stringOutput: this.stringOutput,
+    });
     this.dataTypes.set(dataTypeInstance.getKey(), dataTypeInstance);
   }
 

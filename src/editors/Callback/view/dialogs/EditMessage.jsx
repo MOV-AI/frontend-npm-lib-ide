@@ -6,7 +6,7 @@ import {
   Dialog,
   DialogContent,
   BaseButton,
-  DialogActions
+  DialogActions,
 } from "@mov-ai/mov-fe-lib-react";
 import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 import { PLUGINS } from "../../../../utils/Constants";
@@ -19,20 +19,20 @@ import MaterialTree from "../../../_shared/MaterialTree/MaterialTree";
 import Search from "../../../_shared/Search/Search";
 import { searchMessages } from "./utils";
 
-const useStyles = makeStyles(_theme => ({
+const useStyles = makeStyles((_theme) => ({
   treeRoot: {
     overflowY: "auto",
     overflowX: "hidden",
     paddingLeft: 5,
     justifyContent: "center",
-    width: "100%"
+    width: "100%",
   },
   paper: {
-    minWidth: "40%"
-  }
+    minWidth: "40%",
+  },
 }));
 
-const EditMessageDialog = props => {
+const EditMessageDialog = (props) => {
   // Props
   const { call, scope, selectedMessage, onClose, onSubmit } = props;
   // State hooks
@@ -52,7 +52,7 @@ const EditMessageDialog = props => {
   /**
    * Format message list to tree structure
    */
-  const _updateMessages = useCallback(list => {
+  const _updateMessages = useCallback((list) => {
     let messagesStruct = [];
     Object.keys(list)
       .sort()
@@ -64,9 +64,9 @@ const EditMessageDialog = props => {
             return {
               id: (idx1 + 1) * 100 + idx2 + 1,
               text: message,
-              isLeaf: true
+              isLeaf: true,
             };
-          })
+          }),
         });
       });
     // TODO : If create a CB from NodeEditor append the corresponding Message
@@ -84,7 +84,7 @@ const EditMessageDialog = props => {
    * On change selected Message
    * @param {*} selectedMessage
    */
-  const onSelectMessage = _selectedMessage => {
+  const onSelectMessage = (_selectedMessage) => {
     const messagePath = _selectedMessage.split("/");
     if (messagePath.length <= 1) return;
     // Return selectedMessage
@@ -95,11 +95,11 @@ const EditMessageDialog = props => {
    * On search tree
    */
   const onSearch = useCallback(
-    value => {
+    (value) => {
       const result = searchMessages(value, messages);
       setFilteredMsg(result);
     },
-    [messages]
+    [messages],
   );
 
   //========================================================================================
@@ -116,9 +116,9 @@ const EditMessageDialog = props => {
     call(
       PLUGINS.DOC_MANAGER.NAME,
       PLUGINS.DOC_MANAGER.CALL.GET_STORE,
-      scope
-    ).then(store => {
-      store.helper.getAllMessages().then(msgs => {
+      scope,
+    ).then((store) => {
+      store.helper.getAllMessages().then((msgs) => {
         if (msgs) _updateMessages(msgs);
         setLoading(false);
       });

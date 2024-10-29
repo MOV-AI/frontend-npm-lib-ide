@@ -5,7 +5,7 @@ import { IconButton, Typography } from "@mov-ai/mov-fe-lib-react";
 import {
   DATA_TYPES,
   DEFAULT_VALUE,
-  DISABLED_VALUE
+  DISABLED_VALUE,
 } from "../../../../../../utils/Constants";
 
 import { rowKeyValueStyles } from "../styles";
@@ -16,7 +16,7 @@ const RowKeyValue = ({
   allowDelete,
   type,
   handleParameterEditModal,
-  handleParameterDeleteModal
+  handleParameterDeleteModal,
 }) => {
   const classes = rowKeyValueStyles();
   const viewOnly = !allowEdit;
@@ -69,7 +69,7 @@ const RowKeyValue = ({
    * @returns {JSXElement}
    */
   const renderParamRow = useCallback(
-    row => {
+    (row) => {
       if (row.value === DEFAULT_VALUE || row.value === null) {
         return (
           <Typography
@@ -92,13 +92,17 @@ const RowKeyValue = ({
         );
       } else {
         return (
-          <Typography component="div" data-testid="param_value" className={classes.valueContainer}>
+          <Typography
+            component="div"
+            data-testid="param_value"
+            className={classes.valueContainer}
+          >
             {getValue(row.value, row.type)}
           </Typography>
         );
       }
     },
-    [classes.valueDefault, classes.valueContainer, classes.valueNone]
+    [classes.valueDefault, classes.valueContainer, classes.valueNone],
   );
 
   return (
@@ -141,12 +145,12 @@ RowKeyValue.propTypes = {
   handleParameterEditModal: PropTypes.func,
   handleParameterDeleteModal: PropTypes.func,
   allowDelete: PropTypes.bool,
-  allowEdit: PropTypes.bool
+  allowEdit: PropTypes.bool,
 };
 
 RowKeyValue.defaultProps = {
   allowDelete: false,
-  allowEdit: false
+  allowEdit: false,
 };
 
 export default RowKeyValue;

@@ -1,17 +1,15 @@
 import React, { forwardRef, useEffect } from "react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { makeStyles } from "@mov-ai/mov-fe-lib-react";
-import { drawerSub } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
 import withAlerts from "../../decorators/withAlerts";
 import withMenuHandler from "../../decorators/withMenuHandler";
-import { PLUGINS } from "../../utils/Constants";
 import { composeDecorators } from "../../utils/Utils";
 import { ViewPlugin } from "./ViewReactPlugin";
 
 export const useStyles = makeStyles(() => ({
   root: {
-    height: "100%"
-  }
+    height: "100%",
+  },
 }));
 
 /**
@@ -31,7 +29,7 @@ export function withToolPlugin(ReactComponent, methods = []) {
   const DecoratedToolComponent = composeDecorators(ToolComponent, [
     withTheme,
     withAlerts,
-    withMenuHandler
+    withMenuHandler,
   ]);
 
   /**

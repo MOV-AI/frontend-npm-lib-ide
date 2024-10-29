@@ -1,7 +1,7 @@
 import React from "react";
 import { useTheme } from "@mov-ai/mov-fe-lib-react";
 
-const NotInstalled = props => {
+const NotInstalled = (props) => {
   const { name } = props;
   const theme = useTheme();
   return (
@@ -21,6 +21,6 @@ export const getNotInstalledTabData = (id, name) => {
     tabTitle: name,
     scope: id,
     extension: "",
-    content: <NotInstalled name={tabTitle} />
+    content: <NotInstalled name={tabTitle} />,
   };
 };

@@ -17,7 +17,7 @@ test("Serialize to DB", () => {
 
   const expected = {
     Value: data.value,
-    Description: data.description
+    Description: data.description,
   };
 
   expect(param.serializeToDB()).toMatchObject(expected);
@@ -25,14 +25,14 @@ test("Serialize to DB", () => {
 
 test("Serialize OF db", () => {
   const content = {
-    param1: { Value: 1981, Description: "best year", Type: DATA_TYPES.BOOLEAN }
+    param1: { Value: 1981, Description: "best year", Type: DATA_TYPES.BOOLEAN },
   };
 
   const expected = {
     name: "param1",
     value: content.param1.Value,
     type: DATA_TYPES.BOOLEAN,
-    description: content.param1.Description
+    description: content.param1.Description,
   };
 
   const data = Parameter.serializeOfDB(content);

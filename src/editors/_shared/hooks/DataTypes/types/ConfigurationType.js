@@ -2,65 +2,33 @@ import React from "react";
 import { Rest } from "@mov-ai/mov-fe-lib-core";
 import { DATA_TYPES, SCOPES } from "../../../../../utils/Constants";
 import ConfigurationSelector from "../../../ConfigurationSelector/ConfigurationSelector";
-import DataType, { useEdit } from "../AbstractDataType";
+import { useTextEdit } from "../AbstractDataType";
+import StringType from "./StringType";
 
 function ConfigurationEdit(props) {
-  const { alert, formatValue, ...rest } = useEdit(props);
-
-  return (
-    <ConfigurationSelector
-      alert={alert}
-      rowProps={rest}
-      formatValue={formatValue}
-    />
-  );
+  const { alert, ...rest } = useTextEdit(props);
+  return <ConfigurationSelector alert={alert} rowProps={rest} />;
 }
 
-class ConfigurationType extends DataType {
-  // Configuration type properties definition
+class ConfigurationType extends StringType {
   key = DATA_TYPES.CONFIGURATION;
   label = SCOPES.CONFIGURATION;
 
-  editComponent = props => {
-    return <ConfigurationEdit dataType={this} { ...props } />;
+  editComponent = (props) => {
+    return <ConfigurationEdit dataType={this} {...props} />;
   };
 
-  /**
-   * Validate configuration value
-   * @param {*} value
-   * @returns
-   */
-  validate(value, options) {
-    if (value === "None")
-      return Promise.resolve({ success: true });
+  async _validate(value) {
+    if (value === "") return true;
 
-    const validationMethod = options?.isConfigFromParameter
-      ? "validateConfiguration"
-      : "validateConfigurationRaw";
-    // Callback to validate value
-    return Rest.cloudFunction({
+    const res = await Rest.cloudFunction({
       cbName: "backend.DataValidation",
-      func: validationMethod,
-      args: value
-    })
-      .then(res => {
-        const isValid = res.success && res.result;
-        return { success: isValid, error: "ConfigurationNotFound" };
-      })
-      .catch(err => {
-        console.log("Configuration validation err", err);
-        return { success: false };
-      });
-  }
+      func: "validateConfigurationRaw",
+      args: value,
+    });
 
-  /**
-   * Temporary Hack to format configuration for parameter containing the $(config ) syntax
-   * @param {string} configurationName : Configuration selected
-   * @returns {string} Formatted Configuration Value
-   */
-  static format2Parameter = configurationName => {
-    return `$(config ${configurationName})`;
-  };
+    return res.success && res.result;
+  }
 }
 
 export default ConfigurationType;

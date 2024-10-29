@@ -5,7 +5,7 @@ import { Tooltip, Typography } from "@mov-ai/mov-fe-lib-react";
 
 import { invalidLinksWarningStyles } from "./styles";
 
-const InvalidLinksWarning = props => {
+const InvalidLinksWarning = (props) => {
   const { invalidLinks } = props;
 
   // Style hooks
@@ -47,12 +47,12 @@ const InvalidLinksWarning = props => {
         <Typography variant="h6">{i18n.t("TargetPort")}</Typography>
       </div>
       <div className={classes.invalidLinksMessageHolder}>
-        {invalidLinks.map(linkInfo => (
+        {invalidLinks.map((linkInfo) => (
           <div key={linkInfo.id} className={classes.invalidLinkHolder}>
             <Tooltip
               title={buildTooltipTitle(
                 linkInfo.sourceNode,
-                linkInfo.sourcePort
+                linkInfo.sourcePort,
               )}
             >
               <div>
@@ -65,7 +65,7 @@ const InvalidLinksWarning = props => {
             <Tooltip
               title={buildTooltipTitle(
                 linkInfo.targetNode,
-                linkInfo.targetPort
+                linkInfo.targetPort,
               )}
             >
               <div>
@@ -84,7 +84,7 @@ const InvalidLinksWarning = props => {
 };
 
 InvalidLinksWarning.propTypes = {
-  invalidLinks: PropTypes.array.isRequired
+  invalidLinks: PropTypes.array.isRequired,
 };
 
 export default InvalidLinksWarning;

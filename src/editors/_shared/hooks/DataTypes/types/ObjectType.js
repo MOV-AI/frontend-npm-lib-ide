@@ -1,6 +1,5 @@
 import { DATA_TYPES } from "../../../../../utils/Constants";
 import DataType from "../AbstractDataType";
-import { checkIfDefaultOrDisabled } from "./utils";
 
 class ObjectType extends DataType {
   key = DATA_TYPES.OBJECT;
@@ -8,7 +7,10 @@ class ObjectType extends DataType {
   default = {};
 
   _validate(value) {
-    return value === undefined || value !== null && typeof value === "object" && !Array.isArray(value);
+    return (
+      value === undefined ||
+      (value !== null && typeof value === "object" && !Array.isArray(value))
+    );
   }
 }
 

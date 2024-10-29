@@ -6,7 +6,7 @@ import { AddBoxIcon, EditIcon } from "@mov-ai/mov-fe-lib-react";
 import CollapsibleHeader from "../CollapsibleHeader/CollapsibleHeader";
 import MaterialTable from "../MaterialTable/MaterialTable";
 
-const KeyValueTable = props => {
+const KeyValueTable = (props) => {
   // Props
   const {
     varName,
@@ -16,7 +16,7 @@ const KeyValueTable = props => {
     openEditDialog,
     editable,
     columns,
-    testId = "section_key-value-table"
+    testId = "section_key-value-table",
   } = props;
 
   //========================================================================================
@@ -30,7 +30,7 @@ const KeyValueTable = props => {
    * @param {*} _data : Raw data (can be an object of objects)
    * @returns {array} Formatted data
    */
-  const formatData = _data => {
+  const formatData = (_data) => {
     if (Array.isArray(_data)) return _data;
     return Object.values(_data).map((item, i) => {
       return {
@@ -38,7 +38,7 @@ const KeyValueTable = props => {
         name: item.name,
         value: item.value,
         type: item.type,
-        description: item.description
+        description: item.description,
       };
     });
   };
@@ -58,12 +58,12 @@ const KeyValueTable = props => {
    */
   const getActions = () => {
     const actions = [
-      rowData => ({
+      (rowData) => ({
         icon: () => <EditIcon />,
         disabled: !editable,
         tooltip: i18n.t("Edit"),
-        onClick: () => openEditDialog(varName, rowData.name)
-      })
+        onClick: () => openEditDialog(varName, rowData.name),
+      }),
     ];
     // Add row button if editable
     if (editable)
@@ -71,7 +71,7 @@ const KeyValueTable = props => {
         icon: () => <AddBoxIcon />,
         tooltip: i18n.t("AddAction", { actionTitle: title }),
         isFreeAction: true,
-        onClick: () => openEditDialog(varName)
+        onClick: () => openEditDialog(varName),
       });
     return actions;
   };
@@ -91,7 +91,7 @@ const KeyValueTable = props => {
         editable={{
           isEditable: () => editable,
           isDeletable: () => editable,
-          onRowDelete: rowData => onRowDelete(varName, rowData.name)
+          onRowDelete: (rowData) => onRowDelete(varName, rowData.name),
         }}
       />
     </CollapsibleHeader>
@@ -105,12 +105,12 @@ KeyValueTable.propTypes = {
   title: PropTypes.string,
   data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   columns: PropTypes.array,
-  editable: PropTypes.bool
+  editable: PropTypes.bool,
 };
 
 KeyValueTable.defaultProps = {
   data: [],
-  editable: false
+  editable: false,
 };
 
 //The function returns true when the compared props equal, preventing the component from re-rendering

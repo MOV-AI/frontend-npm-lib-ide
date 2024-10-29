@@ -8,9 +8,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@mov-ai/mov-fe-lib-react";
-import {
-  InfoIcon,
-} from "@mov-ai/mov-fe-lib-react";
+import { InfoIcon } from "@mov-ai/mov-fe-lib-react";
 import { useTheme } from "@mov-ai/mov-fe-lib-react";
 import Model from "../model/Configuration";
 import { defaultFunction } from "../../../utils/Utils";
@@ -28,13 +26,13 @@ export const Configuration = (props, ref) => {
     name,
     instance,
     saveDocument = () => defaultFunction("saveDocument"),
-    editable = true
+    editable = true,
   } = props;
   // Other Hooks
   const { data } = useDataSubscriber({
     instance,
     propsData: props.data,
-    keysToDisconsider: Model.KEYS_TO_DISCONSIDER
+    keysToDisconsider: Model.KEYS_TO_DISCONSIDER,
   });
   // Style Hooks
   const classes = configurationStyles();
@@ -65,7 +63,7 @@ export const Configuration = (props, ref) => {
   }, [id, name, instance, props.data]);
 
   usePluginMethods(ref, {
-    renderRightMenu
+    renderRightMenu,
   });
 
   //========================================================================================
@@ -78,7 +76,7 @@ export const Configuration = (props, ref) => {
    * Updates the config extension
    * @param {String} value
    */
-  const updateConfigExtension = value => {
+  const updateConfigExtension = (value) => {
     if (instance.current) instance.current.setExtension(value);
   };
 
@@ -87,10 +85,9 @@ export const Configuration = (props, ref) => {
    * @param {String} value
    * @returns
    */
-  const updateConfigCode = value => {
-    if (!instance.current || value === instance.current.getCode())
-      return;
-    instance.current.setCode(value);
+  const updateConfigCode = (value) => {
+    if (value === instance.current.getCode()) return;
+    if (instance.current) instance.current.setCode(value);
   };
 
   //========================================================================================
@@ -113,7 +110,7 @@ export const Configuration = (props, ref) => {
    * Should be called when editor loads
    * @param {*} editor
    */
-  const onLoadEditor = editor => {
+  const onLoadEditor = (editor) => {
     if (!id) editor.focus();
   };
 
@@ -152,10 +149,7 @@ export const Configuration = (props, ref) => {
         position="static"
         className={classes.appBar}
       >
-        <Toolbar
-          data-testid="input-toolbar"
-          variant="dense"
-        >
+        <Toolbar data-testid="input-toolbar" variant="dense">
           <ToggleButtonGroup
             size="small"
             exclusive

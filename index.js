@@ -5,23 +5,20 @@ import reportWebVitals from "./src/reportWebVitals";
 import BaseApp, { installEditor, installTool } from "./src/App/BaseApp";
 import { Store, DBSubscriber } from "./src/store";
 import { Model, Manager } from "./src/models";
-import {
-  withAlerts,
-  withMenuHandler
-} from "./src/decorators";
+import { withAlerts, withMenuHandler } from "./src/decorators";
 import { withEditorPlugin, withViewPlugin, withToolPlugin } from "./src/engine";
 // Import src/editors
 import {
   CallbackModel,
   CallbackStore,
   CallbackEditor,
-  Callback
+  Callback,
 } from "./src/editors/Callback";
 import {
   ConfigurationModel,
   ConfigurationStore,
   ConfigurationEditor,
-  Configuration
+  Configuration,
 } from "./src/editors/Configuration";
 import { NodeModel, NodeStore, NodeEditor, Node } from "./src/editors/Node";
 import {
@@ -29,13 +26,13 @@ import {
   FlowStore,
   FlowEditor,
   Flow,
-  getBaseContextOptions
+  getBaseContextOptions,
 } from "./src/editors/Flow";
 import FlowExplorer from "./src/editors/Flow/view/Components/Explorer/Explorer";
 // Tools
 import HomeTabPlugin, { getHomeTab } from "./src/tools/HomeTab/HomeTab";
 import ShortcutsPlugin, {
-  getShortcutsTab
+  getShortcutsTab,
 } from "./src/tools/AppShortcuts/AppShortcuts";
 // Utils
 import ApplicationTheme from "./src/themes";
@@ -43,6 +40,7 @@ import * as CONSTANTS from "./src/utils/Constants";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "./src/utils/Messages";
 import Workspace from "./src/utils/Workspace";
 import { KEYBINDINGS } from "./src/utils/shortcuts";
+export { useKeyBinds, addKeyBind, removeKeyBind } from "./src/utils/keybinds";
 import * as Utils from "./src/utils/Utils";
 import LocalStorage from "./src/utils/LocalStorage";
 // Hooks
@@ -66,7 +64,7 @@ export {
   ConfigurationModel,
   ConfigurationStore,
   ConfigurationEditor,
-  Configuration
+  Configuration,
 };
 export { NodeModel, NodeStore, NodeEditor, Node };
 export {
@@ -75,7 +73,7 @@ export {
   FlowEditor,
   Flow,
   reportWebVitals,
-  getBaseContextOptions
+  getBaseContextOptions,
 };
 export { CONSTANTS, ERROR_MESSAGES, SUCCESS_MESSAGES, KEYBINDINGS };
 export { Workspace, LocalStorage, Utils };

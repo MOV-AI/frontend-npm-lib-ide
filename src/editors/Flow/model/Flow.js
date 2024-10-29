@@ -6,7 +6,7 @@ import {
   ExposedPortsManager,
   Link,
   NodeInstance,
-  SubFlow
+  SubFlow,
 } from "./subModels"; // from internal subModels
 import schema from "./schema";
 
@@ -22,7 +22,7 @@ class Flow extends Model {
     //========================================================================================
 
     this.propEvents = {
-      onAny: (event, name, value) => this.propsUpdate(event, name, value)
+      onAny: (event, name, value) => this.propsUpdate(event, name, value),
     };
 
     //========================================================================================
@@ -35,13 +35,13 @@ class Flow extends Model {
     this.exposedPorts = new ExposedPortsManager(
       "exposedPorts",
       ExposedPorts,
-      this.propEvents
+      this.propEvents,
     );
     this.links = new Manager("links", Link, this.propEvents);
     this.nodeInstances = new Manager(
       "nodeInstances",
       NodeInstance,
-      this.propEvents
+      this.propEvents,
     );
     this.parameters = new Manager("parameters", Parameter, this.propEvents);
     this.subFlows = new Manager("subFlows", SubFlow, this.propEvents);
@@ -231,7 +231,7 @@ class Flow extends Model {
       subFlows,
       exposedPorts,
       links,
-      parameters
+      parameters,
     } = json;
 
     super.setData({ description, name, details });
@@ -286,7 +286,7 @@ class Flow extends Model {
    * @param {string} id : The node (nodeInst or subFlow) id
    * @returns {array} Deleted links array
    */
-  deleteNodeLinks = id => {
+  deleteNodeLinks = (id) => {
     const deletedLinks = [];
 
     // delete all links connected to the node
@@ -401,7 +401,7 @@ class Flow extends Model {
       subFlows: this.getSubFlows().serialize(),
       exposedPorts: this.getExposedPorts().serialize(),
       links: this.getLinks().serialize(),
-      parameters: this.getParameters().serialize()
+      parameters: this.getParameters().serialize(),
     };
   }
 
@@ -414,7 +414,7 @@ class Flow extends Model {
     const { name, description, details } = this.serialize();
 
     // TODO method is just a temporary fix. https://movai.atlassian.net/browse/BP-465
-    const getValueToSave = manager => {
+    const getValueToSave = (manager) => {
       return manager.hasItems() ? manager.serializeToDB() : undefined;
     };
 
@@ -426,7 +426,7 @@ class Flow extends Model {
       Container: this.getSubFlows().serializeToDB(),
       ExposedPorts: getValueToSave(this.getExposedPorts()),
       Links: getValueToSave(this.getLinks()),
-      Parameter: this.getParameters().serializeToDB()
+      Parameter: this.getParameters().serializeToDB(),
     };
   }
 
@@ -453,7 +453,7 @@ class Flow extends Model {
       Container: subFlows,
       ExposedPorts: exposedPorts,
       Links: links,
-      Parameter: parameters
+      Parameter: parameters,
     } = json;
 
     return {
@@ -467,10 +467,10 @@ class Flow extends Model {
       subFlows: Manager.serializeOfDB(subFlows, SubFlow),
       exposedPorts: ExposedPortsManager.serializeOfDB(
         exposedPorts,
-        ExposedPorts
+        ExposedPorts,
       ),
       links: Manager.serializeOfDB(links, Link),
-      parameters: Manager.serializeOfDB(parameters, Parameter)
+      parameters: Manager.serializeOfDB(parameters, Parameter),
     };
   }
 
@@ -483,14 +483,14 @@ class Flow extends Model {
     "subFlows",
     "exposedPorts",
     "links",
-    "nodeInstances"
+    "nodeInstances",
   ];
 
   static OBSERVABLE_KEYS = {
     NAME: "name",
     DETAILS: "details",
     PARAMETERS: "parameters",
-    DESCRIPTION: "description"
+    DESCRIPTION: "description",
   };
 }
 

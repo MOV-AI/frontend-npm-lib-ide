@@ -5,7 +5,7 @@ import { Divider, Link, Tooltip, Typography } from "@mov-ai/mov-fe-lib-react";
 import { SCOPES } from "../../../../../../utils/Constants";
 import { portStyles } from "../styles";
 
-const PortsDetails = props => {
+const PortsDetails = (props) => {
   // Props
   const { openDoc, templateData, protectedDocs } = props;
   // State Hooks
@@ -25,20 +25,20 @@ const PortsDetails = props => {
    * @param {*} ports
    * @returns {array} Input and Output ports
    */
-  const getPorts = useCallback(ports => {
+  const getPorts = useCallback((ports) => {
     const _inputPorts = [];
     const _outputPorts = [];
-    Object.keys(ports).forEach(portName => {
+    Object.keys(ports).forEach((portName) => {
       const port = ports[portName];
       const inputs = Object.values(port.portIn);
       const outputs = Object.values(port.portOut);
-      const callbacks = inputs.map(el => el.callback).filter(cb => cb);
+      const callbacks = inputs.map((el) => el.callback).filter((cb) => cb);
       // Add input ports
       inputs.some(() =>
         _inputPorts.push({
           name: portName,
-          value: callbacks
-        })
+          value: callbacks,
+        }),
       );
       // Add output ports
       outputs.some(() => _outputPorts.push({ name: portName }));
@@ -75,11 +75,11 @@ const PortsDetails = props => {
             <Link
               data-testid="input_open-callback"
               component="button"
-              onClick={event => {
+              onClick={(event) => {
                 openDoc({
                   scope: SCOPES.CALLBACK,
                   name: callback,
-                  ctrlKey: event.ctrlKey
+                  ctrlKey: event.ctrlKey,
                 });
               }}
             >
@@ -89,7 +89,7 @@ const PortsDetails = props => {
         </Tooltip>
       );
     },
-    [protectedDocs, classes, openDoc]
+    [protectedDocs, classes, openDoc],
   );
 
   /**
@@ -98,7 +98,7 @@ const PortsDetails = props => {
    * @returns {ReactElement} Ports data
    */
   const getInternalData = useCallback(
-    portsData => {
+    (portsData) => {
       return portsData.map((port, portIndex) => {
         return (
           <Typography
@@ -116,7 +116,7 @@ const PortsDetails = props => {
         );
       });
     },
-    [classes, getCallbackLink]
+    [classes, getCallbackLink],
   );
 
   //========================================================================================
@@ -171,12 +171,12 @@ const PortsDetails = props => {
 PortsDetails.propTypes = {
   openDoc: PropTypes.func.isRequired,
   templateData: PropTypes.object,
-  protectedDocs: PropTypes.array
+  protectedDocs: PropTypes.array,
 };
 
 PortsDetails.defaultProps = {
   templateData: {},
-  protectedDocs: []
+  protectedDocs: [],
 };
 
 export default PortsDetails;
