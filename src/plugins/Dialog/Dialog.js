@@ -5,7 +5,12 @@ import { SelectScopeModal, withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "./../../themes";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { PLUGINS, SAVE_OUTDATED_DOC_ACTIONS } from "../../utils/Constants";
+import {
+  PLUGINS,
+  SAVE_OUTDATED_DOC_ACTIONS,
+  KEYBIND_SCOPES,
+} from "../../utils/Constants";
+import { getCurrentUrl, setUrl } from "../../utils/keybinds";
 import AlertBeforeAction from "./components/AlertDialog/AlertBeforeAction";
 import AlertDialog from "./components/AlertDialog/AlertDialog";
 import AppDialog from "./components/AppDialog/AppDialog";
@@ -23,6 +28,8 @@ class Dialog extends IDEPlugin {
       ]),
     );
     super({ ...profile, methods });
+
+    this.currentKeybindUrl = KEYBIND_SCOPES.APP;
   }
 
   //========================================================================================
@@ -305,6 +312,10 @@ class Dialog extends IDEPlugin {
    * @returns {DOMElement} Target element to render dialog
    */
   _handleDialogOpen() {
+    // Save the current keybind url
+    this.currentKeybindUrl = getCurrentUrl();
+    setUrl(KEYBIND_SCOPES.DIALOG);
+
     document.body.classList.add(Dialog.BODY_CLASS_NAME);
     const containerElement = document.getElementById("alertPanel");
     const targetElement = document.createElement("div");
@@ -318,6 +329,9 @@ class Dialog extends IDEPlugin {
    * @private Handle dialog close : Unmount dialog component and remove target element
    */
   _handleDialogClose(targetElement, onClose) {
+    // Give back the scope to the old keybind url
+    setUrl(this.currentKeybindUrl);
+
     document.body.classList.remove(Dialog.BODY_CLASS_NAME);
     ReactDOM.unmountComponentAtNode(targetElement);
     const pnode = targetElement.parentNode;

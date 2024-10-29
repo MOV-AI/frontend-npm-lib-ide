@@ -178,7 +178,7 @@ export const PLUGINS = {
 };
 
 export const KEYBIND_SCOPES = {
-  APP: "all",
+  APP: "global",
   DIALOG: "dialog",
 };
 
