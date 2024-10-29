@@ -3,7 +3,6 @@ import { getRefComponent } from "../utils/Utils";
 
 const RETRY_UPDATE_MENU_TIMEOUT = 100;
 const MAXIMUM_RETRIES = 3;
-let lastActiveTabName = undefined;
 
 /**
  * Handle actions to update right menu of each editor

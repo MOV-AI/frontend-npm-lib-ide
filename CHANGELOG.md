@@ -1,5 +1,6 @@
 # TBD
 
+- [FP-2956](https://movai.atlassian.net/browse/FP-2956): Drawers should reflect editor being interacted with in split view mode
 - [FP-2976](https://movai.atlassian.net/browse/FP-2976): IDE - Infinite modals
 - [FP-2979](https://movai.atlassian.net/browse/FP-2979): Paste parameters using context menu or CTRL+V not working
 - [FP-2919](https://movai.atlassian.net/browse/FP-2919): Configure husky, lint-staged and prettier for lib-ide
