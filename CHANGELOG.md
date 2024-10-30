@@ -1,4 +1,4 @@
-# TBD
+# 1.5.0
 
 - [FP-2956](https://movai.atlassian.net/browse/FP-2956): Drawers should reflect editor being interacted with in split view mode
 - [FP-2976](https://movai.atlassian.net/browse/FP-2976): IDE - Infinite modals
