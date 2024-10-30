@@ -7,7 +7,7 @@ import ParameterEditorDialog from "../../../../_shared/KeyValueTable/ParametersE
 import KeyValueTable from "../../../../_shared/KeyValueTable/KeyValueTable";
 import useDataTypes from "../../../../_shared/hooks/useDataTypes";
 
-const ParametersTable = props => {
+const ParametersTable = (props) => {
   // Props
   const { editable, data, openEditDialog, onRowDelete, defaultColumns } = props;
   // Hooks
@@ -18,16 +18,16 @@ const ParametersTable = props => {
     field: "type",
     width: 150,
     tableData: {
-      columnOrder: 1.5 // Workaround to add this column after 1, but before 2
+      columnOrder: 1.5, // Workaround to add this column after 1, but before 2
     },
     cellStyle: {
       textOverflow: "ellipsis",
       whiteSpace: "nowrap",
-      overflow: "hidden"
+      overflow: "hidden",
     },
-    render: rowData => (
+    render: (rowData) => (
       <span data-testid="output_type">{getType(rowData.type).getLabel()}</span>
-    )
+    ),
   };
   const columns = [...defaultColumns];
   columns.push(typeColumn);
@@ -59,7 +59,7 @@ ParametersTable.propTypes = {
   defaultColumns: PropTypes.array,
   onRowDelete: PropTypes.func,
   openEditDialog: PropTypes.func,
-  editable: PropTypes.bool
+  editable: PropTypes.bool,
 };
 
 ParametersTable.defaultProps = {
@@ -67,7 +67,7 @@ ParametersTable.defaultProps = {
   defaultColumns: [],
   onRowDelete: () => defaultFunction("onRowDelete"),
   openEditDialog: () => defaultFunction("openEditDialog"),
-  editable: false
+  editable: false,
 };
 
 //The function returns true when the compared props equal, preventing the component from re-rendering

@@ -25,13 +25,13 @@ test("Serialize OF db", () => {
       EnvVar: { path: { Value: "/opt/movai" } },
       Visualization: {
         x: { Value: 0.01 },
-        y: { Value: 0.02 }
+        y: { Value: 0.02 },
       },
       Parameter: {
         camera: { Value: "back1", Type: DATA_TYPES.STRING },
-        move_distance_to_car: { Value: "0.30", Type: DATA_TYPES.NUMBER }
-      }
-    }
+        move_distance_to_car: { Value: "0.30", Type: DATA_TYPES.NUMBER },
+      },
+    },
   };
 
   const expected = {
@@ -46,10 +46,10 @@ test("Serialize OF db", () => {
       move_distance_to_car: {
         name: "move_distance_to_car",
         value: "0.30",
-      }
+      },
     },
     envVars: { path: { name: "path", value: "/opt/movai" } },
-    commands: { cmd1: { name: "cmd1", value: "exec.sh" } }
+    commands: { cmd1: { name: "cmd1", value: "exec.sh" } },
   };
 
   expect(NodeInstance.serializeOfDB(data)).toMatchObject(expected);

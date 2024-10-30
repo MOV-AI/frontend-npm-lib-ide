@@ -49,11 +49,11 @@ const MenuItem = ({ item, closeMenu }) => {
    * @param {*} evt : Event
    */
   const handleOptionClick = useCallback(
-    evt => {
+    (evt) => {
       callback && callback(evt);
       closeMenu(evt);
     },
-    [callback, closeMenu]
+    [callback, closeMenu],
   );
 
   return (
@@ -90,5 +90,5 @@ const MenuItem = ({ item, closeMenu }) => {
 export default MenuItem;
 
 MenuItem.propTypes = {
-  item: PropTypes.object.isRequired
+  item: PropTypes.object.isRequired,
 };

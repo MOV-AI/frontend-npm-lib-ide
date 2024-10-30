@@ -19,15 +19,15 @@ class Alerts extends IDEPlugin {
     title,
     message,
     severity = ALERT_SEVERITIES.SUCCESS,
-    location = "snackbar"
+    location = "snackbar",
   }) {
     const alertByLocation = {
       snackbar: () => snackbar({ message, severity }),
       modal: () =>
         this.call(PLUGINS.DIALOG.NAME, PLUGINS.DIALOG.CALL.ALERT, {
           title,
-          message
-        })
+          message,
+        }),
     };
     // Show Alert
     alertByLocation[location]();

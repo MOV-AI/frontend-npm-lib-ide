@@ -9,17 +9,11 @@ const ROBOT_OFFLINE_TIME = 8; // sec
 
 const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
   // Props
-  const {
-    id,
-    version,
-    alert,
-    onStartStopFlow,
-    mainInterface,
-  } = props;
+  const { id, version, alert, onStartStopFlow, mainInterface } = props;
   // State hooks
   const [robotStatus, setRobotStatus] = useState({
     activeFlow: "",
-    isOnline: true
+    isOnline: true,
   });
   // Manager
   const robotManager = useMemo(() => new RobotManager(), []);
@@ -41,7 +35,7 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
    * @param {*} timestamp
    * @returns {boolean} True if robot is online and False otherwise
    */
-  const isRobotOnline = useCallback(timestamp => {
+  const isRobotOnline = useCallback((timestamp) => {
     return Date.now() * 0.001 - timestamp <= ROBOT_OFFLINE_TIME;
   }, []);
 
@@ -50,7 +44,7 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
    * @param {*} robotStatusData
    * @returns
    */
-  const getNodesRunning = useCallback(robotStatusData => {
+  const getNodesRunning = useCallback((robotStatusData) => {
     const nodesLchd = robotStatusData.nodes_lchd || [];
     const nodesPersistent = robotStatusData.persistent_nodes_lchd
       ? robotStatusData.persistent_nodes_lchd
@@ -63,7 +57,7 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
    * @param {*} isOnline
    */
   const onlineAlert = useCallback(
-    isOnline => {
+    (isOnline) => {
       const msg = isOnline
         ? { text: i18n.t("RobotOnline"), type: "info" }
         : { text: i18n.t("RobotOffline"), type: "warning" };
@@ -76,7 +70,7 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
         alert({ message: msg.text, severity: msg.type });
       }
     },
-    [alert, robotStatus.isOnline]
+    [alert, robotStatus.isOnline],
   );
 
   /**
@@ -86,11 +80,11 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
     const emptyNodeStatus = {};
     const emptyAllNodeStatus = {};
     // Reset node_status
-    Object.keys(nodeStatusRef.current).forEach(node => {
+    Object.keys(nodeStatusRef.current).forEach((node) => {
       emptyNodeStatus[node] = 0;
     });
     // Reset all_nodes_status
-    Object.keys(allNodeStatusRef.current).forEach(node => {
+    Object.keys(allNodeStatusRef.current).forEach((node) => {
       emptyAllNodeStatus[node] = 0;
     });
     // Update local variables
@@ -116,10 +110,10 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
    * @returns {boolean} True if flowName is running and False otherwise
    */
   const isFlowRunning = useCallback(
-    flowName => {
+    (flowName) => {
       return getFlowPath() === flowName;
     },
-    [getFlowPath]
+    [getFlowPath],
   );
 
   /**
@@ -134,8 +128,7 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
     (key, targetValue, data, forceUpdate) => {
       if (
         !mainInterface ||
-        Date.now() - debounceDeltaRef.current <= DEBOUNCE_TIME &&
-        !forceUpdate
+        (Date.now() - debounceDeltaRef.current <= DEBOUNCE_TIME && !forceUpdate)
       )
         return;
 
@@ -154,17 +147,25 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
 
         activeFlow = isOnline ? robotStatusData.active_flow : "";
         onStartStopFlow(activeFlow);
-        mainInterface.current?.nodeStatusUpdated(running ? runningNodes.reduce(
-          (a, key) => ({ ...a, [mainInterface.current?.id + "__" + key]: 1 }),
-          {}
-        ) : { [mainInterface.current?.id]: 0 }, { isOnline, activeFlow });
+        mainInterface.current?.nodeStatusUpdated(
+          running
+            ? runningNodes.reduce(
+                (a, key) => ({
+                  ...a,
+                  [mainInterface.current?.id + "__" + key]: 1,
+                }),
+                {},
+              )
+            : { [mainInterface.current?.id]: 0 },
+          { isOnline, activeFlow },
+        );
       }
       // Robot doesn't have "Status" key in Redis
       else {
         if (isOnline) {
           alert({
             message: "Robot has no 'Status' information",
-            severity: "warning"
+            severity: "warning",
           });
         }
       }
@@ -181,8 +182,8 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
       onStartStopFlow,
       onlineAlert,
       mainInterface,
-      viewMode
-    ]
+      viewMode,
+    ],
   );
 
   //========================================================================================
@@ -196,34 +197,34 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
    * @param {*} robotId
    */
   const robotSubscribe = useCallback(
-    robotId => {
+    (robotId) => {
       const robot = robotManager.getRobot(robotId);
       const robotStatusData = robot.data?.Status;
       // Set robot status from robot manager data (if any)
       if (robotStatusData) {
         onStartStopFlow(robotStatusData.active_flow);
-        setRobotStatus(prevState => {
+        setRobotStatus((prevState) => {
           return {
             ...prevState,
-            activeFlow: robotStatusData.active_flow
+            activeFlow: robotStatusData.active_flow,
           };
         });
       }
       // Subscribe to status change
       robot.subscribe({
         property: "Status",
-        onLoad: data => {
+        onLoad: (data) => {
           updateNodeStatus("value", robotId, data);
         },
-        onUpdate: updateData => {
+        onUpdate: (updateData) => {
           if (updateData.event === "hset") {
             if (robotId !== selectedRobotRef.current) return;
             updateNodeStatus("key", robotId, updateData);
           }
-        }
+        },
       });
     },
-    [onStartStopFlow, robotManager, updateNodeStatus]
+    [onStartStopFlow, robotManager, updateNodeStatus],
   );
 
   /**
@@ -263,7 +264,7 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
     robotSubscribe,
     robotUnsubscribe,
     getFlowPath,
-    robotStatus
+    robotStatus,
   };
 };
 

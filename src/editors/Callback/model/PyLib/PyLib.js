@@ -50,7 +50,7 @@ class PyLib extends Model {
     return {
       name: this.getName(),
       module: this.getModule(),
-      libClass: this.getClass()
+      libClass: this.getClass(),
     };
   }
 
@@ -59,7 +59,7 @@ class PyLib extends Model {
 
     return {
       Module: module,
-      Class: libClass
+      Class: libClass,
     };
   }
 

@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect } from "react";
+import React, { forwardRef, useCallback, useEffect, useRef } from "react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { makeStyles } from "@material-ui/core";
 import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
@@ -6,12 +6,13 @@ import withAlerts from "../../decorators/withAlerts";
 import withMenuHandler from "../../decorators/withMenuHandler";
 import { PLUGINS } from "../../utils/Constants";
 import { composeDecorators } from "../../utils/Utils";
+import { setUrl } from "../../utils/keybinds";
 import { ViewPlugin } from "./ViewReactPlugin";
 
 export const useStyles = makeStyles(() => ({
   root: {
-    height: "100%"
-  }
+    height: "100%",
+  },
 }));
 
 /**
@@ -24,7 +25,21 @@ export function withToolPlugin(ReactComponent, methods = []) {
   const RefComponent = forwardRef((props, ref) => ReactComponent(props, ref));
 
   const ToolComponent = forwardRef((props, ref) => {
-    const { on, off, profile } = props;
+    const { on, off, profile, updateRightMenu } = props;
+
+    /**
+     * Activate tool : activate tool's keybinds and update right menu
+     */
+    const activateTool = useCallback(() => {
+      setUrl(profile.name);
+      resetAndUpdateMenus();
+    }, [profile.name, resetAndUpdateMenus]);
+
+    const resetAndUpdateMenus = useCallback(() => {
+      // We should reset bookmarks when changing tabs. Right? And Left too :D
+      PluginManagerIDE.resetBookmarks();
+      updateRightMenu?.();
+    }, [updateRightMenu]);
 
     /**
      * Component did mount
@@ -40,14 +55,18 @@ export function withToolPlugin(ReactComponent, methods = []) {
       };
     }, [off, on, profile.name]);
 
-    return <RefComponent {...props} ref={ref} />;
+    return (
+      <div tabIndex="-1" style={{ height: "100%" }} onFocus={activateTool}>
+        <RefComponent {...props} ref={ref} />
+      </div>
+    );
   });
 
   // Decorate component
   const DecoratedToolComponent = composeDecorators(ToolComponent, [
     withTheme,
     withAlerts,
-    withMenuHandler
+    withMenuHandler,
   ]);
 
   /**

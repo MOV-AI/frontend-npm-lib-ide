@@ -7,14 +7,14 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     opacity: 0.9,
-    backgroundColor: theme.palette.background.secondary
+    backgroundColor: theme.palette.background.secondary,
   },
   tooltip: {
-    whiteSpace: "pre"
-  }
+    whiteSpace: "pre",
+  },
 });
 
 class Tooltip extends Component {
@@ -32,7 +32,7 @@ class Tooltip extends Component {
 
   state = {
     open: false,
-    message: "" // tooltip text
+    message: "", // tooltip text
   };
 
   updateEl = () => {
@@ -49,7 +49,7 @@ class Tooltip extends Component {
 
     this.setState({
       open,
-      message: text
+      message: text,
     });
   };
 
@@ -90,12 +90,12 @@ class Tooltip extends Component {
 Tooltip.propTypes = {
   domNode: PropTypes.object.isRequired,
   classes: PropTypes.object,
-  theme: PropTypes.object
+  theme: PropTypes.object,
 };
 
 Tooltip.defaultProps = {
   classes: {},
-  theme: {}
+  theme: {},
 };
 
 export default withStyles(styles, { withTheme: true })(Tooltip);

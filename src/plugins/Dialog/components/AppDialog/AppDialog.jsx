@@ -19,12 +19,12 @@ import { appDialogStyles, appDialogTitleStyles } from "./styles";
  * @param {*} props : Component props
  * @returns {ReactComponent} DialogTitle Component
  */
-export const DialogTitle = props => {
+export const DialogTitle = (props) => {
   const {
     children,
     onClose,
     hasCloseButton,
-    testId = "section_dialog-title"
+    testId = "section_dialog-title",
   } = props;
   const classes = appDialogTitleStyles();
   return (
@@ -53,7 +53,7 @@ export const DialogTitle = props => {
  * @param {*} props
  * @returns {ReactComponent} AppDialog component wrapper
  */
-const AppDialog = props => {
+const AppDialog = (props) => {
   const {
     allowSubmit = true,
     actions,
@@ -62,7 +62,7 @@ const AppDialog = props => {
     closeOnBackdrop = true,
     title = i18n.t("DefaultDialogTitle"),
     submitText = i18n.t("Submit"),
-    testId = "section_app-dialog"
+    testId = "section_app-dialog",
   } = props;
   const [open, setOpen] = useState(true);
   const classes = appDialogStyles();
@@ -76,7 +76,7 @@ const AppDialog = props => {
       setOpen(false);
       onClose();
     },
-    [setOpen, onClose]
+    [setOpen, onClose],
   );
 
   /**
@@ -89,7 +89,7 @@ const AppDialog = props => {
     handleClose();
   };
 
-  const handleKeyUp = event => {
+  const handleKeyUp = (event) => {
     if (event.key === "Enter") {
       handleSubmit();
     }
@@ -136,13 +136,13 @@ AppDialog.propTypes = {
   onClose: PropTypes.func,
   actions: PropTypes.element,
   hasCloseButton: PropTypes.bool,
-  closeOnBackdrop: PropTypes.bool
+  closeOnBackdrop: PropTypes.bool,
 };
 
 AppDialog.defaultProps = {
   onClose: () => defaultFunction("onClose"),
   hasCloseButton: true,
-  closeOnBackdrop: false
+  closeOnBackdrop: false,
 };
 
 export default withTheme(AppDialog, ApplicationTheme);

@@ -3,14 +3,13 @@ import { getRefComponent } from "../utils/Utils";
 
 const RETRY_UPDATE_MENU_TIMEOUT = 100;
 const MAXIMUM_RETRIES = 3;
-let lastActiveTabName = undefined;
 
 /**
  * Handle actions to update right menu of each editor
  * @param {*} Component : Editor React Component
  * @returns {ReactComponent} React component that receives props to handle menu actions
  */
-const withMenuHandler = Component => {
+const withMenuHandler = (Component) => {
   const RefComponent = getRefComponent(Component);
 
   return (props, ref) => {

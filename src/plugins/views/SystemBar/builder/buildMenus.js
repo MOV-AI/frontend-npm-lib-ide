@@ -4,14 +4,14 @@ import AppSettings from "../../../../App/AppSettings";
 import { parseKeybinds, openLink } from "../../../../utils/Utils";
 import {
   HOMETAB_PROFILE,
-  SHORTCUTS_PROFILE
+  SHORTCUTS_PROFILE,
 } from "../../../../utils/Constants";
 import { KEYBINDINGS } from "../../../../utils/shortcuts";
 import {
   saveDocument,
   saveAllDocument,
   aboutPopup,
-  openTool
+  openTool,
 } from "../../../../utils/generalFunctions";
 import { buildNewFileSubmenu } from "./buildSubMenus";
 
@@ -24,7 +24,7 @@ const buildMenus = async (call, classes) => {
         {
           id: "newFile",
           title: i18n.t("NewDoc"),
-          data: await buildNewFileSubmenu(call)
+          data: await buildNewFileSubmenu(call),
         },
         // Get the last 10 and show them here
         // {
@@ -38,19 +38,19 @@ const buildMenus = async (call, classes) => {
           id: "saveFile",
           title: i18n.t(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.LABEL),
           keybind: parseKeybinds(
-            KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS
+            KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS,
           ),
-          callback: () => saveDocument(call)
+          callback: () => saveDocument(call),
         },
         {
           id: "saveAllFiles",
           title: i18n.t(KEYBINDINGS.GENERAL.KEYBINDS.SAVE_ALL.LABEL),
           keybind: parseKeybinds(
-            KEYBINDINGS.GENERAL.KEYBINDS.SAVE_ALL.SHORTCUTS
+            KEYBINDINGS.GENERAL.KEYBINDS.SAVE_ALL.SHORTCUTS,
           ),
-          callback: () => saveAllDocument(call)
-        }
-      ]
+          callback: () => saveAllDocument(call),
+        },
+      ],
     };
   };
 
@@ -140,24 +140,24 @@ const buildMenus = async (call, classes) => {
           ? {
               id: "getStarted",
               title: i18n.t(
-                KEYBINDINGS.GENERAL.KEYBINDS.OPEN_WELCOME_TAB.LABEL
+                KEYBINDINGS.GENERAL.KEYBINDS.OPEN_WELCOME_TAB.LABEL,
               ),
               keybind: parseKeybinds(
-                KEYBINDINGS.GENERAL.KEYBINDS.OPEN_WELCOME_TAB.SHORTCUTS
+                KEYBINDINGS.GENERAL.KEYBINDS.OPEN_WELCOME_TAB.SHORTCUTS,
               ),
-              callback: () => openTool(call, HOMETAB_PROFILE.name)
+              callback: () => openTool(call, HOMETAB_PROFILE.name),
             }
           : null,
         hasShortcutsTab
           ? {
               id: "keyboardShortcuts",
               title: i18n.t(
-                KEYBINDINGS.GENERAL.KEYBINDS.OPEN_SHORTCUTS_TAB.LABEL
+                KEYBINDINGS.GENERAL.KEYBINDS.OPEN_SHORTCUTS_TAB.LABEL,
               ),
               keybind: parseKeybinds(
-                KEYBINDINGS.GENERAL.KEYBINDS.OPEN_SHORTCUTS_TAB.SHORTCUTS
+                KEYBINDINGS.GENERAL.KEYBINDS.OPEN_SHORTCUTS_TAB.SHORTCUTS,
               ),
-              callback: () => openTool(call, SHORTCUTS_PROFILE.name)
+              callback: () => openTool(call, SHORTCUTS_PROFILE.name),
             }
           : null,
         hasHomeTab || hasShortcutsTab ? {} : null,
@@ -167,16 +167,16 @@ const buildMenus = async (call, classes) => {
               id: "documentation",
               title: i18n.t("Documentation"),
               externalLink: true,
-              callback: () => openLink(AppSettings.HELP.DOCUMENTATION)
+              callback: () => openLink(AppSettings.HELP.DOCUMENTATION),
             }
           : null,
         hasDocumentation ? {} : null,
         {
           id: "about",
           title: i18n.t("About"),
-          callback: () => aboutPopup(call, classes)
-        }
-      ].filter(el => el)
+          callback: () => aboutPopup(call, classes),
+        },
+      ].filter((el) => el),
     };
   }
 
@@ -184,11 +184,11 @@ const buildMenus = async (call, classes) => {
     return {
       id: "toolsMenu",
       title: i18n.t("Tools"),
-      data: getSystemBarTools().map(tool => ({
+      data: getSystemBarTools().map((tool) => ({
         id: tool.id,
         title: tool.profile.title,
-        callback: () => openTool(call, tool.profile.name)
-      }))
+        callback: () => openTool(call, tool.profile.name),
+      })),
     };
   }
 

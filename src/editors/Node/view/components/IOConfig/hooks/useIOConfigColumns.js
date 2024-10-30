@@ -4,13 +4,13 @@ import {
   FormControl,
   NativeSelect,
   TextField,
-  Tooltip
+  Tooltip,
 } from "@material-ui/core";
 import useSelectOptions from "./useSelectOptions";
 
 import { configColumnsStyles } from "./styles";
 
-const useIOConfigColumns = data => {
+const useIOConfigColumns = (data) => {
   const { autoFocus, scopePorts, scopeSystemPortsData } = data;
   // Hooks
   const classes = configColumnsStyles();
@@ -28,7 +28,7 @@ const useIOConfigColumns = data => {
    * @param {array<{label: string, value: string}>} options
    * @returns {ReactElement} List of options available
    */
-  const renderOptions = options => {
+  const renderOptions = (options) => {
     return (
       options !== undefined &&
       options.map((option, optionIndex) => {
@@ -46,7 +46,7 @@ const useIOConfigColumns = data => {
    * @param {*} rowData
    * @returns {ReactElement} Element to be rendered as port icon
    */
-  const renderPortIcon = useCallback(rowData => {
+  const renderPortIcon = useCallback((rowData) => {
     const inIcon = Object.keys(rowData.portIn).length ? (
       <Tooltip title="Iport">
         <i className="icon-in" style={{ fontSize: "1.5rem" }}></i>
@@ -71,24 +71,24 @@ const useIOConfigColumns = data => {
    * @returns {ReactElement} TextField to edit name
    */
   const getNameEditComponent = useCallback(
-    props => {
+    (props) => {
       return (
         <TextField
           autoFocus={autoFocus}
           placeholder={props.columnDef.title}
           value={props.value === undefined ? "" : props.value}
-          onChange={event => props.onChange(event.target.value)}
+          onChange={(event) => props.onChange(event.target.value)}
           inputProps={{
             "data-testid": "input_name",
             style: {
               fontSize: 13,
-              textAlign: "left"
-            }
+              textAlign: "left",
+            },
           }}
         />
       );
     },
-    [autoFocus]
+    [autoFocus],
   );
 
   /**
@@ -97,12 +97,12 @@ const useIOConfigColumns = data => {
    * @returns {ReactElement} Element to edit Transport/Protocol
    */
   const getTransportEditComponent = useCallback(
-    props => {
+    (props) => {
       /**
        * On Change Transport / Protocol
        * @param {Event} event
        */
-      const onChange = event => {
+      const onChange = (event) => {
         const newData = { ...props.rowData };
         newData.template = event.target.value;
 
@@ -163,7 +163,13 @@ const useIOConfigColumns = data => {
         </div>
       );
     },
-    [classes, scopePorts, getGroupOptions, getMessageOptions, getPackageOptions]
+    [
+      classes,
+      scopePorts,
+      getGroupOptions,
+      getMessageOptions,
+      getPackageOptions,
+    ],
   );
 
   /**
@@ -172,12 +178,12 @@ const useIOConfigColumns = data => {
    * @returns {ReactElement} Element to edit Package
    */
   const getPackageEditComponent = useCallback(
-    props => {
+    (props) => {
       /**
        * On change event for package selector
        * @param {Event} event
        */
-      const onChange = event => {
+      const onChange = (event) => {
         const newData = { ...props.rowData };
         newData.msgPackage = event.target.value;
         newData.message = "";
@@ -202,7 +208,7 @@ const useIOConfigColumns = data => {
         </div>
       );
     },
-    [classes, getPackageOptions]
+    [classes, getPackageOptions],
   );
 
   /**
@@ -211,12 +217,12 @@ const useIOConfigColumns = data => {
    * @returns {ReactElement} Element to edit Message
    */
   const getMessageEditComponent = useCallback(
-    props => {
+    (props) => {
       /**
        * On change message selector
        * @param {*} evt
        */
-      const onChange = evt => {
+      const onChange = (evt) => {
         const newData = { ...props.rowData };
         newData.message = evt.target.value;
         props.onRowDataChange(newData);
@@ -239,7 +245,7 @@ const useIOConfigColumns = data => {
         </div>
       );
     },
-    [classes, getMessageOptions]
+    [classes, getMessageOptions],
   );
 
   //========================================================================================
@@ -259,43 +265,43 @@ const useIOConfigColumns = data => {
         field: "portType",
         render: renderPortIcon,
         editable: "never",
-        width: 50
+        width: 50,
       },
       {
         title: i18n.t("Name"),
         field: "name",
         defaultSort: "asc",
-        render: rowData => (
+        render: (rowData) => (
           <span data-testid="output_name">{rowData.name}</span>
         ),
-        editComponent: getNameEditComponent
+        editComponent: getNameEditComponent,
       },
       {
         title: i18n.t("TransportProtocol"),
         field: "template",
-        render: rowData => (
+        render: (rowData) => (
           <span data-testid="output_protocol">
             {scopePorts[rowData?.template]?.Label}
           </span>
         ), // what you see (not in edit mode)
-        editComponent: getTransportEditComponent
+        editComponent: getTransportEditComponent,
       },
       {
         title: i18n.t("Package"),
         field: "msgPackage",
-        render: rowData => (
+        render: (rowData) => (
           <span data-testid="output_package">{rowData.msgPackage}</span>
         ),
-        editComponent: getPackageEditComponent
+        editComponent: getPackageEditComponent,
       },
       {
         title: i18n.t("Message"),
         field: "message",
-        render: rowData => (
+        render: (rowData) => (
           <span data-testid="output_message">{rowData.message}</span>
         ),
-        editComponent: getMessageEditComponent
-      }
+        editComponent: getMessageEditComponent,
+      },
     ];
   }, [
     scopePorts,

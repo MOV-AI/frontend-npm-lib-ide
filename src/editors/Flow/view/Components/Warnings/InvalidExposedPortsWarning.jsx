@@ -5,7 +5,7 @@ import ExposedPortLine from "./components/ExposedPortLine";
 
 import { invalidExposedPortsWarningStyles } from "./styles";
 
-const InvalidExposedPortsWarning = props => {
+const InvalidExposedPortsWarning = (props) => {
   const { invalidExposedPorts, call, closeModal } = props;
 
   // Style hooks
@@ -28,7 +28,7 @@ const InvalidExposedPortsWarning = props => {
         <h5>{i18n.t("NodeTemplate")}</h5>
       </div>
       <div className={classes.invalidExposedPortsMessageHolder}>
-        {invalidExposedPorts.map(exposedPortInfo => (
+        {invalidExposedPorts.map((exposedPortInfo) => (
           <ExposedPortLine
             key={exposedPortInfo.nodeInst.data.id}
             closeModal={closeModal}
@@ -45,7 +45,7 @@ const InvalidExposedPortsWarning = props => {
 };
 
 InvalidExposedPortsWarning.propTypes = {
-  invalidExposedPorts: PropTypes.array.isRequired
+  invalidExposedPorts: PropTypes.array.isRequired,
 };
 
 export default InvalidExposedPortsWarning;

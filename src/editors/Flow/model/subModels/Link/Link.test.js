@@ -11,14 +11,14 @@ test("Serialize OF db", () => {
   const content = {
     [id]: {
       From: "test2/p2/out",
-      To: "test/p1/in"
-    }
+      To: "test/p1/in",
+    },
   };
 
   const expected = {
     id,
     from: "test2/p2/out",
-    to: "test/p1/in"
+    to: "test/p1/in",
   };
 
   expect(Link.serializeOfDB(content)).toMatchObject(expected);
@@ -28,7 +28,7 @@ test("Serialize TO db", () => {
   const data = {
     id: "5f148e55-38d0-4bbf-a66a-da2c99dd56ae",
     from: "test2/p2/out",
-    to: "test/p1/in"
+    to: "test/p1/in",
   };
 
   const obj = new Link();
@@ -36,7 +36,7 @@ test("Serialize TO db", () => {
 
   const expected = {
     From: data.from,
-    To: data.to
+    To: data.to,
   };
 
   expect(obj.serializeToDB()).toMatchObject(expected);
@@ -47,8 +47,8 @@ test("serialize", () => {
   const content = {
     [id]: {
       From: "test2/p2/out",
-      To: "test/p1/in"
-    }
+      To: "test/p1/in",
+    },
   };
   const obj = new Link();
   obj.setData(Link.serializeOfDB(content));
