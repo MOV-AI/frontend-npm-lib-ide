@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3007](https://movai.atlassian.net/browse/FP-3007): Scene - Search backspace on drawer deletes node
+
 # 1.4.1
 
 - [FP-2956](https://movai.atlassian.net/browse/FP-2956): Drawers should reflect editor being interacted with in split view mode
