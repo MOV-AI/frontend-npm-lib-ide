@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3008](https://movai.atlassian.net/browse/FP-3008): IDE - Inconsistent Start and Stop behaviour
+
 # 1.4.1
 
 - [FP-2956](https://movai.atlassian.net/browse/FP-2956): Drawers should reflect editor being interacted with in split view mode
