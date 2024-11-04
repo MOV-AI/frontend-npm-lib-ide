@@ -9,7 +9,8 @@ import {
   Tooltip,
   IconButton,
 } from "@mov-ai/mov-fe-lib-react";
-import { DRAWER, PLUGINS } from "../../../utils/Constants";
+import { DRAWER } from "../../../utils/Constants";
+import { setUrl } from "../../../utils/keybinds";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { withHostReactPlugin } from "../../../engine/ReactPlugin/HostReactPlugin";
 import { bookmarkStyles } from "./../../../decorators/styles";
@@ -219,7 +220,11 @@ function DrawerPanel(props) {
           style={style}
           className={`${drawerClasses.drawer} ${className}`}
         >
-          <Typography component="div" className={drawerClasses.content}>
+          <Typography
+            component="div"
+            className={drawerClasses.content}
+            onClick={() => setUrl("DrawerPanel/" + anchor)}
+          >
             {active ? (
               <div className={classes.bookmarkHolder}>{realView}</div>
             ) : (

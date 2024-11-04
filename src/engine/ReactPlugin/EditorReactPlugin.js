@@ -6,7 +6,7 @@ import { withDataHandler } from "../../plugins/DocManager/DataHandler";
 import { drawerSub } from "../../plugins/hosts/DrawerPanel/DrawerPanel";
 import { KEYBINDINGS } from "../../utils/shortcuts";
 import { PLUGINS } from "../../utils/Constants";
-import { useKeyBinds, setUrl } from "../../utils/keybinds";
+import { addKeyBind, setUrl } from "../../utils/keybinds";
 import { composeDecorators } from "../../utils/Utils";
 import { ViewPlugin } from "./ViewReactPlugin";
 
@@ -27,22 +27,27 @@ export function withEditorPlugin(ReactComponent, methods = []) {
 
     const editorContainer = useRef();
 
-    const { addKeyBind, removeKeyBind } = useKeyBinds(id);
-
     /**
      * Activate editor : activate editor's keybinds and update right menu
      */
     const activateEditor = useCallback(() => {
       setUrl(id);
       drawerSub.url = id;
-    }, [id]);
+      resetAndUpdateMenus();
+      addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
+    }, [id, resetAndUpdateMenus]);
+
+    const resetAndUpdateMenus = useCallback(() => {
+      // We should reset bookmarks when changing tabs. Right? And Left too :D
+      PluginManagerIDE.resetBookmarks();
+      updateRightMenu();
+    }, [updateRightMenu]);
 
     /**
      * Component did mount
      */
     useEffect(() => {
-      addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
-
+      activateEditor();
       on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async (data) => {
         const validTab = await call(
           PLUGINS.TABS.NAME,
@@ -51,30 +56,27 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         );
 
         // This check goes through every open tab checking it's id
-        // towards data.id (which comes from the ACTIVE_TAB_CHANGE broadcast)
+        // towards tabId (which comes from the ACTIVE_TAB_CHANGE broadcast)
         // When we find the tab with the id that we want to reset, we reset it
         if (!validTab || (validTab && data.id === id)) {
-          // We should reset bookmarks when changing tabs. Right? And Left too :D
-          updateRightMenu();
+          resetAndUpdateMenus();
           activateEditor();
         }
       });
 
       // Remove key bind on component unmount
       return () => {
-        removeKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS);
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
       };
     }, [
-      id,
-      addKeyBind,
-      removeKeyBind,
-      on,
-      off,
-      save,
-      call,
-      updateRightMenu,
       activateEditor,
+      addKeyBind,
+      call,
+      id,
+      off,
+      on,
+      resetAndUpdateMenus,
+      save,
     ]);
 
     return (
@@ -82,7 +84,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         tabIndex="-1"
         ref={editorContainer}
         className={`container-${scope}`}
-        onClick={activateEditor}
         onFocus={activateEditor}
       >
         <RefComponent {...props} saveDocument={save} ref={ref} />

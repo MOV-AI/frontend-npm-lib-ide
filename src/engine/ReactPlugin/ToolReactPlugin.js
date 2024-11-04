@@ -1,9 +1,10 @@
-import React, { forwardRef, useEffect } from "react";
+import React, { forwardRef, useCallback, useEffect, useRef } from "react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { makeStyles } from "@mov-ai/mov-fe-lib-react";
 import withAlerts from "../../decorators/withAlerts";
 import withMenuHandler from "../../decorators/withMenuHandler";
 import { composeDecorators } from "../../utils/Utils";
+import { setUrl } from "../../utils/keybinds";
 import { ViewPlugin } from "./ViewReactPlugin";
 
 export const useStyles = makeStyles(() => ({
@@ -22,7 +23,41 @@ export function withToolPlugin(ReactComponent, methods = []) {
   const RefComponent = forwardRef((props, ref) => ReactComponent(props, ref));
 
   const ToolComponent = forwardRef((props, ref) => {
-    return <RefComponent {...props} ref={ref} />;
+    const { on, off, profile, updateRightMenu } = props;
+
+    /**
+     * Activate tool : activate tool's keybinds and update right menu
+     */
+    const activateTool = useCallback(() => {
+      setUrl(profile.name);
+      resetAndUpdateMenus();
+    }, [profile.name, resetAndUpdateMenus]);
+
+    const resetAndUpdateMenus = useCallback(() => {
+      // We should reset bookmarks when changing tabs. Right? And Left too :D
+      PluginManagerIDE.resetBookmarks();
+      updateRightMenu?.();
+    }, [updateRightMenu]);
+
+    /**
+     * Component did mount
+     */
+    useEffect(() => {
+      PluginManagerIDE.resetBookmarks();
+      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async () => {
+        PluginManagerIDE.resetBookmarks();
+      });
+
+      return () => {
+        off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
+      };
+    }, [off, on, profile.name]);
+
+    return (
+      <div tabIndex="-1" style={{ height: "100%" }} onFocus={activateTool}>
+        <RefComponent {...props} ref={ref} />
+      </div>
+    );
   });
 
   // Decorate component
