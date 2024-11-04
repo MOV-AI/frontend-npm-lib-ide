@@ -1,6 +1,6 @@
 # TBD
 
-- [FP-3007](https://movai.atlassian.net/browse/FP-3007): Scene - Search backspace on drawer deletes node
+- [FP-3001](https://movai.atlassian.net/browse/FP-3001): Clicking backspace on drawer input deletes selected node
 
 # 1.4.1
 
