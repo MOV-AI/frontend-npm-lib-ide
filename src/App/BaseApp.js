@@ -24,7 +24,7 @@ import { MainContext } from "../main-context";
 import { defaultFunction } from "../utils/Utils";
 import { addEditor } from "../plugins/DocManager/factory";
 import { addTool } from "../tools";
-import { addKeyBind } from "../utils/keybinds";
+import { useKeyBinds } from "../utils/keybinds";
 import * as genFunctions from "../utils/generalFunctions";
 import { KEYBINDINGS } from "../utils/shortcuts";
 import AppSettings, {
@@ -56,6 +56,7 @@ function BaseApp(props) {
   } = props;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { addKeyBind } = useKeyBinds(KEYBIND_SCOPES.APP);
 
   // Style hook
   const classes = appStyles(DEBUG_MODE)();
