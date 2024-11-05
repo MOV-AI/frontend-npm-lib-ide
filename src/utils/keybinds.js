@@ -2,7 +2,19 @@ import { useMemo } from "react";
 import { KEYBIND_SCOPES } from "./Constants";
 
 const keybinds = { "/": {} };
-let url = "/";
+let scopeUrl = "/";
+
+/**
+ * Composes a path given an url and a scope.
+ * If we don't have a scope we just return the url
+ * @param {string} url
+ * @param {string} scope
+ * @returns
+ */
+function composePath(url, scope) {
+  if (!scope) return url;
+  return url + "/" + scope;
+}
 
 /**
  * get url-bound addKeyBind and removeKeyBind functions
@@ -24,7 +36,7 @@ export function useKeyBinds(url) {
  * in a certain context
  */
 export function addKeyBind(keys, callback, scope = "", url = "") {
-  const path = url + "/" + scope;
+  const path = composePath(url, scope);
   const local = keybinds[path] ?? {};
 
   for (const name of Array.isArray(keys) ? keys : [keys])
@@ -37,7 +49,7 @@ export function addKeyBind(keys, callback, scope = "", url = "") {
  * remove a keyBind
  */
 export function removeKeyBind(keys, scope = "", url = "") {
-  const path = url + "/" + scope;
+  const path = composePath(url, scope);
   const local = keybinds[path] ?? {};
 
   for (const name of Array.isArray(keys) ? keys : [keys]) delete local[name];
@@ -49,12 +61,12 @@ export function removeKeyBind(keys, scope = "", url = "") {
  * set the current url so that we can trigger
  * the right callbacks when the user presses key combinations
  */
-export function setUrl(local_url = KEYBIND_SCOPES.APP, scope = "") {
-  url = local_url + "/" + scope;
+export function setUrl(url = KEYBIND_SCOPES.APP, scope = "") {
+  scopeUrl = composePath(url, scope);
 }
 
 export function getCurrentUrl() {
-  return url;
+  return scopeUrl;
 }
 
 /**
@@ -63,7 +75,7 @@ export function getCurrentUrl() {
  */
 globalThis.addEventListener("keydown", (evt) => {
   const dataScope = evt.target.getAttribute("data-scope");
-  const path = url + (dataScope ?? "");
+  const path = scopeUrl + (dataScope ?? "");
   const kbs = { ...(keybinds[path] ?? {}), ...keybinds["/"] };
 
   if (evt.key === "Control" || evt.key === "Alt") return;
