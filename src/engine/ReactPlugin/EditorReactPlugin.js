@@ -6,7 +6,7 @@ import withLoader from "../../decorators/withLoader";
 import { withDataHandler } from "../../plugins/DocManager/DataHandler";
 import { KEYBINDINGS } from "../../utils/shortcuts";
 import { PLUGINS } from "../../utils/Constants";
-import { useKeyBinds, setUrl } from "../../utils/keybinds";
+import { addKeyBind, setUrl } from "../../utils/keybinds";
 import { composeDecorators } from "../../utils/Utils";
 import { ViewPlugin } from "./ViewReactPlugin";
 
@@ -27,14 +27,13 @@ export function withEditorPlugin(ReactComponent, methods = []) {
 
     const editorContainer = useRef();
 
-    const { addKeyBind, removeKeyBind } = useKeyBinds(id);
-
     /**
      * Activate editor : activate editor's keybinds and update right menu
      */
     const activateEditor = useCallback(() => {
       setUrl(id);
       resetAndUpdateMenus();
+      addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
     }, [id, resetAndUpdateMenus]);
 
     const resetAndUpdateMenus = useCallback(() => {
@@ -47,8 +46,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
      * Component did mount
      */
     useEffect(() => {
-      addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
-
+      activateEditor();
       on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async (data) => {
         const validTab = await call(
           PLUGINS.TABS.NAME,
@@ -67,7 +65,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
 
       // Remove key bind on component unmount
       return () => {
-        removeKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS);
         off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
       };
     }, [
@@ -77,7 +74,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
       id,
       off,
       on,
-      removeKeyBind,
       resetAndUpdateMenus,
       save,
     ]);

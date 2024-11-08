@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3001](https://movai.atlassian.net/browse/FP-3001): Clicking backspace on drawer input deletes selected node
+
 # 1.4.1
 
 - [FP-2956](https://movai.atlassian.net/browse/FP-2956): Drawers should reflect editor being interacted with in split view mode
