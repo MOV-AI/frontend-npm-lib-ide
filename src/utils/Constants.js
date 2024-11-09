@@ -168,6 +168,12 @@ export const PLUGINS = {
   PLACEHOLDER: {
     NAME: "placeholder",
   },
+  ORCHESTRATOR: {
+    NAME: "orchestrator",
+    CALL: {
+      RENDER_MENUS: "renderMenus",
+    },
+  },
   FLOW_EXPLORER: {
     NAME: "FlowExplorer",
     CALL: {},

@@ -1,6 +1,5 @@
 import React, { forwardRef, useCallback, useEffect, useRef } from "react";
 import withAlerts from "../../decorators/withAlerts";
-import withMenuHandler from "../../decorators/withMenuHandler";
 import withLoader from "../../decorators/withLoader";
 import { withDataHandler } from "../../plugins/DocManager/DataHandler";
 import { KEYBINDINGS } from "../../utils/shortcuts";
@@ -22,7 +21,7 @@ export function withEditorPlugin(ReactComponent, methods = []) {
    * Component responsible to handle common editor lifecycle
    */
   const EditorComponent = forwardRef((props, ref) => {
-    const { id, on, off, call, scope, save } = props;
+    const { id, call, scope, save } = props;
 
     const editorContainer = useRef();
 
@@ -47,20 +46,22 @@ export function withEditorPlugin(ReactComponent, methods = []) {
      * Component did mount
      */
     useEffect(() => {
+      // This only happens on component mount,
+      // So, only when the editor is first loaded.
       call(PLUGINS.ORCHESTRATOR.NAME, PLUGINS.ORCHESTRATOR.CALL.RENDER_MENUS, {
         id,
         ref,
       });
       call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_EXISTING_TAB, id);
       activateEditor();
-    }, [activateEditor, call, id, off, on, ref, save]);
+    }, [id, ref, call, activateEditor, save]);
 
     return (
       <div
         tabIndex="-1"
         ref={editorContainer}
         className={`container-${scope}`}
-        onFocus={activateEditor}
+        onClick={activateEditor}
       >
         <RefComponent {...props} saveDocument={save} ref={ref} />
       </div>
@@ -72,7 +73,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
     withAlerts,
     withLoader,
     withDataHandler,
-    withMenuHandler,
   ]);
 
   /**
