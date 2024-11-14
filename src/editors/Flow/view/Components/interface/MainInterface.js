@@ -92,18 +92,41 @@ function ensureParents(json) {
   return ret;
 }
 
+const flows = {};
+globalThis.flows = flows;
+
 export default class MainInterface {
-  constructor({
-    id,
-    containerId,
-    modelView,
-    width,
-    height,
-    data,
-    classes,
-    call,
-    graphCls,
-  }) {
+  constructor(props, state, setState) {
+    const existing = flows[props.id];
+
+    if (existing) {
+      existing.state = { ...existing.state, ...state };
+      existing.setState = (newState) =>
+        setState({
+          ...existing.state,
+          ...newState,
+        });
+      return existing;
+    }
+
+    console.log("MainView", props);
+
+    const {
+      id,
+      containerId,
+      instance,
+      width,
+      height,
+      data,
+      classes,
+      call,
+      graphCls,
+    } = props;
+
+    flows[id] = this;
+    this.state = state;
+    this.setState = (newState) => setState({ ...this.state, ...newState });
+
     //========================================================================================
     /*                                                                                      *
      *                                      Properties                                      *
@@ -113,7 +136,7 @@ export default class MainInterface {
     this.containerId = containerId;
     this.width = width;
     this.height = height;
-    this.modelView = modelView;
+    this.modelView = instance;
     this.data = data;
     this.graphCls = graphCls ?? Graph;
     this.classes = classes;
@@ -125,7 +148,10 @@ export default class MainInterface {
     this.canvas = null;
     this.graph = null;
     this.shortcuts = null;
-    this.onLoad = () => {};
+
+    this.setState({
+      loading: true,
+    });
 
     // Set initial mode as loading
     this.setMode(EVT_NAMES.LOADING);
@@ -151,6 +177,14 @@ export default class MainInterface {
     this.loadDoc();
   }
 
+  attach() {
+    if (!this.state.loading) this.canvas.appendDocumentFragment();
+  }
+
+  destroy() {
+    delete flows[this.id];
+  }
+
   /**
    * @private
    * Loads the document in the graph
@@ -163,7 +197,7 @@ export default class MainInterface {
     this.setMode(EVT_NAMES.DEFAULT);
     this.canvas.appendDocumentFragment();
     this.graph.updateAllPositions();
-    this.onLoad();
+    this.setState({ loading: false });
   };
 
   //========================================================================================
@@ -179,6 +213,7 @@ export default class MainInterface {
   set selectedNodes(nodes) {
     this.graph.selectedNodes = nodes;
     if (this.selectedLink) this.selectedLink.onSelected(false);
+    for (const node of nodes) this.state.onNodeSelected(node);
   }
 
   get selectedLink() {
@@ -342,9 +377,6 @@ export default class MainInterface {
   addSubscribers = () => {
     this.mode.default.onEnter.subscribe(this.onDefault);
 
-    // drag mode -> onExit event
-    this.mode.drag.onExit.subscribe(this.onDragEnd);
-
     // Node click and double click events
     this.mode.selectNode.onEnter.subscribe(this.onSelectNode);
 
@@ -402,6 +434,8 @@ export default class MainInterface {
     nodes.forEach((node) => {
       const { id } = node.data;
       const nodeName = getNodeNameFromId(id);
+      node.data.Visualization[0] = new Number(node.object.attr("x"));
+      node.data.Visualization[1] = new Number(node.object.attr("y"));
       const [x, y] = node.data.Visualization;
 
       const items =
@@ -467,16 +501,20 @@ export default class MainInterface {
     const currentZoom = this.canvas.currentZoom?.k ?? 1;
     const step = 2 / currentZoom + 1;
     const delta = {
-      ArrowRight: [1 * step, 0],
-      ArrowLeft: [-1 * step, 0],
-      ArrowUp: [0, -1 * step],
-      ArrowDown: [0, 1 * step],
+      ArrowRight: [step, 0],
+      ArrowLeft: [-step, 0],
+      ArrowUp: [0, -step],
+      ArrowDown: [0, step],
     };
     const [dx, dy] = delta[event.code];
-    const [x, y] = [50, 50]; // skip boundaries validation used when dragging a node
-    this.graph.onNodeDrag(null, { x, y, dx, dy });
+    this.graph.onNodeDrag(null, { x: 50, y: 50, dx, dy });
     this.onDragEnd();
   };
+
+  onMouseDown(event, node) {
+    this.downPos = { x: event.x, y: event.y };
+    this.state.onNodeSelected(node);
+  }
 
   onFocusNode = (node) => {
     const { xCenter, yCenter } = node.getCenter();

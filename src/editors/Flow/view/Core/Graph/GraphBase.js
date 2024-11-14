@@ -240,11 +240,17 @@ export default class GraphBase {
       nodes = new Set([gnode.obj].concat(nodes));
     }
 
-    if (this.canvas.inBoundaries(d.x, d.y)) {
+    if (this.canvas.inBoundaries(d.x, d.y))
       this.selectedNodes.forEach((node) => {
-        node.setPositionDelta(d.dx, d.dy);
+        node.object.attr(
+          "x",
+          node.data.Visualization[0] + d.x - this.mInterface.downPos.x,
+        );
+        node.object.attr(
+          "y",
+          node.data.Visualization[1] + d.y - this.mInterface.downPos.y,
+        );
       });
-    }
 
     function update() {
       nodes.forEach((node) => {
@@ -466,13 +472,13 @@ export default class GraphBase {
    * @param {string} nodeType : One of the types in NODE_TYPES
    */
   async addNode(node, nodeType = NODE_TYPES.NODE, parent = this.rootNode) {
-    const events = { onDrag: this.onNodeDrag };
+    const events = {};
 
     try {
       const inst = await Factory.create(
         this.docManager,
         Factory.OUTPUT[nodeType],
-        { canvas: this.canvas, node, events },
+        { canvas: this.canvas, node, events, mInterface: this.mInterface },
       );
       this.nodes.set(node.id, { obj: inst, links: [] });
 

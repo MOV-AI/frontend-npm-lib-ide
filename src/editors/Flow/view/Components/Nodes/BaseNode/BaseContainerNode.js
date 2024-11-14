@@ -7,12 +7,13 @@ import { TYPES } from "../../../Constants/constants";
  *  used for ContainerNode and TreeContainerNode
  */
 class BaseContainerNode extends BaseNode {
-  constructor({ canvas, node, events, template }) {
+  constructor({ canvas, node, events, template, mInterface }) {
     super({
       canvas,
       node,
       events,
       template,
+      mInterface,
     });
     // container node's data
     this.data = {

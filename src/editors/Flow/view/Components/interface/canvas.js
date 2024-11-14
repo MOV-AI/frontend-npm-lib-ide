@@ -152,7 +152,6 @@ class Canvas {
 
   appendDocumentFragment = () => {
     const el_container = document.getElementById(this.containerId);
-    d3.select(`#${this.containerId} svg`).remove();
     el_container.appendChild(this.svg);
   };
 

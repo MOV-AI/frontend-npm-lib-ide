@@ -2,6 +2,7 @@
 
 - [FP-3001](https://movai.atlassian.net/browse/FP-3001): Clicking backspace on drawer input deletes selected node
 - [FP-3012](https://movai.atlassian.net/browse/FP-3012): When adding a node, the node list collapses
+- [FP-1013](https://movai.atlassian.net/browse/FP-1013): Shift selecting multiple nodes and selecting multiple nodes by shift seeking the mouse are conflicting
 
 # 1.4.1
 

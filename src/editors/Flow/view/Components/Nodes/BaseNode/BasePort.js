@@ -143,8 +143,8 @@ class BasePort extends BasePortStruct {
       data,
       nodeSize: { height: node.height, width: node.width },
       center: node.center,
-      x: node.posX + this.cx,
-      y: node.posY + this.cy,
+      x: new Number(node.object.attr("x")) + this.cx,
+      y: new Number(node.object.attr("y")) + this.cy,
     };
   }
 
