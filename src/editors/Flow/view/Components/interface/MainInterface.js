@@ -109,8 +109,6 @@ export default class MainInterface {
       return existing;
     }
 
-    console.log("MainView", props);
-
     const {
       id,
       containerId,
@@ -179,10 +177,6 @@ export default class MainInterface {
 
   attach() {
     if (!this.state.loading) this.canvas.appendDocumentFragment();
-  }
-
-  destroy() {
-    delete flows[this.id];
   }
 
   /**
@@ -531,6 +525,6 @@ export default class MainInterface {
   };
 
   destroy = () => {
-    // Nothing to do
+    delete flows[this.id];
   };
 }

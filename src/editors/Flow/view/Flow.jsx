@@ -116,11 +116,6 @@ export const Flow = (props, ref) => {
 
   let mainInterface = null;
 
-  useEffect(() => {
-    mainInterface.attach();
-    return () => mainInterface.destroy();
-  }, []);
-
   // Other Hooks
   const classes = flowStyles();
   const clipboard = useMemo(() => new Clipboard(), []);
@@ -813,6 +808,11 @@ export const Flow = (props, ref) => {
     state,
     setState,
   );
+
+  useEffect(() => {
+    mainInterface.attach();
+    return () => mainInterface.destroy();
+  }, []);
 
   /**
    * Subscribe to mainInterface and canvas events
