@@ -39,6 +39,7 @@
     "@emotion/styled": "^11.3.0",
     "@remixproject/engine": "^0.3.19",
     "@remixproject/engine-web": "^0.3.19",
+    "@remixproject/plugin-utils": "^0.3.38",
     "canvas": "^2.11.2",
     "d3": "^5.16.0",
     "joi": "^17.4.2",

@@ -30,7 +30,7 @@ const withBookmarks = (Component) => {
   }
 
   return (props, ref) => {
-    const { anchor, emit, call } = props;
+    const { anchor, emit } = props;
     // React state hooks
     const [bookmarks, setBookmarks] = useState({});
     const [active, setActive] = useState();
