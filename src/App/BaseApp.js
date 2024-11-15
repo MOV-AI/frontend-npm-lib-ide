@@ -4,6 +4,7 @@ import { Style } from "@mov-ai/mov-fe-lib-react";
 import { Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import DocManager from "../plugins/DocManager/DocManager";
+import Orchestrator from "../plugins/Orchestrator/Orchestrator";
 import Dialog from "../plugins/Dialog/Dialog";
 import Alerts from "../plugins/Alerts/Alerts";
 import BottomBar from "../plugins/hosts/BottomBar/BottomBar";
@@ -24,7 +25,7 @@ import { MainContext } from "../main-context";
 import { defaultFunction } from "../utils/Utils";
 import { addEditor } from "../plugins/DocManager/factory";
 import { addTool } from "../tools";
-import { addKeyBind } from "../utils/keybinds";
+import { useKeyBinds } from "../utils/keybinds";
 import * as genFunctions from "../utils/generalFunctions";
 import { KEYBINDINGS } from "../utils/shortcuts";
 import AppSettings, {
@@ -56,6 +57,7 @@ function BaseApp(props) {
   } = props;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { addKeyBind } = useKeyBinds(KEYBIND_SCOPES.APP);
 
   // Style hook
   const classes = appStyles(DEBUG_MODE)();
@@ -208,6 +210,10 @@ function installAppPlugins() {
     {
       profile: { name: PLUGINS.ALERT.NAME },
       factory: (profile) => new Alerts(profile),
+    },
+    {
+      profile: { name: PLUGINS.ORCHESTRATOR.NAME },
+      factory: (profile) => new Orchestrator(profile),
     },
   ];
   plugins.forEach((pluginDescription) => {

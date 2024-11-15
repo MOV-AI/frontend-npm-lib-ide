@@ -213,7 +213,7 @@ export const Node = (props, ref) => {
    *                                                                                      */
   //========================================================================================
 
-  const renderRightMenu = useCallback(() => {
+  const renderMenus = useCallback(() => {
     const details = props.data?.details ?? {};
     const menuName = `${id}-detail-menu`;
     const menuTitle = i18n.t("NodeDetailsMenuTitle");
@@ -231,7 +231,7 @@ export const Node = (props, ref) => {
   }, [call, id, name, props.data, instance]);
 
   usePluginMethods(ref, {
-    renderRightMenu,
+    renderMenus,
   });
 
   //========================================================================================

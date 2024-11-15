@@ -28,7 +28,7 @@
 const Configuration = props => {
   const {data: ConfigData, setData: (data) => {} } = props;
 
-  const renderRightMenu = React.useCallback(() => {
+  const renderMenus = React.useCallback(() => {
     const menuName = `${path}-detail-menu`;
     const actualConfig = configRef.current;
     // add bookmark

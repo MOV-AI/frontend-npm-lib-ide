@@ -549,7 +549,7 @@ export const Flow = (props, ref) => {
     [call, getLinkMenuToAdd],
   );
 
-  const renderRightMenu = useCallback(() => {
+  const renderMenus = useCallback(() => {
     const details = props.data?.details || {};
     const bookmarks = {
       [MENUS.current.DETAIL.NAME]: {
@@ -615,7 +615,7 @@ export const Flow = (props, ref) => {
   ]);
 
   usePluginMethods(ref, {
-    renderRightMenu,
+    renderMenus,
   });
 
   //========================================================================================
