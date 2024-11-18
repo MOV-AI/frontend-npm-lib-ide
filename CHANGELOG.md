@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3068](https://movai.atlassian.net/browse/FP-3068): Inconsitencies on Keybindings
+
 # 1.4.2
 
 - [FP-3001](https://movai.atlassian.net/browse/FP-3001): Clicking backspace on drawer input deletes selected node
