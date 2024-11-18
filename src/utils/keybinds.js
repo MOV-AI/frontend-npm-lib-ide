@@ -75,24 +75,6 @@ export function getCurrentUrl() {
 }
 
 /**
- * If it's an input we always want to keep the default browser behaviour
- * Unless it specifically defined that it should have keybinds (data-scope)
- * @param {Element} target
- * @returns {boolean}
- */
-function shouldVoidKeybinds(target) {
-  return (
-    !target.getAttribute("data-scope") &&
-    // if it is an input
-    (target.tagName === "INPUT" ||
-      // or a textarea
-      target.tagName === "TEXTAREA" ||
-      // or a MUI option
-      target.role === "option")
-  );
-}
-
-/**
  * this handles calling callbacks that correspond
  * to user key combinations
  */
@@ -101,12 +83,7 @@ globalThis.addEventListener("keydown", (evt) => {
   const path = composePath(scopeUrl, dataScope);
   const kbs = { ...(keybinds[path] ?? {}), ...keybinds["/"] };
 
-  if (
-    shouldVoidKeybinds(evt.target) ||
-    evt.key === "Control" ||
-    evt.key === "Alt"
-  )
-    return;
+  if (evt.key === "Control" || evt.key === "Alt") return;
 
   for (const key of Object.keys(kbs)) {
     const splits = key.split("+").reduce(
