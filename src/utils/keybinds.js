@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { KEYBIND_SCOPES } from "./Constants";
 
 const keybinds = { "/": {} };
-let scopeUrl = "/";
+let globalUrl = "";
 
 /**
  * Composes a path given an url and a scope.
@@ -12,14 +12,13 @@ let scopeUrl = "/";
  * @returns
  */
 function composePath(url, scope) {
-  if (!scope) return url;
   return url + "/" + scope;
 }
 
 /**
  * get url-bound addKeyBind and removeKeyBind functions
  */
-export function useKeyBinds(url) {
+export function useKeyBinds(url = globalUrl) {
   return useMemo(
     () => ({
       addKeyBind: (keys, callback, scope) =>
@@ -66,12 +65,12 @@ export function removeKeyBind(keys, scope = "", url = KEYBIND_SCOPES.APP) {
  * set the current url so that we can trigger
  * the right callbacks when the user presses key combinations
  */
-export function setUrl(url = KEYBIND_SCOPES.APP, scope = "") {
-  scopeUrl = composePath(url, scope);
+export function setUrl(url = KEYBIND_SCOPES.APP) {
+  globalUrl = url;
 }
 
 export function getCurrentUrl() {
-  return scopeUrl;
+  return globalUrl;
 }
 
 /**
@@ -80,7 +79,7 @@ export function getCurrentUrl() {
  */
 globalThis.addEventListener("keydown", (evt) => {
   const dataScope = evt.target.getAttribute("data-scope");
-  const path = scopeUrl + (dataScope ?? "");
+  const path = composePath(globalUrl, dataScope ?? "");
   const kbs = { ...(keybinds[path] ?? {}), ...keybinds["/"] };
 
   if (evt.key === "Control" || evt.key === "Alt") return;
@@ -105,4 +104,5 @@ globalThis.addEventListener("keydown", (evt) => {
   }
 });
 
-window.keybinds = keybinds;
+globalThis.keybinds = keybinds;
+globalThis.getCurrentUrl = getCurrentUrl;
