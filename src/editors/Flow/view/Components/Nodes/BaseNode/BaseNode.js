@@ -561,8 +561,6 @@ class BaseNode extends BaseNodeStruct {
    *
    */
   onClick = () => {
-    d3.event.stopPropagation();
-
     // shift key pressed
     const { shiftKey } = d3.event;
     this.handleSelectionChange(shiftKey);

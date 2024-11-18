@@ -202,9 +202,6 @@ export default class BaseLink extends BaseLinkStruct {
    * @param {*} availableInReadOnly
    */
   eventsOn = (fn, availableInReadOnly = true) => {
-    d3.event.preventDefault();
-    d3.event.stopPropagation();
-
     const { visible, readOnly } = this;
     if (visible && (availableInReadOnly || !readOnly)) fn();
   };
