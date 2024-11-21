@@ -72,7 +72,7 @@ function filter(searchQuery, subject) {
 }
 
 const Search = (props) => {
-  const { onSearch } = props;
+  const { onSearch, onFocus } = props;
 
   // State hooks
   const [searchInput, setSearchInput] = useState("");
@@ -128,6 +128,7 @@ const Search = (props) => {
       placeholder={i18n.t("Search")}
       value={searchInput}
       onChange={onChangeSearch}
+      onFocus={onFocus}
       inputProps={{ "data-testid": "input_search" }}
       InputProps={{
         endAdornment: (

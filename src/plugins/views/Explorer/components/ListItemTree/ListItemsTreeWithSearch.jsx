@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Divider, List, ListItem } from "@material-ui/core";
+import { PLUGINS } from "../../../../../utils/Constants";
 import Search from "../../../../../utils/components/Search/Search";
 import VirtualizedTree from "../VirtualizedTree/VirtualizedTree";
 
@@ -29,7 +30,7 @@ export function toggleExpandRow(node, data) {
 }
 
 const ListItemsTreeWithSearch = (props) => {
-  const { data } = props;
+  const { data, call } = props;
 
   // State hooks
   const [itemData, setItemData] = useState([]);
@@ -126,6 +127,21 @@ const ListItemsTreeWithSearch = (props) => {
     setItemData(searchFilter(data, searchValue));
   };
 
+  /**
+   * Search handler
+   * @param {String} searchValue : String used to search
+   */
+  const handleOnFocus = async () => {
+    const activeTab = await call(
+      PLUGINS.TABS.NAME,
+      PLUGINS.TABS.CALL.GET_ACTIVE_TAB,
+    );
+
+    if (activeTab.scope === "Flow") {
+      await call(activeTab.id, PLUGINS.EDITOR.FLOW.CALL.SET_FLOW_TO_DEFAULT);
+    }
+  };
+
   //========================================================================================
   /*                                                                                      *
    *                                    React Lifecycle                                   *
@@ -160,7 +176,7 @@ const ListItemsTreeWithSearch = (props) => {
   return (
     <List className={classes.list} dense={true} component="div">
       <ListItem className={classes.searchHolder} component="div">
-        <Search onSearch={handleOnSearch} />
+        <Search onSearch={handleOnSearch} onFocus={handleOnFocus} />
       </ListItem>
       <Divider />
       <div className={classes.listHolder}>

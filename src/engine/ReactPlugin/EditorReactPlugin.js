@@ -14,7 +14,7 @@ import { ViewPlugin } from "./ViewReactPlugin";
  * @param {Array<String>} methods : Methods to be exposed
  * @returns
  */
-export function withEditorPlugin(ReactComponent, methods = []) {
+export function withEditorPlugin(ReactComponent) {
   const RefComponent = forwardRef((props, ref) => ReactComponent(props, ref));
 
   /**
@@ -63,7 +63,12 @@ export function withEditorPlugin(ReactComponent, methods = []) {
         className={`container-${scope}`}
         onClick={activateEditor}
       >
-        <RefComponent {...props} saveDocument={save} ref={ref} />
+        <RefComponent
+          {...props}
+          saveDocument={save}
+          ref={ref}
+          activateEditor={activateEditor}
+        />
       </div>
     );
   });
@@ -80,7 +85,10 @@ export function withEditorPlugin(ReactComponent, methods = []) {
    */
   return class extends ViewPlugin {
     constructor(profile, props = {}) {
-      super(profile, props, methods);
+      const editorExposedMethods = [
+        ...Object.values(PLUGINS.EDITOR[props.scope.toUpperCase()]?.CALL ?? {}),
+      ];
+      super(profile, props, editorExposedMethods);
     }
 
     render(otherProps) {

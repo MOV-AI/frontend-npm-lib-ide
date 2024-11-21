@@ -64,6 +64,7 @@ export const Flow = (props, ref) => {
     alert,
     confirmationAlert,
     contextOptions,
+    activateEditor,
     on,
     off,
   } = props;
@@ -614,10 +615,6 @@ export const Flow = (props, ref) => {
     getLinkMenuToAdd,
   ]);
 
-  usePluginMethods(ref, {
-    renderMenus,
-  });
-
   //========================================================================================
   /*                                                                                      *
    *                                     Handle Events                                    *
@@ -710,10 +707,11 @@ export const Flow = (props, ref) => {
           selectedNodeRef.current = node;
           activeBookmark = MENUS.current.NODE.NAME;
           addNodeMenu(node, true);
+          activateEditor();
         }
       }, 300);
     },
-    [addNodeMenu, unselectNode, onLinkSelected],
+    [addNodeMenu, unselectNode, onLinkSelected, activateEditor],
   );
 
   /**
@@ -725,6 +723,7 @@ export const Flow = (props, ref) => {
       selectedLinkRef.current = link;
       getMainInterface().selectedLink = link;
       if (!link) {
+        activeBookmark = MENUS.current.DETAIL.NAME;
         call(
           PLUGINS.RIGHT_DRAWER.NAME,
           PLUGINS.RIGHT_DRAWER.CALL.REMOVE_BOOKMARK,
@@ -753,9 +752,11 @@ export const Flow = (props, ref) => {
 
         activeBookmark = MENUS.current.LINK.NAME;
         addLinkMenu(link, true);
+
+        activateEditor();
       }
     },
-    [call, unselectNode, addLinkMenu],
+    [call, unselectNode, addLinkMenu, activateEditor],
   );
 
   /**
@@ -1459,6 +1460,11 @@ export const Flow = (props, ref) => {
     handleSearchDisabled,
   ]);
 
+  usePluginMethods(ref, {
+    renderMenus,
+    setFlowsToDefault,
+  });
+
   //========================================================================================
   /*                                                                                      *
    *                                        Render                                        *
@@ -1527,12 +1533,15 @@ Flow.propTypes = {
   scope: PropTypes.string.isRequired,
   call: PropTypes.func.isRequired,
   on: PropTypes.func.isRequired,
+  off: PropTypes.func.isRequired,
   data: PropTypes.object,
   instance: PropTypes.object,
   editable: PropTypes.bool,
   alert: PropTypes.func,
   confirmationAlert: PropTypes.func,
   saveDocument: PropTypes.func,
+  activateEditor: PropTypes.func,
+  contextOptions: PropTypes.func,
 };
 
 export default withEditorPlugin(Flow);

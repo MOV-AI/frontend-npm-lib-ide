@@ -71,7 +71,7 @@ const Explorer = (props) => {
    * Handle Mouse Leave on Node
    * @param {NodeObject} node
    */
-  const handleMouseLeaveNode = useCallback((_node) => {
+  const handleMouseLeaveNode = useCallback(() => {
     if (shouldUpdatePreview.current) {
       setSelectedNode({});
     }
@@ -89,7 +89,7 @@ const Explorer = (props) => {
    */
   const loadDocs = useCallback(
     (docManager) => {
-      return setData((_node) =>
+      return setData(() =>
         [docManager.getStore("Node"), docManager.getStore("Flow")].map(
           (store, id) => {
             const { name, title } = store;
@@ -146,6 +146,7 @@ const Explorer = (props) => {
         {data && (
           <ListItemsTreeWithSearch
             data={data}
+            call={call}
             onClickNode={requestScopeVersions}
             onMouseEnter={handleMouseEnterNode}
             onMouseLeave={handleMouseLeaveNode}
