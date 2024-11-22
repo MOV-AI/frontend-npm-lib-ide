@@ -137,7 +137,7 @@ const ListItemsTreeWithSearch = (props) => {
       PLUGINS.TABS.CALL.GET_ACTIVE_TAB,
     );
 
-    if (activeTab.scope === "Flow") {
+    if (activeTab?.scope === "Flow") {
       await call(activeTab.id, PLUGINS.EDITOR.FLOW.CALL.SET_FLOW_TO_DEFAULT);
     }
   };

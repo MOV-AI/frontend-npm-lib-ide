@@ -37,7 +37,7 @@ export function withEditorPlugin(ReactComponent) {
       setUrl(id);
       addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
 
-      if (activeTab.id !== id) {
+      if (activeTab?.id !== id) {
         call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_EXISTING_TAB, id);
       }
     }, [call, id, save]);
