@@ -2,6 +2,7 @@ import React, { forwardRef, useState } from "react";
 import PropTypes from "prop-types";
 import { Drawer, Typography } from "@material-ui/core";
 import { DRAWER } from "../../../utils/Constants";
+import { setUrl } from "../../../utils/keybinds";
 import { withHostReactPlugin } from "../../../engine/ReactPlugin/HostReactPlugin";
 import { usePluginMethods } from "../../../engine/ReactPlugin/ViewReactPlugin";
 import withBookmarks, {
@@ -121,7 +122,11 @@ const DrawerPanel = forwardRef((props, ref) => {
       style={{ ...style }}
       className={`${classes.drawer} ${className}`}
     >
-      <Typography component="div" className={classes.content}>
+      <Typography
+        component="div"
+        className={classes.content}
+        onClick={() => setUrl("DrawerPanel/" + anchor)}
+      >
         {activeView === DRAWER.VIEWS.PLUGIN ? viewPlugins : bookmarkView}
       </Typography>
     </Drawer>

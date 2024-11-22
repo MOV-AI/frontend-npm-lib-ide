@@ -101,6 +101,8 @@ const useTabLayout = (props, dockRef) => {
       ) {
         dockRef.current.dockMove(maxboxChildren[0], null, DOCK_MODES.MAXIMIZE);
       }
+
+      activeTabId.current = tabId;
     },
     [dockRef],
   );
@@ -543,7 +545,6 @@ const useTabLayout = (props, dockRef) => {
       };
 
       setUrl(tabData.id);
-      emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: tabData.id });
       addTabToStack(tabData, tabPosition);
       tabsByIdRef.current.set(tabData.id, tabData);
       workspaceManager.setTabs(tabsByIdRef.current);
@@ -552,6 +553,7 @@ const useTabLayout = (props, dockRef) => {
 
       if (existingTab) {
         focusExistingTab(tabData.id);
+        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: tabData.id });
         return;
       }
 
@@ -675,10 +677,11 @@ const useTabLayout = (props, dockRef) => {
         extension,
       };
       return {
-        id: id,
+        id,
+        scope,
+        content,
         tabIncrement,
         title: _getCustomTab(tabData, _closeTab, isDirty),
-        content: content,
         closable: true,
       };
     },

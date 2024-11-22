@@ -35,7 +35,12 @@ export function useKeyBinds(url) {
  * provide a scope and/or a url to have that keybind apply only
  * in a certain context
  */
-export function addKeyBind(keys, callback, scope = "", url = "") {
+export function addKeyBind(
+  keys,
+  callback,
+  scope = "",
+  url = KEYBIND_SCOPES.APP,
+) {
   const path = composePath(url, scope);
   const local = keybinds[path] ?? {};
 
@@ -48,7 +53,7 @@ export function addKeyBind(keys, callback, scope = "", url = "") {
 /**
  * remove a keyBind
  */
-export function removeKeyBind(keys, scope = "", url = "") {
+export function removeKeyBind(keys, scope = "", url = KEYBIND_SCOPES.APP) {
   const path = composePath(url, scope);
   const local = keybinds[path] ?? {};
 

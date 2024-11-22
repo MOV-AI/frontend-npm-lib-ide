@@ -42,7 +42,7 @@ export const Callback = (props, ref) => {
    *                                                                                      */
   //========================================================================================
 
-  const renderRightMenu = useCallback(() => {
+  const renderMenus = useCallback(() => {
     const menuName = `${id}-detail-menu`;
     const menuTitle = i18n.t("CallbackDetailsMenuTitle");
     // add bookmark
@@ -57,7 +57,7 @@ export const Callback = (props, ref) => {
   }, [call, id, name, scope]);
 
   usePluginMethods(ref, {
-    renderRightMenu,
+    renderMenus,
   });
 
   //========================================================================================
