@@ -83,6 +83,25 @@ const Explorer = (props) => {
    *                                                                                      */
   //========================================================================================
 
+  const getFilteredChildren = useCallback(
+    (store) => {
+      return store
+        .getDocs()
+        .filter((d) => !d.isNew && d.id !== Utils.getNameFromURL(flowId));
+    },
+    [flowId],
+  );
+
+  const getFormatedChildren = (filteredChildren) => {
+    return filteredChildren.map((doc, childId) => ({
+      id: childId,
+      name: doc.getName(),
+      title: doc.getName(),
+      scope: doc.getScope(),
+      url: doc.getUrl(),
+    }));
+  };
+
   /**
    * Load documents
    * @param {DocManager} docManager
@@ -93,28 +112,19 @@ const Explorer = (props) => {
         [docManager.getStore("Node"), docManager.getStore("Flow")].map(
           (store, id) => {
             const { name, title } = store;
-            const filteredChildren = store
-              .getDocs()
-              .filter((d) => !d.isNew && d.id !== Utils.getNameFromURL(flowId));
+            const filteredChildren = getFilteredChildren(store);
+
             return {
               id,
               name,
               title,
-              children: filteredChildren.map((doc, childId) => {
-                return {
-                  id: childId,
-                  name: doc.getName(),
-                  title: doc.getName(),
-                  scope: doc.getScope(),
-                  url: doc.getUrl(),
-                };
-              }),
+              children: getFormatedChildren(filteredChildren),
             };
           },
         ),
       );
     },
-    [flowId],
+    [getFilteredChildren],
   );
 
   //========================================================================================
@@ -162,4 +172,7 @@ export default withViewPlugin(Explorer);
 Explorer.propTypes = {
   call: PropTypes.func.isRequired,
   on: PropTypes.func.isRequired,
+  emit: PropTypes.func.isRequired,
+  flowId: PropTypes.string.isRequired,
+  mainInterface: PropTypes.object.isRequired,
 };

@@ -71,6 +71,17 @@ const ListItemsTreeWithSearch = (props) => {
     return finalData;
   }
 
+  const getFormatedChildren = (child, i) => {
+    child.id = child.id ?? i;
+    child.url = child.url ?? child.id;
+    if (child.children) {
+      child.children.forEach((grandChild, j) => {
+        grandChild.id = grandChild.id ?? j;
+        grandChild.url = grandChild.url ?? grandChild.id;
+      });
+    }
+  };
+
   /**
    * Filters given array of data
    * @param {Array} searchData : data that we want to filter from
@@ -89,24 +100,15 @@ const ListItemsTreeWithSearch = (props) => {
       .map((node) => {
         return {
           ...node,
-          children: (node.children ?? []).filter(
-            (ch) => ch.name && ch.name.toLowerCase().includes(valueLower),
+          children: (node.children ?? []).filter((ch) =>
+            ch.name?.toLowerCase().includes(valueLower),
           ),
         };
       });
 
     // Add children id if missing
     filteredNodes.forEach((node) => {
-      node.children.forEach((child, i) => {
-        child.id = child.id ?? i;
-        child.url = child.url ?? child.id;
-        if (child.children) {
-          child.children.forEach((grandChild, j) => {
-            grandChild.id = grandChild.id ?? j;
-            grandChild.url = grandChild.url ?? grandChild.id;
-          });
-        }
-      });
+      node.children.forEach(getFormatedChildren);
     });
 
     return normalizeData(filteredNodes);
@@ -188,6 +190,7 @@ const ListItemsTreeWithSearch = (props) => {
 
 ListItemsTreeWithSearch.propTypes = {
   data: PropTypes.array.isRequired,
+  call: PropTypes.func.isRequired,
 };
 
 export default ListItemsTreeWithSearch;
