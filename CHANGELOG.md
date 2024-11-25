@@ -1,7 +1,8 @@
-# TBD
+# 1.4.2
 
 - [FP-2644](https://movai.atlassian.net/browse/FP-2644): UI is frozen in certain split configurations in the IDE
 - [FP-3001](https://movai.atlassian.net/browse/FP-3001): Clicking backspace on drawer input deletes selected node
+- [FP-3012](https://movai.atlassian.net/browse/FP-3012): When adding a node, the node list collapses
 
 # 1.4.1
 

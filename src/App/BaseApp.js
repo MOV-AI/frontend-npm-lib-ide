@@ -4,6 +4,7 @@ import { Style } from "@mov-ai/mov-fe-lib-react";
 import { Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import DocManager from "../plugins/DocManager/DocManager";
+import Orchestrator from "../plugins/Orchestrator/Orchestrator";
 import Dialog from "../plugins/Dialog/Dialog";
 import Alerts from "../plugins/Alerts/Alerts";
 import BottomBar from "../plugins/hosts/BottomBar/BottomBar";
@@ -209,6 +210,10 @@ function installAppPlugins() {
     {
       profile: { name: PLUGINS.ALERT.NAME },
       factory: (profile) => new Alerts(profile),
+    },
+    {
+      profile: { name: PLUGINS.ORCHESTRATOR.NAME },
+      factory: (profile) => new Orchestrator(profile),
     },
   ];
   plugins.forEach((pluginDescription) => {

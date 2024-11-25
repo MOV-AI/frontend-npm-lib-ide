@@ -8,7 +8,6 @@ import KeyboardIcon from "@material-ui/icons/Keyboard";
 import { Utils } from "@mov-ai/mov-fe-lib-core";
 import movaiIcon from "../Branding/movai-logo-white.png";
 import { ERROR_MESSAGES } from "./Messages";
-import { KEYBIND_SCOPES } from "./Constants";
 
 /**
  * Export a non implemented empty function

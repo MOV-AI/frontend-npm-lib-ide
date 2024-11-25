@@ -1,7 +1,5 @@
 import React, { forwardRef, useCallback, useEffect, useRef } from "react";
-import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
 import withAlerts from "../../decorators/withAlerts";
-import withMenuHandler from "../../decorators/withMenuHandler";
 import withLoader from "../../decorators/withLoader";
 import { withDataHandler } from "../../plugins/DocManager/DataHandler";
 import { KEYBINDINGS } from "../../utils/shortcuts";
@@ -23,67 +21,47 @@ export function withEditorPlugin(ReactComponent, methods = []) {
    * Component responsible to handle common editor lifecycle
    */
   const EditorComponent = forwardRef((props, ref) => {
-    const { id, on, off, call, scope, save, updateRightMenu } = props;
+    const { id, call, scope, save } = props;
 
     const editorContainer = useRef();
 
     /**
      * Activate editor : activate editor's keybinds and update right menu
      */
-    const activateEditor = useCallback(() => {
-      setUrl(id);
-      resetAndUpdateMenus();
-      addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
-    }, [id, resetAndUpdateMenus]);
+    const activateEditor = useCallback(async () => {
+      const activeTab = await call(
+        PLUGINS.TABS.NAME,
+        PLUGINS.TABS.CALL.GET_ACTIVE_TAB,
+      );
 
-    const resetAndUpdateMenus = useCallback(() => {
-      // We should reset bookmarks when changing tabs. Right? And Left too :D
-      PluginManagerIDE.resetBookmarks();
-      updateRightMenu();
-    }, [updateRightMenu]);
+      setUrl(id);
+      addKeyBind(KEYBINDINGS.EDITOR_GENERAL.KEYBINDS.SAVE.SHORTCUTS, save);
+
+      if (activeTab.id !== id) {
+        call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_EXISTING_TAB, id);
+      }
+    }, [call, id, save]);
 
     /**
      * Component did mount
      */
     useEffect(() => {
-      activateEditor();
-      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async (data) => {
-        const validTab = await call(
-          PLUGINS.TABS.NAME,
-          PLUGINS.TABS.CALL.FIND_TAB,
-          data.id,
-        );
-
-        // This check goes through every open tab checking it's id
-        // towards tabId (which comes from the ACTIVE_TAB_CHANGE broadcast)
-        // When we find the tab with the id that we want to reset, we reset it
-        if (!validTab || (validTab && data.id === id)) {
-          resetAndUpdateMenus();
-          activateEditor();
-        }
+      // This only happens on component mount,
+      // So, only when the editor is first loaded.
+      call(PLUGINS.ORCHESTRATOR.NAME, PLUGINS.ORCHESTRATOR.CALL.RENDER_MENUS, {
+        id,
+        ref,
       });
-
-      // Remove key bind on component unmount
-      return () => {
-        off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
-      };
-    }, [
-      activateEditor,
-      addKeyBind,
-      call,
-      id,
-      off,
-      on,
-      resetAndUpdateMenus,
-      save,
-    ]);
+      call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_EXISTING_TAB, id);
+      activateEditor();
+    }, [id, ref, call, activateEditor, save]);
 
     return (
       <div
         tabIndex="-1"
         ref={editorContainer}
         className={`container-${scope}`}
-        onFocus={activateEditor}
+        onClick={activateEditor}
       >
         <RefComponent {...props} saveDocument={save} ref={ref} />
       </div>
@@ -95,7 +73,6 @@ export function withEditorPlugin(ReactComponent, methods = []) {
     withAlerts,
     withLoader,
     withDataHandler,
-    withMenuHandler,
   ]);
 
   /**
