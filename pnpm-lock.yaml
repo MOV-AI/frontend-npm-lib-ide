@@ -35,6 +35,9 @@ importers:
       '@remixproject/engine-web':
         specifier: ^0.3.19
         version: 0.3.38
+      '@remixproject/plugin-utils':
+        specifier: ^0.3.38
+        version: 0.3.38
       canvas:
         specifier: ^2.11.2
         version: 2.11.2

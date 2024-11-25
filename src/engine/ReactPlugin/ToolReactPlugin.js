@@ -1,12 +1,10 @@
-import React, { forwardRef, useCallback, useEffect, useRef } from "react";
+import React, { forwardRef, useCallback, useRef } from "react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { makeStyles } from "@material-ui/core";
-import PluginManagerIDE from "../PluginManagerIDE/PluginManagerIDE";
 import withAlerts from "../../decorators/withAlerts";
-import withMenuHandler from "../../decorators/withMenuHandler";
-import { PLUGINS } from "../../utils/Constants";
 import { composeDecorators } from "../../utils/Utils";
 import { setUrl } from "../../utils/keybinds";
+import { PLUGINS } from "../../utils/Constants";
 import { ViewPlugin } from "./ViewReactPlugin";
 
 export const useStyles = makeStyles(() => ({
@@ -25,38 +23,35 @@ export function withToolPlugin(ReactComponent, methods = []) {
   const RefComponent = forwardRef((props, ref) => ReactComponent(props, ref));
 
   const ToolComponent = forwardRef((props, ref) => {
-    const { on, off, profile, updateRightMenu } = props;
+    const { profile, call } = props;
+
+    const toolRef = useRef();
 
     /**
      * Activate tool : activate tool's keybinds and update right menu
      */
-    const activateTool = useCallback(() => {
+    const activateTool = useCallback(async () => {
+      const activeTab = await call(
+        PLUGINS.TABS.NAME,
+        PLUGINS.TABS.CALL.GET_ACTIVE_TAB,
+      );
+
+      const id = toolRef.current.closest("div[role='tabpanel']").id;
+
       setUrl(profile.name);
-      resetAndUpdateMenus();
-    }, [profile.name, resetAndUpdateMenus]);
 
-    const resetAndUpdateMenus = useCallback(() => {
-      // We should reset bookmarks when changing tabs. Right? And Left too :D
-      PluginManagerIDE.resetBookmarks();
-      updateRightMenu?.();
-    }, [updateRightMenu]);
-
-    /**
-     * Component did mount
-     */
-    useEffect(() => {
-      PluginManagerIDE.resetBookmarks();
-      on(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, async () => {
-        PluginManagerIDE.resetBookmarks();
-      });
-
-      return () => {
-        off(PLUGINS.TABS.NAME, PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE);
-      };
-    }, [off, on, profile.name]);
+      if (activeTab.id !== id) {
+        call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_EXISTING_TAB, id);
+      }
+    }, [call, profile.name]);
 
     return (
-      <div tabIndex="-1" style={{ height: "100%" }} onFocus={activateTool}>
+      <div
+        ref={toolRef}
+        tabIndex="-1"
+        style={{ height: "100%" }}
+        onClick={activateTool}
+      >
         <RefComponent {...props} ref={ref} />
       </div>
     );
@@ -66,7 +61,6 @@ export function withToolPlugin(ReactComponent, methods = []) {
   const DecoratedToolComponent = composeDecorators(ToolComponent, [
     withTheme,
     withAlerts,
-    withMenuHandler,
   ]);
 
   /**
