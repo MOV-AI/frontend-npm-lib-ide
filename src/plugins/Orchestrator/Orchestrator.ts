@@ -1,6 +1,5 @@
 import { Profile } from "@remixproject/plugin-utils";
 import { PLUGINS } from "../../utils/Constants";
-import { setUrl } from "../../utils/keybinds";
 import PluginManagerIDE from "../../engine/PluginManagerIDE/PluginManagerIDE";
 import IDEPlugin from "../../engine/IDEPlugin/IDEPlugin";
 
