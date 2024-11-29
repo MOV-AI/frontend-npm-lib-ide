@@ -1,4 +1,4 @@
-# TBD
+# 1.4.3
 
 - [FP-3068](https://movai.atlassian.net/browse/FP-3068): Inconsitencies on Keybindings
 
