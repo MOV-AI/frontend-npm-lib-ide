@@ -288,12 +288,17 @@ export const Node = (props, ref) => {
   const handleNewCallback = useCallback(
     (defaultMsg, ioConfigName, portName) => {
       const scope = CallbackModel.SCOPE;
+      const tempName = "new_callback";
+      call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.CREATE, {
+        scope,
+        name: tempName,
+      });
       call(
         PLUGINS.DOC_MANAGER.NAME,
         PLUGINS.DOC_MANAGER.CALL.SAVE,
         {
           scope,
-          name: " new_callback ",
+          name: tempName,
           data: {
             message: defaultMsg,
           },
