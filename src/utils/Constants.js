@@ -182,6 +182,14 @@ export const PLUGINS = {
   SYSTEM_BAR: {
     NAME: "systemBar",
   },
+  // Exposed editor methods
+  EDITOR: {
+    FLOW: {
+      CALL: {
+        SET_FLOW_TO_DEFAULT: "setFlowsToDefault",
+      },
+    },
+  },
 };
 
 export const KEYBIND_SCOPES = {
