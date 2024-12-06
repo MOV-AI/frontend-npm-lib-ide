@@ -20,7 +20,7 @@ export const explorerStyles = makeStyles((_theme) => ({
 export const previewStyles = makeStyles((theme) => ({
   previewHolder: {
     padding: "20px",
-    height: "60px",
+    height: "100px",
     borderBottom: `1px dashed ${theme?.icon?.color ?? "black"}`,
   },
 }));
