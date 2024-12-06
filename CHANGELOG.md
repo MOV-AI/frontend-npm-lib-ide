@@ -1,5 +1,6 @@
 # TBD
 
+- [FP-3027](https://movai.atlassian.net/browse/FP-3027): IDE - Hide container configuration on nodes
 - [FP-2964](https://movai.atlassian.net/browse/FP-2964): IDE - Doc doesn't get dirty when changes are made (so its not saved)
 
 # 1.4.3
