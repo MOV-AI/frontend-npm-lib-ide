@@ -1,3 +1,7 @@
+# 1.4.3
+
+- [FP-3068](https://movai.atlassian.net/browse/FP-3068): Inconsitencies on Keybindings
+
 # 1.4.2
 
 - [FP-2644](https://movai.atlassian.net/browse/FP-2644): UI is frozen in certain split configurations in the IDE

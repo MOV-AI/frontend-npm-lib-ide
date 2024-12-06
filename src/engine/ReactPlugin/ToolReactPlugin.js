@@ -40,7 +40,7 @@ export function withToolPlugin(ReactComponent, methods = []) {
 
       setUrl(profile.name);
 
-      if (activeTab.id !== id) {
+      if (activeTab?.id !== id) {
         call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_EXISTING_TAB, id);
       }
     }, [call, profile.name]);
