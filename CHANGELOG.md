@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3008](https://movai.atlassian.net/browse/FP-3008): IDE - Inconsistent Start and Stop behaviour
+
 # v1.4.4
 
 - [FP-3027](https://movai.atlassian.net/browse/FP-3027): IDE - Hide container configuration on nodes

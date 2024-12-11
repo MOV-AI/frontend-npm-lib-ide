@@ -40,7 +40,6 @@ import { buttonStyles, flowTopBarStyles } from "./styles";
 import FlowSearch from "./FlowSearch";
 
 const BACKEND_CALLBACK_NAME = "backend.FlowTopBar";
-const FEEDBACK_TIMEOUT = 10000;
 
 const ButtonTopBar = forwardRef((props, ref) => {
   const { disabled, onClick, children, testId = "input_top-bar" } = props;
@@ -95,6 +94,13 @@ const FlowTopBar = (props) => {
   // Managers Memos
   const robotManager = useMemo(() => new RobotManager(), []);
   const workspaceManager = useMemo(() => new Workspace(), []);
+  const [isActive, setIsActive] = useState(
+    getFlowPath() === robotStatus.activeFlow,
+  );
+
+  useEffect(() => {
+    setIsActive(getFlowPath() === robotStatus.activeFlow);
+  }, [robotStatus.activeFlow]);
 
   //========================================================================================
   /*                                                                                      *
@@ -342,18 +348,9 @@ const FlowTopBar = (props) => {
         })
         .then((res) => {
           if (!res) return;
-          commandRobotTimeoutRef.current = setTimeout(() => {
-            // If flow reloads (creation of a new) the old is unmounted
-            if (!isMounted.current) return;
-            // Set actionLoading false and show error message
-            setActionLoading(false);
-            alert({
-              message: i18n.t("FailedFlowAction", {
-                action: i18n.t(action.toLowerCase()),
-              }),
-              severity: ALERT_SEVERITIES.ERROR,
-            });
-          }, FEEDBACK_TIMEOUT);
+          if (!isMounted.current) return;
+          if (action === "START") setIsActive(true);
+          setActionLoading(false);
         })
         .catch((err) => {
           console.warn("Error sending action to robot", err);
@@ -512,7 +509,7 @@ const FlowTopBar = (props) => {
               })}
             </Select>
           </FormControl>
-          {getFlowPath() === robotStatus.activeFlow ? (
+          {isActive ? (
             <ButtonTopBar
               testId="input_stop-flow"
               ref={buttonDOMRef}
