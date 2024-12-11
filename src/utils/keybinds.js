@@ -80,7 +80,7 @@ export function getCurrentUrl() {
  */
 globalThis.addEventListener("keydown", (evt) => {
   const dataScope = evt.target.getAttribute("data-scope");
-  const path = scopeUrl + (dataScope ?? "");
+  const path = composePath(scopeUrl, dataScope);
   const kbs = { ...(keybinds[path] ?? {}), ...keybinds["/"] };
 
   if (evt.key === "Control" || evt.key === "Alt") return;

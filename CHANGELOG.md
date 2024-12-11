@@ -1,3 +1,12 @@
+# v1.4.4
+
+- [FP-3027](https://movai.atlassian.net/browse/FP-3027): IDE - Hide container configuration on nodes
+- [FP-2964](https://movai.atlassian.net/browse/FP-2964): IDE - Doc doesn't get dirty when changes are made (so its not saved)
+
+# 1.4.3
+
+- [FP-3068](https://movai.atlassian.net/browse/FP-3068): Inconsitencies on Keybindings
+
 # 1.4.2
 
 - [FP-2988](https://movai.atlassian.net/browse/FP-2988): Can't create Callback from node subscriber port "+" button

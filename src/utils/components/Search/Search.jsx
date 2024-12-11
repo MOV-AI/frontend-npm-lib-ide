@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import SearchIcon from "@material-ui/icons/Search";
 import ClearIcon from "@material-ui/icons/Clear";
@@ -43,7 +44,7 @@ function filter(searchQuery, subject) {
       subject = normalizeString(subject);
       return subject.includes(searchQuery);
 
-    case DATA_TYPES.OBJECT:
+    case DATA_TYPES.OBJECT: {
       // Is array
       if (Array.isArray(subject)) {
         subject = subject?.filter((e) => {
@@ -59,7 +60,9 @@ function filter(searchQuery, subject) {
       // Is an object
       const values = Object.values(subject || {});
       const list = filter(searchQuery, values);
+
       return list.length > 0 ? subject : false;
+    }
 
     case DATA_TYPES.NUMBER:
       return searchNonStrings();
@@ -72,7 +75,7 @@ function filter(searchQuery, subject) {
 }
 
 const Search = (props) => {
-  const { onSearch } = props;
+  const { onSearch, onFocus } = props;
 
   // State hooks
   const [searchInput, setSearchInput] = useState("");
@@ -128,6 +131,7 @@ const Search = (props) => {
       placeholder={i18n.t("Search")}
       value={searchInput}
       onChange={onChangeSearch}
+      onFocus={onFocus}
       inputProps={{ "data-testid": "input_search" }}
       InputProps={{
         endAdornment: (
@@ -150,6 +154,11 @@ const Search = (props) => {
       }}
     />
   );
+};
+
+Search.propTypes = {
+  onSearch: PropTypes.func.isRequired,
+  onFocus: PropTypes.func.isRequired,
 };
 
 export default Search;

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
+import { Features } from "@mov-ai/mov-fe-lib-core";
 import { Typography } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
 import Model from "../model/Node";
@@ -447,16 +448,18 @@ export const Node = (props, ref) => {
         onRowDelete={deleteKeyValue}
         varName="commands"
       ></KeyValueTable>
-      <KeyValueTable
-        testId="section_container-configuration"
-        title={i18n.t("ContainerConfigurations")}
-        editable={editable}
-        data={data.containerConf}
-        columns={defaultColumns}
-        openEditDialog={handleOpenEditDialog}
-        onRowDelete={deleteKeyValue}
-        varName="containerConf"
-      ></KeyValueTable>
+      {Features.get("ontainerConfigurations") && (
+        <KeyValueTable
+          testId="section_container-configuration"
+          title={i18n.t("ContainerConfigurations")}
+          editable={editable}
+          data={data.containerConf}
+          columns={defaultColumns}
+          openEditDialog={handleOpenEditDialog}
+          onRowDelete={deleteKeyValue}
+          varName="containerConf"
+        ></KeyValueTable>
+      )}
     </Typography>
   );
 };
