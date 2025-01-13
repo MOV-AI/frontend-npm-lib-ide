@@ -1,4 +1,4 @@
-# TBD
+# v1.4.4
 
 - [FP-3080](https://movai.atlassian.net/browse/FP-3080): IDE - Fix Node preview banner width
 - [FP-3027](https://movai.atlassian.net/browse/FP-3027): IDE - Hide container configuration on nodes
