@@ -140,9 +140,9 @@ const useTabLayout = (props, dockRef) => {
       let tabExists = maxboxChildren?.tabs.find((t) => t.id === layoutActiveId);
 
       if (!tabExists) {
-        tabExists = _layout.dockbox.children[0].tabs.find(
-          (t) => t.id === layoutActiveId,
-        );
+        const dockboxChildren = _layout.dockbox.children[0];
+        if (dockboxChildren?.tabs)
+          tabExists = dockboxChildren.tabs.find((t) => t.id === layoutActiveId);
       }
       activeTabId.current = layoutActiveId;
 
