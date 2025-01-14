@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-1013](https://movai.atlassian.net/browse/FP-1013): IDE - Optimize Flow shift select nodes
+
 # v1.4.4
 
 - [FP-3080](https://movai.atlassian.net/browse/FP-3080): IDE - Fix Node preview banner width
