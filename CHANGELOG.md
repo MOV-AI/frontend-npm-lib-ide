@@ -14,6 +14,7 @@
 
 # 1.4.2
 
+- [FP-2988](https://movai.atlassian.net/browse/FP-2988): Can't create Callback from node subscriber port "+" button
 - [FP-3001](https://movai.atlassian.net/browse/FP-3001): Clicking backspace on drawer input deletes selected node
 - [FP-3012](https://movai.atlassian.net/browse/FP-3012): When adding a node, the node list collapses
 
