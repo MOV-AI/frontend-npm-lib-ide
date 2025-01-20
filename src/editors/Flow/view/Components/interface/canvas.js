@@ -94,9 +94,6 @@ class Canvas {
 
   set hoveredNode(value) {
     this._hoveredNode = value;
-    if (!value && d3.event.shiftKey) {
-      this.addBrushCanvas();
-    }
   }
 
   get isMouseOverNode() {
@@ -394,23 +391,23 @@ class Canvas {
     const events = [
       {
         event: "contextmenu",
-        fn: () => this.onContext(),
+        fn: this.onContext,
       },
       {
         event: "click",
-        fn: () => this.onClick(),
+        fn: this.onClick,
       },
       {
         event: "mousemove",
-        fn: () => this.onMouseMove(),
+        fn: this.onMouseMove,
       },
       {
         event: "keydown",
-        fn: () => this.onKeyDown(),
+        fn: this.onKeyDown,
       },
       {
         event: "keyup",
-        fn: () => this.onKeyUp(),
+        fn: this.onKeyUp,
       },
     ];
 
