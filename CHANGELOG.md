@@ -3,10 +3,10 @@
 - [FP-1013](https://movai.atlassian.net/browse/FP-1013): IDE - Optimize Flow shift select nodes
 - [FP-2644](https://movai.atlassian.net/browse/FP-2644): UI is frozen in certain split configurations in the IDE
 - [FP-2988](https://movai.atlassian.net/browse/FP-2988): Can't create Callback from node subscriber port "+" button
+- [FP-3080](https://movai.atlassian.net/browse/FP-3080): IDE - Fix Node preview banner width
 
 # v1.4.4
 
-- [FP-3080](https://movai.atlassian.net/browse/FP-3080): IDE - Fix Node preview banner width
 - [FP-3027](https://movai.atlassian.net/browse/FP-3027): IDE - Hide container configuration on nodes
 - [FP-2964](https://movai.atlassian.net/browse/FP-2964): IDE - Doc doesn't get dirty when changes are made (so its not saved)
 
