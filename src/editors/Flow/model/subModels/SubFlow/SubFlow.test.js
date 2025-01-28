@@ -1,4 +1,4 @@
-import { DATA_TYPES } from "../../../../../utils/Constants";
+import { DATA_TYPES } from "@mov-ai/mov-fe-lib-react";
 import { Manager } from "../../../../../models";
 import Position from "../Position/Position";
 import SubFlow from "./SubFlow";

@@ -5,8 +5,8 @@ import DeleteIcon from "@material-ui/icons/DeleteOutline";
 import IconButton from "@material-ui/core/IconButton";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import { Typography } from "@material-ui/core";
+import { DATA_TYPES } from "@mov-ai/mov-fe-lib-react";
 import {
-  DATA_TYPES,
   DEFAULT_VALUE,
   DISABLED_VALUE,
 } from "../../../../../../utils/Constants";

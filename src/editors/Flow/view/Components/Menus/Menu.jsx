@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import PropTypes from "prop-types";
-import { i18n } from "@mov-ai/mov-fe-lib-react";
+import { i18n, DATA_TYPES } from "@mov-ai/mov-fe-lib-react";
 import {
   Collapse,
   Divider,
@@ -21,7 +21,6 @@ import useDataSubscriber from "../../../../../plugins/DocManager/useDataSubscrib
 import { ERROR_MESSAGES } from "../../../../../utils/Messages";
 import {
   DEFAULT_KEY_VALUE_DATA,
-  DATA_TYPES,
   PLUGINS,
   TABLE_KEYS_NAMES,
   DIALOG_TITLE,
