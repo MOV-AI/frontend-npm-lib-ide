@@ -1,11 +1,10 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 import _isEqual from "lodash/isEqual";
-import { i18n } from "@mov-ai/mov-fe-lib-react";
+import { i18n, useDataTypes } from "@mov-ai/mov-fe-lib-react";
 import { defaultFunction } from "../../../../../utils/Utils";
 import ParameterEditorDialog from "../../../../_shared/KeyValueTable/ParametersEditorDialog";
 import KeyValueTable from "../../../../_shared/KeyValueTable/KeyValueTable";
-import useDataTypes from "../../../../_shared/hooks/useDataTypes";
 
 const ParametersTable = (props) => {
   // Props

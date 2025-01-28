@@ -1,9 +1,8 @@
 import React from "react";
-import { i18n } from "@mov-ai/mov-fe-lib-react";
+import { i18n, DATA_TYPES } from "@mov-ai/mov-fe-lib-react";
 import InfoLogo from "@material-ui/icons/Info";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import { DATA_TYPES } from "../../../../../utils/Constants";
 import { HtmlTooltip } from "../../../../_shared/HtmlTooltip/HtmlTooltip";
 
 import { keyValueHookStyles } from "./styles";

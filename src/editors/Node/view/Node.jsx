@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { i18n } from "@mov-ai/mov-fe-lib-react";
+import { i18n, DATA_TYPES } from "@mov-ai/mov-fe-lib-react";
 import { Features } from "@mov-ai/mov-fe-lib-core";
 import { Typography } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
@@ -12,7 +12,6 @@ import {
   DEFAULT_KEY_VALUE_DATA,
   TABLE_KEYS_NAMES,
   DIALOG_TITLE,
-  DATA_TYPES,
   ROS_VALID_NAMES,
   ROS_VALID_NAMES_VARIATION,
   PLUGINS,

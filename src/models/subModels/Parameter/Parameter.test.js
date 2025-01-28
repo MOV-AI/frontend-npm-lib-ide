@@ -1,4 +1,4 @@
-import { DATA_TYPES } from "../../../utils/Constants";
+import { DATA_TYPES } from "@mov-ai/mov-fe-lib-react";
 import Parameter from "./Parameter";
 
 test("Smoke test", () => {

@@ -1,4 +1,3 @@
-import { DATA_TYPES } from "../../../utils/Constants";
 import { Command, EnvVar, Parameter, Port } from "../../../models/subModels";
 import Node from "./Node";
 

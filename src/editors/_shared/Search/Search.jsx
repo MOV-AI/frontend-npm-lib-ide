@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { i18n } from "@mov-ai/mov-fe-lib-react";
+import { i18n, DATA_TYPES } from "@mov-ai/mov-fe-lib-react";
 import SearchIcon from "@material-ui/icons/Search";
 import ClearIcon from "@material-ui/icons/Clear";
 import { TextField, IconButton, Tooltip } from "@material-ui/core";
-import { DATA_TYPES } from "../../../utils/Constants";
 
 import { searchStyles } from "./styles";
 

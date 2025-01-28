@@ -1,4 +1,4 @@
-import { i18n } from "@mov-ai/mov-fe-lib-react";
+import { i18n, DATA_TYPES } from "@mov-ai/mov-fe-lib-react";
 import { TYPES } from "../editors/Flow/view/Constants/constants";
 
 export const APP_DEFAULT_CONFIG = "app-ide-ce";
@@ -8,16 +8,6 @@ export const MANAGER = "manager";
 
 export const DEFAULT_VALUE = undefined;
 export const DISABLED_VALUE = "None";
-
-export const DATA_TYPES = {
-  CONFIGURATION: "config",
-  BOOLEAN: "boolean",
-  STRING: "string",
-  NUMBER: "number",
-  OBJECT: "object",
-  ARRAY: "array",
-  ANY: "any",
-};
 
 export const SCOPES = {
   CALLBACK: "Callback",

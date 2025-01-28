@@ -10,18 +10,16 @@ import {
   Radio,
   RadioGroup,
 } from "@material-ui/core";
-import { withTheme } from "@mov-ai/mov-fe-lib-react";
+import { withTheme, useDataTypes, DATA_TYPES } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../themes";
 import { ERROR_MESSAGES } from "../../../utils/Messages";
 import {
-  DATA_TYPES,
   DEFAULT_VALUE,
   DISABLED_VALUE,
   ALERT_SEVERITIES,
 } from "../../../utils/Constants";
 import withAlerts from "../../../decorators/withAlerts";
 import KeyValueEditorDialog from "../KeyValueTable/KeyValueEditorDialog";
-import useDataTypes from "../hooks/useDataTypes";
 
 import { parametersDialogStyles } from "./styles";
 

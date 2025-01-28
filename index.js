@@ -45,7 +45,6 @@ export { useKeyBinds, addKeyBind, removeKeyBind } from "./src/utils/keybinds";
 import * as Utils from "./src/utils/Utils";
 import LocalStorage from "./src/utils/LocalStorage";
 // Hooks
-import useDataTypes from "./src/editors/_shared/hooks/useDataTypes";
 import useDataSubscriber from "./src/plugins/DocManager/useDataSubscriber";
 import PluginManagerIDE from "./src/engine/PluginManagerIDE/PluginManagerIDE";
 import { usePluginMethods } from "./src/engine/ReactPlugin/ViewReactPlugin";
@@ -80,7 +79,7 @@ export { HomeTabPlugin, getHomeTab };
 export { ShortcutsPlugin, getShortcutsTab };
 export { FlowExplorer };
 export { ThemeProvider, ApplicationTheme };
-export { useDataTypes, useDataSubscriber, usePluginMethods };
+export { useDataSubscriber, usePluginMethods };
 export { openTool };
 
 // Export editor's shared components

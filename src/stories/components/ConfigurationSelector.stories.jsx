@@ -1,9 +1,13 @@
-import { Button, snackbar, withNotification } from "@mov-ai/mov-fe-lib-react";
+import {
+  Button,
+  snackbar,
+  withNotification,
+  useDataTypes,
+} from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import React from "react";
 import ConfigurationSelector from "../../editors/_shared/ConfigurationSelector/ConfigurationSelector";
 import ConfigurationType from "../../editors/_shared/hooks/DataTypes/types/ConfigurationType";
-import useDataTypes from "../../editors/_shared/hooks/useDataTypes";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
