@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-2639](https://movai.atlassian.net/browse/FP-2639): IDE - Explorer windows popping up when switching to Get Started
+
 # v1.4.5
 
 - [FP-1013](https://movai.atlassian.net/browse/FP-1013): IDE - Optimize Flow shift select nodes
