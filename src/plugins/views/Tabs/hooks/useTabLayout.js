@@ -578,6 +578,7 @@ const useTabLayout = (props, dockRef) => {
           const firstContainer = _getFirstContainer(newState[tabPosition]);
           firstContainer.tabs.push(tabData);
           firstContainer.activeId = tabData.id;
+          delete firstContainer.group;
         }
 
         workspaceManager.setLayout(newState);
