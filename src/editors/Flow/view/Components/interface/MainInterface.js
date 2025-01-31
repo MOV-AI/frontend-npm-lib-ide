@@ -281,6 +281,7 @@ export default class MainInterface {
       [NODE_PROP_DATA.LABEL]: name,
       Label: name,
       name: name,
+      Template: nodeData.template,
       id: name,
     };
     // Add node to model data
