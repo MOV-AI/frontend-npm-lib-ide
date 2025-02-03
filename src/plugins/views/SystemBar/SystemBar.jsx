@@ -86,7 +86,7 @@ const SystemBar = (props) => {
         setSystemMenus(data);
       });
     });
-  }, [on, call, dialogClasses]);
+  }, []);
 
   return (
     <>

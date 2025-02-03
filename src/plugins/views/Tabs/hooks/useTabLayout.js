@@ -150,9 +150,9 @@ const useTabLayout = (props, dockRef) => {
       let tabExists = maxboxChildren?.tabs.find((t) => t.id === layoutActiveId);
 
       if (!tabExists) {
-        tabExists = _layout.dockbox.children[0].tabs.find(
-          (t) => t.id === layoutActiveId,
-        );
+        const dockboxChildren = _layout.dockbox.children[0];
+        if (dockboxChildren?.tabs)
+          tabExists = dockboxChildren.tabs.find((t) => t.id === layoutActiveId);
       }
 
       if (!tabExists && layoutActiveId) {
@@ -556,7 +556,6 @@ const useTabLayout = (props, dockRef) => {
       };
 
       setUrl(tabData.id);
-      emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: tabData.id });
       addTabToStack(tabData, tabPosition);
       tabsByIdRef.current.set(tabData.id, tabData);
       workspaceManager.setTabs(tabsByIdRef.current);
@@ -564,6 +563,7 @@ const useTabLayout = (props, dockRef) => {
       const existingTab = findTab(tabData.id);
       if (existingTab) {
         focusExistingTab(tabData.id);
+        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: tabData.id });
         return;
       }
 
@@ -683,9 +683,11 @@ const useTabLayout = (props, dockRef) => {
         extension,
       };
       return {
-        id: id,
+        id,
+        scope,
+        content,
+        tabIncrement,
         title: _getCustomTab(tabData, _closeTab, isDirty),
-        content: content,
         closable: true,
       };
     },
@@ -748,8 +750,6 @@ const useTabLayout = (props, dockRef) => {
   const updateTabId = useCallback(
     (prevTabId, newTabData) => {
       _getTabData(newTabData).then((tabData) => {
-        // Update new open tab id
-        activeTabId.current = tabData.id;
         // Set new layout
         setLayout((prevState) => {
           // look for tab in windowbox

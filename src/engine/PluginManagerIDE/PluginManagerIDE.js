@@ -1,5 +1,4 @@
 import { Engine, PluginManager } from "@remixproject/engine";
-import { BOOKMARK_METHODS, PLUGINS } from "../../utils/Constants";
 
 export default class PluginManagerIDE {
   constructor() {
@@ -91,17 +90,6 @@ export default class PluginManagerIDE {
    */
   static getPlugin(pluginName) {
     return PluginManagerIDE.getInstance().getPlugin(pluginName);
-  }
-
-  /**
-   * Reset App Bookmarks for left/right drawers
-   */
-  static resetBookmarks() {
-    const manager = PluginManagerIDE.getInstance().manager;
-    if (PluginManagerIDE.getPlugin(PLUGINS.RIGHT_DRAWER.NAME))
-      manager.call(PLUGINS.RIGHT_DRAWER.NAME, BOOKMARK_METHODS.RESET_BOOKMARKS);
-    if (PluginManagerIDE.getPlugin(PLUGINS.LEFT_DRAWER.NAME))
-      manager.call(PLUGINS.LEFT_DRAWER.NAME, BOOKMARK_METHODS.RESET_BOOKMARKS);
   }
 
   /**

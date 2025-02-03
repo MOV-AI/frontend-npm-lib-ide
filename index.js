@@ -5,7 +5,7 @@ import reportWebVitals from "./src/reportWebVitals";
 import BaseApp, { installEditor, installTool } from "./src/App/BaseApp";
 import { Store, DBSubscriber } from "./src/store";
 import { Model, Manager } from "./src/models";
-import { withAlerts, withMenuHandler } from "./src/decorators";
+import { withAlerts } from "./src/decorators";
 import { withEditorPlugin, withViewPlugin, withToolPlugin } from "./src/engine";
 // Import src/editors
 import {
@@ -57,7 +57,7 @@ export { BaseApp, installEditor, installTool };
 export { PluginManagerIDE };
 export { Store, DBSubscriber };
 export { Model, Manager };
-export { withAlerts, withMenuHandler };
+export { withAlerts };
 export { withEditorPlugin, withViewPlugin, withToolPlugin };
 export { CallbackModel, CallbackStore, CallbackEditor, Callback };
 export {

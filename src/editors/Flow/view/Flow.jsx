@@ -63,6 +63,7 @@ export const Flow = (props, ref) => {
     alert,
     confirmationAlert,
     contextOptions,
+    activateEditor,
     on,
     off,
   } = props;
@@ -475,7 +476,7 @@ export const Flow = (props, ref) => {
         url: "global/Flow/" + name,
         suffix: "right",
         select: true,
-        view: (
+        view: () => (
           <MenuComponent
             id={id}
             call={call}
@@ -518,7 +519,7 @@ export const Flow = (props, ref) => {
         title: i18n.t(MENUS.current.LINK.TITLE),
         select: true,
         suffix: "right",
-        view: (
+        view: () => (
           <LinkMenu
             id={id}
             call={call}
@@ -547,7 +548,7 @@ export const Flow = (props, ref) => {
     [getLinkMenuToAdd],
   );
 
-  const renderRightMenu = useCallback(() => {
+  const renderMenus = useCallback(() => {
     const details = props.data?.details || {};
 
     drawerSub.add(MENUS.current.DETAIL.NAME, {
@@ -557,7 +558,7 @@ export const Flow = (props, ref) => {
       suffix: "right",
       select: true,
       force: true,
-      view: (
+      view: () => (
         <Menu
           id={id}
           call={call}
@@ -577,10 +578,11 @@ export const Flow = (props, ref) => {
           title: i18n.t(FLOW_EXPLORER_PROFILE.title),
           url: "global/Flow/" + name,
           suffix: "right",
-          view: new Explorer(FLOW_EXPLORER_PROFILE).render({
-            flowId: id,
-            mainInterface: getMainInterface(),
-          }),
+          view: () =>
+            new Explorer(FLOW_EXPLORER_PROFILE).render({
+              flowId: id,
+              mainInterface: getMainInterface(),
+            }),
         },
         [],
       );
@@ -607,10 +609,6 @@ export const Flow = (props, ref) => {
     getNodeMenuToAdd,
     getLinkMenuToAdd,
   ]);
-
-  usePluginMethods(ref, {
-    renderRightMenu,
-  });
 
   //========================================================================================
   /*                                                                                      *
@@ -751,6 +749,8 @@ export const Flow = (props, ref) => {
 
         activeBookmark = MENUS.current.LINK.NAME;
         addLinkMenu(link, true);
+
+        activateEditor();
       }
       selectedLinkRef.current = link;
     },
@@ -1191,7 +1191,6 @@ export const Flow = (props, ref) => {
       getContextOptions,
       handleCopyNode,
       handleDeleteNode,
-      renderRightMenu,
       startNode,
       stopNode,
       handleDeleteLink,
@@ -1454,6 +1453,13 @@ export const Flow = (props, ref) => {
       },
       KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_CLOSE.SCOPE,
     );
+    addKeyBind(
+      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SHORTCUTS,
+      (evt) => {
+        evt.preventDefault();
+      },
+      KEYBINDINGS.MISC.KEYBINDS.SEARCH_INPUT_PREVENT_SEARCH.SCOPE,
+    );
     addKeyBind(KEYBINDINGS.FLOW.KEYBINDS.COPY_NODE.SHORTCUTS, handleCopyNode);
     addKeyBind(
       KEYBINDINGS.FLOW.KEYBINDS.PASTE_NODE.SHORTCUTS,
@@ -1496,6 +1502,11 @@ export const Flow = (props, ref) => {
     handleShortcutDelete,
     handleSearchDisabled,
   ]);
+
+  usePluginMethods(ref, {
+    renderMenus,
+    setFlowsToDefault,
+  });
 
   //========================================================================================
   /*                                                                                      *
@@ -1565,12 +1576,15 @@ Flow.propTypes = {
   scope: PropTypes.string.isRequired,
   call: PropTypes.func.isRequired,
   on: PropTypes.func.isRequired,
+  off: PropTypes.func.isRequired,
   data: PropTypes.object,
   instance: PropTypes.object,
   editable: PropTypes.bool,
   alert: PropTypes.func,
   confirmationAlert: PropTypes.func,
   saveDocument: PropTypes.func,
+  activateEditor: PropTypes.func,
+  contextOptions: PropTypes.func,
 };
 
 export default withEditorPlugin(Flow);

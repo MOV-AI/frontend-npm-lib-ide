@@ -35,6 +35,7 @@ const Tabs = (props, ref) => {
     updateTabId,
     getActiveTab,
     focusActiveTab,
+    focusExistingTab,
     close,
   });
 

@@ -324,6 +324,7 @@ const Explorer = (props) => {
         {data && (
           <ListItemsTreeWithSearch
             data={data}
+            call={call}
             onClickNode={requestScopeVersions}
             handleCopyClick={handleCopy}
             handleDeleteClick={handleDelete}

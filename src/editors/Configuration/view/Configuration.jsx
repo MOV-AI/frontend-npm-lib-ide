@@ -44,7 +44,7 @@ export const Configuration = (props, ref) => {
    *                                                                                      */
   //========================================================================================
 
-  const renderRightMenu = useCallback(() => {
+  const renderMenus = useCallback(() => {
     const details = props.data?.details || {};
     const menuName = `detail-menu`;
     const menuTitle = i18n.t("ConfigurationDetailsMenuTitle");
@@ -63,7 +63,7 @@ export const Configuration = (props, ref) => {
   }, [id, name, instance, props.data]);
 
   usePluginMethods(ref, {
-    renderRightMenu,
+    renderMenus,
   });
 
   //========================================================================================

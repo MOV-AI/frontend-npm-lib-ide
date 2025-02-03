@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Divider, List, ListItem } from "@mov-ai/mov-fe-lib-react";
+import { PLUGINS } from "../../../../../utils/Constants";
 import Search from "../../../../../utils/components/Search/Search";
 import VirtualizedTree from "../VirtualizedTree/VirtualizedTree";
 
@@ -29,7 +30,7 @@ export function toggleExpandRow(node, data) {
 }
 
 const ListItemsTreeWithSearch = (props) => {
-  const { data } = props;
+  const { data, call } = props;
 
   // State hooks
   const [itemData, setItemData] = useState([]);
@@ -70,6 +71,17 @@ const ListItemsTreeWithSearch = (props) => {
     return finalData;
   }
 
+  const getFormatedChildren = (child, i) => {
+    child.id = child.id ?? i;
+    child.url = child.url ?? child.id;
+    if (child.children) {
+      child.children.forEach((grandChild, j) => {
+        grandChild.id = grandChild.id ?? j;
+        grandChild.url = grandChild.url ?? grandChild.id;
+      });
+    }
+  };
+
   /**
    * Filters given array of data
    * @param {Array} searchData : data that we want to filter from
@@ -88,24 +100,15 @@ const ListItemsTreeWithSearch = (props) => {
       .map((node) => {
         return {
           ...node,
-          children: (node.children ?? []).filter(
-            (ch) => ch.name && ch.name.toLowerCase().includes(valueLower),
+          children: (node.children ?? []).filter((ch) =>
+            ch.name?.toLowerCase().includes(valueLower),
           ),
         };
       });
 
     // Add children id if missing
     filteredNodes.forEach((node) => {
-      node.children.forEach((child, i) => {
-        child.id = child.id ?? i;
-        child.url = child.url ?? child.id;
-        if (child.children) {
-          child.children.forEach((grandChild, j) => {
-            grandChild.id = grandChild.id ?? j;
-            grandChild.url = grandChild.url ?? grandChild.id;
-          });
-        }
-      });
+      node.children.forEach(getFormatedChildren);
     });
 
     return normalizeData(filteredNodes);
@@ -124,6 +127,21 @@ const ListItemsTreeWithSearch = (props) => {
   const handleOnSearch = (searchValue) => {
     setSearchInput(searchValue);
     setItemData(searchFilter(data, searchValue));
+  };
+
+  /**
+   * Search handler
+   * @param {String} searchValue : String used to search
+   */
+  const handleOnFocus = async () => {
+    const activeTab = await call(
+      PLUGINS.TABS.NAME,
+      PLUGINS.TABS.CALL.GET_ACTIVE_TAB,
+    );
+
+    if (activeTab?.scope === "Flow") {
+      await call(activeTab.id, PLUGINS.EDITOR.FLOW.CALL.SET_FLOW_TO_DEFAULT);
+    }
   };
 
   //========================================================================================
@@ -160,7 +178,7 @@ const ListItemsTreeWithSearch = (props) => {
   return (
     <List className={classes.list} dense={true} component="div">
       <ListItem className={classes.searchHolder} component="div">
-        <Search onSearch={handleOnSearch} />
+        <Search onSearch={handleOnSearch} onFocus={handleOnFocus} />
       </ListItem>
       <Divider />
       <div className={classes.listHolder}>
@@ -172,6 +190,7 @@ const ListItemsTreeWithSearch = (props) => {
 
 ListItemsTreeWithSearch.propTypes = {
   data: PropTypes.array.isRequired,
+  call: PropTypes.func.isRequired,
 };
 
 export default ListItemsTreeWithSearch;

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Typography, Grid } from "@mov-ai/mov-fe-lib-react";
 import DocManager from "../plugins/DocManager/DocManager";
+import Orchestrator from "../plugins/Orchestrator/Orchestrator";
 import Dialog from "../plugins/Dialog/Dialog";
 import Alerts from "../plugins/Alerts/Alerts";
 import BottomBar from "../plugins/hosts/BottomBar/BottomBar";
@@ -17,12 +18,12 @@ import MainMenu from "../plugins/views/MainMenu/MainMenu";
 import Tabs from "../plugins/views/Tabs/Tabs";
 import PluginManagerIDE from "../engine/PluginManagerIDE/PluginManagerIDE";
 import Placeholder from "../plugins/views/Placeholder/Placeholder";
-import { PLUGINS, HOSTS } from "../utils/Constants";
+import { PLUGINS, HOSTS, KEYBIND_SCOPES } from "../utils/Constants";
 import { MainContext } from "../main-context";
 import { defaultFunction } from "../utils/Utils";
 import { addEditor } from "../plugins/DocManager/factory";
 import { addTool } from "../tools";
-import { addKeyBind } from "../utils/keybinds";
+import { useKeyBinds } from "../utils/keybinds";
 import * as genFunctions from "../utils/generalFunctions";
 import { KEYBINDINGS } from "../utils/shortcuts";
 import AppSettings, {
@@ -54,6 +55,7 @@ function BaseApp(props) {
   } = props;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { addKeyBind } = useKeyBinds(KEYBIND_SCOPES.APP);
 
   // Style hook
   const classes = appStyles(DEBUG_MODE)();
@@ -210,6 +212,10 @@ function installAppPlugins() {
     {
       profile: { name: PLUGINS.ALERT.NAME },
       factory: (profile) => new Alerts(profile),
+    },
+    {
+      profile: { name: PLUGINS.ORCHESTRATOR.NAME },
+      factory: (profile) => new Orchestrator(profile),
     },
   ];
   plugins.forEach((pluginDescription) => {

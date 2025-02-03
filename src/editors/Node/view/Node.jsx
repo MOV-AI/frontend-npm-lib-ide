@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
+import { Features } from "@mov-ai/mov-fe-lib-core";
 import { Typography } from "@mov-ai/mov-fe-lib-react";
 import { InfoIcon } from "@mov-ai/mov-fe-lib-react";
 import Model from "../model/Node";
@@ -287,14 +288,19 @@ export const Node = (props, ref) => {
    * @param {string} portName : Port name
    */
   const handleNewCallback = useCallback(
-    (defaultMsg, ioConfigName, portName) => {
+    async (defaultMsg, ioConfigName, portName) => {
       const scope = CallbackModel.SCOPE;
-      call(
+      const tempName = "new_callback";
+      await call(PLUGINS.DOC_MANAGER.NAME, PLUGINS.DOC_MANAGER.CALL.CREATE, {
+        scope,
+        name: tempName,
+      });
+      await call(
         PLUGINS.DOC_MANAGER.NAME,
         PLUGINS.DOC_MANAGER.CALL.SAVE,
         {
           scope,
-          name: " new_callback ",
+          name: tempName,
           data: {
             message: defaultMsg,
           },
@@ -443,16 +449,18 @@ export const Node = (props, ref) => {
         onRowDelete={deleteKeyValue}
         varName="commands"
       ></KeyValueTable>
-      <KeyValueTable
-        testId="section_container-configuration"
-        title={i18n.t("ContainerConfigurations")}
-        editable={editable}
-        data={data.containerConf}
-        columns={defaultColumns}
-        openEditDialog={handleOpenEditDialog}
-        onRowDelete={deleteKeyValue}
-        varName="containerConf"
-      ></KeyValueTable>
+      {Features.get("ontainerConfigurations") && (
+        <KeyValueTable
+          testId="section_container-configuration"
+          title={i18n.t("ContainerConfigurations")}
+          editable={editable}
+          data={data.containerConf}
+          columns={defaultColumns}
+          openEditDialog={handleOpenEditDialog}
+          onRowDelete={deleteKeyValue}
+          varName="containerConf"
+        ></KeyValueTable>
+      )}
     </Typography>
   );
 };

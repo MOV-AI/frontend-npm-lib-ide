@@ -48,24 +48,25 @@ class DrawerSub extends Sub {
     );
   }
 
+  _open(value, extra = {}) {
+    return {
+      ...this._value,
+      [this.index]: {
+        ...(this._value[this.index] ?? {}),
+        open: this.shared ? value : undefined,
+        ...extra,
+      },
+      [this._suffix]: value,
+      url: this._url,
+    };
+  }
+
   set open(value) {
     if (value === this.open) {
       this._target = this._value;
       return;
     }
-    this.update(
-      {
-        ...this._value,
-        [this.index]: {
-          ...(this._value[this.index] ?? {}),
-          open: this.shared ? value : undefined,
-        },
-        [this._suffix]: value,
-        url: this._url,
-      },
-      "$url.open",
-      true,
-    );
+    this.update(this._open(value), "$url.open", true);
   }
 
   get open() {
@@ -112,12 +113,16 @@ class DrawerSub extends Sub {
     delete bookmarks[name];
     return this.update(bookmarks, path);
   }
-}
 
-function selectBookmark(anchor, name) {
-  drawerSub.suffix = anchor;
-  drawerSub.setActive(name, { suffix: anchor });
-  drawerSub.open = name === drawerSub.active ? true : !drawerSub.open;
+  select(anchor, name, active) {
+    this.suffix = anchor;
+    const value = name === (active ?? name) ? !drawerSub.open : true;
+    return this.update(
+      { ...this._open(value, { active: name }) },
+      "$url.open",
+      true,
+    );
+  }
 }
 
 export const drawerSub = new DrawerSub();
@@ -130,8 +135,8 @@ function BookmarkTab(props) {
   const { active, name, bookmark, anchor, classes } = props;
 
   const handleOnClick = useCallback(() => {
-    selectBookmark(anchor, name);
-  }, [name, anchor]);
+    drawerSub.select(anchor, name, active);
+  }, [name, anchor, active]);
 
   return (
     <Tooltip title={bookmark.title || name} placement="left">
@@ -165,7 +170,7 @@ function DrawerPanel(props) {
   const sharedOpen = drawerSub.use(anchor);
   const { bookmarks = {}, open = true } = side;
   const active = side.active;
-  const renderedView = bookmarks[active]?.view ?? <></>;
+  const renderedView = bookmarks[active]?.view ?? (() => <></>);
   const realOpen =
     (open || open === undefined) && (!active || bookmarks?.[active]);
   drawerSub.echo("DrawerPanel", side, sharedOpen, realOpen);
@@ -175,7 +180,7 @@ function DrawerPanel(props) {
 
   const selectBookmarkCallback = useCallback(
     (name) => {
-      selectBookmark(anchor, name);
+      drawerSub.select(anchor, name, active);
     },
     [anchor, active],
   );
@@ -238,10 +243,7 @@ function DrawerPanel(props) {
   );
 }
 
-DrawerPanel.pluginMethods = [
-  ...Object.values(PLUGINS.RIGHT_DRAWER.CALL),
-  ...Object.values(DRAWER.METHODS),
-];
+DrawerPanel.pluginMethods = [...Object.values(DRAWER.METHODS)];
 
 export default withTheme(
   withHostReactPlugin(DrawerPanel, DrawerPanel.pluginMethods),

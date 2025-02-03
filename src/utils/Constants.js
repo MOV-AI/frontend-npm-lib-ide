@@ -26,13 +26,6 @@ export const SCOPES = {
   FLOW: "Flow",
 };
 
-export const BOOKMARK_METHODS = {
-  ADD_BOOKMARK: "addBookmark",
-  SET_BOOKMARK: "setBookmark",
-  REMOVE_BOOKMARK: "removeBookmark",
-  RESET_BOOKMARKS: "resetBookmarks",
-};
-
 export const DRAWER = {
   VIEWS: {
     PLUGIN: "PLUGIN",
@@ -113,6 +106,7 @@ export const PLUGINS = {
       OPEN_EDITOR: "openEditor",
       UPDATE_TAB_ID: "updateTabId",
       FOCUS_ACTIVE_TAB: "focusActiveTab",
+      FOCUS_EXISTING_TAB: "focusExistingTab",
       GET_ACTIVE_TAB: "getActiveTab",
     },
     ON: {
@@ -123,7 +117,6 @@ export const PLUGINS = {
   LEFT_DRAWER: {
     NAME: "left",
     CALL: {
-      ...BOOKMARK_METHODS,
       ...DRAWER.METHODS,
     },
     ON: {
@@ -133,7 +126,6 @@ export const PLUGINS = {
   RIGHT_DRAWER: {
     NAME: "right",
     CALL: {
-      ...BOOKMARK_METHODS,
       ...DRAWER.METHODS,
     },
     ON: {
@@ -170,6 +162,12 @@ export const PLUGINS = {
   PLACEHOLDER: {
     NAME: "placeholder",
   },
+  ORCHESTRATOR: {
+    NAME: "orchestrator",
+    CALL: {
+      RENDER_MENUS: "renderMenus",
+    },
+  },
   FLOW_EXPLORER: {
     NAME: "FlowExplorer",
     CALL: {},
@@ -178,10 +176,18 @@ export const PLUGINS = {
   SYSTEM_BAR: {
     NAME: "systemBar",
   },
+  // Exposed editor methods
+  EDITOR: {
+    FLOW: {
+      CALL: {
+        SET_FLOW_TO_DEFAULT: "setFlowsToDefault",
+      },
+    },
+  },
 };
 
 export const KEYBIND_SCOPES = {
-  APP: "global",
+  APP: "/",
   DIALOG: "dialog",
 };
 
