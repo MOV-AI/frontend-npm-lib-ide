@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3050](https://movai.atlassian.net/browse/FP-3050): Configurations: Toggle between XML and YAML isn't highlighting in real-time
+
 # v1.4.5
 
 - [FP-1013](https://movai.atlassian.net/browse/FP-1013): IDE - Optimize Flow shift select nodes
