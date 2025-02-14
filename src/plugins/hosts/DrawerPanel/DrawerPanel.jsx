@@ -18,13 +18,11 @@ const DrawerPanel = forwardRef((props, ref) => {
     anchor,
     initialOpenState,
     className,
-    length,
     children: bookmarkView,
   } = props;
   const [open, setOpen] = useState(initialOpenState);
   const [activeView, setActiveView] = useState(DRAWER.VIEWS.PLUGIN);
-  const realOpen = open && (anchor === "left" || length);
-  const classes = drawerPanelStyles(anchor === "left", realOpen)();
+  const classes = drawerPanelStyles(anchor === "left", open)();
 
   //========================================================================================
   /*                                                                                      *
@@ -84,7 +82,6 @@ const DrawerPanel = forwardRef((props, ref) => {
    */
   const resetDrawer = () => {
     setActiveView(DRAWER.VIEWS.PLUGIN);
-    setOpen(initialOpenState);
   };
 
   //========================================================================================
@@ -115,7 +112,7 @@ const DrawerPanel = forwardRef((props, ref) => {
   return (
     <Drawer
       id={hostName}
-      open={realOpen}
+      open={open}
       anchor={anchor}
       variant="persistent"
       style={{ ...style }}
@@ -140,7 +137,12 @@ export default withHostReactPlugin(
 
 DrawerPanel.propTypes = {
   hostName: PropTypes.string.isRequired,
+  anchor: PropTypes.string.isRequired,
+  className: PropTypes.string,
   initialOpenState: PropTypes.bool,
+  style: PropTypes.object,
+  children: PropTypes.object,
+  viewPlugins: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 };
 
 DrawerPanel.defaultProps = {
