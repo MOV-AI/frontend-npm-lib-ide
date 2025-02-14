@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { MonacoCodeEditor } from "@mov-ai/mov-fe-lib-code-editor";
@@ -31,6 +31,7 @@ export const Configuration = (props, ref) => {
     propsData: props.data,
     keysToDisconsider: Model.KEYS_TO_DISCONSIDER,
   });
+  const [extension, setExtension] = useState("yaml");
   // Style Hooks
   const classes = configurationStyles();
   const theme = useTheme();
@@ -99,6 +100,7 @@ export const Configuration = (props, ref) => {
    */
   const handleChangeFileType = (event, newExtension) => {
     event.stopPropagation();
+    setExtension(newExtension);
     updateConfigExtension(newExtension);
   };
 
@@ -116,7 +118,7 @@ export const Configuration = (props, ref) => {
    *                                                                                      */
   //========================================================================================
 
-  const renderEditor = () => {
+  const editorEl = useMemo(() => {
     return (
       <div
         data-testid="section_configuration-editor"
@@ -124,7 +126,7 @@ export const Configuration = (props, ref) => {
       >
         <MonacoCodeEditor
           value={data.code}
-          language={data.extension}
+          language={extension}
           theme={theme.codeEditor?.theme}
           options={{ readOnly: !editable }}
           onChange={updateConfigCode}
@@ -133,7 +135,7 @@ export const Configuration = (props, ref) => {
         />
       </div>
     );
-  };
+  }, [extension, classes.codeContainer, data.code]);
 
   return (
     <div
@@ -157,7 +159,7 @@ export const Configuration = (props, ref) => {
           </ToggleButtonGroup>
         </Toolbar>
       </AppBar>
-      {renderEditor()}
+      {editorEl}
     </div>
   );
 };
