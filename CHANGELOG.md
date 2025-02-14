@@ -1,5 +1,6 @@
 # TBD
 
+- [FP-3050](https://movai.atlassian.net/browse/FP-3050): Configurations: Toggle between XML and YAML isn't highlighting in real-time
 - [FP-3107](https://movai.atlassian.net/browse/FP-3107): IDE: File selection context disappeared
 
 # v1.4.5
