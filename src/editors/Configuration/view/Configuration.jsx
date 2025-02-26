@@ -33,6 +33,7 @@ export const Configuration = (props, ref) => {
   });
   const [extension, setExtension] = useState("yaml");
   // Style Hooks
+
   const classes = configurationStyles();
   const theme = useTheme();
 
@@ -69,12 +70,29 @@ export const Configuration = (props, ref) => {
    *                                                                                      */
   //========================================================================================
 
+  const isXML = (code) => {
+    const xmlPattern = /^\s*<(\?xml|[\w-]+)(\s|>)/;
+    return xmlPattern.test(code);
+  };
+
+  const isYAML = (code) => {
+    const yamlPattern = /^[\w\s-]+:\s*.+/m;
+    return yamlPattern.test(code) && !isXML(code);
+  };
+
+  const detectLanguage = (code) => {
+    if (isXML(code)) return "xml";
+    if (isYAML(code)) return "yaml";
+    return "plaintext";
+  };
+
   /**
    * Updates the config extension
    * @param {String} value
    */
   const updateConfigExtension = (value) => {
     if (instance.current) instance.current.setExtension(value);
+    console.log("setExtension ", instance.current.setExtension(value));
   };
 
   /**
@@ -85,6 +103,10 @@ export const Configuration = (props, ref) => {
   const updateConfigCode = (value) => {
     if (value === instance.current.getCode()) return;
     if (instance.current) instance.current.setCode(value);
+    console.log("value ", instance.current.setCode(value));
+    const checkLanguage = detectLanguage(value);
+    console.log("checkLanguage ", checkLanguage);
+    updateConfigExtension(checkLanguage);
   };
 
   //========================================================================================
@@ -102,6 +124,7 @@ export const Configuration = (props, ref) => {
     event.stopPropagation();
     setExtension(newExtension);
     updateConfigExtension(newExtension);
+    console.log("newExtension ", newExtension);
   };
 
   /**
