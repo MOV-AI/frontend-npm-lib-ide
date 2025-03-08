@@ -37,11 +37,12 @@ class BaseNode extends BaseNodeStruct {
    * @param {object} events functions to be called on node's events
    * @param {object} template the template data
    */
-  constructor({ canvas, node, events, template }) {
+  constructor({ canvas, node, events, template, mInterface }) {
     super(node);
     this.canvas = canvas;
     this.events = events;
     this._template = template;
+    this.mInterface = mInterface;
 
     //========================================================================================
     /*                                                                                      *
@@ -235,6 +236,9 @@ class BaseNode extends BaseNodeStruct {
       .attr("x", this.posX)
       .attr("y", this.posY);
 
+    this.data.Visualization[0] = new Number(this.object.attr("x"));
+    this.data.Visualization[1] = new Number(this.object.attr("y"));
+
     // add a rect to the svg element
     // this is the body of the node
     this.object
@@ -276,7 +280,9 @@ class BaseNode extends BaseNodeStruct {
   addEvents = () => {
     // node event listeners
     this.object.on("click", () => this.eventsOn(this.onClick));
-    this.object.on("mousedown", () => this.eventsOn(this.onMouseDown));
+    this.object.on("mousedown", () =>
+      this.eventsOn(this.onMouseDown.bind(this)),
+    );
     this.object.on("mouseenter", () => this.eventsOn(this.onMouseEnter));
     this.object.on("mouseleave", () => this.eventsOn(this.onMouseLeave));
     this.object.on("dblclick", () => this.eventsOn(this.onDblClick));
@@ -299,7 +305,7 @@ class BaseNode extends BaseNodeStruct {
       .drag()
       .on("start", () => this.eventsOn(this.onDragStart))
       .on("end", () => this.eventsOn(this.onDragEnd))
-      .on("drag", () => this.eventsOn(this.onDrag));
+      .on("drag", () => this.mInterface.graph.onNodeDrag(this, d3.event));
     this._drag.handler(this.object);
     return this;
   };
@@ -526,6 +532,7 @@ class BaseNode extends BaseNodeStruct {
    *
    */
   onMouseDown = () => {
+    this.mInterface.onMouseDown(d3.event, this);
     // Exit function if click is on port
     if (this.isPort(d3.event.target)) return;
     // Continue otherwise
@@ -610,8 +617,7 @@ class BaseNode extends BaseNodeStruct {
     // change the cursor style
     this.object.style("cursor", "move");
 
-    this._drag.delta.x = this.object.attr("x") - d3.event.x;
-    this._drag.delta.y = this.object.attr("y") - d3.event.y;
+    this.mInterface.downPos = { x: d3.event.x, y: d3.event.y };
   };
 
   /**
@@ -621,38 +627,13 @@ class BaseNode extends BaseNodeStruct {
   onDragEnd = () => {
     // change the cursor style
     this.object.style("cursor", "default");
+    this.mInterface.onDragEnd(this, d3.event);
 
     if (this.canvas.mode.current.id === EVT_NAMES.DRAG) {
       this.canvas.mode.previous.id === EVT_NAMES.SELECT_NODE
         ? this.canvas.setPreviousMode()
         : this.canvas.setMode(EVT_NAMES.DEFAULT);
     }
-  };
-
-  /**
-   * @private
-   * On drag node event
-   *
-   */
-  onDrag = () => {
-    // this will only set the mode once
-    // done here to filter from click events
-    this.canvas.setMode(EVT_NAMES.DRAG, this);
-    const { delta } = this._drag;
-
-    // set the node position
-    this.setPosition(d3.event.x + delta.x, d3.event.y + delta.y);
-
-    // trigger the onDrag event
-    if ("onDrag" in this.events) this.events.onDrag(this, d3.event);
-
-    const _onDrag = this.canvas.mode.current?.onDrag ?? {
-      next: () => {
-        /* empty method */
-      },
-    };
-
-    _onDrag.next(this);
   };
 
   handleSelectionChange(shiftKey) {
@@ -698,10 +679,6 @@ class BaseNode extends BaseNodeStruct {
 
     // set svg new posistion
     this.object.attr("x", this.posX).attr("y", this.posY);
-
-    // execute onDrag callbacks to trigger links render
-    if ("onDrag" in this.events)
-      this.events.onDrag(this, { x: this.posX, y: this.posY });
   }
 
   /**
