@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3138](https://movai.atlassian.net/browse/FP-3138): Not able to use dev container in all frontend repos
+
 # v1.4.6
 
 - [FP-2639](https://movai.atlassian.net/browse/FP-2639): IDE - Explorer windows popping up when switching to Get Started
