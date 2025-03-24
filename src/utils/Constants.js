@@ -7,7 +7,7 @@ export const APP_CUSTOM_CONFIG = "app-custom-ide-ce";
 export const MANAGER = "manager";
 
 export const DEFAULT_VALUE = undefined;
-export const DISABLED_VALUE = "None";
+export const DISABLED_VALUE = "{{DISABLED_VALUE}}";
 
 export const DATA_TYPES = {
   CONFIGURATION: "config",
