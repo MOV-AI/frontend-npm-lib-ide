@@ -1,5 +1,6 @@
 # TBD
 
+- [FP-3141](https://movai.atlassian.net/browse/FP-3141): Unable to update node parameter if the first value saved as None
 - [FP-3138](https://movai.atlassian.net/browse/FP-3138): Not able to use dev container in all frontend repos
 
 # v1.4.6
