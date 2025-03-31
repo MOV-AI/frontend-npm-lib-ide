@@ -21,6 +21,7 @@ const MESSAGES = {
   WARNING_MESSAGES: {},
   SUCCESS_MESSAGES: {
     SAVED_SUCCESSFULLY: "SavedSuccessfully",
+    SUCCESSFUL_FLOW_ACTION: "SuccessFlowAction",
     DOC_DELETE_SUCCESSFULLY: "DocDeleteSuccessfully",
     CALLBACK_CREATED: "CallbackCreated",
     NODE_IS_ACTION: "NodeIsAction",

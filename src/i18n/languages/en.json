@@ -254,6 +254,7 @@
   "StopFlow": "Stop Flow",
   "SubFlow": "Sub-Flow",
   "Submit": "Submit",
+  "SuccessFlowAction": "{{action}} flow successful",
   "TargetPort": "Target Port",
   "TemplateName-Colon": "Template Name:",
   "TheSelectedNodes": "the selected nodes",
