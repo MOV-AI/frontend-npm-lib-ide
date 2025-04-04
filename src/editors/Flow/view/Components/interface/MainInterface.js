@@ -1,6 +1,6 @@
-import lodash from "lodash";
 import { BehaviorSubject } from "rxjs";
 import { filter } from "rxjs/operators";
+import Factory from "../Nodes/Factory";
 import { NODE_TYPES, TYPES } from "../../Constants/constants";
 import { getNodeNameFromId } from "../../Core/Graph/Utils";
 import Graph from "../../Core/Graph/GraphBase";
@@ -427,6 +427,31 @@ export default class MainInterface {
     this.addLink();
   };
 
+  getUpdatedVersionOfNode = async (oldNode) => {
+    const newModel = this.modelView.current.serializeToDB();
+    const newNodes =
+      oldNode.nodeType === NODE_TYPES.NODE
+        ? newModel.NodeInst
+        : newModel.Container;
+    const currentNode = {
+      id: oldNode.data.id ?? oldNode.name,
+      ...newNodes[oldNode.name],
+    };
+
+    try {
+      const newNode = await Factory.create(
+        this.docManager,
+        Factory.OUTPUT[oldNode.nodeType],
+        { canvas: this.canvas, node: currentNode, events: oldNode.events },
+      );
+
+      return newNode;
+    } catch (err) {
+      console.warn(err);
+      return oldNode;
+    }
+  };
+
   onSelectNode = (data) => {
     const { nodes, shiftKey } = data;
     const { selectedNodes } = this;
@@ -437,9 +462,16 @@ export default class MainInterface {
     if (!shiftKey) selectedNodes.length = 0;
 
     filterNodes.forEach((node) => {
-      node.selected
-        ? selectedNodes.push(node)
-        : lodash.pull(selectedNodes, node);
+      if (node.selected) {
+        selectedNodes.push(node);
+      } else {
+        const nodesWithoutThisNode = selectedNodes.filter(
+          (n) => n.name !== node.name,
+        );
+
+        selectedNodes.length = 0;
+        selectedNodes.push(...nodesWithoutThisNode);
+      }
     });
   };
 

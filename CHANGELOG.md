@@ -1,5 +1,6 @@
 # TBD
 
+- [FP-3154](https://movai.atlassian.net/browse/FP-3154): IDE - Copy node from flows in split view missing edited parameters
 - [FP-3138](https://movai.atlassian.net/browse/FP-3138): Not able to use dev container in all frontend repos
 
 # v1.4.6
