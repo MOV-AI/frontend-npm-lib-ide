@@ -63,6 +63,13 @@ const ButtonTopBar = forwardRef((props, ref) => {
   );
 });
 
+ButtonTopBar.propTypes = {
+  disabled: PropTypes.bool,
+  testId: PropTypes.string,
+  onClick: PropTypes.func,
+  children: PropTypes.node,
+};
+
 const FlowTopBar = (props) => {
   // Props
   const {
@@ -588,6 +595,15 @@ const FlowTopBar = (props) => {
 
 FlowTopBar.propTypes = {
   id: PropTypes.string,
+  scope: PropTypes.string,
+  viewMode: PropTypes.string,
+  name: PropTypes.string,
+  loading: PropTypes.bool,
+  canRun: PropTypes.bool,
+  mainInterface: PropTypes.object,
+  call: PropTypes.func,
+  confirmationAlert: PropTypes.func,
+  alert: PropTypes.func,
   nodeStatusUpdated: PropTypes.func,
   onViewModeChange: PropTypes.func,
   onStartStopFlow: PropTypes.func,
