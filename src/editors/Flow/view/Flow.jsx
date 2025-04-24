@@ -1551,4 +1551,4 @@ Flow.propTypes = {
   contextOptions: PropTypes.func,
 };
 
-export default withEditorPlugin(Flow, { shouldReloadDataOnSave: true });
+export default withEditorPlugin(Flow);

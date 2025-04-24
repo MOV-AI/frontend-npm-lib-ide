@@ -27,24 +27,22 @@ const NODE_PROPS = {
   },
 };
 
-// thanks, ChatGPT
 // sets the object's value, given the path described by the splits
 function _set(obj, value, splits = []) {
   if (splits.length === 0) {
     throw new Error("Invalid splits array");
   }
-
-  let currentObj = obj;
-
+  let current = obj;
   for (let i = 0; i < splits.length - 1; i++) {
-    const split = splits[i];
-    currentObj = currentObj[split] = currentObj[split] || {};
+    const k = splits[i];
+    if (typeof current[k] !== "object" || current[k] === null) {
+      current[k] = {};
+    }
+    current = current[k];
   }
-
-  currentObj[splits[splits.length - 1]] = value;
+  current[splits[splits.length - 1]] = value;
 }
 
-// thanks, ChatGPT
 // ensure parents of lit nodes are lit
 function _marks(obj) {
   const result = {};
@@ -71,24 +69,31 @@ function _marks(obj) {
 function ensureParents(json) {
   const initial = { ...cachedNodeStatus };
   const newStatus = {};
-
-  for (const [key, value] of Object.entries(json))
+  for (const [key, value] of Object.entries(json)) {
     _set(newStatus, value, key.split("__"));
-
+  }
   const marks = _marks(newStatus);
-  const ret = { ...marks };
 
-  // turn off child nodes if parent is turned off
+  Object.entries(marks).forEach(([fullKey, val]) => {
+    if (val === 0) {
+      const parts = fullKey.split("__");
+      for (let i = 1; i < parts.length; i++) {
+        const parentKey = parts.slice(0, i).join("__");
+        marks[parentKey] = 0;
+      }
+    }
+  });
+  const ret = { ...marks };
   for (const key of Object.keys(initial)) {
     if (!ret[key]) ret[key] = 0;
     else
-      for (const key2 of Object.keys(marks))
+      for (const key2 of Object.keys(marks)) {
         if (key.startsWith(key2) && !marks[key2]) {
           ret[key] = 0;
           break;
         }
+      }
   }
-
   return ret;
 }
 
@@ -528,3 +533,5 @@ export default class MainInterface {
     // Nothing to do
   };
 }
+
+export { _set, _marks, ensureParents };
