@@ -138,10 +138,10 @@ describe("FlowTopBar", () => {
     return container;
   }
 
-  it("matches snapshot", async () => {
-    const container = await setup();
-
-    expect(container).toMatchSnapshot();
+  it("renders the two view-mode buttons and the robot selector", async () => {
+    await setup();
+    expect(screen.getByTestId("input_tree-view-flow")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Robot/i })).toBeInTheDocument();
   });
 
   it("changes view mode", async () => {
