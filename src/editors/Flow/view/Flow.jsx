@@ -1152,9 +1152,16 @@ export const Flow = (props, ref) => {
    * Handle copy node
    */
   const handleCopyNode = useCallback(
-    (evt) => {
+    async (evt) => {
       evt?.preventDefault?.();
-      const selectedNodes = getSelectedNodes();
+
+      const selectedNodes = await Promise.all(
+        getSelectedNodes().map(async (n) => {
+          const newNode = await getMainInterface().getUpdatedVersionOfNode(n);
+          return newNode;
+        }),
+      );
+
       const nodesPos = selectedNodes.map((n) =>
         Vec2.of(n.center.xCenter, n.center.yCenter),
       );
@@ -1180,11 +1187,11 @@ export const Flow = (props, ref) => {
       evt?.preventDefault?.();
       const position = (contextArgs.current =
         getMainInterface().canvas.mousePosition);
-      const nodesToCopy = clipboard.read(KEYS.NODES_TO_COPY);
-      if (!nodesToCopy) return;
+      const nodesToPaste = clipboard.read(KEYS.NODES_TO_COPY);
+      if (!nodesToPaste) return;
 
-      for (const [i, node] of nodesToCopy.nodes.entries()) {
-        const nodesPosFromCenter = nodesToCopy.nodesPosFromCenter || [
+      for (const [i, node] of nodesToPaste.nodes.entries()) {
+        const nodesPosFromCenter = nodesToPaste.nodesPosFromCenter || [
           Vec2.ZERO,
         ];
         const newPos = Vec2.of(position.x, position.y).add(
@@ -1193,7 +1200,7 @@ export const Flow = (props, ref) => {
         // Open dialog for each node to copy
         await pasteNodeDialog(newPos.toObject(), {
           node: node,
-          flow: nodesToCopy.flow,
+          flow: nodesToPaste.flow,
         });
       }
     },

@@ -9,7 +9,7 @@ import BasePort from "./BasePort";
 import BaseNodeHeader from "./BaseNodeHeader";
 import BaseNodeStatus from "./BaseNodeStatus";
 import { EVT_NAMES } from "../../../events";
-import { TYPES } from "../../../Constants/constants";
+import { NODE_TYPES, TYPES } from "../../../Constants/constants";
 
 const STYLE = {
   stroke: {
@@ -49,6 +49,7 @@ class BaseNode extends BaseNodeStruct {
      *                                                                                      */
     //========================================================================================
 
+    this.nodeType = NODE_TYPES.NODE;
     this.dbClickTimeout = null;
     this.object = null;
     this._drag = { handler: null, debounce: null, delta: { x: 0, y: 0 } };
