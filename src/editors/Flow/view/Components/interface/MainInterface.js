@@ -1,6 +1,6 @@
-import lodash from "lodash";
 import { BehaviorSubject } from "rxjs";
 import { filter } from "rxjs/operators";
+import Factory from "../Nodes/Factory";
 import { NODE_TYPES, TYPES } from "../../Constants/constants";
 import { getNodeNameFromId } from "../../Core/Graph/Utils";
 import Graph from "../../Core/Graph/GraphBase";
@@ -27,24 +27,22 @@ const NODE_PROPS = {
   },
 };
 
-// thanks, ChatGPT
 // sets the object's value, given the path described by the splits
 function _set(obj, value, splits = []) {
   if (splits.length === 0) {
     throw new Error("Invalid splits array");
   }
-
-  let currentObj = obj;
-
+  let current = obj;
   for (let i = 0; i < splits.length - 1; i++) {
-    const split = splits[i];
-    currentObj = currentObj[split] = currentObj[split] || {};
+    const k = splits[i];
+    if (typeof current[k] !== "object" || current[k] === null) {
+      current[k] = {};
+    }
+    current = current[k];
   }
-
-  currentObj[splits[splits.length - 1]] = value;
+  current[splits[splits.length - 1]] = value;
 }
 
-// thanks, ChatGPT
 // ensure parents of lit nodes are lit
 function _marks(obj) {
   const result = {};
@@ -71,24 +69,31 @@ function _marks(obj) {
 function ensureParents(json) {
   const initial = { ...cachedNodeStatus };
   const newStatus = {};
-
-  for (const [key, value] of Object.entries(json))
+  for (const [key, value] of Object.entries(json)) {
     _set(newStatus, value, key.split("__"));
-
+  }
   const marks = _marks(newStatus);
-  const ret = { ...marks };
 
-  // turn off child nodes if parent is turned off
+  Object.entries(marks).forEach(([fullKey, val]) => {
+    if (val === 0) {
+      const parts = fullKey.split("__");
+      for (let i = 1; i < parts.length; i++) {
+        const parentKey = parts.slice(0, i).join("__");
+        marks[parentKey] = 0;
+      }
+    }
+  });
+  const ret = { ...marks };
   for (const key of Object.keys(initial)) {
     if (!ret[key]) ret[key] = 0;
     else
-      for (const key2 of Object.keys(marks))
+      for (const key2 of Object.keys(marks)) {
         if (key.startsWith(key2) && !marks[key2]) {
           ret[key] = 0;
           break;
         }
+      }
   }
-
   return ret;
 }
 
@@ -427,6 +432,31 @@ export default class MainInterface {
     this.addLink();
   };
 
+  getUpdatedVersionOfNode = async (oldNode) => {
+    const newModel = this.modelView.current.serializeToDB();
+    const newNodes =
+      oldNode.nodeType === NODE_TYPES.NODE
+        ? newModel.NodeInst
+        : newModel.Container;
+    const currentNode = {
+      id: oldNode.data.id ?? oldNode.name,
+      ...newNodes[oldNode.name],
+    };
+
+    try {
+      const newNode = await Factory.create(
+        this.docManager,
+        Factory.OUTPUT[oldNode.nodeType],
+        { canvas: this.canvas, node: currentNode, events: oldNode.events },
+      );
+
+      return newNode;
+    } catch (err) {
+      console.warn(err);
+      return oldNode;
+    }
+  };
+
   onSelectNode = (data) => {
     const { nodes, shiftKey } = data;
     const { selectedNodes } = this;
@@ -437,9 +467,16 @@ export default class MainInterface {
     if (!shiftKey) selectedNodes.length = 0;
 
     filterNodes.forEach((node) => {
-      node.selected
-        ? selectedNodes.push(node)
-        : lodash.pull(selectedNodes, node);
+      if (node.selected) {
+        selectedNodes.push(node);
+      } else {
+        const nodesWithoutThisNode = selectedNodes.filter(
+          (n) => n.name !== node.name,
+        );
+
+        selectedNodes.length = 0;
+        selectedNodes.push(...nodesWithoutThisNode);
+      }
     });
   };
 
@@ -496,3 +533,5 @@ export default class MainInterface {
     // Nothing to do
   };
 }
+
+export { _set, _marks, ensureParents };

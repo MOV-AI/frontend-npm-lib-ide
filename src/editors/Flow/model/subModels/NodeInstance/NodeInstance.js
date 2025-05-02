@@ -399,7 +399,7 @@ class NodeInstance extends Model {
     LAUNCH: "launch",
     PERSISTENT: "persistent",
     REMAPPABLE: "remappable",
-    POSITION: "persistent",
+    POSITION: "position",
   };
 }
 
