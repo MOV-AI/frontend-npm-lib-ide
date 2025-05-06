@@ -1,5 +1,6 @@
 # TBD
 
+- [FP-3162](https://movai.atlassian.net/browse/FP-3162): IDE - Cannot read properties of undefined (reading 'trim')
 - [FP-3008](https://movai.atlassian.net/browse/FP-3008): IDE - Inconsistent Start and Stop behaviour
 - [FP-3138](https://movai.atlassian.net/browse/FP-3138): Not able to use dev container in all frontend repos
 
