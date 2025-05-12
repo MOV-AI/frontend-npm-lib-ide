@@ -1,7 +1,7 @@
 import TreeNode from "../BaseNode/TreeView/TreeNode";
 import BaseContainerNode from "../BaseNode/BaseContainerNode";
 import CollapsableItem from "../BaseNode/TreeView/CollapsableItem";
-import { TYPES } from "../../../Constants/constants";
+import { NODE_TYPES, TYPES } from "../../../Constants/constants";
 
 const RENDERING_MODE = {
   tree: 0,
@@ -23,6 +23,8 @@ class TreeContainerNode extends TreeNode {
     this.getExposedName = this.base.getExposedName;
     this._addPorts = () => this;
     this.isContainer = true;
+
+    this.nodeType = NODE_TYPES.TREE_NODE;
 
     // initialize the container
     this.init();
