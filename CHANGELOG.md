@@ -1,10 +1,7 @@
 # TBD
 
-<<<<<<< HEAD
-
-- # [FP-2947](https://movai.atlassian.net/browse/FP-2947): IDE - Searching for a NODE with same name as flow doesn't return results
+- [FP-2947](https://movai.atlassian.net/browse/FP-2947): IDE - Searching for a NODE with same name as flow doesn't return results
 - [FP-3154](https://movai.atlassian.net/browse/FP-3154): IDE - Copy node from flows in split view missing edited parameters
-  > > > > > > > dev
 - [FP-3008](https://movai.atlassian.net/browse/FP-3008): IDE - Inconsistent Start and Stop behaviour
 - [FP-3138](https://movai.atlassian.net/browse/FP-3138): Not able to use dev container in all frontend repos
 
