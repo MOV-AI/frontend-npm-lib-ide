@@ -1,4 +1,4 @@
-# TBD
+# v2.6.
 
 - [FP-3162](https://movai.atlassian.net/browse/FP-3162): IDE - Cannot read properties of undefined (reading 'trim')
 - [FP-3202](https://movai.atlassian.net/browse/FP-3202): IDE - When opening a Flow, a message appears
