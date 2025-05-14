@@ -277,12 +277,14 @@ const FlowTopBar = (props) => {
     setActionLoading(false);
     setIsActive(getFlowPath() === robotStatus.activeFlow);
 
-    alert({
-      message: i18n.t(SUCCESS_MESSAGES.SUCCESSFUL_FLOW_ACTION, {
-        action: requestedSuccessfulActionRef.current,
-      }),
-      severity: ALERT_SEVERITIES.SUCCESS,
-    });
+    if (requestedSuccessfulActionRef.current) {
+      alert({
+        message: i18n.t(SUCCESS_MESSAGES.SUCCESSFUL_FLOW_ACTION, {
+          action: requestedSuccessfulActionRef.current,
+        }),
+        severity: ALERT_SEVERITIES.SUCCESS,
+      });
+    }
 
     requestedSuccessfulActionRef.current = "";
   }, [robotStatus.activeFlow, getFlowPath, setActionLoading, alert]);

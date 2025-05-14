@@ -104,6 +104,7 @@ export const Node = (props, ref) => {
   const setPort = useCallback((value, resolve, reject, previousData) => {
     try {
       if (!instance.current) throw new Error("NoInstance");
+      if (!value.name) throw new Error(ERROR_MESSAGES.NAME_IS_MANDATORY);
 
       // Trim name
       value.name = value.name.trim();
@@ -116,7 +117,7 @@ export const Node = (props, ref) => {
 
       // Check for transport/package/message
       if (!value.template)
-        throw new Error(i18n.t(ERROR_MESSAGES.NO_TRANSPORT_PROTOCOL_CHOSEN));
+        throw new Error(ERROR_MESSAGES.NO_TRANSPORT_PROTOCOL_CHOSEN);
       else if (!value.msgPackage)
         throw new Error(ERROR_MESSAGES.NO_PACKAGE_CHOSEN);
       else if (!value.message)
@@ -132,7 +133,7 @@ export const Node = (props, ref) => {
       resolve();
     } catch (err) {
       // Show alert
-      alert({ message: err.message, severity: ALERT_SEVERITIES.ERROR });
+      alert({ message: i18n.t(err.message), severity: ALERT_SEVERITIES.ERROR });
       // Reject promise
       reject();
     }
