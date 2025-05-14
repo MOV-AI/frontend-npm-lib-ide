@@ -7,6 +7,7 @@ import ListItemsTreeWithSearch, {
 } from "./../../../../../plugins/views/Explorer/components/ListItemTree/ListItemsTreeWithSearch";
 import { withViewPlugin } from "../../../../../engine/ReactPlugin/ViewReactPlugin";
 import { PLUGINS } from "../../../../../utils/Constants";
+import Flow from "../../../model/Flow";
 import Preview from "./Preview";
 
 import { explorerStyles } from "./styles";
@@ -87,7 +88,14 @@ const Explorer = (props) => {
     (store) => {
       return store
         .getDocs()
-        .filter((d) => !d.isNew && d.id !== Utils.getNameFromURL(flowId));
+        .filter(
+          ({ isNew, id, constructor }) =>
+            !isNew &&
+            !(
+              id === Utils.getNameFromURL(flowId) &&
+              constructor.SCOPE === Flow.SCOPE
+            ),
+        );
     },
     [flowId],
   );
