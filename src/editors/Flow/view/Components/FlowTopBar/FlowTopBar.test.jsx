@@ -187,12 +187,10 @@ describe("FlowTopBar", () => {
     });
 
     await waitFor(() =>
-      expect(Rest.post).toHaveBeenCalledWith({
-        path: "v1/frontend/ide/",
-        body: {
-          func: "sendToRobot",
-          args: ["START", "path1", "r1"],
-        },
+      expect(helper.sendToRobot).toHaveBeenCalledWith({
+        action: "START",
+        flowPath: "path1",
+        robotId: "r1",
       }),
     );
   });
@@ -207,17 +205,15 @@ describe("FlowTopBar", () => {
 
     await setup();
 
-    await act(async () =>
-      userEvent.click(screen.getByTestId("input_stop-flow")),
-    );
+    act(() => {
+      userEvent.click(screen.getByTestId("input_stop-flow"));
+    });
 
     await waitFor(() =>
-      expect(Rest.post).toHaveBeenCalledWith({
-        path: "v1/frontend/ide/",
-        body: {
-          func: "sendToRobot",
-          args: ["STOP", "path1", "r1"],
-        },
+      expect(helper.sendToRobot).toHaveBeenCalledWith({
+        action: "STOP",
+        flowPath: "path1",
+        robotId: "r1",
       }),
     );
   });
