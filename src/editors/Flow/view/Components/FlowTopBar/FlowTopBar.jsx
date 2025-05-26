@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import PropTypes from "prop-types";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { RobotManager, CONSTANTS, Rest } from "@mov-ai/mov-fe-lib-core";
+import { RobotManager, CONSTANTS } from "@mov-ai/mov-fe-lib-core";
 import {
   Typography,
   Tooltip,
@@ -286,6 +286,7 @@ const FlowTopBar = (props) => {
       });
     }
 
+    setActionLoading(false);
     requestedSuccessfulActionRef.current = "";
   }, [robotStatus.activeFlow, getFlowPath, setActionLoading, alert]);
 
@@ -361,28 +362,32 @@ const FlowTopBar = (props) => {
       if (!canStart) return;
 
       setActionLoading(true);
-
       try {
-        const result = await Rest.post({
-          path: "v1/frontend/ide/",
-          body: {
-            func: "sendToRobot",
-            args: [action, flowPath || getFlowPath(), robotSelected],
-          },
+        const res = helperRef.current.sendToRobot({
+          action,
+          flowPath: flowPath || getFlowPath(),
+          robotId: robotSelected,
         });
 
-        if (!result.success) throw result.error;
+        if (!res || !isMounted.current) {
+          alert({
+            message: i18n.t("FailedFlowAction", {
+              action: i18n.t(action.toLowerCase()),
+            }),
+            severity: ALERT_SEVERITIES.ERROR,
+          });
+          return;
+        }
 
         requestedSuccessfulActionRef.current = action;
       } catch (err) {
         console.warn("Error sending action to robot", err);
         alert({
-          message: i18n.t(err),
+          message: i18n.t(ERROR_MESSAGES.ERROR_RUNNING_SPECIFIC_CALLBACK, {
+            callbackName: BACKEND_CALLBACK_NAME,
+          }),
           severity: ALERT_SEVERITIES.ERROR,
         });
-        setActionLoading(false);
-      } finally {
-        if (buttonDOMRef.current) buttonDOMRef.current.blur();
       }
     },
     [alert, canRunFlow, getFlowPath, robotSelected],
