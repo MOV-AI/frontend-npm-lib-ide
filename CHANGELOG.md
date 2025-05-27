@@ -1,3 +1,7 @@
+# 2.6.1
+
+- [FP-3008](https://movai.atlassian.net/browse/FP-3008): IDE - Inconsistent Start and Stop behaviour - Revert
+
 # v2.6.0
 
 - [FP-3162](https://movai.atlassian.net/browse/FP-3162): IDE - Cannot read properties of undefined (reading 'trim')

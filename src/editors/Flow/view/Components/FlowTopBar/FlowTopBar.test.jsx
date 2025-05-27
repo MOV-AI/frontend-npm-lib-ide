@@ -15,7 +15,6 @@ jest.mock("../../../../../utils/Workspace", () => {
 import React from "react";
 import { render, screen, within, waitFor, act } from "@testing-library/react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
-import { Rest } from "@mov-ai/mov-fe-lib-core";
 import userEvent from "@testing-library/user-event";
 import WorkspaceFactory from "../../../../../utils/Workspace";
 
@@ -28,9 +27,6 @@ jest.mock("@mov-ai/mov-fe-lib-core", () => ({
     ),
   })),
   CONSTANTS: { GLOBAL_WORKSPACE: "global" },
-  Rest: {
-    post: jest.fn().mockResolvedValue({ success: true }),
-  },
 }));
 
 jest.mock("./hooks/useNodeStatusUpdate", () => ({
@@ -187,12 +183,10 @@ describe("FlowTopBar", () => {
     });
 
     await waitFor(() =>
-      expect(Rest.post).toHaveBeenCalledWith({
-        path: "v1/frontend/ide/",
-        body: {
-          func: "sendToRobot",
-          args: ["START", "path1", "r1"],
-        },
+      expect(helper.sendToRobot).toHaveBeenCalledWith({
+        action: "START",
+        flowPath: "path1",
+        robotId: "r1",
       }),
     );
   });
@@ -207,17 +201,15 @@ describe("FlowTopBar", () => {
 
     await setup();
 
-    await act(async () =>
-      userEvent.click(screen.getByTestId("input_stop-flow")),
-    );
+    act(() => {
+      userEvent.click(screen.getByTestId("input_stop-flow"));
+    });
 
     await waitFor(() =>
-      expect(Rest.post).toHaveBeenCalledWith({
-        path: "v1/frontend/ide/",
-        body: {
-          func: "sendToRobot",
-          args: ["STOP", "path1", "r1"],
-        },
+      expect(helper.sendToRobot).toHaveBeenCalledWith({
+        action: "STOP",
+        flowPath: "path1",
+        robotId: "r1",
       }),
     );
   });
