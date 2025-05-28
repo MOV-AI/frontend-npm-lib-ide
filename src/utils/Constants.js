@@ -237,9 +237,7 @@ export const DEFAULT_KEY_VALUE_DATA = {
  * and then followed by any letters, numbers, underscores and forward slash (/),
  * but can’t have 2 underscores in a row;
  */
-export const ROS_VALID_NAMES = new RegExp(
-  /(?!.*__.*)^[a-zA-Z~/]{1}?[a-zA-Z0-9_/]*$/,
-);
+export const ROS_VALID_NAMES = new RegExp(/^[a-zA-Z_~/][a-zA-Z0-9_/]*$/);
 
 /**
  * Used for Parameters, Environment Variables and Command Line
