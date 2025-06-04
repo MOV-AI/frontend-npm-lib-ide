@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3212](https://movai.atlassian.net/browse/FP-3212): Unable to create a type Array flow parameter with a list of strings
+
 # 2.6.1
 
 - [FP-3008](https://movai.atlassian.net/browse/FP-3008): IDE - Inconsistent Start and Stop behaviour - Revert

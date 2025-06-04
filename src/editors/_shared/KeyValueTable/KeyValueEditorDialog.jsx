@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState, memo } from "react";
+import React, { useCallback, useState, memo } from "react";
 import PropTypes from "prop-types";
-import { i18n } from "@mov-ai/mov-fe-lib-react";
+import { i18n, withTheme } from "@mov-ai/mov-fe-lib-react";
 import _isEqual from "lodash/isEqual";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -16,7 +16,6 @@ import {
   DialogActions,
   Button,
 } from "@material-ui/core";
-import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../themes";
 import { DialogTitle } from "../../../plugins/Dialog/components/AppDialog/AppDialog";
 
@@ -33,7 +32,6 @@ const KeyValueEditorDialog = (props) => {
     onClose,
     onSubmit,
     nameValidation,
-    valueValidation,
     title,
     isNew,
     data,
@@ -146,7 +144,6 @@ const KeyValueEditorDialog = (props) => {
    *                                    Render Methods                                    *
    *                                                                                      */
   //========================================================================================
-
   return (
     <Dialog open={true} onClose={onClose} classes={{ paper: classes.paper }}>
       <div data-testid="section_key-value-editor-dialog">
@@ -185,7 +182,7 @@ const KeyValueEditorDialog = (props) => {
                 />
               </FormControl>
             )}
-            {renderCustomContent && renderCustomContent()}
+            {renderCustomContent?.()}
             <InputLabel className={classes.label}>{i18n.t("Value")}</InputLabel>
             <FormControl className={classes.marginTop}>
               {renderValueEditor(data.value, {
