@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3208](https://movai.atlassian.net/browse/FP-3208): IDE - Unable to add a Node after importing the Node to MOV.AI. (which already existed)
+
 # 2.6.1
 
 - [FP-3008](https://movai.atlassian.net/browse/FP-3008): IDE - Inconsistent Start and Stop behaviour - Revert

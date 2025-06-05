@@ -249,7 +249,7 @@ export const ROS_VALID_NAMES = new RegExp(
  * but can’t have 2 underscores in a row;
  */
 export const ROS_VALID_NAMES_VARIATION = new RegExp(
-  /(?!.*__.*)^[a-zA-Z_~/]{1}?[a-zA-Z0-9_/]*$/,
+  /^[a-zA-Z_~/][a-zA-Z0-9_/]*$/,
 );
 
 export const ALERT_SEVERITIES = {
