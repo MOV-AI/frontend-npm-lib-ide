@@ -1,4 +1,4 @@
-# TBD
+# 2.6.2
 
 - [FP-3212](https://movai.atlassian.net/browse/FP-3212): Unable to create a type Array flow parameter with a list of strings
 - [FP-3208](https://movai.atlassian.net/browse/FP-3208): IDE - Unable to add a Node after importing the Node to MOV.AI. (which already existed)
