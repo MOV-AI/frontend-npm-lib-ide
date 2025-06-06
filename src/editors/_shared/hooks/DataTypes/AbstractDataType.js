@@ -173,15 +173,15 @@ class AbstractDataType {
   async validate(value) {
     // "None" indicates a disabled value
     if (value === DISABLED_VALUE) return { success: true };
-
     try {
       const parsed = this._validationParse(value);
       return {
-        success: await this._validate(parsed),
+        success: this._validate(parsed),
         parsed,
       };
     } catch (_e) {
-      return { success: false };
+      console.error("Validation error:", _e);
+      return { success: false, error: _e?.message || _e };
     }
   }
 
