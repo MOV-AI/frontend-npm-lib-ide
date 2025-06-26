@@ -87,6 +87,7 @@ class BasePort extends BasePortStruct {
       .attr("r", this.radius)
       .attr("stroke-width", 0)
       .attr("class", css)
+      .attr("id", `${this.data.name}_port`)
       .attr("data-testid", this.data.name);
 
     return this;
