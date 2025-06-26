@@ -105,6 +105,8 @@ export const Flow = (props, ref) => {
   const clipboard = useMemo(() => new Clipboard(), []);
 
   // Refs
+  const tooltipConfigTimerRef = useRef(null);
+  const lastHoveredIdRef = useRef(null);
   const interfaceSubscriptionsList = useRef([]);
   const contextArgs = useRef(null);
   const mainInterfaceRef = useRef();
@@ -786,6 +788,32 @@ export const Flow = (props, ref) => {
   }, [call, onLinkSelected, onNodeSelected]);
 
   /**
+   * Used to handle the port tooltip closing
+   */
+  const handleCloseTooltip = useCallback((hoveredId, timer = 3000) => {
+    lastHoveredIdRef.current = hoveredId;
+    clearTimeout(tooltipConfigTimerRef.current);
+
+    tooltipConfigTimerRef.current = setTimeout(() => {
+      const bubbledUpHoveredElements = document.querySelectorAll(":hover");
+
+      const checkIfIdInHoveredElements = [...bubbledUpHoveredElements].find(
+        (el) =>
+          el.id === `${lastHoveredIdRef.current}_port` ||
+          el.id === `${lastHoveredIdRef.current}_tooltip`,
+      );
+
+      if (!hoveredId && !checkIfIdInHoveredElements) {
+        setTooltipConfig(null);
+        tooltipConfigTimerRef.current = null;
+        lastHoveredIdRef.current = null;
+      } else {
+        handleCloseTooltip(hoveredId);
+      }
+    }, timer);
+  }, []);
+
+  /**
    * Subscribe to mainInterface and canvas events
    */
   const onReady = useCallback(
@@ -1056,10 +1084,13 @@ export const Flow = (props, ref) => {
               left: event.layerX + 8,
               top: event.layerY,
             };
+
             setTooltipConfig({
               port,
               anchorPosition,
             });
+
+            handleCloseTooltip(port.name);
           }),
       );
 
@@ -1073,9 +1104,7 @@ export const Flow = (props, ref) => {
                 event.type === EVT_TYPES.PORT,
             ),
           )
-          .subscribe(() => {
-            setTooltipConfig(null);
-          }),
+          .subscribe(() => handleCloseTooltip(null, 300)),
       );
 
       interfaceSubscriptionsList.current.push(
@@ -1103,6 +1132,7 @@ export const Flow = (props, ref) => {
       getContextOptions,
       handleCopyNode,
       handleDeleteNode,
+      handleCloseTooltip,
       startNode,
       stopNode,
       handleDeleteLink,
@@ -1529,7 +1559,12 @@ export const Flow = (props, ref) => {
       {contextMenuOptions?.options && (
         <FlowContextMenu onClose={handleContextClose} {...contextMenuOptions} />
       )}
-      {tooltipConfig && <PortTooltip {...tooltipConfig} />}
+      {tooltipConfig && (
+        <PortTooltip
+          {...tooltipConfig}
+          handleCloseTooltip={handleCloseTooltip}
+        />
+      )}
     </div>
   );
 };

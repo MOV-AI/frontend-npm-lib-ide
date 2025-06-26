@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
 
 const PortTooltip = (props) => {
   const classes = useStyles();
-  const { anchorPosition, port } = props;
+  const { anchorPosition, port, handleCloseTooltip } = props;
   const title = i18n.t("Port");
 
   const itemTextProps = {
@@ -47,9 +47,12 @@ const PortTooltip = (props) => {
 
   return (
     <Paper
+      id={`${port.data.name}_tooltip`}
       style={{ ...anchorPosition }}
       className={classes.root}
       elevation={14}
+      onMouseOver={() => handleCloseTooltip(`${port.data.name}_tooltip`)}
+      onMouseOut={() => handleCloseTooltip(null, 300)}
     >
       <List
         dense={true}
@@ -77,6 +80,7 @@ PortTooltip.propTypes = {
     top: PropTypes.number,
   }).isRequired,
   port: PropTypes.object.isRequired,
+  handleCloseTooltip: PropTypes.function.isRequired,
 };
 
 PortTooltip.defaultProps = {};
