@@ -1,6 +1,7 @@
 # TBD
 
 - [FP-2905](https://movai.atlassian.net/browse/FP-2905): When changing a node template, the node is not updated in the flow
+- [FP-3081](https://movai.atlassian.net/browse/FP-3081): Port Modal lingers frequently
 
 # 2.6.2
 
