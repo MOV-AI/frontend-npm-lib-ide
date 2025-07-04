@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3254](https://movai.atlassian.net/browse/FP-3254): Inconsistent error message when creating node with invalid name
+
 # 2.6.2
 
 - [FP-3212](https://movai.atlassian.net/browse/FP-3212): Unable to create a type Array flow parameter with a list of strings
