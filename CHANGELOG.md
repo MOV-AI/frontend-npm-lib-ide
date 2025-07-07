@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3163](https://movai.atlassian.net/browse/FP-3163): Clicking on the flow of a member opens the flow with the master
+
 # 2.6.2
 
 - [FP-3212](https://movai.atlassian.net/browse/FP-3212): Unable to create a type Array flow parameter with a list of strings
