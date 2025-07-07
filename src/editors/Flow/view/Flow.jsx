@@ -1470,6 +1470,7 @@ export const Flow = (props, ref) => {
   usePluginMethods(ref, {
     renderMenus,
     setFlowsToDefault,
+    onRobotChange,
   });
 
   //========================================================================================
@@ -1477,7 +1478,6 @@ export const Flow = (props, ref) => {
    *                                        Render                                        *
    *                                                                                      */
   //========================================================================================
-
   return (
     <div data-testid="section_flow-editor" className={classes.root}>
       <div id="flow-top-bar">
@@ -1503,6 +1503,7 @@ export const Flow = (props, ref) => {
             onEnabled: handleSearchEnabled,
             onDisabled: handleSearchDisabled,
           }}
+          robotSelected={robotSelected}
         ></FlowTopBar>
       </div>
       <BaseFlow
