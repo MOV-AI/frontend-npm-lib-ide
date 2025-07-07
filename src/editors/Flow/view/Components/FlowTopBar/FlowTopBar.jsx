@@ -94,7 +94,6 @@ const FlowTopBar = (props) => {
 
   // Sync robotSelected state with robotSelect prop changes
   useEffect(() => {
-    console.log("robotSelect prop changed:", robotSelect);
     setRobotSelected(robotSelect || "");
   }, [robotSelect]);
 
@@ -235,11 +234,6 @@ const FlowTopBar = (props) => {
    */
   const onLoadRobotList = useCallback(
     (robots) => {
-      console.log(
-        "onLoadRobotList",
-        robotSelected,
-        workspaceManager.getSelectedRobot(),
-      );
       const currentSelected =
         robotSelected || workspaceManager.getSelectedRobot();
       // Remove blacklisted robots
@@ -252,7 +246,7 @@ const FlowTopBar = (props) => {
       // Get running Robot
       getRunningRobot(currentSelected, robots);
     },
-    [getRunningRobot, workspaceManager],
+    [getRunningRobot, robotSelected, workspaceManager],
   );
 
   /**
