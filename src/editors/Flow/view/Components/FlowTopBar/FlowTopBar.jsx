@@ -86,10 +86,17 @@ const FlowTopBar = (props) => {
     searchProps,
     confirmationAlert,
     canRun,
+    robotSelected: robotSelect,
   } = props;
   // State hooks
   const [actionLoading, setActionLoading] = useState(false);
-  const [robotSelected, setRobotSelected] = useState("");
+  const [robotSelected, setRobotSelected] = useState(robotSelect || "");
+
+  // Sync robotSelected state with robotSelect prop changes
+  useEffect(() => {
+    setRobotSelected(robotSelect || "");
+  }, [robotSelect]);
+
   const [robotList, setRobotList] = useState({});
 
   // Other hooks
@@ -227,7 +234,8 @@ const FlowTopBar = (props) => {
    */
   const onLoadRobotList = useCallback(
     (robots) => {
-      const currentSelected = workspaceManager.getSelectedRobot();
+      const currentSelected =
+        robotSelected || workspaceManager.getSelectedRobot();
       // Remove blacklisted robots
       Object.keys(robots).forEach((robotId) => {
         if (ROBOT_BLACKLIST.includes(robots[robotId].RobotName))
@@ -238,7 +246,7 @@ const FlowTopBar = (props) => {
       // Get running Robot
       getRunningRobot(currentSelected, robots);
     },
-    [getRunningRobot, workspaceManager],
+    [getRunningRobot, robotSelected, workspaceManager],
   );
 
   /**
