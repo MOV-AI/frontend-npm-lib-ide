@@ -42,7 +42,11 @@ import InvalidLinksWarning from "./Components/Warnings/InvalidLinksWarning";
 import InvalidParametersWarning from "./Components/Warnings/InvalidParametersWarning";
 import InvalidExposedPortsWarning from "./Components/Warnings/InvalidExposedPortsWarning";
 import { EVT_NAMES, EVT_TYPES } from "./events";
-import { FLOW_VIEW_MODE, TYPES } from "./Constants/constants";
+import {
+  FLOW_VIEW_MODE,
+  TYPES,
+  PORT_TOOLTIP_MODAL_TIMEOUTS,
+} from "./Constants/constants";
 import GraphBase from "./Core/Graph/GraphBase";
 import GraphTreeView from "./Core/Graph/GraphTreeView";
 import { getBaseContextOptions } from "./contextOptions";
@@ -105,6 +109,8 @@ export const Flow = (props, ref) => {
   const clipboard = useMemo(() => new Clipboard(), []);
 
   // Refs
+  const tooltipConfigTimerRef = useRef(null);
+  const lastHoveredIdRef = useRef(null);
   const interfaceSubscriptionsList = useRef([]);
   const contextArgs = useRef(null);
   const mainInterfaceRef = useRef();
@@ -709,7 +715,7 @@ export const Flow = (props, ref) => {
           addNodeMenu(node, true);
           activateEditor();
         }
-      }, 300);
+      }, 100);
     },
     [addNodeMenu, unselectNode, onLinkSelected, activateEditor],
   );
@@ -784,6 +790,35 @@ export const Flow = (props, ref) => {
       { action: "setMode", value: EVT_NAMES.DEFAULT },
     );
   }, [call, onLinkSelected, onNodeSelected]);
+
+  /**
+   * Used to handle the port tooltip closing
+   */
+  const handleCloseTooltip = useCallback(
+    (hoveredId, timer = PORT_TOOLTIP_MODAL_TIMEOUTS.NORMAL) => {
+      lastHoveredIdRef.current = hoveredId;
+      clearTimeout(tooltipConfigTimerRef.current);
+
+      tooltipConfigTimerRef.current = setTimeout(() => {
+        const bubbledUpHoveredElements = document.querySelectorAll(":hover");
+
+        const checkIfIdInHoveredElements = [...bubbledUpHoveredElements].find(
+          (el) =>
+            el.id === `${lastHoveredIdRef.current}_port` ||
+            el.id === `${lastHoveredIdRef.current}_tooltip`,
+        );
+
+        if (!hoveredId && !checkIfIdInHoveredElements) {
+          setTooltipConfig(null);
+          tooltipConfigTimerRef.current = null;
+          lastHoveredIdRef.current = null;
+        } else {
+          handleCloseTooltip(hoveredId);
+        }
+      }, timer);
+    },
+    [],
+  );
 
   /**
    * Subscribe to mainInterface and canvas events
@@ -1056,10 +1091,13 @@ export const Flow = (props, ref) => {
               left: event.layerX + 8,
               top: event.layerY,
             };
+
             setTooltipConfig({
               port,
               anchorPosition,
             });
+
+            handleCloseTooltip(port.name);
           }),
       );
 
@@ -1073,9 +1111,9 @@ export const Flow = (props, ref) => {
                 event.type === EVT_TYPES.PORT,
             ),
           )
-          .subscribe(() => {
-            setTooltipConfig(null);
-          }),
+          .subscribe(() =>
+            handleCloseTooltip(null, PORT_TOOLTIP_MODAL_TIMEOUTS.FORCE_CLOSE),
+          ),
       );
 
       interfaceSubscriptionsList.current.push(
@@ -1103,6 +1141,7 @@ export const Flow = (props, ref) => {
       getContextOptions,
       handleCopyNode,
       handleDeleteNode,
+      handleCloseTooltip,
       startNode,
       stopNode,
       handleDeleteLink,
@@ -1530,7 +1569,12 @@ export const Flow = (props, ref) => {
       {contextMenuOptions?.options && (
         <FlowContextMenu onClose={handleContextClose} {...contextMenuOptions} />
       )}
-      {tooltipConfig && <PortTooltip {...tooltipConfig} />}
+      {tooltipConfig && (
+        <PortTooltip
+          {...tooltipConfig}
+          handleCloseTooltip={handleCloseTooltip}
+        />
+      )}
     </div>
   );
 };

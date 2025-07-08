@@ -1,6 +1,8 @@
 # TBD
 
 - [FP-3163](https://movai.atlassian.net/browse/FP-3163): Clicking on the flow of a member opens the flow with the master
+- [FP-2905](https://movai.atlassian.net/browse/FP-2905): When changing a node template, the node is not updated in the flow
+- [FP-3081](https://movai.atlassian.net/browse/FP-3081): Port Modal lingers frequently
 
 # 2.6.2
 
