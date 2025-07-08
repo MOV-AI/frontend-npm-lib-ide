@@ -1,4 +1,4 @@
-# TBD
+# 2.6.3
 
 - [FP-3163](https://movai.atlassian.net/browse/FP-3163): Clicking on the flow of a member opens the flow with the master
 - [FP-2905](https://movai.atlassian.net/browse/FP-2905): When changing a node template, the node is not updated in the flow
