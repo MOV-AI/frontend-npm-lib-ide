@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3262](https://movai.atlassian.net/browse/FP-3262): New installation of movai 2.4 maintains the tab metadata history at IDE from another movai bot
+
 # 2.6.3
 
 - [FP-3163](https://movai.atlassian.net/browse/FP-3163): Clicking on the flow of a member opens the flow with the master
