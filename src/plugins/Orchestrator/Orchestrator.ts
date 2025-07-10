@@ -57,6 +57,8 @@ class Orchestrator extends IDEPlugin {
 
       this.cachedMenus.set(pluginName, pluginRenderMenus);
       pluginRenderMenus();
+    } else {
+      this.call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.CLOSE);
     }
   }
 
@@ -67,10 +69,14 @@ class Orchestrator extends IDEPlugin {
   //========================================================================================
 
   renderMenus(data) {
-    const pluginRef = data.ref.current;
+    const pluginRef = data.ref?.current;
 
-    if (pluginRef !== null) {
+    PluginManagerIDE.resetBookmarks();
+
+    if (pluginRef) {
       this.updateMenus(data.id, pluginRef);
+    } else {
+      this.call(PLUGINS.RIGHT_DRAWER.NAME, PLUGINS.RIGHT_DRAWER.CALL.CLOSE);
     }
   }
 }
