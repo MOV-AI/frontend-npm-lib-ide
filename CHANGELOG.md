@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3273](https://movai.atlassian.net/browse/FP-3273): [IDE] Right separator weird behavior
+
 # 2.6.3
 
 - [FP-3163](https://movai.atlassian.net/browse/FP-3163): Clicking on the flow of a member opens the flow with the master
