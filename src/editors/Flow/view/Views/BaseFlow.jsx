@@ -18,7 +18,6 @@ const BaseFlow = (props) => {
     id,
     name,
     type,
-    model,
     dataFromDB,
     off,
     on,
@@ -49,7 +48,6 @@ const BaseFlow = (props) => {
     width: "400px",
     height: "200px",
     containerId,
-    model,
     readOnly,
     call,
   });
@@ -123,7 +121,6 @@ BaseFlow.propTypes = {
   id: PropTypes.string,
   name: PropTypes.string,
   type: PropTypes.string,
-  model: PropTypes.string,
   dataFromDB: PropTypes.object,
 };
 
