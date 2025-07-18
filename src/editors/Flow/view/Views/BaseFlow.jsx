@@ -93,10 +93,14 @@ const BaseFlow = (props) => {
 
     // Dispatch on ready event
     onReady(mInt);
+  }, [graphClass, dataFromDB, onReady, getMainInterface]);
+
+  // Cleanup on BaseFlow destroy
+  useEffect(() => {
     return () => {
       getMainInterface().graph.destroy();
     };
-  }, [graphClass, dataFromDB, onReady, getMainInterface]);
+  }, [getMainInterface]);
 
   return (
     <div id={`${viewMode}-${id}`} className={classes.flowContainer}>

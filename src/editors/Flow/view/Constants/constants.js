@@ -45,6 +45,11 @@ const generateContainerId = (flowId) => {
 
 const PARENT_NODE_SEP = "^";
 
+const PORT_TOOLTIP_MODAL_TIMEOUTS = {
+  NORMAL: 3000,
+  FORCE_CLOSE: 100,
+};
+
 export {
   MAX_MOVING_PIXELS,
   CANVAS_LIMITS,
@@ -54,4 +59,5 @@ export {
   MOVAI_FLOW_TYPES,
   NODE_TYPES,
   TYPES,
+  PORT_TOOLTIP_MODAL_TIMEOUTS,
 };

@@ -1,6 +1,7 @@
 import { User } from "@mov-ai/mov-fe-lib-core";
 import { DOCK_POSITIONS, DEFAULT_LAYOUT, DEFAULT_TABS } from "./Constants";
 import LocalStorage from "./LocalStorage";
+import AppSettings from "../App/AppSettings";
 
 class Workspace {
   constructor() {
@@ -10,14 +11,15 @@ class Workspace {
 
     const APP_NAME = "movai-ide-ce";
     const USER_NAME = this.user.getUsername() ?? "";
+    const baseKey = `movai.${USER_NAME}.${AppSettings.APP_INFORMATION.VERSION}.${APP_NAME}`;
 
     this.storage = new LocalStorage();
-    this.TABS_KEY = `movai.${USER_NAME}.${APP_NAME}.tabs`;
-    this.TAB_STACK_KEY = `movai.${USER_NAME}.${APP_NAME}.tabStack`;
-    this.LAYOUT_KEY = `movai.${USER_NAME}.${APP_NAME}.layout`;
-    this.SELECTED_ROBOT_KEY = `movai.${USER_NAME}.${APP_NAME}.selectedRobot`;
-    this.RECENT_DOCUMENTS_KEY = `movai.${USER_NAME}.${APP_NAME}.recentDocuments`;
-    this.DEBUGGING_FLOW_KEY = `movai.${USER_NAME}.${APP_NAME}.flowIsDebugging`;
+    this.TABS_KEY = `${baseKey}.tabs`;
+    this.TAB_STACK_KEY = `${baseKey}.tabStack`;
+    this.LAYOUT_KEY = `${baseKey}.layout`;
+    this.SELECTED_ROBOT_KEY = `${baseKey}.selectedRobot`;
+    this.RECENT_DOCUMENTS_KEY = `${baseKey}.recentDocuments`;
+    this.DEBUGGING_FLOW_KEY = `${baseKey}.flowIsDebugging`;
     this.layoutAndTabs = this.getLayoutAndTabs();
     this.layout = this.layoutAndTabs[0];
     this.tabs = this.layoutAndTabs[1];

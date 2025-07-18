@@ -1,6 +1,13 @@
 # TBD
 
 - [FP-3276](https://movai.atlassian.net/browse/FP-3276): Saving a scene through backend.viewer in 2.4 is way slower than 2.3
+- [FP-3262](https://movai.atlassian.net/browse/FP-3262): New installation of movai 2.4 maintains the tab metadata history at IDE from another movai bot
+
+# 2.6.3
+
+- [FP-3163](https://movai.atlassian.net/browse/FP-3163): Clicking on the flow of a member opens the flow with the master
+- [FP-2905](https://movai.atlassian.net/browse/FP-2905): When changing a node template, the node is not updated in the flow
+- [FP-3081](https://movai.atlassian.net/browse/FP-3081): Port Modal lingers frequently
 
 # 2.6.2
 
