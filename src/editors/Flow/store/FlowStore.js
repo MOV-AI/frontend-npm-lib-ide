@@ -23,7 +23,7 @@ class FlowStore extends Store {
     this.getPlugin("DBSubscriber").subscribe(name);
 
     if (FLOW_CACHE.has(name)) {
-      // some non warmful code repetition from base store
+      // some non harmful code repetition from base store
       const obj = this.getDoc(name) || this.newDoc(name).setIsNew(false);
       const file = FLOW_CACHE.get(name);
       const data = obj.constructor.serializeOfDB(file);

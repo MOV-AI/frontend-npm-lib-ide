@@ -28,7 +28,7 @@ class NodeStore extends Store {
     this.getPlugin("DBSubscriber").subscribe(name);
 
     if (NODE_CACHE.has(name)) {
-      // some non warmful code repetition from base store
+      // some non harmful code repetition from base store
       const obj = this.getDoc(name) || this.newDoc(name).setIsNew(false);
       const file = NODE_CACHE.get(name);
       const data = obj.constructor.serializeOfDB(file);
