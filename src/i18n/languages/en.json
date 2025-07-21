@@ -222,6 +222,7 @@
   "RobotOffline": "Robot is offline",
   "RobotOnline": "Robot is online",
   "Run": "Run",
+  "ROSValidNamesInstruction": "Please enter a name that starts with a letter, tilde (~), or slash (/), contains only letters, numbers, underscores (_), or slashes (/), and does not include double underscores (__).",
   "Save": "Save",
   "SaveDoc": "Save Document",
   "SaveDocKeybindDescription": "Use to save currently active Document.",
