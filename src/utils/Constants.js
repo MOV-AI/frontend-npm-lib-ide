@@ -243,6 +243,13 @@ export const ROS_VALID_NAMES = new RegExp(
 );
 
 /**
+ * Use this when you're trying to pass instructions to the user how to handle the above ROS_VALID_NAMES validation
+ * If you alter the ROS_VALID_NAMES const please update this warning accordingly
+ * This is the translation string
+ */
+export const ROS_VALID_NAMES_INSTRUCTION = "ROSValidNamesInstruction";
+
+/**
  * Used for Parameters, Environment Variables and Command Line
  * We’re using a variation of the valid ROS validation which only allows for a name to begin with a letter,
  * tilde (~) or a forward slash (/), but also allowing the first character to be an underscore (_),
