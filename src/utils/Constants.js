@@ -187,6 +187,7 @@ export const PLUGINS = {
     FLOW: {
       CALL: {
         SET_FLOW_TO_DEFAULT: "setFlowsToDefault",
+        SELECT_ROBOT: "onRobotChange",
       },
     },
   },
