@@ -1,3 +1,7 @@
+# 2.6.5
+
+- [FP-3295](https://movai.atlassian.net/browse/FP-3295): Parameters dropdown closes when switching nodes
+
 # 2.6.3
 
 - [FP-3163](https://movai.atlassian.net/browse/FP-3163): Clicking on the flow of a member opens the flow with the master
