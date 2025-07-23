@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3287](https://movai.atlassian.net/browse/FP-3287): Parameter editor scroll bar not showing well
+
 # 2.6.4
 
 - [FP-3295](https://movai.atlassian.net/browse/FP-3295): Parameters dropdown closes when switching nodes
