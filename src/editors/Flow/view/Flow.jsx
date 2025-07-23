@@ -56,6 +56,9 @@ import { flowStyles } from "./styles";
 
 let activeBookmark = null;
 
+// if less than this, node right menu will not maintain opened state
+const NODE_SELECTION_DEBOUNCE_MS = 300;
+
 export const Flow = (props, ref) => {
   // Props
   const {
@@ -715,7 +718,7 @@ export const Flow = (props, ref) => {
           addNodeMenu(node, true);
           activateEditor();
         }
-      }, 100);
+      }, NODE_SELECTION_DEBOUNCE_MS);
     },
     [addNodeMenu, unselectNode, onLinkSelected, activateEditor],
   );
