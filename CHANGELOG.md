@@ -1,4 +1,4 @@
-# TBD
+# 2.6.4
 
 - [FP-3295](https://movai.atlassian.net/browse/FP-3295): Parameters dropdown closes when switching nodes
 - [FP-3276](https://movai.atlassian.net/browse/FP-3276): Saving a scene through backend.viewer in 2.4 is way slower than 2.3
