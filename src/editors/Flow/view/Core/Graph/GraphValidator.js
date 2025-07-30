@@ -11,6 +11,7 @@ import MESSAGES from "../../../../../utils/Messages";
 import {
   ROS_VALID_NAMES,
   ALERT_SEVERITIES,
+  ROS_VALID_NAMES_INSTRUCTION,
 } from "../../../../../utils/Constants";
 import { defaultFunction } from "../../../../../utils/Utils";
 import { MisMatchMessageLink } from "../../Components/Links/Errors";
@@ -280,9 +281,9 @@ export default class GraphValidator {
         );
       if (!re.test(newName))
         throw new Error(
-          i18n.t(MESSAGES.ERROR_MESSAGES.INVALID_INSTANCE_NAME, {
+          `${i18n.t(MESSAGES.ERROR_MESSAGES.INVALID_INSTANCE_NAME, {
             instance: instType,
-          }),
+          })} - ${i18n.t(ROS_VALID_NAMES_INSTRUCTION)}`,
         );
       if (this.graph.nodes.has(newName))
         throw new Error(
