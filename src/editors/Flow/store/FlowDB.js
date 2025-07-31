@@ -1,5 +1,6 @@
-import { MasterDB } from "@mov-ai/mov-fe-lib-core";
+import { WSSub } from "@mov-ai/mov-fe-lib-core";
 
+const socket = new WSSub();
 const cache = new Map();
 const FLOW_CACHE = (() => {
   function loadData(data) {
@@ -11,7 +12,7 @@ const FLOW_CACHE = (() => {
   }
 
   // init cache
-  MasterDB.subscribe(
+  socket.subscribe(
     {
       Scope: "Flow",
       Name: "*",

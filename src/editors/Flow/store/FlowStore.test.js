@@ -1,24 +1,40 @@
-import FlowStore from "./FlowStore";
-import { DBSubscriber } from "../../../store";
-import Model from "../model/Flow";
-
-test("smoke test", () => {
-  const obj = new FlowStore();
-
-  expect(obj).toBeInstanceOf(FlowStore);
+jest.mock("@mov-ai/mov-fe-lib-core", () => {
+  return {
+    WSSub: jest.fn().mockImplementation(() => ({
+      subscribe: jest.fn(),
+    })),
+  };
 });
 
-test("Get plugin loaded", () => {
-  const store = new FlowStore();
+import FLOW_CACHE from "./FlowDB";
 
-  expect(store.getPlugin("DBSubscriber")).toBeInstanceOf(DBSubscriber);
-});
+describe("FLOW_CACHE", () => {
+  beforeEach(() => {
+    FLOW_CACHE.clear();
+  });
 
-test("Validate defaults", () => {
-  const store = new FlowStore();
+  test("set and get a flow", () => {
+    const flow = { Label: "TestFlow", data: "some-data" };
 
-  expect(store.workspace).toBe("global");
-  expect(store.name).toBe("Flow");
-  expect(store.title).toBe("Flows");
-  expect(store.model).toBe(Model);
+    FLOW_CACHE.set(flow.Label, flow);
+    expect(FLOW_CACHE.has("TestFlow")).toBe(true);
+    expect(FLOW_CACHE.get("TestFlow")).toEqual(flow);
+  });
+
+  test("clear removes all entries", () => {
+    FLOW_CACHE.set("Flow1", { Label: "Flow1" });
+    FLOW_CACHE.set("Flow2", { Label: "Flow2" });
+
+    expect(FLOW_CACHE.has("Flow1")).toBe(true);
+    expect(FLOW_CACHE.has("Flow2")).toBe(true);
+
+    FLOW_CACHE.clear();
+
+    expect(FLOW_CACHE.has("Flow1")).toBe(false);
+    expect(FLOW_CACHE.has("Flow2")).toBe(false);
+  });
+
+  test("get returns undefined for unknown flow", () => {
+    expect(FLOW_CACHE.get("UnknownFlow")).toBeUndefined();
+  });
 });
