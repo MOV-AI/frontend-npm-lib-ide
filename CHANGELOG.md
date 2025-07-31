@@ -1,3 +1,7 @@
+# 2.7.0-2
+
+- Minor fix in using own web socket for the FlowDB and NodeDB
+
 # 2.7.0
 
 - [FP-3276](https://movai.atlassian.net/browse/FP-3276): Saving a scene through backend.viewer in 2.4 is way slower than 2.3
