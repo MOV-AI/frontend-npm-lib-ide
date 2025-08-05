@@ -32,3 +32,8 @@ h4 {
 ::-webkit-scrollbar-thumb:hover {
   background: #ee9500;
 }
+
+#mainPanel .dock-panel-min-btn:before {
+  content: "_";
+  color: #fff;
+}

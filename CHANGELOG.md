@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3313](https://movai.atlassian.net/browse/FP-3313): IDE - UI Multiple tab not intuitive
+
 # 2.7.0-2
 
 - Minor fix in using own web socket for the FlowDB and NodeDB
