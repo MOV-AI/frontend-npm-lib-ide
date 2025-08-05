@@ -4,18 +4,18 @@ import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { compareDocumentPaths } from "../../../Utils/utils";
 
 const DEBOUNCE_TIME = 600; // ms
+const ROBOT_OFFLINE_TIME = 8; // sec
 
 const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
   // Props
   const { id, version, alert, onStartStopFlow, mainInterface } = props;
-  // Manager
-  const robotManager = useMemo(() => new RobotManager(), []);
   // State hooks
   const [robotStatus, setRobotStatus] = useState({
     activeFlow: "",
-    isOnline: robotManager.checkStatus(robotSelected),
+    isOnline: true,
   });
-  console.log("robotManager", robotManager);
+  // Manager
+  const robotManager = useMemo(() => new RobotManager(), []);
   // Refs
   const selectedRobotRef = useRef(robotSelected);
   const debounceDeltaRef = useRef(Date.now());
@@ -34,9 +34,9 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
    * @param {*} timestamp
    * @returns {boolean} True if robot is online and False otherwise
    */
-  const isRobotOnline = useCallback(() => {
-    return robotManager.checkStatus(robotSelected);
-  }, [robotManager, robotSelected]);
+  const isRobotOnline = useCallback((timestamp) => {
+    return Date.now() * 0.001 - timestamp <= ROBOT_OFFLINE_TIME;
+  }, []);
 
   /**
    * @private Get running nodes
@@ -92,8 +92,6 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
     // Send updates to canvas
     mainInterface.current?.resetAllNodeStatus();
   }, [mainInterface]);
-  console.log("robotStatus", robotStatus);
-  console.log("robotSelected", robotSelected);
 
   /**
    * Format flow path
@@ -127,22 +125,20 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
    */
   const updateNodeStatus = useCallback(
     (key, targetValue, data, forceUpdate) => {
-      console.log("updateNodeStatus", key, targetValue, data);
       if (
         !mainInterface ||
         (Date.now() - debounceDeltaRef.current <= DEBOUNCE_TIME && !forceUpdate)
       )
         return;
 
-      let isOnline = robotManager.checkStatus(robotSelected);
-      console.log("updateNodeStatus isOnline", isOnline);
-      console.log("robotSelected", robotSelected);
+      let isOnline = true;
       let activeFlow = "";
 
       // get robot status
       const robotStatusData = data[key].Robot?.[targetValue]?.Status;
 
       if (robotStatusData) {
+        isOnline = isRobotOnline(robotStatusData.timestamp);
         activeFlow = robotStatusData.active_flow;
 
         const running = isOnline && isFlowRunning(robotStatusData.active_flow);
