@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`withToolPlugin HOC matches snapshot via RTL 1`] = `
+<DocumentFragment>
+  <div
+    id="snap-tab"
+    role="tabpanel"
+  >
+    <div
+      style="height: 100%;"
+      tabindex="-1"
+    >
+      <span>
+        Snap
+      </span>
+    </div>
+  </div>
+</DocumentFragment>
+`;
