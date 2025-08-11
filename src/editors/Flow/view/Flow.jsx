@@ -1195,6 +1195,12 @@ export const Flow = (props, ref) => {
    */
   const handleCopyNode = useCallback(
     async (evt) => {
+      const selectedText = window.getSelection().toString();
+
+      if (selectedText) {
+        return;
+      }
+
       evt?.preventDefault?.();
 
       const selectedNodes = await Promise.all(
@@ -1226,7 +1232,19 @@ export const Flow = (props, ref) => {
    */
   const handlePasteNodes = useCallback(
     async (evt) => {
+      const activeElement = document.activeElement;
+
+      if (
+        activeElement &&
+        ((activeElement.tagName.toLowerCase() == "input" &&
+          activeElement.type == "text") ||
+          activeElement.tagName.toLowerCase() == "textarea")
+      ) {
+        return;
+      }
+
       evt?.preventDefault?.();
+
       const position = (contextArgs.current =
         getMainInterface().canvas.mousePosition);
       const nodesToPaste = clipboard.read(KEYS.NODES_TO_COPY);
@@ -1285,10 +1303,26 @@ export const Flow = (props, ref) => {
    * Triggers the correct deletion
    * (if a link is selected delete link, else delete nodes)
    */
-  const handleShortcutDelete = useCallback(() => {
-    if (selectedLinkRef.current) handleDeleteLink();
-    else handleDeleteNode();
-  }, [handleDeleteLink, handleDeleteNode]);
+  const handleShortcutDelete = useCallback(
+    (evt) => {
+      const activeElement = document.activeElement;
+
+      if (
+        activeElement &&
+        ((activeElement.tagName.toLowerCase() == "input" &&
+          activeElement.type == "text") ||
+          activeElement.tagName.toLowerCase() == "textarea")
+      ) {
+        return;
+      }
+
+      evt?.preventDefault?.();
+
+      if (selectedLinkRef.current) handleDeleteLink();
+      else handleDeleteNode();
+    },
+    [handleDeleteLink, handleDeleteNode],
+  );
 
   /**
    * Toggle exposed port

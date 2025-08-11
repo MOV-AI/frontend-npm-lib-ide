@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3317](https://movai.atlassian.net/browse/FP-3317): IDE - Copy and Save issues
+
 # 2.7.0-2
 
 - Minor fix in using own web socket for the FlowDB and NodeDB
