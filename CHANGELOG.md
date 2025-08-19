@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3287](https://movai.atlassian.net/browse/FP-3287): Parameter editor scroll bar not showing well
+
 # 2.7.0-2
 
 - Minor fix in using own web socket for the FlowDB and NodeDB
