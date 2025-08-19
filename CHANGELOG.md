@@ -2,12 +2,19 @@
 
 - [FP-3287](https://movai.atlassian.net/browse/FP-3287): Parameter editor scroll bar not showing well
 
-# 2.6.4
+# 2.7.0-2
 
-- [FP-3295](https://movai.atlassian.net/browse/FP-3295): Parameters dropdown closes when switching nodes
+- Minor fix in using own web socket for the FlowDB and NodeDB
+
+# 2.7.0
+
 - [FP-3276](https://movai.atlassian.net/browse/FP-3276): Saving a scene through backend.viewer in 2.4 is way slower than 2.3
 - [FP-3254](https://movai.atlassian.net/browse/FP-3254): Inconsistent error message when creating node with invalid name
 - [FP-3262](https://movai.atlassian.net/browse/FP-3262): New installation of movai 2.4 maintains the tab metadata history at IDE from another movai bot
+
+# 2.6.4
+
+- [FP-3295](https://movai.atlassian.net/browse/FP-3295): Parameters dropdown closes when switching nodes
 
 # 2.6.3
 
