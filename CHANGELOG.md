@@ -11,6 +11,7 @@
 - [FP-3276](https://movai.atlassian.net/browse/FP-3276): Saving a scene through backend.viewer in 2.4 is way slower than 2.3
 - [FP-3254](https://movai.atlassian.net/browse/FP-3254): Inconsistent error message when creating node with invalid name
 - [FP-3262](https://movai.atlassian.net/browse/FP-3262): New installation of movai 2.4 maintains the tab metadata history at IDE from another movai bot
+- [FP-3273](https://movai.atlassian.net/browse/FP-3273): [IDE] Right separator weird behavior
 
 # 2.6.4
 
