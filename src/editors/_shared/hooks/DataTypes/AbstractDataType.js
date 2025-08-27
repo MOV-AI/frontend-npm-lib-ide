@@ -53,7 +53,14 @@ function StringEdit(props) {
 }
 
 const useCodeEditStyles = makeStyles(() => ({
-  root: { width: "100%", height: "100px" },
+  root: {
+    width: "100%",
+    height: "100px",
+    "& .mov-ai-monaco-code-editor .monaco-editor .overflow-guard .monaco-scrollable-element[style]":
+      {
+        left: "32px !important",
+      },
+  },
 }));
 
 function CodeEdit(props) {
@@ -72,7 +79,13 @@ function CodeEdit(props) {
         }}
         language="python"
         disableMinimap={true}
-        options={{ readOnly: disabled }}
+        options={{
+          readOnly: disabled,
+          scrollbar: {
+            vertical: "auto",
+            horizontal: "visible",
+          },
+        }}
         theme={dataType._theme?.codeEditor?.theme ?? "dark"}
         {...rest}
       />
