@@ -1,4 +1,4 @@
-# TBD
+# 2.7.1-0
 
 - [FP-3287](https://movai.atlassian.net/browse/FP-3287): Parameter editor scroll bar not showing well
 - [FP-3317](https://movai.atlassian.net/browse/FP-3317): IDE - Copy and Save issues
