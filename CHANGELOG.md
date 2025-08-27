@@ -1,5 +1,6 @@
 # TBD
 
+- [FP-3317](https://movai.atlassian.net/browse/FP-3317): IDE - Copy and Save issues
 - [FP-3313](https://movai.atlassian.net/browse/FP-3313): IDE - UI Multiple tab not intuitive
 
 # 2.7.0-2
