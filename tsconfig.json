@@ -11,7 +11,7 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "lib": ["es6", "dom"],
+    "lib": ["es6", "es2017", "dom"],
     "types": ["node"]
   },
   "include": ["./src/"]

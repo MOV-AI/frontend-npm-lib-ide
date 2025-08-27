@@ -1,3 +1,9 @@
+# 2.7.1-0
+
+- [FP-3287](https://movai.atlassian.net/browse/FP-3287): Parameter editor scroll bar not showing well
+- [FP-3317](https://movai.atlassian.net/browse/FP-3317): IDE - Copy and Save issues
+- [FP-3313](https://movai.atlassian.net/browse/FP-3313): IDE - UI Multiple tab not intuitive
+
 # 2.7.0-2
 
 - Minor fix in using own web socket for the FlowDB and NodeDB
@@ -7,6 +13,7 @@
 - [FP-3276](https://movai.atlassian.net/browse/FP-3276): Saving a scene through backend.viewer in 2.4 is way slower than 2.3
 - [FP-3254](https://movai.atlassian.net/browse/FP-3254): Inconsistent error message when creating node with invalid name
 - [FP-3262](https://movai.atlassian.net/browse/FP-3262): New installation of movai 2.4 maintains the tab metadata history at IDE from another movai bot
+- [FP-3273](https://movai.atlassian.net/browse/FP-3273): [IDE] Right separator weird behavior
 
 # 2.6.4
 

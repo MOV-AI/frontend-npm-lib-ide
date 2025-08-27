@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useRef } from "react";
+import React, { forwardRef, useCallback, useLayoutEffect, useRef } from "react";
 import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import { makeStyles } from "@material-ui/core";
 import withAlerts from "../../decorators/withAlerts";
@@ -36,14 +36,29 @@ export function withToolPlugin(ReactComponent, methods = []) {
         PLUGINS.TABS.CALL.GET_ACTIVE_TAB,
       );
 
-      const id = toolRef.current.closest("div[role='tabpanel']").id;
-
       setUrl(profile.name);
+      const id = toolRef.current.closest("div[role='tabpanel']").id;
 
       if (activeTab?.id !== id) {
         call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_EXISTING_TAB, id);
       }
     }, [call, profile.name]);
+
+    /**
+     * Component did mount
+     */
+    useLayoutEffect(() => {
+      const id = toolRef.current.closest("div[role='tabpanel']").id;
+
+      // This only happens on component mount,
+      // So, only when the tool is first loaded.
+      call(PLUGINS.ORCHESTRATOR.NAME, PLUGINS.ORCHESTRATOR.CALL.RENDER_MENUS, {
+        id,
+        ref,
+      });
+      call(PLUGINS.TABS.NAME, PLUGINS.TABS.CALL.FOCUS_EXISTING_TAB, id);
+      activateTool();
+    }, [ref, call, activateTool]);
 
     return (
       <div
