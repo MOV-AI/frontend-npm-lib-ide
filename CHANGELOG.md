@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3345](https://movai.atlassian.net/browse/FP-3345): When starting the IDE project weird errors show
+
 # 2.7.1-0
 
 - [FP-3287](https://movai.atlassian.net/browse/FP-3287): Parameter editor scroll bar not showing well
