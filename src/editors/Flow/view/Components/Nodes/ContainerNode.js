@@ -1,3 +1,4 @@
+import { NODE_TYPES } from "../../Constants/constants";
 import BasePort from "./BaseNode/BasePort";
 import BaseContainerNode from "./BaseNode/BaseContainerNode";
 
@@ -16,6 +17,8 @@ class ContainerNode extends BaseContainerNode {
     super(otherArgs);
 
     this.factory = factory;
+
+    this.nodeType = NODE_TYPES.CONTAINER;
   }
 
   /**

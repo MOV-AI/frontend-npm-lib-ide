@@ -34,6 +34,7 @@ const DataHandler = (props) => {
       scope,
       name,
     }).then((model) => {
+      if (!model) return;
       setData(model.serialize());
       modelRef.current = model;
       setLoading(false);

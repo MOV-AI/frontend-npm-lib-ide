@@ -31,7 +31,10 @@ import {
   ALERT_SEVERITIES,
   ROBOT_BLACKLIST,
 } from "../../../../../utils/Constants";
-import { ERROR_MESSAGES } from "../../../../../utils/Messages";
+import {
+  ERROR_MESSAGES,
+  SUCCESS_MESSAGES,
+} from "../../../../../utils/Messages";
 import { defaultFunction } from "../../../../../utils/Utils";
 import { FLOW_VIEW_MODE } from "../../Constants/constants";
 import useNodeStatusUpdate from "./hooks/useNodeStatusUpdate";
@@ -40,7 +43,6 @@ import { buttonStyles, flowTopBarStyles } from "./styles";
 import FlowSearch from "./FlowSearch";
 
 const BACKEND_CALLBACK_NAME = "backend.FlowTopBar";
-const FEEDBACK_TIMEOUT = 10000;
 
 const ButtonTopBar = forwardRef((props, ref) => {
   const { disabled, onClick, children, testId = "input_top-bar" } = props;
@@ -61,6 +63,13 @@ const ButtonTopBar = forwardRef((props, ref) => {
   );
 });
 
+ButtonTopBar.propTypes = {
+  disabled: PropTypes.bool,
+  testId: PropTypes.string,
+  onClick: PropTypes.func,
+  children: PropTypes.node,
+};
+
 const FlowTopBar = (props) => {
   // Props
   const {
@@ -77,21 +86,35 @@ const FlowTopBar = (props) => {
     searchProps,
     confirmationAlert,
     canRun,
+    robotSelected: robotSelect,
   } = props;
   // State hooks
   const [actionLoading, setActionLoading] = useState(false);
-  const [robotSelected, setRobotSelected] = useState("");
+  const [robotSelected, setRobotSelected] = useState(robotSelect || "");
+
+  // Sync robotSelected state with robotSelect prop changes
+  useEffect(() => {
+    setRobotSelected(robotSelect || "");
+  }, [robotSelect]);
+
   const [robotList, setRobotList] = useState({});
+
   // Other hooks
   const classes = flowTopBarStyles();
   const { robotSubscribe, robotUnsubscribe, getFlowPath, robotStatus } =
     useNodeStatusUpdate(props, robotSelected, viewMode);
+
   // Refs
   const buttonDOMRef = useRef();
   const helperRef = useRef();
-  const commandRobotTimeoutRef = useRef();
   const isMounted = useRef();
   const flowInstanceRef = useRef();
+  const requestedSuccessfulActionRef = useRef("");
+
+  const [isActive, setIsActive] = useState(
+    getFlowPath() === robotStatus.activeFlow,
+  );
+
   // Managers Memos
   const robotManager = useMemo(() => new RobotManager(), []);
   const workspaceManager = useMemo(() => new Workspace(), []);
@@ -211,7 +234,8 @@ const FlowTopBar = (props) => {
    */
   const onLoadRobotList = useCallback(
     (robots) => {
-      const currentSelected = workspaceManager.getSelectedRobot();
+      const currentSelected =
+        robotSelected || workspaceManager.getSelectedRobot();
       // Remove blacklisted robots
       Object.keys(robots).forEach((robotId) => {
         if (ROBOT_BLACKLIST.includes(robots[robotId].RobotName))
@@ -222,7 +246,7 @@ const FlowTopBar = (props) => {
       // Get running Robot
       getRunningRobot(currentSelected, robots);
     },
-    [getRunningRobot, workspaceManager],
+    [getRunningRobot, robotSelected, workspaceManager],
   );
 
   /**
@@ -259,8 +283,20 @@ const FlowTopBar = (props) => {
    */
   useEffect(() => {
     setActionLoading(false);
-    clearTimeout(commandRobotTimeoutRef.current);
-  }, [robotStatus.activeFlow, setActionLoading]);
+    setIsActive(getFlowPath() === robotStatus.activeFlow);
+
+    if (requestedSuccessfulActionRef.current) {
+      alert({
+        message: i18n.t(SUCCESS_MESSAGES.SUCCESSFUL_FLOW_ACTION, {
+          action: requestedSuccessfulActionRef.current,
+        }),
+        severity: ALERT_SEVERITIES.SUCCESS,
+      });
+    }
+
+    setActionLoading(false);
+    requestedSuccessfulActionRef.current = "";
+  }, [robotStatus.activeFlow, getFlowPath, setActionLoading, alert]);
 
   //========================================================================================
   /*                                                                                      *
@@ -329,44 +365,40 @@ const FlowTopBar = (props) => {
    * @returns To avoid starting flow if flow is not eligible to start
    */
   const sendActionToRobot = useCallback(
-    (action, flowPath) => {
+    async (action, flowPath) => {
       const canStart = canRunFlow(action);
       if (!canStart) return;
+
       setActionLoading(true);
-      // Send action to robot
-      helperRef.current
-        .sendToRobot({
+      try {
+        const res = helperRef.current.sendToRobot({
           action,
           flowPath: flowPath || getFlowPath(),
           robotId: robotSelected,
-        })
-        .then((res) => {
-          if (!res) return;
-          commandRobotTimeoutRef.current = setTimeout(() => {
-            // If flow reloads (creation of a new) the old is unmounted
-            if (!isMounted.current) return;
-            // Set actionLoading false and show error message
-            setActionLoading(false);
-            alert({
-              message: i18n.t("FailedFlowAction", {
-                action: i18n.t(action.toLowerCase()),
-              }),
-              severity: ALERT_SEVERITIES.ERROR,
-            });
-          }, FEEDBACK_TIMEOUT);
-        })
-        .catch((err) => {
-          console.warn("Error sending action to robot", err);
+        });
+
+        if (!res || !isMounted.current) {
           alert({
-            message: i18n.t(ERROR_MESSAGES.ERROR_RUNNING_SPECIFIC_CALLBACK, {
-              callbackName: BACKEND_CALLBACK_NAME,
+            message: i18n.t("FailedFlowAction", {
+              action: i18n.t(action.toLowerCase()),
             }),
             severity: ALERT_SEVERITIES.ERROR,
           });
+          return;
+        }
+
+        requestedSuccessfulActionRef.current = action;
+      } catch (err) {
+        console.warn("Error sending action to robot", err);
+        alert({
+          message: i18n.t(ERROR_MESSAGES.ERROR_RUNNING_SPECIFIC_CALLBACK, {
+            callbackName: BACKEND_CALLBACK_NAME,
+          }),
+          severity: ALERT_SEVERITIES.ERROR,
         });
-      if (buttonDOMRef.current) buttonDOMRef.current.blur();
+      }
     },
-    [alert, canRunFlow, getFlowPath, robotSelected, setActionLoading],
+    [alert, canRunFlow, getFlowPath, robotSelected],
   );
 
   /**
@@ -374,8 +406,9 @@ const FlowTopBar = (props) => {
    */
   const handleStartFlow = useCallback(
     (saveResponse) => {
-      // Start Flow if there's no active flow
       const flowUrl = saveResponse?.model?.getUrl();
+
+      // Start Flow if there's no active flow
       if (robotStatus.activeFlow === "") {
         sendActionToRobot("START", flowUrl);
       } else {
@@ -512,7 +545,7 @@ const FlowTopBar = (props) => {
               })}
             </Select>
           </FormControl>
-          {getFlowPath() === robotStatus.activeFlow ? (
+          {isActive ? (
             <ButtonTopBar
               testId="input_stop-flow"
               ref={buttonDOMRef}
@@ -577,6 +610,15 @@ const FlowTopBar = (props) => {
 
 FlowTopBar.propTypes = {
   id: PropTypes.string,
+  scope: PropTypes.string,
+  viewMode: PropTypes.string,
+  name: PropTypes.string,
+  loading: PropTypes.bool,
+  canRun: PropTypes.bool,
+  mainInterface: PropTypes.object,
+  call: PropTypes.func,
+  confirmationAlert: PropTypes.func,
+  alert: PropTypes.func,
   nodeStatusUpdated: PropTypes.func,
   onViewModeChange: PropTypes.func,
   onStartStopFlow: PropTypes.func,

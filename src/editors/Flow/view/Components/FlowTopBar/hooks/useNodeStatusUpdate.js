@@ -1,5 +1,4 @@
 import { useState, useRef, useMemo, useEffect, useCallback } from "react";
-import _isEqual from "lodash/isEqual";
 import { RobotManager } from "@mov-ai/mov-fe-lib-core";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import { compareDocumentPaths } from "../../../Utils/utils";

@@ -18,7 +18,6 @@ const BaseFlow = (props) => {
     id,
     name,
     type,
-    model,
     dataFromDB,
     off,
     on,
@@ -49,7 +48,6 @@ const BaseFlow = (props) => {
     width: "400px",
     height: "200px",
     containerId,
-    model,
     readOnly,
     call,
   });
@@ -95,10 +93,14 @@ const BaseFlow = (props) => {
 
     // Dispatch on ready event
     onReady(mInt);
+  }, [graphClass, dataFromDB, onReady, getMainInterface]);
+
+  // Cleanup on BaseFlow destroy
+  useEffect(() => {
     return () => {
       getMainInterface().graph.destroy();
     };
-  }, [graphClass, dataFromDB, onReady, getMainInterface]);
+  }, [getMainInterface]);
 
   return (
     <div id={`${viewMode}-${id}`} className={classes.flowContainer}>
@@ -123,7 +125,6 @@ BaseFlow.propTypes = {
   id: PropTypes.string,
   name: PropTypes.string,
   type: PropTypes.string,
-  model: PropTypes.string,
   dataFromDB: PropTypes.object,
 };
 

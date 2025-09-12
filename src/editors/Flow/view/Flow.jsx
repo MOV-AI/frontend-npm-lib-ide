@@ -42,7 +42,11 @@ import InvalidLinksWarning from "./Components/Warnings/InvalidLinksWarning";
 import InvalidParametersWarning from "./Components/Warnings/InvalidParametersWarning";
 import InvalidExposedPortsWarning from "./Components/Warnings/InvalidExposedPortsWarning";
 import { EVT_NAMES, EVT_TYPES } from "./events";
-import { FLOW_VIEW_MODE, TYPES } from "./Constants/constants";
+import {
+  FLOW_VIEW_MODE,
+  TYPES,
+  PORT_TOOLTIP_MODAL_TIMEOUTS,
+} from "./Constants/constants";
 import GraphBase from "./Core/Graph/GraphBase";
 import GraphTreeView from "./Core/Graph/GraphTreeView";
 import { getBaseContextOptions } from "./contextOptions";
@@ -51,6 +55,9 @@ import "./Resources/css/Flow.css";
 import { flowStyles } from "./styles";
 
 let activeBookmark = null;
+
+// if less than this, node right menu will not maintain opened state
+const NODE_SELECTION_DEBOUNCE_MS = 300;
 
 export const Flow = (props, ref) => {
   // Props
@@ -105,6 +112,8 @@ export const Flow = (props, ref) => {
   const clipboard = useMemo(() => new Clipboard(), []);
 
   // Refs
+  const tooltipConfigTimerRef = useRef(null);
+  const lastHoveredIdRef = useRef(null);
   const interfaceSubscriptionsList = useRef([]);
   const contextArgs = useRef(null);
   const mainInterfaceRef = useRef();
@@ -709,7 +718,7 @@ export const Flow = (props, ref) => {
           addNodeMenu(node, true);
           activateEditor();
         }
-      }, 300);
+      }, NODE_SELECTION_DEBOUNCE_MS);
     },
     [addNodeMenu, unselectNode, onLinkSelected, activateEditor],
   );
@@ -784,6 +793,35 @@ export const Flow = (props, ref) => {
       { action: "setMode", value: EVT_NAMES.DEFAULT },
     );
   }, [call, onLinkSelected, onNodeSelected]);
+
+  /**
+   * Used to handle the port tooltip closing
+   */
+  const handleCloseTooltip = useCallback(
+    (hoveredId, timer = PORT_TOOLTIP_MODAL_TIMEOUTS.NORMAL) => {
+      lastHoveredIdRef.current = hoveredId;
+      clearTimeout(tooltipConfigTimerRef.current);
+
+      tooltipConfigTimerRef.current = setTimeout(() => {
+        const bubbledUpHoveredElements = document.querySelectorAll(":hover");
+
+        const checkIfIdInHoveredElements = [...bubbledUpHoveredElements].find(
+          (el) =>
+            el.id === `${lastHoveredIdRef.current}_port` ||
+            el.id === `${lastHoveredIdRef.current}_tooltip`,
+        );
+
+        if (!hoveredId && !checkIfIdInHoveredElements) {
+          setTooltipConfig(null);
+          tooltipConfigTimerRef.current = null;
+          lastHoveredIdRef.current = null;
+        } else {
+          handleCloseTooltip(hoveredId);
+        }
+      }, timer);
+    },
+    [],
+  );
 
   /**
    * Subscribe to mainInterface and canvas events
@@ -1056,10 +1094,13 @@ export const Flow = (props, ref) => {
               left: event.layerX + 8,
               top: event.layerY,
             };
+
             setTooltipConfig({
               port,
               anchorPosition,
             });
+
+            handleCloseTooltip(port.name);
           }),
       );
 
@@ -1073,9 +1114,9 @@ export const Flow = (props, ref) => {
                 event.type === EVT_TYPES.PORT,
             ),
           )
-          .subscribe(() => {
-            setTooltipConfig(null);
-          }),
+          .subscribe(() =>
+            handleCloseTooltip(null, PORT_TOOLTIP_MODAL_TIMEOUTS.FORCE_CLOSE),
+          ),
       );
 
       interfaceSubscriptionsList.current.push(
@@ -1103,6 +1144,7 @@ export const Flow = (props, ref) => {
       getContextOptions,
       handleCopyNode,
       handleDeleteNode,
+      handleCloseTooltip,
       startNode,
       stopNode,
       handleDeleteLink,
@@ -1152,9 +1194,22 @@ export const Flow = (props, ref) => {
    * Handle copy node
    */
   const handleCopyNode = useCallback(
-    (evt) => {
+    async (evt) => {
+      const selectedText = window.getSelection().toString();
+
+      if (selectedText) {
+        return;
+      }
+
       evt?.preventDefault?.();
-      const selectedNodes = getSelectedNodes();
+
+      const selectedNodes = await Promise.all(
+        getSelectedNodes().map(async (n) => {
+          const newNode = await getMainInterface().getUpdatedVersionOfNode(n);
+          return newNode;
+        }),
+      );
+
       const nodesPos = selectedNodes.map((n) =>
         Vec2.of(n.center.xCenter, n.center.yCenter),
       );
@@ -1177,14 +1232,26 @@ export const Flow = (props, ref) => {
    */
   const handlePasteNodes = useCallback(
     async (evt) => {
+      const activeElement = document.activeElement;
+
+      if (
+        activeElement &&
+        ((activeElement.tagName.toLowerCase() == "input" &&
+          activeElement.type == "text") ||
+          activeElement.tagName.toLowerCase() == "textarea")
+      ) {
+        return;
+      }
+
       evt?.preventDefault?.();
+
       const position = (contextArgs.current =
         getMainInterface().canvas.mousePosition);
-      const nodesToCopy = clipboard.read(KEYS.NODES_TO_COPY);
-      if (!nodesToCopy) return;
+      const nodesToPaste = clipboard.read(KEYS.NODES_TO_COPY);
+      if (!nodesToPaste) return;
 
-      for (const [i, node] of nodesToCopy.nodes.entries()) {
-        const nodesPosFromCenter = nodesToCopy.nodesPosFromCenter || [
+      for (const [i, node] of nodesToPaste.nodes.entries()) {
+        const nodesPosFromCenter = nodesToPaste.nodesPosFromCenter || [
           Vec2.ZERO,
         ];
         const newPos = Vec2.of(position.x, position.y).add(
@@ -1193,7 +1260,7 @@ export const Flow = (props, ref) => {
         // Open dialog for each node to copy
         await pasteNodeDialog(newPos.toObject(), {
           node: node,
-          flow: nodesToCopy.flow,
+          flow: nodesToPaste.flow,
         });
       }
     },
@@ -1236,10 +1303,26 @@ export const Flow = (props, ref) => {
    * Triggers the correct deletion
    * (if a link is selected delete link, else delete nodes)
    */
-  const handleShortcutDelete = useCallback(() => {
-    if (selectedLinkRef.current) handleDeleteLink();
-    else handleDeleteNode();
-  }, [handleDeleteLink, handleDeleteNode]);
+  const handleShortcutDelete = useCallback(
+    (evt) => {
+      const activeElement = document.activeElement;
+
+      if (
+        activeElement &&
+        ((activeElement.tagName.toLowerCase() == "input" &&
+          activeElement.type == "text") ||
+          activeElement.tagName.toLowerCase() == "textarea")
+      ) {
+        return;
+      }
+
+      evt?.preventDefault?.();
+
+      if (selectedLinkRef.current) handleDeleteLink();
+      else handleDeleteNode();
+    },
+    [handleDeleteLink, handleDeleteNode],
+  );
 
   /**
    * Toggle exposed port
@@ -1463,6 +1546,7 @@ export const Flow = (props, ref) => {
   usePluginMethods(ref, {
     renderMenus,
     setFlowsToDefault,
+    onRobotChange,
   });
 
   //========================================================================================
@@ -1470,7 +1554,6 @@ export const Flow = (props, ref) => {
    *                                        Render                                        *
    *                                                                                      */
   //========================================================================================
-
   return (
     <div data-testid="section_flow-editor" className={classes.root}>
       <div id="flow-top-bar">
@@ -1496,6 +1579,7 @@ export const Flow = (props, ref) => {
             onEnabled: handleSearchEnabled,
             onDisabled: handleSearchDisabled,
           }}
+          robotSelected={robotSelected}
         ></FlowTopBar>
       </div>
       <BaseFlow
@@ -1522,7 +1606,12 @@ export const Flow = (props, ref) => {
       {contextMenuOptions?.options && (
         <FlowContextMenu onClose={handleContextClose} {...contextMenuOptions} />
       )}
-      {tooltipConfig && <PortTooltip {...tooltipConfig} />}
+      {tooltipConfig && (
+        <PortTooltip
+          {...tooltipConfig}
+          handleCloseTooltip={handleCloseTooltip}
+        />
+      )}
     </div>
   );
 };

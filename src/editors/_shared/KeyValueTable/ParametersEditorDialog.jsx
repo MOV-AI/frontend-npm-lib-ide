@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { i18n } from "@mov-ai/mov-fe-lib-react";
+import { i18n, withTheme } from "@mov-ai/mov-fe-lib-react";
 import PropTypes from "prop-types";
 import {
   MenuItem,
@@ -10,7 +10,6 @@ import {
   Radio,
   RadioGroup,
 } from "@material-ui/core";
-import { withTheme } from "@mov-ai/mov-fe-lib-react";
 import ApplicationTheme from "../../../themes";
 import { ERROR_MESSAGES } from "../../../utils/Messages";
 import {
@@ -119,7 +118,6 @@ const ParameterEditorDialog = (props) => {
         value: data.value,
         type: data.type,
       };
-
       if (customValidation) return customValidation(dataToValidate);
 
       // Validate data

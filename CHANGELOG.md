@@ -1,6 +1,51 @@
 # TBD
 
 - [FP-3141](https://movai.atlassian.net/browse/FP-3141): Unable to update node parameter if the first value saved as None
+- [FP-3345](https://movai.atlassian.net/browse/FP-3345): When starting the IDE project weird errors show
+
+# 2.7.1-0
+
+- [FP-3287](https://movai.atlassian.net/browse/FP-3287): Parameter editor scroll bar not showing well
+- [FP-3317](https://movai.atlassian.net/browse/FP-3317): IDE - Copy and Save issues
+- [FP-3313](https://movai.atlassian.net/browse/FP-3313): IDE - UI Multiple tab not intuitive
+
+# 2.7.0-2
+
+- Minor fix in using own web socket for the FlowDB and NodeDB
+
+# 2.7.0
+
+- [FP-3276](https://movai.atlassian.net/browse/FP-3276): Saving a scene through backend.viewer in 2.4 is way slower than 2.3
+- [FP-3254](https://movai.atlassian.net/browse/FP-3254): Inconsistent error message when creating node with invalid name
+- [FP-3262](https://movai.atlassian.net/browse/FP-3262): New installation of movai 2.4 maintains the tab metadata history at IDE from another movai bot
+- [FP-3273](https://movai.atlassian.net/browse/FP-3273): [IDE] Right separator weird behavior
+
+# 2.6.4
+
+- [FP-3295](https://movai.atlassian.net/browse/FP-3295): Parameters dropdown closes when switching nodes
+
+# 2.6.3
+
+- [FP-3163](https://movai.atlassian.net/browse/FP-3163): Clicking on the flow of a member opens the flow with the master
+- [FP-2905](https://movai.atlassian.net/browse/FP-2905): When changing a node template, the node is not updated in the flow
+- [FP-3081](https://movai.atlassian.net/browse/FP-3081): Port Modal lingers frequently
+
+# 2.6.2
+
+- [FP-3212](https://movai.atlassian.net/browse/FP-3212): Unable to create a type Array flow parameter with a list of strings
+- [FP-3208](https://movai.atlassian.net/browse/FP-3208): IDE - Unable to add a Node after importing the Node to MOV.AI. (which already existed)
+
+# 2.6.1
+
+- [FP-3008](https://movai.atlassian.net/browse/FP-3008): IDE - Inconsistent Start and Stop behaviour - Revert
+
+# v2.6.0
+
+- [FP-3162](https://movai.atlassian.net/browse/FP-3162): IDE - Cannot read properties of undefined (reading 'trim')
+- [FP-3202](https://movai.atlassian.net/browse/FP-3202): IDE - When opening a Flow, a message appears
+- [FP-2947](https://movai.atlassian.net/browse/FP-2947): IDE - Searching for a NODE with same name as flow doesn't return results
+- [FP-3154](https://movai.atlassian.net/browse/FP-3154): IDE - Copy node from flows in split view missing edited parameters
+- [FP-3008](https://movai.atlassian.net/browse/FP-3008): IDE - Inconsistent Start and Stop behaviour
 - [FP-3138](https://movai.atlassian.net/browse/FP-3138): Not able to use dev container in all frontend repos
 
 # v1.4.6
