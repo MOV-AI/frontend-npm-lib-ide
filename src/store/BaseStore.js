@@ -227,7 +227,7 @@ class BaseStore extends StorePluginManager {
   loadDocs(data) {
     const docType = this.scope;
 
-    if (data?.value)
+    if (data?.value && data.value[docType]) {
       Object.values(data.value[docType]).forEach((doc) => {
         const name = doc.Label;
 
@@ -245,6 +245,7 @@ class BaseStore extends StorePluginManager {
             .enableObservables(true);
         }
       });
+    }
 
     // fire subject onLoad
     if (typeof this.observer?.onLoad === "function") {
@@ -257,7 +258,7 @@ class BaseStore extends StorePluginManager {
    * @param {String} _prop
    * @param {String} _value
    */
-  onDocumentUpdate(instance, _prop, _value) {
+  onDocumentUpdate(instance) {
     if (typeof this.observer.onDocumentDirty === "function") {
       this.observer.onDocumentDirty(this.name, instance, instance.getDirty());
     }
