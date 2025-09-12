@@ -1,4 +1,4 @@
-# TBD
+# 2.7.2-0
 
 - [FP-3141](https://movai.atlassian.net/browse/FP-3141): Unable to update node parameter if the first value saved as None
 - [FP-3345](https://movai.atlassian.net/browse/FP-3345): When starting the IDE project weird errors show
