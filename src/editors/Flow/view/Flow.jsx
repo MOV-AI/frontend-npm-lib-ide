@@ -901,7 +901,6 @@ export const Flow = (props, ref) => {
               left: evtData.event.clientX,
               top: evtData.event.clientY,
             };
-
             contextArgs.current = node;
             setContextMenuOptions({
               anchorPosition,
@@ -911,15 +910,18 @@ export const Flow = (props, ref) => {
                 nodeDebug: {
                   startNode: {
                     func: startNode,
-                    disabled: !(node.data.type === TYPES.CONTAINER
-                      ? false
-                      : runningFlow && !node.status),
+                    disabled:
+                      node.data.type === TYPES.CONTAINER ||
+                      !runningFlow ||
+                      node.status === undefined ||
+                      node.status,
                   },
                   stopNode: {
                     func: stopNode,
-                    disabled: !(node.data.type === TYPES.CONTAINER
-                      ? false
-                      : runningFlow && node.status),
+                    disabled:
+                      node.data.type === TYPES.CONTAINER ||
+                      !runningFlow ||
+                      !node.status,
                   },
                 },
                 viewMode,
