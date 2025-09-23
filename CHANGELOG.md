@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3358](https://movai.atlassian.net/browse/FP-3358): FE - Parameter editor is annoying and does not adjust to amount of data
+
 # 2.7.2-0
 
 - [FP-3141](https://movai.atlassian.net/browse/FP-3141): Unable to update node parameter if the first value saved as None

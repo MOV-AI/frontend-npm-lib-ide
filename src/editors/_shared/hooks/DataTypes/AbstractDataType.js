@@ -56,6 +56,8 @@ const useCodeEditStyles = makeStyles(() => ({
   root: {
     width: "100%",
     height: "100px",
+    resize: "vertical",
+    overflow: "hidden",
     "& .mov-ai-monaco-code-editor .monaco-editor .overflow-guard .monaco-scrollable-element[style]":
       {
         left: "32px !important",
