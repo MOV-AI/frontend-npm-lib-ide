@@ -1,3 +1,8 @@
+# 2.7.3-0
+
+- [FP-3350](https://movai.atlassian.net/browse/FP-3350): Change in an editor and then logout
+- [FP-3355](https://movai.atlassian.net/browse/FP-3355): Fleetboard: Logs not updating -[FP-3192](https://movai.atlassian.net/browse/FP-3192): Should not be possible to start a node from a flow not running
+
 # 2.7.2-0
 
 - [FP-3141](https://movai.atlassian.net/browse/FP-3141): Unable to update node parameter if the first value saved as None
