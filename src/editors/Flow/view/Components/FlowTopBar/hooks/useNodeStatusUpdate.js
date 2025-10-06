@@ -22,6 +22,7 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
   const nodeStatusRef = useRef({});
   const allNodeStatusRef = useRef({});
   const lastMessage = useRef("");
+  const lastUpdateTimeInSec = useRef(0);
 
   //========================================================================================
   /*                                                                                      *
@@ -35,7 +36,14 @@ const useNodeStatusUpdate = (props, robotSelected, viewMode) => {
    * @returns {boolean} True if robot is online and False otherwise
    */
   const isRobotOnline = useCallback((timestamp) => {
-    return Date.now() * 0.001 - timestamp <= ROBOT_OFFLINE_TIME;
+    if (lastUpdateTimeInSec.current === 0) {
+      lastUpdateTimeInSec.current = timestamp;
+      return true;
+    }
+    const isOnline =
+      timestamp - lastUpdateTimeInSec.current <= ROBOT_OFFLINE_TIME;
+    lastUpdateTimeInSec.current = timestamp;
+    return isOnline;
   }, []);
 
   /**
