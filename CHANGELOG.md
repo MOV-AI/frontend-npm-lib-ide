@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3375](https://movai.atlassian.net/browse/FP-3375): Improve offline detection in flow
+
 # 2.7.3-0
 
 - [FP-3350](https://movai.atlassian.net/browse/FP-3350): Change in an editor and then logout
