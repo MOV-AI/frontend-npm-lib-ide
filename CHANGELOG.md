@@ -1,4 +1,4 @@
-# TBD
+# 2.7.4
 
 - [FP-3377](https://movai.atlassian.net/browse/FP-3377): Can't start node in three view, first time.
 - [FP-3375](https://movai.atlassian.net/browse/FP-3375): Improve offline detection in flow
