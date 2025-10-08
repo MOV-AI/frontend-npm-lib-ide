@@ -97,7 +97,7 @@ class BaseNode extends BaseNodeStruct {
    * @returns {boolean} true if running, false otherwise
    */
   get status() {
-    return this._status.status;
+    return this._status?.status ?? false;
   }
 
   get readOnly() {
