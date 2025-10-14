@@ -1,6 +1,18 @@
 # TBD
 
 - [FP-3358](https://movai.atlassian.net/browse/FP-3358): FE - Parameter editor is annoying and does not adjust to amount of data
+- [FP-3329](https://movai.atlassian.net/browse/FP-3329): MOVAI Logs out and does not allow user to save it's work
+
+# 2.7.4
+
+- [FP-3377](https://movai.atlassian.net/browse/FP-3377): Can't start node in three view, first time.
+- [FP-3375](https://movai.atlassian.net/browse/FP-3375): Improve offline detection in flow
+
+# 2.7.3-0
+
+- [FP-3350](https://movai.atlassian.net/browse/FP-3350): Change in an editor and then logout
+- [FP-3355](https://movai.atlassian.net/browse/FP-3355): Fleetboard: Logs not updating
+- [FP-3192](https://movai.atlassian.net/browse/FP-3192): Should not be possible to start a node from a flow not running
 
 # 2.7.2-0
 
