@@ -1,5 +1,6 @@
 # TBD
 
+- [FP-3358](https://movai.atlassian.net/browse/FP-3358): FE - Parameter editor is annoying and does not adjust to amount of data
 - [FP-3329](https://movai.atlassian.net/browse/FP-3329): MOVAI Logs out and does not allow user to save it's work
 
 # 2.7.4
