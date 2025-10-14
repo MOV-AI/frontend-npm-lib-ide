@@ -1,4 +1,4 @@
-# 2.7.5
+# TBD
 
 - [FP-3329](https://movai.atlassian.net/browse/FP-3329): MOVAI Logs out and does not allow user to save it's work
 
