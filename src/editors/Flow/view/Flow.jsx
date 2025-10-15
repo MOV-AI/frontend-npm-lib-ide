@@ -912,7 +912,7 @@ export const Flow = (props, ref) => {
                     func: startNode,
                     disabled:
                       node.data.type === TYPES.CONTAINER ||
-                      !runningFlow ||
+                      !runningFlow?.includes(mainInterface.id) ||
                       node.status === undefined ||
                       node.status,
                   },
@@ -920,7 +920,7 @@ export const Flow = (props, ref) => {
                     func: stopNode,
                     disabled:
                       node.data.type === TYPES.CONTAINER ||
-                      !runningFlow ||
+                      !runningFlow?.includes(mainInterface.id) ||
                       !node.status,
                   },
                 },
