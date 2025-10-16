@@ -125,13 +125,13 @@ importers:
         version: 4.11.5(@types/react@18.2.51)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mov-ai/mov-fe-lib-code-editor':
         specifier: ^1.1.4-1
-        version: 1.1.4-1(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@2.8.1-1)(@mov-ai/mov-fe-lib-react@2.7.3-1(2bsl4ki5qk2h7y4ezobhenxgr4))(monaco-editor@0.31.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.1.4-1(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@2.8.1-1)(@mov-ai/mov-fe-lib-react@2.7.4-1(2bsl4ki5qk2h7y4ezobhenxgr4))(monaco-editor@0.31.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mov-ai/mov-fe-lib-core':
         specifier: 2.8.1-1
         version: 2.8.1-1
       '@mov-ai/mov-fe-lib-react':
-        specifier: 2.7.3-1
-        version: 2.7.3-1(2bsl4ki5qk2h7y4ezobhenxgr4)
+        specifier: 2.7.4-1
+        version: 2.7.4-1(2bsl4ki5qk2h7y4ezobhenxgr4)
       '@storybook/addon-actions':
         specifier: ^6.5.12
         version: 6.5.16(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1434,8 +1434,8 @@ packages:
   '@mov-ai/mov-fe-lib-core@2.8.1-1':
     resolution: {integrity: sha512-vQ2jJdDTvaqYnVY+9uWZX/Vxj/xnvGcaqtUpJdyfIW1i/4QKCTv70iXUzjpGhN9t68sBPYEQnGym76+HC/X9Ww==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-core/2.8.1-1/0326daaf2d56dbcf646a56f792fe6be60da3b3d0}
 
-  '@mov-ai/mov-fe-lib-react@2.7.3-1':
-    resolution: {integrity: sha512-MrJ6GxrdlNisujNSQ1wgFYqZAPXLG7aGOH8RkplZt761gDo4OCHji5jzCh5trg45gFMMyMdvH9J1YSFPR6mfXQ==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-react/2.7.3-1/42dfdcc817d0d2c58efb445d0355acc170a4d2fd}
+  '@mov-ai/mov-fe-lib-react@2.7.4-1':
+    resolution: {integrity: sha512-tz0mTv+gDTDTjjnu5Q5TtYWGZKD8uURFQxnkGeuS7JDZhRZji2d/J5468bo9JIhvJCT111RNXB2xIBcN5RRhcw==, tarball: https://npm.pkg.github.com/download/@MOV-AI/mov-fe-lib-react/2.7.4-1/263c0fe4a6a9fd4b57a37b825851d32450d8e4df}
     peerDependencies:
       '@material-table/core': ^4.3.11
       '@material-ui/core': ^4.12.4
@@ -9465,12 +9465,12 @@ snapshots:
 
   '@mdx-js/util@1.6.22': {}
 
-  '@mov-ai/mov-fe-lib-code-editor@1.1.4-1(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@2.8.1-1)(@mov-ai/mov-fe-lib-react@2.7.3-1(2bsl4ki5qk2h7y4ezobhenxgr4))(monaco-editor@0.31.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@mov-ai/mov-fe-lib-code-editor@1.1.4-1(@codingame/monaco-languageclient@0.17.4)(@mov-ai/mov-fe-lib-core@2.8.1-1)(@mov-ai/mov-fe-lib-react@2.7.4-1(2bsl4ki5qk2h7y4ezobhenxgr4))(monaco-editor@0.31.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@codingame/monaco-jsonrpc': 0.3.1
       '@codingame/monaco-languageclient': 0.17.4
       '@mov-ai/mov-fe-lib-core': 2.8.1-1
-      '@mov-ai/mov-fe-lib-react': 2.7.3-1(2bsl4ki5qk2h7y4ezobhenxgr4)
+      '@mov-ai/mov-fe-lib-react': 2.7.4-1(2bsl4ki5qk2h7y4ezobhenxgr4)
       monaco-editor: 0.31.1
       monaco-editor-core: 0.31.1
       normalize-url: 7.2.0
@@ -9497,7 +9497,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@mov-ai/mov-fe-lib-react@2.7.3-1(2bsl4ki5qk2h7y4ezobhenxgr4)':
+  '@mov-ai/mov-fe-lib-react@2.7.4-1(2bsl4ki5qk2h7y4ezobhenxgr4)':
     dependencies:
       '@babel/runtime': 7.22.15
       '@date-io/date-fns': 1.3.13(date-fns@2.30.0)
