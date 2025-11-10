@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3401](https://movai.atlassian.net/browse/FP-3401): Review local storage var names for the ide
+
 # 2.7.5
 
 - [FP-3192-2](https://movai.atlassian.net/browse/FP-3192): Should not be possible to start a node from a flow not running

@@ -5,7 +5,7 @@ import AppSettings from "../App/AppSettings";
 
 class Workspace {
   constructor() {
-    if (instance) return instance;
+    if (instance?.user?.getUsername()) return instance;
     instance = this;
     this.user = new User();
 
