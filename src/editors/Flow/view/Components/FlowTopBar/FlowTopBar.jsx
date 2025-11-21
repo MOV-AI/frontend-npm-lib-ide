@@ -117,7 +117,7 @@ const FlowTopBar = (props) => {
 
   // Managers Memos
   const robotManager = useMemo(() => new RobotManager(), []);
-  const workspaceManager = useMemo(() => new Workspace(), []);
+  const workspaceManager = useMemo(() => Workspace, []);
 
   //========================================================================================
   /*                                                                                      *

@@ -49,7 +49,7 @@ export default class GraphBase {
     this.onFlowValidated = new Subject();
     this.onLinksValidated = new Subject();
     this.invalidLinks = [];
-    this.flowDebugging = new Workspace().getFlowIsDebugging();
+    this.flowDebugging = Workspace.getFlowIsDebugging();
   }
 
   //========================================================================================
