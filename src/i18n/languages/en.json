@@ -86,6 +86,7 @@
   "EditorGeneralKeybindDescription": "Keyboard Shortcuts that can be used in all Editors.",
   "EditorFlowKeybindLabel": "Flow Editor",
   "EditorFlowKeybindDescription": "Keyboard Shortcuts that are to be used inside the Flow Editor.",
+  "EmptySpaceParameterWarning": "This parameter contains an empty space.",
   "EnvVars": "Env. Variables",
   "EnvironmentVariable": "Environment Variable",
   "EnvironmentVariables": "Environment Variables",
