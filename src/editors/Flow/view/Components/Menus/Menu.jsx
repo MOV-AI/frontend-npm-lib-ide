@@ -80,6 +80,8 @@ const Menu = ({ name, model, details: detailsProp, editable, call }) => {
       output.push({
         key: param,
         value: renderValue(value, type, true),
+        hasEmptySpaces:
+          typeof value === "string" && value.length !== value.trim().length,
       });
     });
     return output;
