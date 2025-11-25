@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-2658](https://movai.atlassian.net/browse/FP-2658): Spaces added at the begging of a parameter value not seen in the node parameters column
+
 # 2.7.5
 
 - [FP-3192-2](https://movai.atlassian.net/browse/FP-3192): Should not be possible to start a node from a flow not running

@@ -1,10 +1,12 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import Edit from "@material-ui/icons/Edit";
+import WarningIcon from "@material-ui/icons/Warning";
 import DeleteIcon from "@material-ui/icons/DeleteOutline";
 import IconButton from "@material-ui/core/IconButton";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import { Typography } from "@material-ui/core";
+import { Tooltip, Typography } from "@material-ui/core";
+import { i18n } from "@mov-ai/mov-fe-lib-react";
 import {
   DATA_TYPES,
   DEFAULT_VALUE,
@@ -110,6 +112,11 @@ const RowKeyValue = ({
 
   return (
     <Typography component="div" className={classes.rowContainer}>
+      {item.hasEmptySpaces && (
+        <Tooltip title={i18n.t("EmptySpaceParameterWarning")}>
+          <WarningIcon fontSize="small" />
+        </Tooltip>
+      )}
       <Typography
         data-testid="param_key"
         component="div"
