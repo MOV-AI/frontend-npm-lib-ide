@@ -53,6 +53,8 @@ const KeyValuesSection = (props) => {
         defaultValue,
         invalid,
         type,
+        hasEmptySpaces:
+          typeof value === "string" && value.length !== value.trim().length,
       });
     });
 
