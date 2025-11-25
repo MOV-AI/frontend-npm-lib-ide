@@ -17,12 +17,13 @@ jest.mock("../../../engine/ReactPlugin/ViewReactPlugin", () => ({
 
 jest.mock("./styles", () => ({ flowStyles: () => ({ root: "flow-root" }) }));
 
-jest.mock("../../../utils/Workspace", () => {
-  return jest.fn().mockImplementation(() => ({
-    getFlowIsDebugging: () => false,
-    setFlowIsDebugging: () => {},
-  }));
-});
+jest.mock("../../../utils/Workspace", () => ({
+  __esModule: true,
+  default: {
+    getFlowIsDebugging: jest.fn(() => false),
+    setFlowIsDebugging: jest.fn(),
+  },
+}));
 
 jest.mock("./Views/BaseFlow", () => {
   const { EVT_NAMES } = require("../view/events");
