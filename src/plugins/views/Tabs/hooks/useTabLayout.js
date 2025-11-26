@@ -23,7 +23,7 @@ import useTabStack from "./useTabStack";
 
 const useTabLayout = (props, dockRef) => {
   const { dependencies, emit, call, on, off } = props;
-  const workspaceManager = useMemo(() => new Workspace(), []);
+  const workspaceManager = useMemo(() => Workspace, []);
   const activeTabId = useRef(null);
   const firstLoad = useRef(true);
   const preventReloadNewDoc = useRef(false);

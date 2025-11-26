@@ -7,16 +7,14 @@ jest.mock("../../../../../utils/Workspace", () => {
       workspaceMock.getSelectedRobot.mockReturnValue(id);
     }),
   };
-  const WorkspaceFactory = jest.fn().mockImplementation(() => workspaceMock);
-  WorkspaceFactory.__workspaceMock = workspaceMock;
-  return { __esModule: true, default: WorkspaceFactory };
+  return { __esModule: true, default: workspaceMock };
 });
 
 import React from "react";
 import { render, screen, within, waitFor, act } from "@testing-library/react";
 import { i18n } from "@mov-ai/mov-fe-lib-react";
 import userEvent from "@testing-library/user-event";
-import WorkspaceFactory from "../../../../../utils/Workspace";
+import Workspace from "../../../../../utils/Workspace";
 
 import FlowTopBar from "./FlowTopBar";
 
@@ -50,9 +48,7 @@ describe("FlowTopBar", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    WorkspaceFactory.__workspaceMock.getSelectedRobot.mockReturnValue(
-      undefined,
-    );
+    Workspace.getSelectedRobot.mockReturnValue(undefined);
 
     helper = {
       getDefaultRobot: jest.fn().mockResolvedValue("r1"),
@@ -168,10 +164,8 @@ describe("FlowTopBar", () => {
 
     await act(async () => userEvent.click(option));
 
-    const workspaceMock = WorkspaceFactory.__workspaceMock;
-
-    expect(workspaceMock.setSelectedRobot).toHaveBeenCalledWith("r2");
-    expect(workspaceMock.getSelectedRobot()).toBe("r2");
+    expect(Workspace.setSelectedRobot).toHaveBeenCalledWith("r2");
+    expect(Workspace.getSelectedRobot()).toBe("r2");
     expect(onRobotChange).toHaveBeenCalledWith("r2");
   });
 

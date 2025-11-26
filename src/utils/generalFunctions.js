@@ -8,8 +8,6 @@ import { getHomeTab } from "../tools/HomeTab/HomeTab";
 import { getShortcutsTab } from "../tools/AppShortcuts/AppShortcuts";
 import { getToolTabData } from "../tools";
 
-const workspaceManager = new Workspace();
-
 //========================================================================================
 /*                                                                                      *
  *                                    Private Methods                                   *
@@ -80,6 +78,7 @@ export function openTool(call, scope = getHomeTab().scope, props = {}) {
   const tabData = getToolTabData({ scope }, props);
 
   if (Object.hasOwn(tabData, "tabIncrement")) {
+    const workspaceManager = Workspace;
     const thisTabIds = [...workspaceManager.getTabs().values()]
       .filter((tab) => tab.scope === tabData.scope)
       .map((tab) => tab.tabIncrement);

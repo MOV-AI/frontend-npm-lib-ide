@@ -1,3 +1,8 @@
+# 2.7.6
+
+- [FP-3401](https://movai.atlassian.net/browse/FP-3401): Review local storage var names for the ide
+- [FP-2658](https://movai.atlassian.net/browse/FP-2658): Spaces added at the begining of a parameter value not seen in the node parameters column
+
 # 2.7.5
 
 - [FP-3192-2](https://movai.atlassian.net/browse/FP-3192): Should not be possible to start a node from a flow not running
