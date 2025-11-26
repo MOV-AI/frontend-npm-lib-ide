@@ -4,14 +4,15 @@ import LocalStorage from "./LocalStorage";
 import AppSettings from "../App/AppSettings";
 
 class Workspace {
-  constructor() {
-    if (instance) return instance;
-    instance = this;
+  constructor() {}
+
+  async init() {
     this.user = new User();
 
     const APP_NAME = "movai-ide-ce";
-    const USER_NAME = this.user.getUsername() ?? "";
-    const baseKey = `movai.${USER_NAME}.${AppSettings.APP_INFORMATION.VERSION}.${APP_NAME}`;
+    const version = AppSettings.APP_INFORMATION.VERSION;
+    const USER_NAME = this.user.getUsername();
+    const baseKey = `movai.${USER_NAME}.${version}.${APP_NAME}`;
 
     this.storage = new LocalStorage();
     this.TABS_KEY = `${baseKey}.tabs`;
@@ -33,14 +34,10 @@ class Workspace {
     this.tabStack = this.getTabStack();
     this.recentDocuments = this.getRecentDocuments();
     this.selectedRobot = this.getSelectedRobot();
-    this.defaultRecentDocuments = [];
   }
 
-  /**
-   * Destroys the instance of workspace
-   */
   destroy() {
-    instance = null;
+    // empty for legacy purposes
   }
 
   /**
@@ -199,13 +196,13 @@ class Workspace {
    * @param {Object} defaultRecentDocuments
    * @returns {Object} with the Recent Documents
    */
-  getRecentDocuments(defaultRecentDocuments = this.defaultRecentDocuments) {
+  getRecentDocuments(defaultRecentDocuments = []) {
     return (
       this.storage.get(this.RECENT_DOCUMENTS_KEY) ?? defaultRecentDocuments
     );
   }
 }
 
-let instance = null;
+const singleton = new Workspace();
 
-export default Workspace;
+export default singleton;

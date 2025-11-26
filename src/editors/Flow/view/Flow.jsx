@@ -121,7 +121,7 @@ export const Flow = (props, ref) => {
   const selectedNodeRef = useRef();
   const selectedLinkRef = useRef();
   const isEditableComponentRef = useRef(true);
-  const workspaceManager = useMemo(() => new Workspace(), []);
+  const workspaceManager = useMemo(() => Workspace, []);
 
   //========================================================================================
   /*                                                                                      *

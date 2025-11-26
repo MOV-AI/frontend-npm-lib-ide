@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
+import Workspace from "../utils/Workspace";
 import PropTypes from "prop-types";
 import { Style } from "@mov-ai/mov-fe-lib-react";
 import { Typography } from "@material-ui/core";
@@ -40,6 +41,10 @@ import "./App.css";
 import { appStyles } from "./styles";
 
 const DEBUG_MODE = false;
+
+async function bootstrap() {
+  await Workspace.init();
+}
 
 function BaseApp(props) {
   // Props
@@ -120,6 +125,7 @@ function BaseApp(props) {
     addAppKeybinds();
     // Write log in consle
     writeMovaiLogo();
+    bootstrap();
   }, [dependencies]);
 
   // Set app settings

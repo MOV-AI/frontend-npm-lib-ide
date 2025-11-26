@@ -18,7 +18,7 @@ import { homeTabStyles } from "./styles";
 
 const HomeTab = (props) => {
   const { call, on, off, alert } = props;
-  const workspaceManager = useMemo(() => new Workspace(), []);
+  const workspaceManager = useMemo(() => Workspace, []);
   const classes = homeTabStyles();
 
   //========================================================================================
