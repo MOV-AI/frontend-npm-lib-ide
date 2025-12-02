@@ -10,6 +10,8 @@ import BaseNodeHeader from "./BaseNodeHeader";
 import BaseNodeStatus from "./BaseNodeStatus";
 import { EVT_NAMES } from "../../../events";
 import { NODE_TYPES, TYPES } from "../../../Constants/constants";
+import { PLUGINS } from "../../../../../../utils/Constants";
+import PluginManagerIDE from "../../../../../../engine/PluginManagerIDE/PluginManagerIDE";
 
 const STYLE = {
   stroke: {
@@ -561,8 +563,16 @@ class BaseNode extends BaseNodeStruct {
    * onClick - on click event
    *
    */
-  onClick = () => {
+  onClick = async () => {
     d3.event.stopPropagation();
+
+    const { call } = PluginManagerIDE.getInstance().manager;
+    const containerId = this.canvas.containerId.split("-").at(-1);
+    await call(
+      PLUGINS.TABS.NAME,
+      PLUGINS.TABS.CALL.FOCUS_EXISTING_TAB,
+      `global/Flow/${containerId}`,
+    );
 
     // shift key pressed
     const { shiftKey } = d3.event;

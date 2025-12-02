@@ -172,8 +172,10 @@ const useTabLayout = (props, dockRef) => {
   /**
    * Get first container in dockbox
    */
-  const _getFirstContainer = useCallback((dockbox) => {
-    const boxData = dockbox.children[0];
+  const _getFirstContainer = useCallback((dockbox, prevActiveTabId) => {
+    const boxData = dockbox.children.filter((child) =>
+      child.tabs?.some((tab) => tab.id === prevActiveTabId),
+    )[0];
     if (boxData?.tabs) return boxData;
     else return _getFirstContainer(boxData);
   }, []);
@@ -535,6 +537,7 @@ const useTabLayout = (props, dockRef) => {
    */
   const open = useCallback(
     (tabData) => {
+      const prevActiveTabId = getActiveTab().id;
       const tabPosition = tabData.dockPosition ?? getDefaultTabPosition();
       const position = tabData.position ?? {
         h: 500,
@@ -575,7 +578,10 @@ const useTabLayout = (props, dockRef) => {
             tabs: [tabData],
           });
         } else {
-          const firstContainer = _getFirstContainer(newState[tabPosition]);
+          const firstContainer = _getFirstContainer(
+            newState[tabPosition],
+            prevActiveTabId,
+          );
           firstContainer.tabs.push(tabData);
           firstContainer.activeId = tabData.id;
           delete firstContainer.group;
