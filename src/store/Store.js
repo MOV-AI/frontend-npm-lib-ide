@@ -18,6 +18,7 @@ class Store extends BaseStore {
    */
   readDoc(name, force) {
     const doc = this.getDoc(name);
+    console.log("Store.readDoc", name, doc?.isLoaded);
     return doc?.isLoaded && !force ? Promise.resolve(doc) : this.loadDoc(name);
   }
 

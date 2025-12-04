@@ -33,6 +33,12 @@ class CallbackStore extends Store {
     return super.loadDoc(name);
   }
 
+  destroy() {
+    console.log("Destroying CallbackStore and its helper");
+    super.destroy();
+    this.helper.destroy();
+  }
+
   static SCOPE = Model.SCOPE;
 }
 

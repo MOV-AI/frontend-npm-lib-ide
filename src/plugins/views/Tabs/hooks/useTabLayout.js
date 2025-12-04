@@ -392,7 +392,15 @@ const useTabLayout = (props, dockRef) => {
   const _closeTab = useCallback(
     async (tabId, forceClose) => {
       const tabData = findTab(tabId);
+      console.log("CLOSING TAB", tabData);
       if (!tabData) return;
+
+      call(
+        PLUGINS.DOC_MANAGER.NAME,
+        PLUGINS.DOC_MANAGER.CALL.UNSUBSCRIBE_TO_CHANGES,
+        tabData.id,
+      );
+
       const currentLayout = dockRef.current.saveLayout();
       const locations = Object.values(DOCK_POSITIONS);
       // look for tab in layout locations
@@ -603,6 +611,7 @@ const useTabLayout = (props, dockRef) => {
   const openEditor = useCallback(
     async (docData) => {
       try {
+        console.log("OPENING EDITOR TAB FOR", docData);
         const doc = await call(
           PLUGINS.DOC_MANAGER.NAME,
           PLUGINS.DOC_MANAGER.CALL.READ,

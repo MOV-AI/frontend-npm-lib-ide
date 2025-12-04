@@ -6,6 +6,7 @@ class Subscriber {
   }
 
   subscribe(onUpdate, onLoad) {
+    console.log("SUBSCRIBER: Subscribing with pattern:", this.pattern);
     MasterDB.subscribe(this.pattern, onUpdate, onLoad);
   }
 
@@ -14,6 +15,7 @@ class Subscriber {
   }
 
   destroy() {
+    console.log("SUBSCRIBER: Destroying subscriber for pattern:", this.pattern);
     this.unsubscribe();
     MasterDB.close();
   }

@@ -19,6 +19,7 @@ class DBSubscriber extends StoreAbstractPlugin {
   constructor(iStore) {
     super();
     this.iStore = iStore;
+    console.log("DBSubscriber initialized for store:", iStore);
   }
 
   name = "DBSubscriber";
@@ -30,6 +31,7 @@ class DBSubscriber extends StoreAbstractPlugin {
   }
 
   subscribe(docName) {
+    console.log("DBSubscriber: Subscribing to document:", docName);
     const subscriber = new Subscriber({
       pattern: this.getPattern(docName),
     });
@@ -44,6 +46,7 @@ class DBSubscriber extends StoreAbstractPlugin {
   }
 
   unsubscribe(docName) {
+    console.log("DBSubscriber: Unsubscribing from document:", docName);
     const id = this.generateId(docName);
 
     this[symbols.subscribers].get(id).destroy();
