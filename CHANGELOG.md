@@ -1,6 +1,7 @@
 # TBD
 
 - [FP-3050](https://movai.atlassian.net/browse/FP-3050): Toggle between XML and YAML isn't highlighting in real-time
+- [FP-3315](https://movai.atlassian.net/browse/FP-3315): IDE - New flow opens in the wrong split screen side
 
 # 2.7.6
 
