@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3050](https://movai.atlassian.net/browse/FP-3050): Toggle between XML and YAML isn't highlighting in real-time
+
 # 2.7.6
 
 - [FP-3401](https://movai.atlassian.net/browse/FP-3401): Review local storage var names for the ide
