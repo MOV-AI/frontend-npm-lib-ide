@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3315](https://movai.atlassian.net/browse/FP-3315): IDE - New flow opens in the wrong split screen side
+
 # 2.7.6
 
 - [FP-3401](https://movai.atlassian.net/browse/FP-3401): Review local storage var names for the ide
