@@ -67,7 +67,6 @@ class BaseStore extends StorePluginManager {
   loadDoc(name) {
     return this.fetchDoc(name)
       .then((file) => {
-        console.log("Store.readDoc", name, file);
         // get or create document
         const obj = this.getDoc(name) || this.newDoc(name).setIsNew(false);
 
@@ -269,7 +268,6 @@ class BaseStore extends StorePluginManager {
    * Method to enable subscriber
    */
   enableSubscriber() {
-    console.log("BASESTORE: Enabling subscriber for pattern:", this.pattern);
     this.subscriber = new Subscriber({
       pattern: this.pattern,
     });
@@ -279,10 +277,6 @@ class BaseStore extends StorePluginManager {
   }
 
   destroy() {
-    console.log(
-      "BASESTORE: Destroying store and subscriber for pattern:",
-      this.pattern,
-    );
     super.destroy();
     if (this.subscriber) this.subscriber.destroy();
   }

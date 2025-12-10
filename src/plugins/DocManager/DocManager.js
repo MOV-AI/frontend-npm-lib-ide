@@ -75,13 +75,7 @@ class DocManager extends IDEPlugin {
     const split = id.split("/");
     const [, scope, docName] = split;
     this.getStore(scope).getPlugin("DBSubscriber").unsubscribe(docName);
-    console.log(
-      "DOCMANAGER: Unsubscribing from changes for id:",
-      scope,
-      docName,
-    );
     if (this.docSubscriptions.has(id)) {
-      console.log("DOCMANAGER: Unsubscribed successfully for id:", id);
       return this.docSubscriptions.delete(id);
     }
   }

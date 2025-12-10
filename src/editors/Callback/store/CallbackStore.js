@@ -27,6 +27,11 @@ class CallbackStore extends Store {
   // Set helper object with cloudFunction
   helper = Helper;
 
+  readDoc(name, force) {
+    this.getPlugin("DBSubscriber").subscribe(name);
+    return super.readDoc(name, force);
+  }
+
   loadDoc(name) {
     this.getPlugin("DBSubscriber").subscribe(name);
 
@@ -34,7 +39,6 @@ class CallbackStore extends Store {
   }
 
   destroy() {
-    console.log("Destroying CallbackStore and its helper");
     super.destroy();
     this.helper.destroy();
   }
