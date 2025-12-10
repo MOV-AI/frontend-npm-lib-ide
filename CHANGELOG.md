@@ -1,3 +1,7 @@
+# TBD
+
+- [FP-3488](https://movai.atlassian.net/browse/FP-3488): Unsubscribe to document basic data when document tab is closed
+
 # 2.7.6
 
 - [FP-3401](https://movai.atlassian.net/browse/FP-3401): Review local storage var names for the ide
