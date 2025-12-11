@@ -1,5 +1,4 @@
 import DocManager from "./DocManager";
-import { PLUGINS } from "../../utils/Constants";
 
 // Mock the factory
 jest.mock("./factory", () => {
