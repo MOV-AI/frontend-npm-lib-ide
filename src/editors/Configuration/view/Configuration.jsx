@@ -16,6 +16,8 @@ import Menu from "./Menu";
 
 import { configurationStyles } from "./styles";
 
+const DEFAULT_EXT = "yaml";
+
 export const Configuration = (props, ref) => {
   const {
     id,
@@ -31,10 +33,11 @@ export const Configuration = (props, ref) => {
     propsData: props.data,
     keysToDisconsider: Model.KEYS_TO_DISCONSIDER,
   });
-  const [extension, setExtension] = useState("yaml");
+
   // Style Hooks
   const classes = configurationStyles();
   const theme = useTheme();
+  const extension = data.extension ?? DEFAULT_EXT;
 
   //========================================================================================
   /*                                                                                      *
@@ -70,14 +73,6 @@ export const Configuration = (props, ref) => {
   //========================================================================================
 
   /**
-   * Updates the config extension
-   * @param {String} value
-   */
-  const updateConfigExtension = (value) => {
-    if (instance.current) instance.current.setExtension(value);
-  };
-
-  /**
    * Updates the config code
    * @param {String} value
    * @returns
@@ -100,8 +95,8 @@ export const Configuration = (props, ref) => {
    */
   const handleChangeFileType = (event, newExtension) => {
     event.stopPropagation();
-    setExtension(newExtension);
-    updateConfigExtension(newExtension);
+
+    if (instance.current) instance.current.setExtension(newExtension);
   };
 
   /**
