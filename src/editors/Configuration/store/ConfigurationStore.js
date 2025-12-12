@@ -13,6 +13,11 @@ class ConfigurationStore extends Store {
     });
   }
 
+  readDoc(name, force) {
+    this.getPlugin("DBSubscriber").subscribe(name);
+    return super.readDoc(name, force);
+  }
+
   loadDoc(name) {
     this.getPlugin("DBSubscriber").subscribe(name);
 

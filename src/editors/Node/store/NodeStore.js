@@ -19,6 +19,11 @@ class NodeStore extends Store {
   // Set helper object with cloudFunction and more
   helper = Helper;
 
+  readDoc(name, force) {
+    this.getPlugin("DBSubscriber").subscribe(name);
+    return super.readDoc(name, force);
+  }
+
   /**
    * @override loadDoc to activate Redis subscriber to document
    * @param {string} name : Document name

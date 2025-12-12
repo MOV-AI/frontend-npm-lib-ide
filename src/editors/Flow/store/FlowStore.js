@@ -19,6 +19,11 @@ class FlowStore extends Store {
   // Set helper object with cloudFunction
   helper = Helper;
 
+  readDoc(name, force) {
+    this.getPlugin("DBSubscriber").subscribe(name);
+    return super.readDoc(name, force);
+  }
+
   loadDoc(name) {
     this.getPlugin("DBSubscriber").subscribe(name);
 

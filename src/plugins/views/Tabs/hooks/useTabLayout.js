@@ -395,6 +395,13 @@ const useTabLayout = (props, dockRef) => {
     async (tabId, forceClose) => {
       const tabData = findTab(tabId);
       if (!tabData) return;
+
+      call(
+        PLUGINS.DOC_MANAGER.NAME,
+        PLUGINS.DOC_MANAGER.CALL.UNSUBSCRIBE_TO_CHANGES,
+        tabData.id,
+      );
+
       const currentLayout = dockRef.current.saveLayout();
       const locations = Object.values(DOCK_POSITIONS);
       // look for tab in layout locations
