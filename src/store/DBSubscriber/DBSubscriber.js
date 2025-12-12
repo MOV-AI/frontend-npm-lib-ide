@@ -30,6 +30,8 @@ class DBSubscriber extends StoreAbstractPlugin {
   }
 
   subscribe(docName) {
+    if (this[symbols.subscribers].has(this.generateId(docName))) return;
+
     const subscriber = new Subscriber({
       pattern: this.getPattern(docName),
     });
@@ -46,7 +48,7 @@ class DBSubscriber extends StoreAbstractPlugin {
   unsubscribe(docName) {
     const id = this.generateId(docName);
 
-    this[symbols.subscribers].get(id).destroy();
+    this[symbols.subscribers].get(id).unsubscribe();
     this[symbols.subscribers].delete(id);
   }
 
@@ -100,7 +102,7 @@ class DBSubscriber extends StoreAbstractPlugin {
         const currentData = doc.serializeToDB();
 
         // remove keys not to be considered
-        const { _schema_version, ...filteredData } = updatedData;
+        const { ...filteredData } = updatedData;
 
         if (this.shouldUpdate(currentData, filteredData)) {
           // getDirty is true:

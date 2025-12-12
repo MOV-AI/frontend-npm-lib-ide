@@ -27,10 +27,20 @@ class CallbackStore extends Store {
   // Set helper object with cloudFunction
   helper = Helper;
 
+  readDoc(name, force) {
+    this.getPlugin("DBSubscriber").subscribe(name);
+    return super.readDoc(name, force);
+  }
+
   loadDoc(name) {
     this.getPlugin("DBSubscriber").subscribe(name);
 
     return super.loadDoc(name);
+  }
+
+  destroy() {
+    super.destroy();
+    this.helper.destroy();
   }
 
   static SCOPE = Model.SCOPE;

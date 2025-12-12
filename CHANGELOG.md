@@ -1,3 +1,9 @@
+# 2.7.7
+
+- [FP-3488](https://movai.atlassian.net/browse/FP-3488): Unsubscribe to document basic data when document tab is closed
+- [FP-3050](https://movai.atlassian.net/browse/FP-3050): Toggle between XML and YAML isn't highlighting in real-time
+- [FP-3315](https://movai.atlassian.net/browse/FP-3315): IDE - New flow opens in the wrong split screen side
+
 # 2.7.6
 
 - [FP-3401](https://movai.atlassian.net/browse/FP-3401): Review local storage var names for the ide

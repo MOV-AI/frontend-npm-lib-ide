@@ -72,6 +72,14 @@ class DocManager extends IDEPlugin {
    * @returns {Promise<Model>}
    */
   unSubscribeToChanges(id) {
+    const split = id.split("/");
+    const [, scope, docName] = split;
+    const plugins = this?.getStore(scope)?.plugins?.values();
+    if (plugins) {
+      plugins
+        .filter((x) => x.name.toLowerCase().includes("subs"))
+        .forEach((x) => x.unsubscribe(docName));
+    }
     if (this.docSubscriptions.has(id)) {
       return this.docSubscriptions.delete(id);
     }

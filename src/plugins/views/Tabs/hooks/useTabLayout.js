@@ -172,8 +172,10 @@ const useTabLayout = (props, dockRef) => {
   /**
    * Get first container in dockbox
    */
-  const _getFirstContainer = useCallback((dockbox) => {
-    const boxData = dockbox.children[0];
+  const _getFirstContainer = useCallback((dockbox, prevActiveTabId) => {
+    const boxData = dockbox.children.filter((child) =>
+      child.tabs?.some((tab) => tab.id === prevActiveTabId),
+    )[0];
     if (boxData?.tabs) return boxData;
     else return _getFirstContainer(boxData);
   }, []);
@@ -393,6 +395,13 @@ const useTabLayout = (props, dockRef) => {
     async (tabId, forceClose) => {
       const tabData = findTab(tabId);
       if (!tabData) return;
+
+      call(
+        PLUGINS.DOC_MANAGER.NAME,
+        PLUGINS.DOC_MANAGER.CALL.UNSUBSCRIBE_TO_CHANGES,
+        tabData.id,
+      );
+
       const currentLayout = dockRef.current.saveLayout();
       const locations = Object.values(DOCK_POSITIONS);
       // look for tab in layout locations
@@ -535,6 +544,7 @@ const useTabLayout = (props, dockRef) => {
    */
   const open = useCallback(
     (tabData) => {
+      const prevActiveTabId = getActiveTab().id;
       const tabPosition = tabData.dockPosition ?? getDefaultTabPosition();
       const position = tabData.position ?? {
         h: 500,
@@ -575,7 +585,10 @@ const useTabLayout = (props, dockRef) => {
             tabs: [tabData],
           });
         } else {
-          const firstContainer = _getFirstContainer(newState[tabPosition]);
+          const firstContainer = _getFirstContainer(
+            newState[tabPosition],
+            prevActiveTabId,
+          );
           firstContainer.tabs.push(tabData);
           firstContainer.activeId = tabData.id;
           delete firstContainer.group;
