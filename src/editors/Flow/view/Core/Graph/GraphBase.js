@@ -91,6 +91,7 @@ export default class GraphBase {
       next: () => this.reset(),
     });
     // Subscribe to node/containers template update
+    console.log("Subscribing to template updates for graph:", this.id);
     this.docManager(
       PLUGINS.DOC_MANAGER.NAME,
       PLUGINS.DOC_MANAGER.CALL.SUBSCRIBE_TO_CHANGES,
@@ -139,6 +140,7 @@ export default class GraphBase {
    * Called before destroying graph
    */
   destroy = () => {
+    console.log("Destroying graph:", this.id);
     // Unsubscribe to changes from docManager
     this.docManager(
       PLUGINS.DOC_MANAGER.NAME,
