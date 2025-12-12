@@ -1,4 +1,4 @@
-# TBD
+# 2.7.7
 
 - [FP-3488](https://movai.atlassian.net/browse/FP-3488): Unsubscribe to document basic data when document tab is closed
 - [FP-3050](https://movai.atlassian.net/browse/FP-3050): Toggle between XML and YAML isn't highlighting in real-time
