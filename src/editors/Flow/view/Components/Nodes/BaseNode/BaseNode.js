@@ -565,6 +565,8 @@ class BaseNode extends BaseNodeStruct {
    */
   onClick = async () => {
     d3.event.stopPropagation();
+    // shift key pressed
+    const { shiftKey } = d3.event;
 
     const { call } = PluginManagerIDE.getInstance().manager;
     const containerId = this.canvas.containerId.split("-").at(-1);
@@ -574,8 +576,6 @@ class BaseNode extends BaseNodeStruct {
       `global/Flow/${containerId}`,
     );
 
-    // shift key pressed
-    const { shiftKey } = d3.event;
     this.handleSelectionChange(shiftKey);
   };
 
