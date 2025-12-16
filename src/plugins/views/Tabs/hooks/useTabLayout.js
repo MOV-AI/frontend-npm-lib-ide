@@ -362,6 +362,14 @@ const useTabLayout = (props, dockRef) => {
           );
         }
 
+        // Unsubscribe from document changes
+        console.log("Unsubscribing from document changes for tab:", tabId);
+        call(
+          PLUGINS.DOC_MANAGER.NAME,
+          PLUGINS.DOC_MANAGER.CALL.UNSUBSCRIBE_TO_CHANGES,
+          tabId,
+        );
+
         // Remove tab and apply new layout
         tabsByIdRef.current.delete(tabId);
         workspaceManager.setTabs(tabsByIdRef.current);
@@ -395,12 +403,6 @@ const useTabLayout = (props, dockRef) => {
     async (tabId, forceClose) => {
       const tabData = findTab(tabId);
       if (!tabData) return;
-
-      call(
-        PLUGINS.DOC_MANAGER.NAME,
-        PLUGINS.DOC_MANAGER.CALL.UNSUBSCRIBE_TO_CHANGES,
-        tabData.id,
-      );
 
       const currentLayout = dockRef.current.saveLayout();
       const locations = Object.values(DOCK_POSITIONS);
