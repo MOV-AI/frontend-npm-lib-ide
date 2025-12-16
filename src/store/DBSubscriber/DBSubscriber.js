@@ -47,7 +47,7 @@ class DBSubscriber extends StoreAbstractPlugin {
 
   unsubscribe(docName) {
     const id = this.generateId(docName);
-
+    if (!this[symbols.subscribers].has(id)) return;
     this[symbols.subscribers].get(id).unsubscribe();
     this[symbols.subscribers].delete(id);
   }
