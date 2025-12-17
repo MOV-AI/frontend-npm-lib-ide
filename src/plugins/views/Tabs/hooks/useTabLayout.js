@@ -173,9 +173,10 @@ const useTabLayout = (props, dockRef) => {
    * Get first container in dockbox
    */
   const _getFirstContainer = useCallback((dockbox, prevActiveTabId) => {
-    const boxData = dockbox.children.filter((child) =>
+    const boxDataArray = dockbox.children.filter((child) =>
       child.tabs?.some((tab) => tab.id === prevActiveTabId),
-    )[0];
+    );
+    let boxData = boxDataArray.length ? boxDataArray[0] : dockbox.children[0];
     if (boxData?.tabs) return boxData;
     else return _getFirstContainer(boxData);
   }, []);
@@ -349,6 +350,12 @@ const useTabLayout = (props, dockRef) => {
       const { name, scope, isNew, isDirty } =
         tabsByIdRef.current?.get(tabId) ?? {};
 
+      // Guard: If tab data doesn't exist, exit early
+      if (!name || !scope) {
+        console.warn(`Tab data not found for tabId: ${tabId}`);
+        return;
+      }
+
       if (isDirty && !forceClose) {
         const document = { id: tabId, name, scope, isNew };
         _closeDirtyTab(document);
@@ -362,13 +369,15 @@ const useTabLayout = (props, dockRef) => {
           );
         }
 
-        // Unsubscribe from document changes
-        console.log("Unsubscribing from document changes for tab:", tabId);
-        call(
-          PLUGINS.DOC_MANAGER.NAME,
-          PLUGINS.DOC_MANAGER.CALL.UNSUBSCRIBE_TO_CHANGES,
-          tabId,
-        );
+        // Unsubscribe from document changes (only for existing docs)
+        if (!isNew) {
+          console.log("Unsubscribing from document changes for tab:", tabId);
+          call(
+            PLUGINS.DOC_MANAGER.NAME,
+            PLUGINS.DOC_MANAGER.CALL.UNSUBSCRIBE_TO_CHANGES,
+            tabId,
+          );
+        }
 
         // Remove tab and apply new layout
         tabsByIdRef.current.delete(tabId);
@@ -376,9 +385,13 @@ const useTabLayout = (props, dockRef) => {
         const dock = getDockFromTabId(tabId);
         removeTabFromStack(tabId, dock);
         applyLayout(newLayout);
+
+        // Update active tab only if needed
         const newTabId = getNextTabFromStack();
-        setUrl(newTabId);
-        emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newTabId });
+        if (newTabId) {
+          setUrl(newTabId);
+          emit(PLUGINS.TABS.ON.ACTIVE_TAB_CHANGE, { id: newTabId });
+        }
       }
     },
     [
@@ -401,6 +414,7 @@ const useTabLayout = (props, dockRef) => {
    */
   const _closeTab = useCallback(
     async (tabId, forceClose) => {
+      console.log("Closing tab:", tabId);
       const tabData = findTab(tabId);
       if (!tabData) return;
 
@@ -546,7 +560,7 @@ const useTabLayout = (props, dockRef) => {
    */
   const open = useCallback(
     (tabData) => {
-      const prevActiveTabId = getActiveTab().id;
+      const prevActiveTabId = getActiveTab()?.id;
       const tabPosition = tabData.dockPosition ?? getDefaultTabPosition();
       const position = tabData.position ?? {
         h: 500,
@@ -715,6 +729,7 @@ const useTabLayout = (props, dockRef) => {
       const isActuallyTabChange = activeTabId.current !== tabId;
       const dock = getDockFromTabId(tabId);
       const tabData = tabsByIdRef.current.get(tabId);
+      if (!tabData) return;
       let newActiveTabId = tabId;
 
       // Attempt to close tab
