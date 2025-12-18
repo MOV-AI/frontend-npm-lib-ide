@@ -90,6 +90,7 @@ function CodeEdit(props) {
         }}
         theme={dataType._theme?.codeEditor?.theme ?? "dark"}
         {...rest}
+        value={rest.rowData?.value || ""}
       />
     </Typography>
   );
